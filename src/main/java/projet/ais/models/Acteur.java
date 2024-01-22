@@ -66,10 +66,12 @@ public class Acteur {
     private List<Stock> stockList;
 
     @OneToMany
+    (mappedBy = "acteur")
     @JsonIgnore
     private List<Magasin> magasinList;
 
    @ManyToOne
+   @JoinColumn(name = "idTypeActeur")
    private TypeActeur typeActeur;
 }
 
