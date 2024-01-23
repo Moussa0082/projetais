@@ -4,7 +4,6 @@ package projet.ais.models;
 
 import jakarta.persistence.*;
 
-import java.util.List;
 
 @Entity
 public class Magasin {
