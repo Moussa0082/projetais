@@ -1,8 +1,149 @@
 package projet.ais.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import jakarta.persistence.EntityNotFoundException;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import projet.ais.Exception.NoContentException;
+import projet.ais.models.Acteur;
+import projet.ais.models.Alerte;
+import projet.ais.models.TypeActeur;
+import projet.ais.repository.ActeurRepository;
+import projet.ais.repository.TypeActeurRepository;
 
 @Service
 public class ActeurService {
+
+    @Autowired
+    private ActeurRepository acteurRepository;
+
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    EmailService emailService;
+
+    @Autowired
+    private TypeActeurRepository typeActeurRepository;
+
+    //créer un user
+      public Acteur createActeur(Acteur acteur, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
+        // TypeActeur typeActeur = typeActeurRepository.findByIdTypeActeur(acteur.getTypeActeur());
+        
+        if (acteurRepository.findByEmailActeur(acteur.getEmailActeur()) == null) {
     
+            //On hashe le mot de passe
+            String passWordHasher = passwordEncoder.encode(acteur.getPassword());
+            acteur.setPassword(passWordHasher);
+
+            // Traitement du fichier image siege acteur
+            if (imageFile1 != null) {
+                String imageLocation = "C:\\xampp\\htdocs\\ais";
+                try {
+                    Path imageRootLocation = Paths.get(imageLocation);
+                    if (!Files.exists(imageRootLocation)) {
+                        Files.createDirectories(imageRootLocation);
+                    }
+    
+                    String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
+                    Path imagePath = imageRootLocation.resolve(imageName);
+                    Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                    acteur.setPhotoSiegeActeur("ais/" + imageName);
+                } catch (IOException e) {
+                    throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
+                }
+            }
+            // image logo acteur 
+            if (imageFile2 != null) {
+                String imageLocation = "C:\\xampp\\htdocs\\ais";
+                try {
+                    Path imageRootLocation = Paths.get(imageLocation);
+                    if (!Files.exists(imageRootLocation)) {
+                        Files.createDirectories(imageRootLocation);
+                    }
+    
+                    String imageName = UUID.randomUUID().toString() + "_" + imageFile2.getOriginalFilename();
+                    Path imagePath = imageRootLocation.resolve(imageName);
+                    Files.copy(imageFile2.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                    acteur.setLogoActeur("ais/" + imageName);
+                } catch (IOException e) {
+                    throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
+                }
+            }
+    
+            return acteurRepository.save(acteur);
+        } 
+        else {
+            throw new IllegalArgumentException("L'email " + acteur.getEmailActeur() + " existe déjà");
+        }
+    }
+    
+
+       //Recuperer la liste des Admins
+     public List<Acteur> getAllActeur(){
+
+        List<Acteur> acteurList = acteurRepository.findAll();
+
+        acteurList = acteurList
+                .stream().sorted((d1, d2) -> d2.getEmailActeur().compareTo(d1.getEmailActeur()))
+                .collect(Collectors.toList());
+        return acteurList;
+    }
+
+    //Desactiver un acteur
+
+    public ResponseEntity<String> disableActeur(Integer id) {
+        Optional<Acteur> acteur = acteurRepository.findById(id);
+        if (acteur.isPresent()) {
+            acteur.get().setStatutActeur(false);
+            acteurRepository.save(acteur.get());
+            Alerte alerte = new Alerte(acteur.get().getEmailActeur(), "Votre compte a été desactivé par l'administrateur vous ne pouvez plus acceder à votre compte " + "\n veuillez contacter l'administrateur ");
+            emailService.sendSimpleMail(alerte);
+            return new ResponseEntity<>("L'acteur " + acteur.get().getNomActeur() + " a été désactivé avec succès", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Admin non trouvé avec l'ID " + id, HttpStatus.BAD_REQUEST);
+        }
+    }
+   
+    //activer un acteur
+    public ResponseEntity<String> enableActeur(Integer id) {
+        Optional<Acteur> acteur = acteurRepository.findById(id);
+        if (acteur.isPresent()) {
+            acteur.get().setStatutActeur(true);
+            acteurRepository.save(acteur.get());
+             Alerte alerte = new Alerte(acteur.get().getEmailActeur(), "Votre compte a été activé par le super admin vous pouvez acceder votre compte");
+            emailService.sendSimpleMail(alerte);
+            return new ResponseEntity<>("Le compte de " + acteur.get().getNomActeur() +  " a été activé avec succès", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Acteur non trouvé avec l'ID " + id, HttpStatus.BAD_REQUEST);
+        }
+    }
+  
+      //Supprimer acteur
+         //Suppression de l'utilisateur
+
+    public String deleteByIdActeur(Integer id){
+        Acteur acteur = acteurRepository.findByIdActeur(id);
+        if(acteur == null){
+            throw new EntityNotFoundException("Désolé l'acteur à supprimer n'existe pas");
+        }
+        acteurRepository.delete(acteur);
+        return "Acteur supprimé avec succèss";
+    }
+
 }

@@ -4,11 +4,12 @@ package projet.ais.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.List;
 
 @Entity
-
+@Data
 public class Acteur {
 
     @Id
@@ -36,10 +37,10 @@ public class Acteur {
     @Column(nullable = false)
     private String longitude;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String photoSiegeActeur;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String logoActeur;
 
     @Column(nullable = false)
@@ -62,7 +63,7 @@ public class Acteur {
     private String filiereActeur;
 
     @Column(nullable = false)
-    private String statutActeur;
+    private boolean statutActeur = false;
 
     @OneToMany
     (mappedBy = "acteur")
@@ -77,5 +78,6 @@ public class Acteur {
    @ManyToOne
    @JoinColumn(name = "idTypeActeur")
    private TypeActeur typeActeur;
+
 }
 

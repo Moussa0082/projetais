@@ -23,6 +23,8 @@ public class Alerte {
     @Column(length = 2000, nullable = false)
     private String message;
 
+  public Alerte(String email, String message){
 
+  }
 
 }

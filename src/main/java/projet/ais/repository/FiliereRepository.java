@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import projet.ais.models.Filiere;
 
 
-public interface FiliereRepository  extends JpaRepository<Filiere , Long>{
+public interface FiliereRepository  extends JpaRepository<Filiere , Integer>{
      
 }
