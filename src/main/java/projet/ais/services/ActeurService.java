@@ -92,6 +92,77 @@ public class ActeurService {
             throw new IllegalArgumentException("L'email " + acteur.getEmailActeur() + " existe déjà");
         }
     }
+
+    
+    //créer un user
+      public Acteur updateActeur(Acteur acteur, Integer id, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
+        // TypeActeur typeActeur = typeActeurRepository.findByIdTypeActeur(acteur.getTypeActeur());
+        Acteur ac = acteurRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Acteur non trouver avec l'id " + id));
+        
+         if (ac == null){
+             
+             new  NoContentException("Acteur non existant");
+         }
+         
+
+         ac.setAdresseActeur(acteur.getAdresseActeur());
+         ac.setNomActeur(acteur.getNomActeur());
+         ac.setTelephoneActeur(acteur.getTelephoneActeur());
+         ac.setWhatsAppActeur(acteur.getWhatsAppActeur());
+         ac.setLocaliteActeur(acteur.getLocaliteActeur());
+         ac.setEmailActeur(acteur.getEmailActeur());
+         ac.setMaillonActeur(acteur.getMaillonActeur());
+         ac.setFiliereActeur(acteur.getFiliereActeur());
+
+
+    // Mettez à jour le mot de passe si un nouveau mot de passe est fourni
+    if (acteur.getPassword() != null && !acteur.getPassword().isEmpty()) {
+        String hashedPassword = passwordEncoder.encode(acteur.getPassword());
+        ac.setPassword(hashedPassword);
+    }
+        
+    
+            
+
+            // Traitement du fichier image siege acteur
+            if (imageFile1 != null) {
+                String imageLocation = "C:\\xampp\\htdocs\\ais";
+                try {
+                    Path imageRootLocation = Paths.get(imageLocation);
+                    if (!Files.exists(imageRootLocation)) {
+                        Files.createDirectories(imageRootLocation);
+                    }
+    
+                    String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
+                    Path imagePath = imageRootLocation.resolve(imageName);
+                    Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                    ac.setPhotoSiegeActeur("ais/" + imageName);
+                } catch (IOException e) {
+                    throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
+                }
+            }
+            // image logo acteur 
+            if (imageFile2 != null) {
+                String imageLocation = "C:\\xampp\\htdocs\\ais";
+                try {
+                    Path imageRootLocation = Paths.get(imageLocation);
+                    if (!Files.exists(imageRootLocation)) {
+                        Files.createDirectories(imageRootLocation);
+                    }
+    
+                    String imageName = UUID.randomUUID().toString() + "_" + imageFile2.getOriginalFilename();
+                    Path imagePath = imageRootLocation.resolve(imageName);
+                    Files.copy(imageFile2.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                    ac.setLogoActeur("ais/" + imageName);
+                } catch (IOException e) {
+                    throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
+                }
+            }
+    
+            return acteurRepository.save(acteur);
+        
+        
+    }
     
 
        //Recuperer la liste des Admins
@@ -135,7 +206,7 @@ public class ActeurService {
     }
   
       //Supprimer acteur
-         //Suppression de l'utilisateur
+
 
     public String deleteByIdActeur(Integer id){
         Acteur acteur = acteurRepository.findByIdActeur(id);
