@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import projet.ais.models.ParametreFicheDonnees;
 
-public interface ParametreFicheDonneesRepository  extends JpaRepository<ParametreFicheDonnees, Integer>{
+public interface ParametreFicheDonneesRepository  extends JpaRepository<ParametreFicheDonnees, Long>{
     
 }

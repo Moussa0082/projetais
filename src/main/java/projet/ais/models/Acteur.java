@@ -44,6 +44,10 @@ public class Acteur {
 
     @Column(nullable = false)
     private String niveau3PaysActeur;
+    
+    @Column(nullable = false)
+    private String password;
+
 
     @Column(nullable = false)
     private String localiteActeur;

@@ -16,7 +16,7 @@ public class TypeActeur {
     private String codeTypeActeur;
 
     @Column(nullable = false)
-    private String DescriptionTypeActeur;
+    private String descriptionTypeActeur;
 
     @OneToMany
     (mappedBy = "typeActeur")
