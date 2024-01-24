@@ -29,49 +29,40 @@ public class TypeActeurService {
     @Autowired
     private TypeActeurRepository typeActeurRepository;
 
-    public void genererCodeTypeActeur(){
-        
-        LocalDate localDate = LocalDate.now();
-        int randomWithMathRandom = (int) ((Math.random() * (100 - 1)) + 1);
-
-    }
+   
   
     //  Ajouter type acteur 
-      public ResponseEntity<String> createTypeActeur(TypeActeur typeActeur) {
+    public ResponseEntity<String> createTypeActeur(TypeActeur typeActeur) {
 
-    // Générer un numéro aléatoire
-    String codeTypeActeur = genererCode();
-
-    // Attribuer le numéro aléatoire au type d'acteur
-    typeActeur.setCodeTypeActeur(codeTypeActeur);
-
-    // Vérifier si le type d'acteur existe déjà
-    if (typeActeurRepository.findByCodeTypeActeur(codeTypeActeur) == null) {
-
-        // Enregistrer le type d'acteur
-        typeActeurRepository.save(typeActeur);
-
-        // Retourner un message de succès
-        return new ResponseEntity<>("Type Acteur créé avec succès", HttpStatus.CREATED);
-    } else {
-
-        // Retourner un message d'erreur
-        return new ResponseEntity<>("Type Acteur déjà existant.", HttpStatus.BAD_REQUEST);
+        // Générer un numéro aléatoire
+        String codeTypeActeur = genererCode();
+    
+        // Attribuer le numéro aléatoire au type d'acteur
+        typeActeur.setCodeTypeActeur(codeTypeActeur);
+    
+        // Vérifier si le type d'acteur existe déjà
+        TypeActeur typeActeurExistant = typeActeurRepository.findByLibelle(typeActeur.getLibelle());
+        if (typeActeurExistant != null) {
+    
+            // Retourner un message d'erreur
+            return new ResponseEntity<>("Type Acteur déjà existant.", HttpStatus.BAD_REQUEST);
+        } else {
+            typeActeurRepository.save(typeActeur);
+            return new ResponseEntity<>("Type Acteur créé avec succès", HttpStatus.CREATED);
+        }
     }
-}
 
 public String genererCode() {
     // Générer 2 lettres aléatoires
-    String lettresAleatoires = genererLettresAleatoires(2);
+    String lettresAleatoires = genererLettresAleatoires(1);
 
     // Générer 3 chiffres aléatoires
     String chiffresAleatoires = genererChiffresAleatoires(3);
 
-    // Obtenir la date actuelle
-    String dateActuelle = getDateActuelle();
+
 
     // Concaténer les parties pour former le code final
-    String codeFinal = lettresAleatoires + chiffresAleatoires + dateActuelle;
+    String codeFinal = lettresAleatoires + chiffresAleatoires ;
 
     return codeFinal;
 }
@@ -96,10 +87,7 @@ private String genererChaineAleatoire(String source, int longueur) {
     return resultat.toString();
 }
 
-private String getDateActuelle() {
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-    return dateFormat.format(new Date());
-}
+
 
         //Modifier type acteur methode
     public TypeActeur updateTypeActeur(Integer id, TypeActeur typeActeur) {
@@ -112,7 +100,7 @@ private String getDateActuelle() {
     }
 
         //Recuperer la liste des type acteur
-     public List<TypeActeur> getAllActeur(){
+     public List<TypeActeur> getAllTypeActeur(){
 
         List<TypeActeur> typeActeurList = typeActeurRepository.findAll();
 

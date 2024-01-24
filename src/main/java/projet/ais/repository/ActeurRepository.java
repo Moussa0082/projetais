@@ -3,6 +3,7 @@ package projet.ais.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import projet.ais.models.Acteur;
+import projet.ais.models.TypeActeur;
 
 public interface ActeurRepository extends JpaRepository<Acteur, Integer>{
 
@@ -11,5 +12,7 @@ public interface ActeurRepository extends JpaRepository<Acteur, Integer>{
      Acteur findByEmailActeurAndPassword(String emailActeur, String Password);
 
      Acteur findByEmailActeur(String emailActeur);
+
+     Acteur findByTypeActeur(TypeActeur typeActeur);
     
 }

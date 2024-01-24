@@ -14,6 +14,11 @@ public class TypeActeur {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idTypeActeur;
 
+
+
+    @Column(nullable = false)
+    private String libelle;
+    
     @Column(nullable = false)
     private String codeTypeActeur;
 

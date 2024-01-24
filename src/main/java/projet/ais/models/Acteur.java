@@ -62,7 +62,7 @@ public class Acteur {
     @Column(nullable = false)
     private String filiereActeur;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private boolean statutActeur = false;
 
     @OneToMany

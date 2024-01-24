@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.EntityNotFoundException;
-
+import java.util.Random;
+import java.time.LocalDate;
+import java.util.Date;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -43,10 +45,16 @@ public class ActeurService {
 
     //créer un user
       public Acteur createActeur(Acteur acteur, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
-        // TypeActeur typeActeur = typeActeurRepository.findByIdTypeActeur(acteur.getTypeActeur());
+        
         
         if (acteurRepository.findByEmailActeur(acteur.getEmailActeur()) == null) {
-    
+          
+            if(acteurRepository.findByTypeActeur(acteur.getTypeActeur()) == null){
+
+                throw new Exception("Veuillez choisir un type d'acteur pour créer un compte" );
+            
+            } 
+
             //On hashe le mot de passe
             String passWordHasher = passwordEncoder.encode(acteur.getPassword());
             acteur.setPassword(passWordHasher);
@@ -85,6 +93,10 @@ public class ActeurService {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
             }
+
+            String codeActeur = genererCode();
+            acteur.setCodeActeur(codeActeur);
+            acteur.setStatutActeur(false);
     
             return acteurRepository.save(acteur);
         } 
@@ -93,6 +105,42 @@ public class ActeurService {
         }
     }
 
+
+    
+public String genererCode() {
+    // Générer 2 lettres aléatoires
+    String lettresAleatoires = genererLettresAleatoires(2);
+
+    // Générer 3 chiffres aléatoires
+    String chiffresAleatoires = genererChiffresAleatoires(3);
+
+
+
+    // Concaténer les parties pour former le code final
+    String codeFinal = lettresAleatoires + chiffresAleatoires ;
+
+    return codeFinal;
+}
+
+private String genererLettresAleatoires(int longueur) {
+    String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    return genererChaineAleatoire(alphabet, longueur);
+}
+
+private String genererChiffresAleatoires(int longueur) {
+    String chiffres = "0123456789";
+    return genererChaineAleatoire(chiffres, longueur);
+}
+
+private String genererChaineAleatoire(String source, int longueur) {
+    Random random = new Random();
+    StringBuilder resultat = new StringBuilder();
+    for (int i = 0; i < longueur; i++) {
+        int index = random.nextInt(source.length());
+        resultat.append(source.charAt(index));
+    }
+    return resultat.toString();
+}
     
     //créer un user
       public Acteur updateActeur(Acteur acteur, Integer id, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
