@@ -4,10 +4,12 @@ package projet.ais.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.List;
 
 @Entity
+@Data
 public class CategorieProduit {
 
     @Id
@@ -24,10 +26,7 @@ public class CategorieProduit {
     private String descriptionCategorie;
 
     @Column(nullable = false)
-    private String statutCategorie;
-
-//    @Column(nullable = false)
-//    private String filiereCategorie;
+    private boolean statutCategorie = true;
 
     @OneToMany
     (mappedBy = "categorieProduit")
