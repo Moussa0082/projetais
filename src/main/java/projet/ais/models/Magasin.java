@@ -3,9 +3,11 @@ package projet.ais.models;
 
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 
 @Entity
+@Data
 public class Magasin {
 
     @Id
@@ -16,7 +18,9 @@ public class Magasin {
     private String codeMagasin;
 
     @Column(nullable = false)
-    private String codeActeur;
+    private String nomMagasin;
+    // @Column(nullable = false)
+    // private String codeActeur;
 
     @Column(nullable = false)
     private String niveau3PaysMagasin;

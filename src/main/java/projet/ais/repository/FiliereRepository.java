@@ -12,4 +12,5 @@ public interface FiliereRepository  extends JpaRepository<Filiere , Integer>{
     Filiere findByIdFiliere(Integer idFiliere);
 
     Filiere findByLibelleFiliere(String libelle);
+
 }

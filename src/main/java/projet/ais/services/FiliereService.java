@@ -4,10 +4,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import projet.ais.CodeGenerator;
 import projet.ais.models.Filiere;
 import projet.ais.repository.FiliereRepository;
 import java.util.List;
-// import projet.ais.Exception.NoContentException;
 import java.util.stream.Collectors;
 
 @Service
@@ -15,14 +15,17 @@ public class FiliereService {
     
     @Autowired
     FiliereRepository filiereRepository;
+    @Autowired
+    CodeGenerator codeGenerator;
 
   public Filiere createFiliere(Filiere filiere){
-
     Filiere filieres = filiereRepository.findByLibelleFiliere(filiere.getLibelleFiliere());
 
     if(filieres != null)
         throw new DataIntegrityViolationException("Ce filiere existe déjà");
-
+    
+    String codes = codeGenerator.genererCode();
+    filiere.setCodeFiliere(codes);
     return filiereRepository.save(filiere);
   }
 

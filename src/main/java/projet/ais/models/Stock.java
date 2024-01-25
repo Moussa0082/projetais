@@ -1,11 +1,13 @@
 package projet.ais.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
 
 @Entity
+@Data
 public class Stock {
 
     @Id
@@ -30,8 +32,8 @@ public class Stock {
     @Column(nullable = false)
     private String typeProduit;
 
-    @Column(nullable = false)
-    private String siteProduction;
+    // @Column(nullable = false)
+    // private String siteProduction;
 
     @Column(nullable = false)
     private String descriptionStock;

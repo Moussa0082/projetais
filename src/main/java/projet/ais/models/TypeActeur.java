@@ -2,16 +2,23 @@ package projet.ais.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.List;
 
 @Entity
+@Data
 public class TypeActeur {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idTypeActeur;
 
+
+
+    @Column(nullable = false)
+    private String libelle;
+    
     @Column(nullable = false)
     private String codeTypeActeur;
 

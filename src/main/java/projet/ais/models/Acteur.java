@@ -37,10 +37,10 @@ public class Acteur {
     @Column(nullable = false)
     private String longitude;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String photoSiegeActeur;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String logoActeur;
 
     @Column(nullable = false)
@@ -62,8 +62,8 @@ public class Acteur {
     @Column(nullable = false)
     private String filiereActeur;
 
-    @Column(nullable = false)
-    private String statutActeur;
+    @Column(nullable = true)
+    private boolean statutActeur = false;
 
     @OneToMany
     (mappedBy = "acteur")
@@ -78,5 +78,6 @@ public class Acteur {
    @ManyToOne
    @JoinColumn(name = "idTypeActeur")
    private TypeActeur typeActeur;
+
 }
 

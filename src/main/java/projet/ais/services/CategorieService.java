@@ -8,10 +8,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import projet.ais.CodeGenerator;
 import projet.ais.models.CategorieProduit;
 import projet.ais.models.Filiere;
 import projet.ais.repository.CategorieProduitRepository;
 import projet.ais.repository.FiliereRepository;
+import com.sun.jdi.request.DuplicateRequestException;
+
 
 @Service
 public class CategorieService {
@@ -21,17 +24,21 @@ public class CategorieService {
    
     @Autowired
     FiliereRepository filiereRepository;
+    @Autowired
+    CodeGenerator codeGenerator;
 
     public CategorieProduit createCategorie(CategorieProduit categorieProduit){
         CategorieProduit categorieProduits = categorieProduitRepository.findBylibelleCategorie(categorieProduit.getLibelleCategorie());
         Filiere filiere  = filiereRepository.findByIdFiliere(categorieProduit.getFiliere().getIdFiliere());
 
         if(categorieProduits != null)
-            throw new DataIntegrityViolationException("Cette catégorie existe déjà");
+            throw new DuplicateRequestException("Cette catégorie existe déjà");
         
         if(filiere != null)
             throw new EntityNotFoundException("Ce filiere n'existe pas");
         
+            String codes = codeGenerator.genererCode();
+            categorieProduit.setCodeCategorie(codes);
         return categorieProduitRepository.save(categorieProduit);
     }
 

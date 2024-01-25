@@ -3,6 +3,7 @@ package projet.ais.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import projet.ais.CodeGenerator;
 import projet.ais.models.CategorieProduit;
 import projet.ais.models.Speculation;
 import projet.ais.repository.CategorieProduitRepository;
@@ -19,6 +20,9 @@ public class SpeculationService {
     SpeculationRepository speculationRepository;
     @Autowired
     CategorieProduitRepository categorieProduitRepository;
+    @Autowired
+    CodeGenerator codeGenerator;
+   
 
     public Speculation createSpeculation(Speculation speculation){
 
@@ -31,6 +35,8 @@ public class SpeculationService {
         if(speculations != null)
             throw new DuplicateRequestException("Cette speculation existe déjà");
         
+            String codes = codeGenerator.genererCode();
+            speculation.setCodeSpeculation(codes);
         return speculationRepository.save(speculation);
     }
 
@@ -70,7 +76,7 @@ public class SpeculationService {
         return speculations;
     }
 
-    public String deleteSpeculation(Integer id){
+    public String DeleteSpeculations(Integer id){
         Speculation speculation = speculationRepository.findById(id).orElseThrow(null);
 
         speculationRepository.delete(speculation);
