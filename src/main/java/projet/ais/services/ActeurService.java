@@ -58,11 +58,8 @@ public class ActeurService {
                 throw new Exception("Veuillez choisir un type d'acteur pour créer un compte");
             }
     
-            // Vérifier si le type d'acteur est valide
-            Acteur ac = acteurRepository.findByTypeActeur(acteur.getTypeActeur());
-            if (ac == null) {
-                throw new Exception("Ce type d'acteur n'existe pas ");
-            } 
+            // // Vérifier si le type d'acteur est valide
+             
 
             //On hashe le mot de passe
             String passWordHasher = passwordEncoder.encode(acteur.getPassword());
@@ -106,8 +103,17 @@ public class ActeurService {
             String codeActeur = genererCode();
             acteur.setCodeActeur(codeActeur);
             acteur.setStatutActeur(false);
-    
-            return acteurRepository.save(acteur);
+
+                
+            Acteur savedActeur = acteurRepository.save(acteur);
+            String msg = " " + savedActeur.getNomActeur().toUpperCase() +  " viens de créer un compte veuiller activer son compte !" ;
+            Acteur acteurExistant = acteurRepository.findByTypeActeur(acteur.getTypeActeur());
+            if(acteurExistant.getTypeActeur().getLibelle() == "Admin"){
+              String mail = acteurExistant.getEmailActeur();
+              Alerte alerte = new Alerte(mail, msg, "Création d'un nouveau compte");
+              emailService.sendSimpleMail(alerte);
+            }
+            return savedActeur;
         } 
         else {
             throw new IllegalArgumentException("L'email " + acteur.getEmailActeur() + " existe déjà");
