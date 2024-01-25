@@ -36,6 +36,7 @@ public class ActeurController {
     private ActeurRepository acteurRepository;
 
     @PostMapping("/create")
+    @Operation(summary = "création d'un acteur")
      public ResponseEntity<Acteur> createActeur(
             @Valid @RequestParam("acteur") String adminString,
             @RequestParam(value = "image1", required = false) MultipartFile imageFile1,
@@ -58,8 +59,9 @@ public class ActeurController {
 
 
 
-             // Get Liste des  admin
+             // Get Liste des  aceturs
       @GetMapping("/read")
+      @Operation(summary = "Liste globale des acteurs")
     public ResponseEntity<List<Acteur>> getAllActeur() {
         return new ResponseEntity<>(acteurService.getAllActeur(), HttpStatus.OK);
     }
@@ -67,6 +69,7 @@ public class ActeurController {
    
     @PutMapping("/disable/{id}")
     //Desactiver un admin methode
+    @Operation(summary = "Désactiver acteur ")
     public ResponseEntity <String> disableActeur(@PathVariable Integer id){
     
         acteurService.disableActeur(id);
@@ -76,6 +79,7 @@ public class ActeurController {
     //Aciver admin
       @PutMapping("/enable/{id}")
     //Desactiver un admin methode
+    @Operation(summary = "Activer acteur ")
     public ResponseEntity <String> enableAdmin(@PathVariable Integer id){
     
         acteurService.enableActeur(id);
@@ -83,9 +87,16 @@ public class ActeurController {
     }
 
 
-           //Supprimer un admin
+    //liste acteur par type acteur
+    @GetMapping("/listeByTypeActeur/{id}")
+    @Operation(summary = "affichage de la liste des acteur par type acteur")
+    public ResponseEntity<List<Acteur>> listeActeurByTypeActeur(@PathVariable Integer id){
+        return  new ResponseEntity<>(acteurService.getAllActeurByTypeActeur(id), HttpStatus.OK);
+    }
+
+           //Supprimer un acteur
            @DeleteMapping("/delete/{id}")
-    @Operation(summary = "Suppression d'un utilisateur")
+    @Operation(summary = "Suppression d'un acteur")
     public ResponseEntity<String> deleteActeur(@PathVariable Integer id){
         return new ResponseEntity<>(acteurService.deleteByIdActeur(id), HttpStatus.OK);
     }

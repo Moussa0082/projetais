@@ -2,8 +2,10 @@ package projet.ais.models;
 
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
+@Data
 public class Niveau3Pays {
 
     @Id
