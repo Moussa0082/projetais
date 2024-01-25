@@ -48,6 +48,14 @@ public class RenvoieParametreService {
         return renvoieList;
     }
 
+    public List<RenvoieParametre> getAllRenvoieByIdParametre(Integer id){
+        List<RenvoieParametre> renvoieList= renvoieParametreRepository.findByParametreFicheDonneesIdParametre(id);
+
+        if(renvoieList.isEmpty())
+            throw new IllegalArgumentException("Aucun parametre trouvé");
+        return renvoieList;
+    }
+
     public String deleteParametre(Integer id){
         RenvoieParametre ren = renvoieParametreRepository.findById(id).orElseThrow(null);
 
