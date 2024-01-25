@@ -59,6 +59,13 @@ public class SousRegionController {
     }
 }
 
+     //liste sous region par continent
+    @GetMapping("/listeSousRegionByContinent/{id}")
+    @Operation(summary = "affichage de la liste des  sous region par continent")
+    public ResponseEntity<List<SousRegion>> listeSousRegionBycontinent(@PathVariable Integer id){
+        return  new ResponseEntity<>(sousRegionService.getAllSousRegionByContinent(id), HttpStatus.OK);
+    }
+
 
            // Get Liste des  pays
       @GetMapping("/read")

@@ -20,5 +20,7 @@ public interface ActeurRepository extends JpaRepository<Acteur, Integer>{
      
 
      List<Acteur> findByTypeActeurIdTypeActeur(Integer idTypeActeur);
+
+     Acteur findByTypeActeur(Acteur acteur);
     
 }

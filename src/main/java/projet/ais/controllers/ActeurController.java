@@ -57,7 +57,31 @@ public class ActeurController {
                 return new ResponseEntity<>(savedActeur, HttpStatus.CREATED);
             }
 
+    
+             //Mettre à jour un acteur
+      @PutMapping("/update/{id}")
+      @Operation(summary = "Mise à jour d'un acteur ")
+      public ResponseEntity<Acteur> updateActeur(
+              @PathVariable Integer id,
+              @Valid @RequestParam("acteur") String acteurString,
+              @RequestParam(value = "image1", required = false)  MultipartFile imageFile1,
+              @RequestParam(value = "image2", required = false) MultipartFile imageFile2) {
+          Acteur acteur = new Acteur();
+          try {
+               acteur = new JsonMapper().readValue(acteurString, Acteur.class);
+          } catch (JsonProcessingException e) {
+              return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+          }
 
+          try {
+            Acteur acteurMisAjour = acteurService.updateActeur(acteur, id, imageFile1, imageFile2);
+            return new ResponseEntity<>(acteurMisAjour, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+  
+         
+      }
 
              // Get Liste des  aceturs
       @GetMapping("/read")

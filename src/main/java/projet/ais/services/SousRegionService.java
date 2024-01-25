@@ -1,6 +1,5 @@
 package projet.ais.services;
 
-import java.util.Random;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -106,7 +105,18 @@ private String genererChaineAleatoire(String source, int longueur) {
         return sousRegionList;
     }
 
-    
+     //Liste sous region par continent
+    public List<SousRegion> getAllSousRegionByContinent(Integer id){
+        List<SousRegion>  sousRegionList = sousRegionRepository.findByContinentIdContinent(id);
+
+        if(sousRegionList.isEmpty()){
+            throw new EntityNotFoundException("Aucun sous region trouvé");
+        }
+        sousRegionList = sousRegionList
+                .stream().sorted((d1, d2) -> d2.getContinent().getNomContinent().compareTo(d1.getContinent().getNomContinent()))
+                .collect(Collectors.toList());
+        return sousRegionList;
+    }
 
 
     //  Supprimer sous region
