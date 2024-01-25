@@ -37,10 +37,10 @@ public class MagasinService {
     public Magasin createMagasin(Magasin magasin, MultipartFile imageFile) throws Exception{
         Acteur acteur = acteurRepository.findByIdActeur(magasin.getActeur().getIdActeur());
 
-        Stock stock = stockRepository.findByIdStock(magasin.getStock().getIdStock());
+        // Stock stock = stockRepository.findByIdStock(magasin.getStock().getIdStock());
 
-        if(stock == null)
-            throw new IllegalStateException("Aucune stock disponible");
+        // if(stock == null)
+        //     throw new IllegalStateException("Aucune stock disponible");
 
         if(acteur == null)
             throw new IllegalStateException("Aucun acteur disponible");
@@ -68,20 +68,18 @@ public class MagasinService {
 
     public Magasin updateMagasin(Magasin magasin, MultipartFile imageFile, Integer id) throws Exception{
     
-        Stock stock = stockRepository.findByIdStock(magasin.getStock().getIdStock());
+        // Stock stock = stockRepository.findByIdStock(magasin.getStock().getIdStock());
         Magasin mag= magasinRepository.findById(id).orElseThrow(null);
 
-        if(stock == null)
-            throw new IllegalStateException("Aucune stock disponible");
+        // if(stock == null)
+        //     throw new IllegalStateException("Aucune stock disponible");
         
         mag.setContactMagasin(magasin.getContactMagasin());
         mag.setLatitude(magasin.getLatitude());
         mag.setLongitude(magasin.getLongitude());
         mag.setLocaliteMagasin(magasin.getLocaliteMagasin());
         mag.setNomMagasin(magasin.getNomMagasin()); 
-        if (magasin.getStock() != null) {
-            mag.setStock(magasin.getStock());
-        }
+        
 
         if (imageFile != null) {
                 String imageLocation = "C:\\xampp\\htdocs\\ais";

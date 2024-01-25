@@ -45,7 +45,7 @@ public class UniteController {
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression des unites")
-    public String deleteUnites(Integer id){
+    public String deleteUnites(@PathVariable Integer id){
         return uniteService.deleteUnite(id);
     }
 }

@@ -4,14 +4,17 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import projet.ais.models.Acteur;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.persistence.EntityNotFoundException;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.TypeActeurRepository;
 import projet.ais.services.TypeActeurService;
@@ -28,25 +31,45 @@ public class TypeActeurController {
 
 
      @PostMapping("/create")
-     public ResponseEntity<String> createTypeActeur(@RequestBody TypeActeur typeActeur){
-          
-         typeActeurService.createTypeActeur(typeActeur);
-       return new ResponseEntity<>("Type acteur créer avec succès", HttpStatus.OK);
-        
+     @Operation(summary = "Ajouté un type d'acteur")
+     public ResponseEntity<String> createTypeActeur(@RequestBody TypeActeur typeActeur) {
+
+        // Vérifier si le type d'acteur existe déjà
+        TypeActeur typeActeurExistant = typeActeurRepository.findByLibelle(typeActeur.getLibelle());
+        if (typeActeurExistant == null) {
+            typeActeurService.createTypeActeur(typeActeur);
+            return new ResponseEntity<>("Type d'acteur créer avec succès" , HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Type d'acetur " + typeActeurExistant.getLibelle() + " existe déjà", HttpStatus.BAD_REQUEST);
+        }
     }
     
-    @PutMapping("/update")
-    public ResponseEntity<String> updateTypeActeur(@RequestBody TypeActeur typeActeur, Integer id){
-         
-        typeActeurService.updateTypeActeur(id, typeActeur);
-      return new ResponseEntity<>("Type acteur modifier avec succès", HttpStatus.OK);
-       
-   }
+    @PutMapping("/update/{id}")
+    @Operation(summary = "Modifier type acteur")
+    public ResponseEntity<String> updateTypeActeur(@RequestBody TypeActeur typeActeur, @PathVariable Integer id) {
+        TypeActeur typeActeurExistant = typeActeurRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("type d'acteur introuvable avec id :" +id));;
+
+        if (typeActeurExistant != null) {
+        typeActeurService.updateTypeActeur(typeActeur, id);
+        return new ResponseEntity<>("Type d'acteur mis à jour avec succès", HttpStatus.OK);
+    } else {
+        return new ResponseEntity<>("Type d'acteur non existant avec l'id " + id, HttpStatus.BAD_REQUEST);
+    }
+}
+
 
            // Get Liste des  type acteur
       @GetMapping("/read")
-    public ResponseEntity<List<TypeActeur>> getAllTypeActeur() {
+      @Operation(summary = "Affichage de la liste des types d'acteur")
+    public ResponseEntity<List<TypeActeur>> getAllTypeActeur() throws Exception {
         return new ResponseEntity<>(typeActeurService.getAllTypeActeur(), HttpStatus.OK);
+    }
+
+       //Supprimer type acteur
+           @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Suppression d'un type d'acteur")
+    public ResponseEntity<String> deleteTypeActeur(@PathVariable Integer id){
+        return new ResponseEntity<>(typeActeurService.deleteByIdTypeActeur(id), HttpStatus.OK);
     }
 
 

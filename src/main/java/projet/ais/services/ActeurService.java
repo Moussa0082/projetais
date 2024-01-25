@@ -5,8 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Random;
 import java.time.LocalDate;
@@ -37,6 +40,7 @@ public class ActeurService {
     @Autowired
     BCryptPasswordEncoder passwordEncoder;
 
+
     @Autowired
     EmailService emailService;
 
@@ -46,13 +50,18 @@ public class ActeurService {
     //créer un user
       public Acteur createActeur(Acteur acteur, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
         
-        
+     
+         
         if (acteurRepository.findByEmailActeur(acteur.getEmailActeur()) == null) {
           
-            if(acteurRepository.findByTypeActeur(acteur.getTypeActeur()) == null){
-
-                throw new Exception("Veuillez choisir un type d'acteur pour créer un compte" );
-            
+            if (acteur.getTypeActeur() == null) {
+                throw new Exception("Veuillez choisir un type d'acteur pour créer un compte");
+            }
+    
+            // Vérifier si le type d'acteur est valide
+            Acteur ac = acteurRepository.findByTypeActeur(acteur.getTypeActeur());
+            if (ac == null) {
+                throw new Exception("Ce type d'acteur n'existe pas ");
             } 
 
             //On hashe le mot de passe
@@ -161,6 +170,7 @@ private String genererChaineAleatoire(String source, int longueur) {
          ac.setEmailActeur(acteur.getEmailActeur());
          ac.setMaillonActeur(acteur.getMaillonActeur());
          ac.setFiliereActeur(acteur.getFiliereActeur());
+         ac.setTypeActeur(acteur.getTypeActeur());
 
 
     // Mettez à jour le mot de passe si un nouveau mot de passe est fourni
@@ -252,10 +262,24 @@ private String genererChaineAleatoire(String source, int longueur) {
             return new ResponseEntity<>("Acteur non trouvé avec l'ID " + id, HttpStatus.BAD_REQUEST);
         }
     }
+
+
+     //Liste type acteur par acteur
+    public List<Acteur> getAllActeurByTypeActeur(Integer id){
+        List<Acteur>  acteurList = acteurRepository.findByTypeActeurIdTypeActeur(id);
+
+        if(acteurList.isEmpty()){
+            throw new EntityNotFoundException("Aucun acteur trouvé");
+        }
+        acteurList = acteurList
+                .stream().sorted((d1, d2) -> d2.getTypeActeur().getDescriptionTypeActeur().compareTo(d1.getTypeActeur().getDescriptionTypeActeur()))
+                .collect(Collectors.toList());
+        return acteurList;
+    } 
+
+
   
       //Supprimer acteur
-
-
     public String deleteByIdActeur(Integer id){
         Acteur acteur = acteurRepository.findByIdActeur(id);
         if(acteur == null){

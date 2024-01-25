@@ -6,4 +6,7 @@ import projet.ais.models.Pays;
 
 public interface PaysRepository  extends JpaRepository<Pays,Integer>{
     
+    Pays findByNomPays(String nompPays);
+    Pays findByIdPays(Integer idPays);
+
 }

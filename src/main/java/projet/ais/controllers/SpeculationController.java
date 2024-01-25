@@ -54,7 +54,7 @@ public class SpeculationController {
     
     @DeleteMapping("/deleteSpeculation/{id}")
     @Operation(summary="Suppression d'une spéculations en fonction de l'id")
-    public String supprimerSpeculation(Integer id) {
+    public String supprimerSpeculation(@PathVariable Integer id) {
         return speculationService.DeleteSpeculations(id);
     }
 }

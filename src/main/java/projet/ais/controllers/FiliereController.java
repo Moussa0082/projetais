@@ -48,7 +48,7 @@ public class FiliereController {
     
     @DeleteMapping("/delete/{id}")
     @Operation(summary="Supprimé un filiere en fonction de l'id de filiere")
-    public String deleteFilieres(Integer id) {
+    public String deleteFilieres(@PathVariable Integer id) {
         return filiereService.DeleteFiliere(id);
     }
 }

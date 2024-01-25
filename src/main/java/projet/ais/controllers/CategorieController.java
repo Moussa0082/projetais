@@ -54,7 +54,7 @@ public class CategorieController {
     
     @DeleteMapping("/delete/{id}")
     @Operation(summary="Supprimé de catégories de produit en fonction de l'id ")
-    public String deleteFilieres(Integer id) {
+    public String deleteFilieres(@PathVariable Integer id) {
         return categorieService.deleteCategorie(id);
     }
 }

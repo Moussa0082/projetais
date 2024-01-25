@@ -88,7 +88,7 @@ public class StockController {
 
         @DeleteMapping("/deleteStocks")
         @Operation(summary = "Suppression des stocks")
-        public String supprimer(Integer id){
+        public String supprimer(@PathVariable Integer id){
             return stockservice.deleteStock(id);
         }
 }

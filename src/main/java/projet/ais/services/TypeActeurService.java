@@ -17,9 +17,13 @@ import java.time.format.DateTimeFormatter;
 import jakarta.persistence.EntityNotFoundException;
 
 import java.util.stream.Collectors;
+import java.util.NoSuchElementException;
 
+
+import projet.ais.Exception.NoContentException;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
+import projet.ais.models.Filiere;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.TypeActeurRepository;
 
@@ -89,26 +93,33 @@ private String genererChaineAleatoire(String source, int longueur) {
 
 
 
-        //Modifier type acteur methode
-    public TypeActeur updateTypeActeur(Integer id, TypeActeur typeActeur) {
-        return typeActeurRepository.findById(id)
-                .map(ta -> {
-                    ta.setDescriptionTypeActeur(null);
-                  return typeActeurRepository.save(ta);
-                }).orElseThrow(() -> new RuntimeException(("Type Acteur non existant avec l'ID " + id)));
-    
-    }
+    //Modifier type acteur methode
+   
+
+     public TypeActeur updateTypeActeur(TypeActeur typeActeur, Integer id){
+
+     TypeActeur typeActeurExistant= typeActeurRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("type d'acteur introuvable avec id :" +id));
+    typeActeurExistant.setLibelle(typeActeur.getLibelle());
+    typeActeurExistant.setDescriptionTypeActeur(typeActeur.getDescriptionTypeActeur());
+
+    return typeActeurRepository.save(typeActeurExistant);
+  }
 
         //Recuperer la liste des type acteur
-     public List<TypeActeur> getAllTypeActeur(){
+     public List<TypeActeur> getAllTypeActeur() throws Exception{
 
         List<TypeActeur> typeActeurList = typeActeurRepository.findAll();
+        if(typeActeurList.isEmpty()){
+            throw new EntityNotFoundException("Liste type d'acteur vide");
+        }
 
         typeActeurList = typeActeurList
                 .stream().sorted((d1, d2) -> d2.getDescriptionTypeActeur().compareTo(d1.getDescriptionTypeActeur()))
                 .collect(Collectors.toList());
         return typeActeurList;
     }
+
+    
 
 
     //  Supprimer type acteur
