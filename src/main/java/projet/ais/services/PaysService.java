@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import projet.ais.models.Niveau2Pays;
 import projet.ais.models.Pays;
 import projet.ais.repository.PaysRepository;
 
@@ -73,6 +74,18 @@ private String genererChaineAleatoire(String source, int longueur) {
 }
 
 
+    //Liste Pays  par sous region
+    public List<Pays> getAllPaysBySousRegion(Integer id){
+        List<Pays>  paysList = paysRepository.findBySousRegionIdSousRegion(id);
+
+        if(paysList.isEmpty()){
+            throw new EntityNotFoundException("Aucun pays trouvé");
+        }
+        paysList = paysList
+                .stream().sorted((d1, d2) -> d2.getSousRegion().getNomSousRegion().compareTo(d1.getSousRegion().getNomSousRegion()))
+                .collect(Collectors.toList());
+        return paysList;
+    }
 
     //Modifier pays methode
    

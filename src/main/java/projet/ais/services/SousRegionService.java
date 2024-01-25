@@ -7,12 +7,14 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.models.Pays;
 import projet.ais.models.SousRegion;
 import projet.ais.repository.SousRegionRepository;
 
+@Service
 public class SousRegionService {
     
 
@@ -108,7 +110,7 @@ private String genererChaineAleatoire(String source, int longueur) {
 
 
     //  Supprimer sous region
-      public String deleteByIdPays(Integer id){
+      public String deleteByIdSousRegion(Integer id){
         SousRegion sousRegion = sousRegionRepository.findByIdSousRegion(id);
         if(sousRegion == null){
             throw new EntityNotFoundException("Désolé la sous region à supprimer n'existe pas");

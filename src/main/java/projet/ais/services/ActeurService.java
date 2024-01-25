@@ -58,11 +58,11 @@ public class ActeurService {
                 throw new Exception("Veuillez choisir un type d'acteur pour créer un compte");
             }
     
-            // Vérifier si le type d'acteur est valide
-            Acteur ac = acteurRepository.findByTypeActeur(acteur.getTypeActeur());
-            if (ac == null) {
-                throw new Exception("Ce type d'acteur n'existe pas ");
-            } 
+            // // Vérifier si le type d'acteur est valide
+            // Acteur ac = acteurRepository.findByTypeActeur(acteur.getTypeActeur());
+            // if (ac == null) {
+            //     throw new Exception("Ce type d'acteur n'existe pas ");
+            // } 
 
             //On hashe le mot de passe
             String passWordHasher = passwordEncoder.encode(acteur.getPassword());

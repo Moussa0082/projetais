@@ -15,6 +15,7 @@ import java.util.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
+import projet.ais.models.Acteur;
 import projet.ais.models.Pays;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.PaysRepository;
@@ -42,6 +43,13 @@ public class PaysController {
         } else {
             return new ResponseEntity<>("Le pays " + paysExistant.getNomPays() + " existe déjà", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    //liste pays par sous region
+    @GetMapping("/listePaysBySousRegion/{id}")
+    @Operation(summary = "affichage de la liste des pays par sous region")
+    public ResponseEntity<List<Pays>> listePaysBysousregion(@PathVariable Integer id){
+        return  new ResponseEntity<>(paysService.getAllPaysBySousRegion(id), HttpStatus.OK);
     }
     
     @PutMapping("/update/{id}")

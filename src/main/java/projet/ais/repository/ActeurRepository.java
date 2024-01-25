@@ -9,13 +9,15 @@ import projet.ais.models.TypeActeur;
 
 public interface ActeurRepository extends JpaRepository<Acteur, Integer>{
 
-     Acteur findByIdActeur(long idActeur);
+     Acteur findByIdActeur(Integer idActeur);
 
      Acteur findByEmailActeurAndPassword(String emailActeur, String Password);
 
      Acteur findByEmailActeur(String emailActeur);
 
      Acteur findByTypeActeur(TypeActeur typeActeur);
+
+     
 
      List<Acteur> findByTypeActeurIdTypeActeur(Integer idTypeActeur);
     
