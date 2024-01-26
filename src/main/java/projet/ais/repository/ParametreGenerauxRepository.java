@@ -6,8 +6,8 @@ import projet.ais.models.ParametreGeneraux;
 
 public interface ParametreGenerauxRepository  extends JpaRepository<ParametreGeneraux, Integer>{
     
-    ParametreGeneraux findByNomParametreGeneraux(String nomParametreGeneraux);
+    ParametreGeneraux findByNomStructure(String nomStructure);
     
-
+    ParametreGeneraux findByIdParametreGeneraux(Integer idParametreGeneraux);
 
 }

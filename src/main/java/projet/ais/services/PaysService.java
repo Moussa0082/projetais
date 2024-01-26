@@ -91,7 +91,7 @@ private String genererChaineAleatoire(String source, int longueur) {
 
      public Pays updatePays(Pays pays, Integer id){
 
-     Pays paysExistant = paysRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("type d'acteur introuvable avec id :" +id));
+    Pays paysExistant = paysRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("type d'acteur introuvable avec id :" +id));
     paysExistant.setNomPays(pays.getNomPays());
     paysExistant.setDescriptionPays(pays.getDescriptionPays());
     paysExistant.setStatutPays(pays.getStatutPays());

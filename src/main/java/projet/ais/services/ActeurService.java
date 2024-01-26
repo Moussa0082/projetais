@@ -162,11 +162,41 @@ private String genererChaineAleatoire(String source, int longueur) {
         // TypeActeur typeActeur = typeActeurRepository.findByIdTypeActeur(acteur.getTypeActeur());
         Acteur ac = acteurRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Acteur non trouver avec l'id " + id));
         
-         if (ac == null){
-             
-             new  NoContentException("Acteur non existant");
-         }
-         
+                     // Traitement du fichier image siege acteur
+                     if (imageFile1 != null) {
+                        String imageLocation = "C:\\xampp\\htdocs\\ais";
+                        try {
+                            Path imageRootLocation = Paths.get(imageLocation);
+                            if (!Files.exists(imageRootLocation)) {
+                                Files.createDirectories(imageRootLocation);
+                            }
+            
+                            String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
+                            Path imagePath = imageRootLocation.resolve(imageName);
+                            Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                            ac.setPhotoSiegeActeur("ais/" + imageName);
+                        } catch (IOException e) {
+                            throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
+                        }
+                    }
+                    // image logo acteur 
+                    if (imageFile2 != null) {
+                        String imageLocation = "C:\\xampp\\htdocs\\ais";
+                        try {
+                            Path imageRootLocation = Paths.get(imageLocation);
+                            if (!Files.exists(imageRootLocation)) {
+                                Files.createDirectories(imageRootLocation);
+                            }
+            
+                            String imageName = UUID.randomUUID().toString() + "_" + imageFile2.getOriginalFilename();
+                            Path imagePath = imageRootLocation.resolve(imageName);
+                            Files.copy(imageFile2.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                            ac.setLogoActeur("ais/" + imageName);
+                        } catch (IOException e) {
+                            throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
+                        }
+                    }
+            
 
          ac.setAdresseActeur(acteur.getAdresseActeur());
          ac.setNomActeur(acteur.getNomActeur());
@@ -188,42 +218,8 @@ private String genererChaineAleatoire(String source, int longueur) {
     
             
 
-            // Traitement du fichier image siege acteur
-            if (imageFile1 != null) {
-                String imageLocation = "C:\\xampp\\htdocs\\ais";
-                try {
-                    Path imageRootLocation = Paths.get(imageLocation);
-                    if (!Files.exists(imageRootLocation)) {
-                        Files.createDirectories(imageRootLocation);
-                    }
-    
-                    String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
-                    Path imagePath = imageRootLocation.resolve(imageName);
-                    Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    ac.setPhotoSiegeActeur("ais/" + imageName);
-                } catch (IOException e) {
-                    throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
-                }
-            }
-            // image logo acteur 
-            if (imageFile2 != null) {
-                String imageLocation = "C:\\xampp\\htdocs\\ais";
-                try {
-                    Path imageRootLocation = Paths.get(imageLocation);
-                    if (!Files.exists(imageRootLocation)) {
-                        Files.createDirectories(imageRootLocation);
-                    }
-    
-                    String imageName = UUID.randomUUID().toString() + "_" + imageFile2.getOriginalFilename();
-                    Path imagePath = imageRootLocation.resolve(imageName);
-                    Files.copy(imageFile2.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    ac.setLogoActeur("ais/" + imageName);
-                } catch (IOException e) {
-                    throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
-                }
-            }
-    
-            return acteurRepository.save(acteur);
+
+            return acteurRepository.save(ac);
         
         
     }

@@ -3,13 +3,15 @@ package projet.ais.models;
 
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
+@Data
 public class ParametreGeneraux {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idParametre;
+    private int idParametreGeneraux;
 
     @Column(nullable = false)
     private String sigleStructure;
@@ -29,7 +31,7 @@ public class ParametreGeneraux {
     @Column(nullable = false)
     private String sloganSysteme;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String logoSysteme;
 
     @Column(nullable = false)
