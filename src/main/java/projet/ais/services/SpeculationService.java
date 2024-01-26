@@ -10,6 +10,10 @@ import projet.ais.repository.CategorieProduitRepository;
 import projet.ais.repository.SpeculationRepository;
 import com.sun.jdi.request.DuplicateRequestException;
 import jakarta.persistence.EntityNotFoundException;
+
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,7 +33,7 @@ public class SpeculationService {
         CategorieProduit categorieProduit = categorieProduitRepository.findByIdCategorieProduit(speculation.getCategorieProduit().getIdCategorieProduit());
         Speculation speculations = speculationRepository.findBynomSpeculation(speculation.getNomSpeculation());
 
-        if(categorieProduit != null)
+        if(categorieProduit == null)
             throw new EntityNotFoundException("Cette categorie n'existe pas");
 
         if(speculations != null)
@@ -37,6 +41,11 @@ public class SpeculationService {
         
             String codes = codeGenerator.genererCode();
             speculation.setCodeSpeculation(codes);
+            Date dates = new Date();
+        Instant instant = dates.toInstant();
+        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+        speculation.setDateModif(dates);
+        speculation.setDateAjout(dates);
         return speculationRepository.save(speculation);
     }
 
@@ -46,7 +55,11 @@ public class SpeculationService {
        Speculation speculations = speculationRepository.findById(id).orElseThrow(null);
        speculations.setDescriptionSpeculation(speculation.getDescriptionSpeculation());
        speculations.setNomSpeculation(speculation.getNomSpeculation());
-
+        speculations.setDateAjout(speculations.getDateAjout());
+       Date dates = new Date();
+       Instant instant = dates.toInstant();
+       ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+       speculations.setDateModif(dates);
         return speculationRepository.save(speculations);
     }
 

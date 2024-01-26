@@ -10,6 +10,7 @@ import projet.ais.models.RenvoieParametre;
 @Repository
 public interface RenvoieParametreRepository extends JpaRepository<RenvoieParametre, Integer>{
     
+    
     RenvoieParametre findByIdRenvoiParametre(Integer id);
     List<RenvoieParametre> findByParametreFicheDonneesIdParametre(Integer id);
 }

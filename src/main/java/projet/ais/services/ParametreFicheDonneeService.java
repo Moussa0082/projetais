@@ -1,5 +1,9 @@
 package projet.ais.services;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,24 +23,33 @@ public class ParametreFicheDonneeService {
     @Autowired
     CodeGenerator codeGenerator;
     
-    public ParametreFicheDonnees createParametre(ParametreFicheDonnees parametreFicheDonnees){
+    public ParametreFicheDonnees createParametreFiche(ParametreFicheDonnees parametreFicheDonnees){
         String codes = codeGenerator.genererCode();
         parametreFicheDonnees.setCodeParametre(codes);
+        Date dates = new Date();
+            Instant instant = dates.toInstant();
+            ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+            parametreFicheDonnees.setDateAjout(dates);
+            parametreFicheDonnees.setDateModif(dates);
         return parametreFicheDonneesRepository.save(parametreFicheDonnees);
     }
 
-    public ParametreFicheDonnees updateParametre(ParametreFicheDonnees parametreFicheDonnees, Integer id){
+    public ParametreFicheDonnees updateParametreFiche(ParametreFicheDonnees parametreFicheDonnees, Integer id){
         
         ParametreFicheDonnees param = parametreFicheDonneesRepository.findById(id).orElseThrow(null);
         param.setClasseParametre(parametreFicheDonnees.getClasseParametre());
         param.setChampParametre(parametreFicheDonnees.getChampParametre());
-        param.setLibelleParametre(parametreFicheDonnees.getLibelleParametre());
-        param.setListeDonneesParametre(parametreFicheDonnees.getListeDonneesParametre());
-        param.setValeurMaxParametre(parametreFicheDonnees.getValeurMaxParametre());
-        param.setValeurMinParametre(parametreFicheDonnees.getValeurMinParametre());
-        param.setValeurObligatoireParametre(parametreFicheDonnees.getValeurObligatoireParametre());
-        param.setCritereChampParametre(parametreFicheDonnees.getCritereChampParametre());
-        
+        param.setLibelle(parametreFicheDonnees.getLibelle());
+        param.setListeDonnee(parametreFicheDonnees.getListeDonnee());
+        param.setValeurMax(parametreFicheDonnees.getValeurMax());
+        param.setValeurMin(parametreFicheDonnees.getValeurMin());
+        param.setValeurObligatoire(parametreFicheDonnees.getValeurObligatoire());
+        param.setCritereChamp(parametreFicheDonnees.getCritereChamp());
+        param.setDateAjout(param.getDateAjout());
+        Date dates = new Date();
+        Instant instant = dates.toInstant();
+        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+        param.setDateModif(dates);
         return parametreFicheDonneesRepository.save(parametreFicheDonnees);
     }
 
@@ -48,7 +61,7 @@ public class ParametreFicheDonneeService {
         return paramList;
     }
 
-    public String deleteParametre(Integer id){
+    public String deleteParametreFiche(Integer id){
         ParametreFicheDonnees parametreFicheDonnees = parametreFicheDonneesRepository.findById(id).orElseThrow(null);
 
         parametreFicheDonneesRepository.delete(parametreFicheDonnees);

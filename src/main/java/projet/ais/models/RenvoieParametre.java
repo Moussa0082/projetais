@@ -1,5 +1,7 @@
 package projet.ais.models;
 
+import java.util.Date;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -13,6 +15,12 @@ public class RenvoieParametre {
 
     @Column(nullable = false)
     private String conditionRenvoi;
+
+    @Column(nullable=false)
+    private Date dateAjout;
+
+    @Column(nullable=false)
+    private Date dateModif;
 
     @Column(nullable = false)
     private String valeurConditionRenvoi;

@@ -1,5 +1,9 @@
 package projet.ais.services;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,16 +24,27 @@ public class RegroupementSevice {
     @Autowired
     ParametreFicheDonneesRepository parametreFicheDonneesRepository ;
 
-    public RegroupementParametre createParametre(RegroupementParametre regroupementParametre){
+    public RegroupementParametre createParametreRegroupement(RegroupementParametre regroupementParametre){
         ParametreFicheDonnees parametreFicheDonnees = parametreFicheDonneesRepository.findByIdParametre(regroupementParametre.getParametreFicheDonnees().getIdParametre());
         if(parametreFicheDonnees == null)
             throw new IllegalArgumentException("Aune parametre trouvé pour le regroupement");
+        
+    Date dates = new Date();
+        Instant instant = dates.toInstant();
+        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+        regroupementParametre.setDateModif(dates);
+        regroupementParametre.setDateAjout(dates);
         return regroupementParametreRepository.save(regroupementParametre);
     }
 
-    public RegroupementParametre updateParametre(RegroupementParametre regroupementParametre, Integer id){
+    public RegroupementParametre updateParametreRegroupement(RegroupementParametre regroupementParametre, Integer id){
         RegroupementParametre regroupementParametres = regroupementParametreRepository.findById(id).orElseThrow(null);
         regroupementParametres.setParametreRegroupe(regroupementParametre.getParametreRegroupe());
+        regroupementParametres.setDateAjout(regroupementParametres.getDateAjout());
+        Date dates = new Date();
+        Instant instant = dates.toInstant();
+        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+        regroupementParametres.setDateModif(dates);
         return regroupementParametreRepository.save(regroupementParametres);
     }
 

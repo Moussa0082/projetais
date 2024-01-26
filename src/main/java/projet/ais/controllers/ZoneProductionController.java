@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
-@RequestMapping("/Speculation")
+@RequestMapping("/ZoneProduction")
 @CrossOrigin
 public class ZoneProductionController {
     
@@ -55,7 +55,7 @@ public class ZoneProductionController {
     @Operation(summary = "Modification de zone de production")
     public ResponseEntity<ZoneProduction> updatezone(
          @Valid @RequestParam("zone") String zoneProduction,
-         @Valid @RequestParam(value = "image") MultipartFile imageFile, @PathVariable Integer id) throws Exception{
+         @Valid @RequestParam(value = "image" ,required = false) MultipartFile imageFile, @PathVariable Integer id) throws Exception{
 
             ZoneProduction zoneProductions = new  ZoneProduction();
             try {

@@ -1,6 +1,8 @@
 package projet.ais.models;
 
 
+import java.util.Date;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -23,31 +25,37 @@ public class ParametreFicheDonnees {
 
 
     @Column(nullable = false)
-    private String libelleParametre;
+    private String libelle;
 
     @Column(nullable = false)
-    private String typeDonneeParametre;
+    private String typeDonnee;
 
     //    Liste à determiner
     @Column(nullable = false)
-    private String ListeDonneesParametre;
-
-    @Column
-    private int valeurMaxParametre;
-
-    @Column
-    private int valeurMinParametre;
+    private String listeDonnee;
 
     @Column(nullable = false)
-    private int valeurObligatoireParametre;
+    private int valeurMax;
 
-    @Column
-    private String  critereChampParametre;
+    @Column(nullable = false)
+    private int valeurMin;
 
-    @OneToOne
-    private RegroupementParametre regroupementParametre;
+    @Column(nullable = false)
+    private int valeurObligatoire;
+    
+    @Column(nullable=false)
+    private Date dateAjout;
 
-    @OneToOne
-    private RenvoieParametre renvoieParametre;
+    @Column(nullable=false)
+    private Date dateModif;
+
+    @Column(nullable = false)
+    private String  critereChamp;
+
+    // @OneToOne
+    // private RegroupementParametre regroupementParametre;
+
+    // @OneToOne
+    // private RenvoieParametre renvoieParametre;
 }
 

@@ -5,6 +5,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collector;
@@ -37,11 +41,6 @@ public class MagasinService {
     public Magasin createMagasin(Magasin magasin, MultipartFile imageFile) throws Exception{
         Acteur acteur = acteurRepository.findByIdActeur(magasin.getActeur().getIdActeur());
 
-        // Stock stock = stockRepository.findByIdStock(magasin.getStock().getIdStock());
-
-        // if(stock == null)
-        //     throw new IllegalStateException("Aucune stock disponible");
-
         if(acteur == null)
             throw new IllegalStateException("Aucun acteur disponible");
         
@@ -63,6 +62,12 @@ public class MagasinService {
             }
             String codes = codeGenerator.genererCode();
             magasin.setCodeMagasin(codes);
+
+            Date dates = new Date();
+            Instant instant = dates.toInstant();
+            ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+            magasin.setDateAjout(dates);
+            magasin.setDateModif(dates);
         return magasinRepository.save(magasin);
     }
 
@@ -71,15 +76,13 @@ public class MagasinService {
         // Stock stock = stockRepository.findByIdStock(magasin.getStock().getIdStock());
         Magasin mag= magasinRepository.findById(id).orElseThrow(null);
 
-        // if(stock == null)
-        //     throw new IllegalStateException("Aucune stock disponible");
-        
+       
         mag.setContactMagasin(magasin.getContactMagasin());
         mag.setLatitude(magasin.getLatitude());
         mag.setLongitude(magasin.getLongitude());
         mag.setLocaliteMagasin(magasin.getLocaliteMagasin());
         mag.setNomMagasin(magasin.getNomMagasin()); 
-        
+        mag.setDateAjout(mag.getDateAjout());
 
         if (imageFile != null) {
                 String imageLocation = "C:\\xampp\\htdocs\\ais";
@@ -97,8 +100,11 @@ public class MagasinService {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
             }
-            
-        return magasinRepository.save(magasin);
+            Date dates = new Date();
+            Instant instant = dates.toInstant();
+            ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+            mag.setDateModif(dates);
+        return magasinRepository.save(mag);
     }
 
     public List<Magasin> getMagasin() {

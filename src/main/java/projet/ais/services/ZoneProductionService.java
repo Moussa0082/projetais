@@ -5,6 +5,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,7 +54,13 @@ public class ZoneProductionService {
                 }
             }
             String codes = codeGenerator.genererCode();
-            zoneProduction.setCodeZone(codes);
+            
+        Date dates = new Date();
+        Instant instant = dates.toInstant();
+        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+        zoneProduction.setCodeZone(codes);
+        zoneProduction.setDateAjout(dates);
+        zoneProduction.setDateModif(dates);
         return zoneProductionRepository.save(zoneProduction);
     }
 
@@ -61,7 +70,7 @@ public class ZoneProductionService {
         zoneProductions.setNomZoneProduction(zoneProduction.getNomZoneProduction());
         zoneProduction.setLatitude(zoneProduction.getLatitude());
         zoneProductions.setLongitude(zoneProduction.getLongitude());
-        
+        zoneProductions.setDateAjout(zoneProductions.getDateAjout());
         if (imageFile != null) {
             String imageLocation = "C:\\xampp\\htdocs\\ais";
             try {
@@ -78,6 +87,10 @@ public class ZoneProductionService {
                 throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
             }
         }
+        Date dates = new Date();
+        Instant instant = dates.toInstant();
+        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+        zoneProductions.setDateModif(dates);
         return zoneProductionRepository.save(zoneProductions);
     }
 

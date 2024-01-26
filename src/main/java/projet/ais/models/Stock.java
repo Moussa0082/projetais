@@ -27,7 +27,7 @@ public class Stock {
     private Date dateProduction;
 
     @Column(nullable = false)
-    private String quantiteStock;
+    private double quantiteStock;
 
     @Column(nullable = false)
     private String typeProduit;
@@ -38,13 +38,19 @@ public class Stock {
     @Column(nullable = false)
     private String descriptionStock;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String photo;
 
     @ManyToOne
     @JoinColumn(name = "idZoneProduction")
     private ZoneProduction zoneProduction;
 
+    @Column(nullable=false)
+    private Date dateAjout;
+
+    @Column(nullable=false)
+    private Date dateModif;
+    
     @ManyToOne
     @JoinColumn(name = "idSpeculation")
     private Speculation speculation;

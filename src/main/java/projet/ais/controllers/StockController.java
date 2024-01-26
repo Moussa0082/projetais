@@ -35,7 +35,7 @@ public class StockController {
     @Operation(summary = "Création de stock")
     public ResponseEntity<Stock> saveStocks(
         @Valid @RequestParam("stock")  String addstocks,
-        @Valid @RequestParam(value = "image") MultipartFile imageFile
+        @Valid @RequestParam(value = "image", required = false) MultipartFile imageFile
         ) throws Exception{
             Stock stock = new Stock();
 

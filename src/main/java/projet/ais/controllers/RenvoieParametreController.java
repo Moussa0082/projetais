@@ -31,13 +31,13 @@ public class RenvoieParametreController {
     @PostMapping("/addParametreRenvoie")
     @Operation(summary = "Création du parametre renvoie")
     public ResponseEntity<RenvoieParametre> saveParam(@RequestBody RenvoieParametre renvoieParametre){
-        return new ResponseEntity<>(renvoieParametreService.createParametre(renvoieParametre), HttpStatus.CREATED);
+        return new ResponseEntity<>(renvoieParametreService.createParametreRenvoie(renvoieParametre), HttpStatus.CREATED);
     }
 
     @PutMapping("/updateParametreRenvoie/{id}")
     @Operation(summary = "Modification du parametre renvoie")
     public ResponseEntity<RenvoieParametre> updateParam(@RequestBody RenvoieParametre renvoieParametre, @PathVariable Integer id){
-        return new ResponseEntity<>(renvoieParametreService.updateParametre(renvoieParametre,id), HttpStatus.CREATED);
+        return new ResponseEntity<>(renvoieParametreService.updateParametreRenvoie(renvoieParametre,id), HttpStatus.CREATED);
     }
 
     @GetMapping("/getAllParametre")
@@ -54,7 +54,7 @@ public class RenvoieParametreController {
 
     @DeleteMapping("delete/{id}")
     public String deleteParam(@PathVariable Integer id){
-        return renvoieParametreService.deleteParametre(id);
+        return renvoieParametreService.deleteParametreRenvoie(id);
     }
 }
 

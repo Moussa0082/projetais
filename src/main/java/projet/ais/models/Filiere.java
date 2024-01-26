@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -27,6 +28,12 @@ public class Filiere {
 
     @Column(nullable = false)
     private boolean statutFiliere = true;
+
+    @Column(nullable=false)
+    private Date dateAjout;
+
+    @Column(nullable=false)
+    private Date dateModif;
 
     @OneToMany
     (mappedBy = "filiere")

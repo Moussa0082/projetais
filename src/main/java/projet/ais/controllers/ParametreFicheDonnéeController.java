@@ -19,7 +19,7 @@ import projet.ais.models.ParametreFicheDonnees;
 import projet.ais.services.ParametreFicheDonneeService;
 
 @RestController
-@RequestMapping("/ParametreFicheDonnée")
+@RequestMapping("/ParametreFicheDonnee")
 public class ParametreFicheDonnéeController {
     
     @Autowired
@@ -28,13 +28,13 @@ public class ParametreFicheDonnéeController {
     @PostMapping("/addParametre")
     @Operation(summary="Création du parametre fiche données")
     public ResponseEntity<ParametreFicheDonnees> saceParametre(@RequestBody ParametreFicheDonnees param ){
-        return new ResponseEntity<>(parametreFicheDonneeService.createParametre(param), HttpStatus.CREATED);
+        return new ResponseEntity<>(parametreFicheDonneeService.createParametreFiche(param), HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
     @Operation(summary = "Modification du parametre")
     public ResponseEntity<ParametreFicheDonnees> modifier(@RequestBody ParametreFicheDonnees param , @PathVariable Integer id ){
-        return new ResponseEntity<>(parametreFicheDonneeService.updateParametre(param, id), HttpStatus.OK);
+        return new ResponseEntity<>(parametreFicheDonneeService.updateParametreFiche(param, id), HttpStatus.OK);
     }
 
     @GetMapping("/getAllParametres")
@@ -46,6 +46,6 @@ public class ParametreFicheDonnéeController {
     @DeleteMapping("/delete/{id}")
     @Operation(summary="Suppression du parametre")
     public String deleteParametres(@PathVariable Integer id){
-        return parametreFicheDonneeService.deleteParametre(id);
+        return parametreFicheDonneeService.deleteParametreFiche(id);
     }
 }

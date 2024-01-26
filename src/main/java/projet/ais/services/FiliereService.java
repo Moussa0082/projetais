@@ -7,6 +7,11 @@ import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.models.Filiere;
 import projet.ais.repository.FiliereRepository;
+
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +31,11 @@ public class FiliereService {
     
     String codes = codeGenerator.genererCode();
     filiere.setCodeFiliere(codes);
+     Date dates = new Date();
+            Instant instant = dates.toInstant();
+            ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+            filiere.setDateAjout(dates);
+            filiere.setDateModif(dates);
     return filiereRepository.save(filiere);
   }
 
@@ -36,7 +46,12 @@ public class FiliereService {
 
     filieres.setDescriptionFiliere(filiere.getDescriptionFiliere());
     filieres.setLibelleFiliere(filiere.getLibelleFiliere());
+    filieres.setDateAjout(filieres.getDateAjout());
 
+    Date dates = new Date();
+    Instant instant = dates.toInstant();
+    ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+    filieres.setDateModif(dates);
     return filiereRepository.save(filieres);
   }
 

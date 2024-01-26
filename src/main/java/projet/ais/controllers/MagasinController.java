@@ -37,7 +37,7 @@ public class MagasinController {
     @PostMapping("/addMagasin")
     public ResponseEntity<Magasin> saveMagasin(
         @Valid @RequestParam("magasin") String magasins,
-        @Valid @RequestParam(value = "image") MultipartFile imageFile) throws Exception{
+        @Valid @RequestParam(value = "image",required = false) MultipartFile imageFile) throws Exception{
 
             Magasin magasin1 = new Magasin();
             try {

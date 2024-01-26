@@ -1,5 +1,9 @@
 package projet.ais.services;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,11 +38,17 @@ public class CategorieService {
         if(categorieProduits != null)
             throw new DuplicateRequestException("Cette catégorie existe déjà");
         
-        if(filiere != null)
+        if(filiere == null)
             throw new EntityNotFoundException("Ce filiere n'existe pas");
         
             String codes = codeGenerator.genererCode();
             categorieProduit.setCodeCategorie(codes);
+            Date dates = new Date();
+            Instant instant = dates.toInstant();
+            ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+            categorieProduit.setDateAjout(dates);
+            categorieProduit.setDateModif(dates);
+
         return categorieProduitRepository.save(categorieProduit);
     }
 
@@ -47,8 +57,13 @@ public class CategorieService {
 
         categorieProduits.setDescriptionCategorie(categorieProduit.getDescriptionCategorie());
         categorieProduits.setLibelleCategorie(categorieProduit.getLibelleCategorie());
-        
-        
+        categorieProduits.setFiliere(categorieProduit.getFiliere());
+        categorieProduits.setDateAjout(categorieProduits.getDateAjout());
+        Date dates = new Date();
+            Instant instant = dates.toInstant();
+            ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+            
+            categorieProduits.setDateModif(dates);
         return categorieProduitRepository.save(categorieProduit);
     }
 
@@ -79,7 +94,7 @@ public class CategorieService {
     public String deleteCategorie(Integer id){
         CategorieProduit categorieProduit = categorieProduitRepository.findById(id).orElseThrow(null);
 
-        categorieProduitRepository.save(categorieProduit); 
+        categorieProduitRepository.delete(categorieProduit); 
         return "Supprimé avec succèss";
     }
 }

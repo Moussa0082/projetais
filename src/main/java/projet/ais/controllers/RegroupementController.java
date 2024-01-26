@@ -30,13 +30,13 @@ public class RegroupementController {
     @PostMapping("/addRegroupement")
     @Operation(summary = "Création du regroupement")
     public ResponseEntity<RegroupementParametre> saveParametre(@RequestBody RegroupementParametre regroupementParametre){
-        return new ResponseEntity<>(regroupementSevice.createParametre(regroupementParametre), HttpStatus.CREATED);
+        return new ResponseEntity<>(regroupementSevice.createParametreRegroupement(regroupementParametre), HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
     @Operation(summary = "Modification du regroupement parametre")
     public ResponseEntity<RegroupementParametre> updatedParametre(@RequestBody RegroupementParametre regroupementParametre, @PathVariable Integer id){
-        return new ResponseEntity<>(regroupementSevice.updateParametre(regroupementParametre, id), HttpStatus.CREATED);
+        return new ResponseEntity<>(regroupementSevice.updateParametreRegroupement(regroupementParametre, id), HttpStatus.CREATED);
     }
 
     @GetMapping("/getAllParametre")

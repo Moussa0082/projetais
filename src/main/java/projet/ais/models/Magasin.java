@@ -2,6 +2,8 @@ package projet.ais.models;
 
 
 
+import java.util.Date;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -37,11 +39,14 @@ public class Magasin {
     @Column(nullable = false)
     private String contactMagasin;
 
-    @Column(nullable = false)
-    private String photo;
+    @Column(nullable=false)
+    private Date dateAjout;
 
-    @OneToOne
-    private Stock stock;
+    @Column(nullable=false)
+    private Date dateModif;
+
+    @Column(nullable = true)
+    private String photo;
 
     @ManyToOne
     @JoinColumn( name = "idActeur")
