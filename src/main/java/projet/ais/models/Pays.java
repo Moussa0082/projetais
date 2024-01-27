@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Data
@@ -23,8 +23,14 @@ public class Pays {
     @Column(nullable = false)
     private String descriptionPays;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String statutPays;
+
+    @Column(nullable=true)
+    private Date dateAjout;
+
+    @Column(nullable=false)
+    private Date dateModif;
 
     @OneToMany
     (mappedBy = "pays")

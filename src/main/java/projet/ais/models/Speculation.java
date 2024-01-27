@@ -2,10 +2,13 @@ package projet.ais.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
+@Data
 public class Speculation {
 
     @Id
@@ -22,12 +25,18 @@ public class Speculation {
     private String descriptionSpeculation;
 
     @Column(nullable = false)
-    private String statutSpeculation;
+    private boolean statutSpeculation = true;
 
     @ManyToOne
     @JoinColumn(name = "idCategorieProduit")
     private CategorieProduit categorieProduit;
 
+     @Column(nullable=true)
+    private Date dateAjout;
+
+    @Column(nullable=true)
+    private Date dateModif;
+    
     @OneToMany
     (mappedBy = "speculation")
     @JsonIgnore

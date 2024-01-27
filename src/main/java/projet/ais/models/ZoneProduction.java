@@ -2,21 +2,24 @@ package projet.ais.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
+@Data
 public class ZoneProduction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idZone;
+    private int idZoneProduction;
 
     @Column(nullable = false)
-    private String codeActeur;
+    private String codeZone;
 
     @Column(nullable = false)
-    private String nomZone;
+    private String nomZoneProduction;
 
     @Column(nullable = false)
     private String latitude;
@@ -24,8 +27,14 @@ public class ZoneProduction {
     @Column(nullable = false)
     private String longitude;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String photoZone;
+
+    @Column(nullable=true)
+    private Date dateAjout;
+
+    @Column(nullable=true)
+    private Date dateModif;
 
     @OneToMany
     (mappedBy = "zoneProduction")

@@ -3,6 +3,7 @@ package projet.ais.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import java.util.*;
 
 @Entity
 @Data
@@ -23,6 +24,12 @@ public class Niveau3Pays {
 
     @Column(nullable = false)
     private String statutN3;
+
+    @Column(nullable=true)
+    private Date dateAjout;
+
+    @Column(nullable=true)
+    private Date dateModif;
 
     @ManyToOne
     @JoinColumn( name = "idNiveau2Pays") 

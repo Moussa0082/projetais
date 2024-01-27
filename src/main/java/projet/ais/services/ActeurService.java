@@ -5,18 +5,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+
 import org.springframework.web.multipart.MultipartFile;
 
-import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Random;
-import java.time.LocalDate;
-import java.util.Date;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.logging.Logger;
+
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
@@ -29,6 +27,7 @@ import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.ActeurRepository;
+import projet.ais.repository.AlerteRepository;
 import projet.ais.repository.TypeActeurRepository;
 
 @Service
@@ -40,27 +39,37 @@ public class ActeurService {
     @Autowired
     BCryptPasswordEncoder passwordEncoder;
 
-
     @Autowired
-    EmailService emailService;
+    private AlerteRepository alerteRepository;
 
     @Autowired
     private TypeActeurRepository typeActeurRepository;
 
-    //créer un user
+
+    @Autowired
+    EmailService emailService;
+
+    // @Autowired
+    // private TypeActeurRepository typeActeurRepository;
+
+    //créer un acteur
       public Acteur createActeur(Acteur acteur, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
         
-     
+        
+    // Vérifier si l'acteur a le même mail et le même type
+    Acteur existingActeurAvecMemeType = acteurRepository.findByEmailActeurAndTypeActeur(acteur.getEmailActeur(), acteur.getTypeActeur());
+    if (existingActeurAvecMemeType != null) {
+        // Si un acteur avec le même email et type existe déjà
+        throw new IllegalArgumentException("Un acteur avec le même email et type existe déjà");
+    }
          
-        if (acteurRepository.findByEmailActeur(acteur.getEmailActeur()) == null) {
-          
+    // if (acteurRepository.findByEmailActeur(acteur.getEmailActeur()) == null) {
+        
             if (acteur.getTypeActeur() == null) {
                 throw new Exception("Veuillez choisir un type d'acteur pour créer un compte");
             }
-    
-            // // Vérifier si le type d'acteur est valide
-             
-
+            
+            
             //On hashe le mot de passe
             String passWordHasher = passwordEncoder.encode(acteur.getPassword());
             acteur.setPassword(passWordHasher);
@@ -105,19 +114,34 @@ public class ActeurService {
             acteur.setStatutActeur(false);
 
                 
+            // Enregistrement de l'acteur
             Acteur savedActeur = acteurRepository.save(acteur);
-            String msg = " " + savedActeur.getNomActeur().toUpperCase() +  " viens de créer un compte veuiller activer son compte !" ;
-            Acteur acteurExistant = acteurRepository.findByTypeActeur(acteur.getTypeActeur());
-            if(acteurExistant.getTypeActeur().getLibelle() == "Admin"){
-              String mail = acteurExistant.getEmailActeur();
-              Alerte alerte = new Alerte(mail, msg, "Création d'un nouveau compte");
-              emailService.sendSimpleMail(alerte);
-            }
-            return savedActeur;
-        } 
-        else {
-            throw new IllegalArgumentException("L'email " + acteur.getEmailActeur() + " existe déjà");
-        }
+            Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
+               if(admins != null){
+              System.out.println(admins.getEmailActeur());
+              // Envoyer un email à chaque administrateur
+              String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez activer son compte dans les plus brefs délais !";
+              // for (Acteur admin : admins) {
+                  
+                  Alerte alerte = new Alerte(admins.getEmailActeur(), msg, "Création d'un nouveau compte");
+                  emailService.sendSimpleMail(alerte);
+                  System.out.println(emailService.sendSimpleMail(alerte));
+               }  else{
+                System.out.println("Acteur non trouver");
+               }
+
+            //     }
+            
+        
+    
+// }
+
+
+    return savedActeur;
+        // } 
+        // else {
+        //     throw new IllegalArgumentException("L'email " + acteur.getEmailActeur() + " existe déjà");
+        // }
     }
 
 

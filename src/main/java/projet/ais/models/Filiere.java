@@ -4,10 +4,13 @@ package projet.ais.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Data;
 
-import java.util.List;
+import java.util.Date;
+import java.util.*;
 
 @Entity
+@Data
 public class Filiere {
 
     @Id
@@ -24,7 +27,13 @@ public class Filiere {
     private String descriptionFiliere;
 
     @Column(nullable = false)
-    private String statutFiliere;
+    private boolean statutFiliere = true;
+
+    @Column(nullable=true)
+    private Date dateAjout;
+
+    @Column(nullable=true)
+    private Date dateModif;
 
     @OneToMany
     (mappedBy = "filiere")

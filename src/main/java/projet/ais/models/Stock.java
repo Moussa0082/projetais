@@ -1,11 +1,13 @@
 package projet.ais.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
 
 @Entity
+@Data
 public class Stock {
 
     @Id
@@ -25,24 +27,30 @@ public class Stock {
     private Date dateProduction;
 
     @Column(nullable = false)
-    private String quantiteStock;
+    private double quantiteStock;
 
     @Column(nullable = false)
     private String typeProduit;
 
-    @Column(nullable = false)
-    private String siteProduction;
+    // @Column(nullable = false)
+    // private String siteProduction;
 
     @Column(nullable = false)
     private String descriptionStock;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String photo;
 
     @ManyToOne
     @JoinColumn(name = "idZoneProduction")
     private ZoneProduction zoneProduction;
 
+    @Column(nullable=true)
+    private Date dateAjout;
+
+    @Column(nullable=true)
+    private Date dateModif;
+    
     @ManyToOne
     @JoinColumn(name = "idSpeculation")
     private Speculation speculation;
@@ -58,5 +66,10 @@ public class Stock {
     @ManyToOne
     @JoinColumn(name = "idActeur")
     private Acteur acteur;
+
+    @ManyToMany
+    private List<Sortie_Stock> sortie_Stock;
+
 }
+
 

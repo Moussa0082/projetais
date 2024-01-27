@@ -4,6 +4,7 @@ package projet.ais.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import java.util.*;
 
 @Entity
 @Data
@@ -60,5 +61,11 @@ public class ParametreGeneraux {
 
     @Column(nullable = false)
     private String localiteStructure;
+
+    @Column(nullable=false)
+    private Date dateAjout;
+
+    @Column(nullable=false)
+    private Date dateModif;
 
 }

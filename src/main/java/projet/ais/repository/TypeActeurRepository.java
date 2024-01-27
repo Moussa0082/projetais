@@ -9,5 +9,6 @@ public interface TypeActeurRepository extends JpaRepository<TypeActeur, Integer>
     TypeActeur findByCodeTypeActeur(String codeTypeActeur);
     TypeActeur findByIdTypeActeur(Integer idTypeActeur);
     TypeActeur findByLibelle(String libelle);
+
     
 }

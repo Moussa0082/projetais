@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Data
@@ -24,6 +24,12 @@ public class TypeActeur {
 
     @Column(nullable = false)
     private String descriptionTypeActeur;
+
+    @Column(nullable=true)
+    private Date dateAjout;
+
+    @Column(nullable=true)
+    private Date dateModif;
 
     @OneToMany
     (mappedBy = "typeActeur")

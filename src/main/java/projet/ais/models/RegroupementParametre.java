@@ -1,7 +1,11 @@
 package projet.ais.models;
+import java.util.Date;
+
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
+@Data
 public class RegroupementParametre {
 
     @Id
@@ -11,6 +15,12 @@ public class RegroupementParametre {
     @Column(nullable = false)
     private String parametreRegroupe;
 
+     @Column(nullable=true)
+    private Date dateAjout;
+
+    @Column(nullable=true)
+    private Date dateModif;
+    
     @OneToOne
     private ParametreFicheDonnees parametreFicheDonnees;
 }

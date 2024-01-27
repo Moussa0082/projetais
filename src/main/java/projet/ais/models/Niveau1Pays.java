@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Data
@@ -26,6 +26,12 @@ public class Niveau1Pays {
 
     @Column(nullable = false)
     private String statutN1;
+
+    @Column(nullable=true)
+    private Date dateAjout;
+
+    @Column(nullable=true)
+    private Date dateModif;
 
     @ManyToOne
     @JoinColumn( name = "idPays")

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Data
@@ -28,6 +28,12 @@ public class Continent {
 
     @Column(nullable = false)
     private String statutContinent;
+
+    @Column(nullable=true)
+    private Date dateAjout;
+
+    @Column(nullable=true)
+    private Date dateModif;
 
     @OneToMany
     (mappedBy = "continent")
