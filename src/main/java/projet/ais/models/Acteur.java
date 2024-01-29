@@ -51,10 +51,16 @@ public class Acteur {
     private String password;
 
     @Column(nullable=true)
-    private Date dateAjout;
+    private String dateAjout;
 
     @Column(nullable=true)
-    private Date dateModif;
+    private String dateModif;
+
+    @Column(nullable=true)
+    private String personneAjout;
+
+    @Column(nullable=true)
+    private String personneModif;
 
     @Column(nullable = false)
     private String localiteActeur;
@@ -69,7 +75,7 @@ public class Acteur {
     private String filiereActeur;
 
     @Column(nullable = true)
-    private boolean statutActeur = false;
+    private boolean statutActeur ;
 
     @OneToMany
     (mappedBy = "acteur")

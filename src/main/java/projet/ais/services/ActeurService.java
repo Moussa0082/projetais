@@ -12,20 +12,17 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.Random;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.nio.file.Path;
-import java.util.logging.Logger;
 
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import projet.ais.Exception.NoContentException;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
-import projet.ais.models.TypeActeur;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.AlerteRepository;
 import projet.ais.repository.TypeActeurRepository;
@@ -111,21 +108,33 @@ public class ActeurService {
 
             String codeActeur = genererCode();
             acteur.setCodeActeur(codeActeur);
-            acteur.setStatutActeur(false);
-
-                
+            
+            
+            
+            
             // Enregistrement de l'acteur
+    if ((acteur.getTypeActeur().getLibelle()) == "Admin") {
+        System.out.println(acteur.getTypeActeur().getLibelle());
+        acteur.setStatutActeur(true);
+    } else {
+        acteur.setStatutActeur(false);
+    }
+
+    Date d = new Date(); 
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+     String dt = sdf.format(d);
+     acteur.setDateAjout(dt);
             Acteur savedActeur = acteurRepository.save(acteur);
             Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
-               if(admins != null){
+               if(admins != null && admins.getTypeActeur().getLibelle() != "Admin"){
               System.out.println(admins.getEmailActeur());
               // Envoyer un email à chaque administrateur
               String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez activer son compte dans les plus brefs délais !";
               // for (Acteur admin : admins) {
                   
-                  Alerte alerte = new Alerte(admins.getEmailActeur(), msg, "Création d'un nouveau compte");
-                  emailService.sendSimpleMail(alerte);
-                  System.out.println(emailService.sendSimpleMail(alerte));
+                //   Alerte alerte = new Alerte(admins.getEmailActeur(), msg, "Création d'un nouveau compte");
+                //   emailService.sendSimpleMail(alerte);
+                //   System.out.println(emailService.sendSimpleMail(alerte));
                }  else{
                 System.out.println("Acteur non trouver");
                }
@@ -221,7 +230,10 @@ private String genererChaineAleatoire(String source, int longueur) {
                         }
                     }
             
-
+                    Date d = new Date(); 
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                     String dt = sdf.format(d);
+                     ac.setDateModif(dt);
          ac.setAdresseActeur(acteur.getAdresseActeur());
          ac.setNomActeur(acteur.getNomActeur());
          ac.setTelephoneActeur(acteur.getTelephoneActeur());

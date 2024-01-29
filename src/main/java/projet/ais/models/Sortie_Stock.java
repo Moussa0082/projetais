@@ -2,10 +2,14 @@ package projet.ais.models;
 
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
+@Data
 public class Sortie_Stock {
 
     @Id
@@ -19,7 +23,7 @@ public class Sortie_Stock {
     private String  codeStock;
 
     @Column(nullable = false)
-    private int quantiteSortie;
+    private double quantiteSortie;
 
     @Column(nullable = false)
     private String codeActeurDestination;
@@ -27,13 +31,13 @@ public class Sortie_Stock {
     @Column(nullable = false)
     private int prixVente;
 
-    @Column(nullable=true)
-    private Date dateAjout;
 
     @Column(nullable=true)
     private Date dateModif;
 
-    @ManyToMany
-    private List<Stock> stock;
+    @ManyToOne
+    
+    @JoinColumn(name = "idStock")
+    private Stock stock;
 }
 

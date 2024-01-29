@@ -67,7 +67,8 @@ public class Stock {
     @JoinColumn(name = "idActeur")
     private Acteur acteur;
 
-    @ManyToMany
+    @OneToMany
+    (mappedBy = "stock")
     private List<Sortie_Stock> sortie_Stock;
 
 }

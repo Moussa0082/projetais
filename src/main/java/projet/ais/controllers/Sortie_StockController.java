@@ -8,12 +8,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import projet.ais.models.Sortie_Stock;
+import projet.ais.models.SousRegion;
 import projet.ais.models.Stock;
 import projet.ais.services.Sortie_StockService;
 
@@ -24,6 +27,17 @@ public class Sortie_StockController {
 
     @Autowired
     private Sortie_StockService sortie_StockService;
+
+    
+      @PostMapping("/create")
+     @Operation(summary = "Sortie de stock")
+     public ResponseEntity<Sortie_Stock> createSortieStock(@RequestBody Sortie_Stock sortie_Stock) throws Exception {
+
+        
+            Sortie_Stock st =  sortie_StockService.createSortieStock(sortie_Stock);
+            return new ResponseEntity<>( st, HttpStatus.OK);
+       
+    }
 
     @GetMapping("/byStockId/{idStock}")
     public ResponseEntity<List<Sortie_Stock>> getSortieStocksByStockId(@PathVariable int idStock) {
