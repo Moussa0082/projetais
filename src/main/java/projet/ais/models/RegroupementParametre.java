@@ -20,7 +20,7 @@ public class RegroupementParametre {
 
     @Column(nullable=true)
     private Date dateModif;
-    
+
     @OneToOne
-    private ParametreFicheDonnees parametreFicheDonnees;
+    private ParametreFiche parametreFiche;
 }

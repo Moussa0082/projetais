@@ -10,9 +10,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import projet.ais.models.ParametreFicheDonnees;
 import projet.ais.models.RegroupementParametre;
-import projet.ais.repository.ParametreFicheDonneesRepository;
 import projet.ais.repository.RegroupementParametreRepository;
 
 @Service
@@ -21,13 +19,13 @@ public class RegroupementSevice {
     @Autowired
     RegroupementParametreRepository regroupementParametreRepository;
 
-    @Autowired
-    ParametreFicheDonneesRepository parametreFicheDonneesRepository ;
+    // @Autowired
+    // ParametreFicheDonneesRepository parametreFicheDonneesRepository ;
 
     public RegroupementParametre createParametreRegroupement(RegroupementParametre regroupementParametre){
-        ParametreFicheDonnees parametreFicheDonnees = parametreFicheDonneesRepository.findByIdParametre(regroupementParametre.getParametreFicheDonnees().getIdParametre());
-        if(parametreFicheDonnees == null)
-            throw new IllegalArgumentException("Aune parametre trouvé pour le regroupement");
+        // ParametreFicheDonnees parametreFicheDonnees = parametreFicheDonneesRepository.findByIdParametre(regroupementParametre.getParametreFicheDonnees().getIdParametre());
+        // if(parametreFicheDonnees == null)
+        //     throw new IllegalArgumentException("Aune parametre trouvé pour le regroupement");
         
     Date dates = new Date();
         Instant instant = dates.toInstant();

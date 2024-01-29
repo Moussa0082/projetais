@@ -46,11 +46,11 @@ public class RenvoieParametreController {
         return new ResponseEntity<>(renvoieParametreService.getAllRenvoie(), HttpStatus.OK);
     }
 
-    @GetMapping("/getAllParamRenvoieByIdParamFicheDonne/{id}")
-    @Operation(summary = "Liste du parametre")
-    public ResponseEntity<List<RenvoieParametre> > getAllParamRenvoieByParamFicheDonnees(@PathVariable Integer id){
-        return new ResponseEntity<>(renvoieParametreService.getAllRenvoieByIdParametre(id), HttpStatus.OK);
-    }
+    // @GetMapping("/getAllParamRenvoieByIdParamFicheDonne/{id}")
+    // @Operation(summary = "Liste du parametre")
+    // public ResponseEntity<List<RenvoieParametre> > getAllParamRenvoieByParamFicheDonnees(@PathVariable Integer id){
+    //     return new ResponseEntity<>(renvoieParametreService.getAllRenvoieByIdParametre(id), HttpStatus.OK);
+    // }
 
     @DeleteMapping("delete/{id}")
     public String deleteParam(@PathVariable Integer id){
