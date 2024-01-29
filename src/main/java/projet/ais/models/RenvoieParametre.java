@@ -29,5 +29,5 @@ public class RenvoieParametre {
     private String descriptionRenvoie;
 
     @OneToOne
-    private ParametreFicheDonnees parametreFicheDonnees;
+    private ParametreFiche parametreFiche;
 }

@@ -12,5 +12,5 @@ public interface RenvoieParametreRepository extends JpaRepository<RenvoieParamet
     
     
     RenvoieParametre findByIdRenvoiParametre(Integer id);
-    List<RenvoieParametre> findByParametreFicheDonneesIdParametre(Integer id);
+    List<RenvoieParametre> findByParametreFicheIdParametreFiche(Integer id);
 }

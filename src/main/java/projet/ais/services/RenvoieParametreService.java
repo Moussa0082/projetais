@@ -10,9 +10,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import projet.ais.models.ParametreFicheDonnees;
+import projet.ais.models.ParametreFiche;
 import projet.ais.models.RenvoieParametre;
-import projet.ais.repository.ParametreFicheDonneesRepository;
+import projet.ais.repository.ParametreFicheRepository;
 import projet.ais.repository.RenvoieParametreRepository;
 
 @Service
@@ -21,10 +21,11 @@ public class RenvoieParametreService {
     @Autowired
     RenvoieParametreRepository renvoieParametreRepository;
     @Autowired
-    ParametreFicheDonneesRepository parametreFicheDonneesRepository;
+    ParametreFicheRepository parametreFicheRepository;
+    
 
     public RenvoieParametre createParametreRenvoie(RenvoieParametre renvoieParametre){
-        ParametreFicheDonnees param = parametreFicheDonneesRepository.findByIdParametre(renvoieParametre.getIdRenvoiParametre());
+        ParametreFiche param = parametreFicheRepository.findByIdParametreFiche(renvoieParametre.getIdRenvoiParametre());
 
         if(param == null)
             throw new IllegalArgumentException("Aucune parametre trouvé");
@@ -62,13 +63,13 @@ public class RenvoieParametreService {
         return renvoieList;
     }
 
-     public List<RenvoieParametre> getAllRenvoieByIdParametre(Integer id){
-         List<RenvoieParametre> renvoieList= renvoieParametreRepository.findByParametreFicheDonneesIdParametre(id);
+    //  public List<RenvoieParametre> getAllRenvoieByIdParametre(Integer id){
+    //      List<RenvoieParametre> renvoieList= renvoieParametreRepository.findByParametreFicheDonneesIdParametre(id);
 
-         if(renvoieList.isEmpty())
-             throw new IllegalArgumentException("Aucun parametre trouvé");
-         return renvoieList;
-    }
+    //      if(renvoieList.isEmpty())
+    //          throw new IllegalArgumentException("Aucun parametre trouvé");
+    //      return renvoieList;
+    // }
 
     public String deleteParametreRenvoie(Integer id){
         RenvoieParametre ren = renvoieParametreRepository.findById(id).orElseThrow(null);
