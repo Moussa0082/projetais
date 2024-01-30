@@ -19,11 +19,14 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import projet.ais.models.Filiere;
 import projet.ais.models.Magasin;
 import projet.ais.models.ZoneProduction;
 import projet.ais.services.MagasinService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 @RestController
@@ -49,10 +52,10 @@ public class MagasinController {
         return new ResponseEntity<>(saveMag, HttpStatus.CREATED);
     }
     
-    @PostMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Magasin> updatedMagasin(
         @Valid @RequestParam("magasin") String magasins,
-        @Valid @RequestParam(value = "image") MultipartFile imageFile, @PathVariable Integer id) throws Exception{
+        @Valid @RequestParam(value = "image",required = false) MultipartFile imageFile, @PathVariable Integer id) throws Exception{
 
             Magasin magasin1 = new Magasin();
             try {
@@ -64,6 +67,17 @@ public class MagasinController {
         return new ResponseEntity<>(updateMag, HttpStatus.CREATED);
     }
 
+    @PutMapping("/activer/{id}")
+    @Operation(summary="Activation de magasin fonction de l'id de filiere")
+    public ResponseEntity<Magasin> activeMagasin(@PathVariable Integer id) throws Exception {
+        return new ResponseEntity<>(magasinService.active(id), HttpStatus.OK);
+    }
+
+    @PutMapping("/desactiver/{id}")
+    @Operation(summary="Desactivation de magasin fonction de l'id de filiere")
+    public ResponseEntity<Magasin> desactiveMagasin(@PathVariable Integer id) throws Exception {
+        return new ResponseEntity<>(magasinService.desactive(id), HttpStatus.OK);
+    }
     @GetMapping("/getAllMagagin")
     @Operation(summary = "Liste des magasins")
     public ResponseEntity<List<Magasin>> listeMagasin(){

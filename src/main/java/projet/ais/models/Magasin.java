@@ -4,6 +4,8 @@ package projet.ais.models;
 
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -39,6 +41,9 @@ public class Magasin {
     @Column(nullable = false)
     private String contactMagasin;
 
+    @Column(nullable = false)
+    private boolean statutMagasin = true;
+
     @Column(nullable=true)
     private Date dateAjout;
 
@@ -51,5 +56,10 @@ public class Magasin {
     @ManyToOne
     @JoinColumn( name = "idActeur")
     private Acteur acteur;
+
+    @OneToMany
+    (mappedBy = "magasin")
+    @JsonIgnore
+    private List<Stock> stockList;
 }
 

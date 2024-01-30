@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
+import projet.ais.models.CategorieProduit;
 import projet.ais.models.Filiere;
 import projet.ais.repository.FiliereRepository;
 
@@ -74,4 +75,26 @@ public class FiliereService {
 
     return "Supprimer avec succèss";
   }
+
+  public Filiere active(Integer id) throws Exception{
+    Filiere filieres = filiereRepository.findById(id).orElseThrow(null);
+
+        try {
+          filieres.setStatutFiliere(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation  de la filiere : " + e.getMessage());
+        }
+        return filiereRepository.save(filieres);
+    }
+
+    public Filiere desactive(Integer id) throws Exception{
+      Filiere filieres = filiereRepository.findById(id).orElseThrow(null);
+
+      try {
+        filieres.setStatutFiliere(false);
+      } catch (Exception e) {
+          throw new Exception("Erreur lors de desactivation  de la filiere : " + e.getMessage());
+      }
+      return filiereRepository.save(filieres);
+    }
 }

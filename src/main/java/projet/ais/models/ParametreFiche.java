@@ -52,4 +52,7 @@ public class ParametreFiche {
 
     @Column(nullable = false)
     private String critereChampParametre;
+
+    @Column(nullable = false)
+    private boolean statutParametre = true;
 }

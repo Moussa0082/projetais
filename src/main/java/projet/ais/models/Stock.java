@@ -6,6 +6,8 @@ import lombok.Data;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Data
 public class Stock {
@@ -51,6 +53,9 @@ public class Stock {
     @Column(nullable=true)
     private Date dateModif;
     
+    @Column(nullable = false)
+    private boolean statutSotck = true;
+
     @ManyToOne
     @JoinColumn(name = "idSpeculation")
     private Speculation speculation;
@@ -59,8 +64,8 @@ public class Stock {
     @JoinColumn(name = "idUnite")
     private Unite unite;
 
-    @OneToOne
-    // @JoinColumn(name = "idMagasin")
+    @ManyToOne
+    @JoinColumn(name = "idMagasin")
     private Magasin magasin;
 
     @ManyToOne
@@ -69,6 +74,7 @@ public class Stock {
 
     @OneToMany
     (mappedBy = "stock")
+    @JsonIgnore
     private List<Sortie_Stock> sortie_Stock;
 
 }

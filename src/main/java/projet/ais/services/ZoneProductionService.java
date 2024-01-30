@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import projet.ais.CodeGenerator;
+import projet.ais.models.Unite;
 import projet.ais.models.ZoneProduction;
 import projet.ais.repository.ZoneProductionRepository;
 import com.sun.jdi.request.DuplicateRequestException;
@@ -111,5 +112,27 @@ public class ZoneProductionService {
 
         zoneProductionRepository.delete(zoneProduction);
         return "Supprimé avec success";
+    }
+
+    public ZoneProduction active(Integer id) throws Exception{
+        ZoneProduction zoneProduction = zoneProductionRepository.findById(id).orElseThrow(null);
+
+        try {
+            zoneProduction.setStatutZone(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation : " + e.getMessage());
+        }
+        return zoneProductionRepository.save(zoneProduction);
+    }
+
+    public ZoneProduction desactive(Integer id) throws Exception{
+        ZoneProduction zoneProduction = zoneProductionRepository.findById(id).orElseThrow(null);
+
+        try {
+            zoneProduction.setStatutZone(false);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de la descativation : " + e.getMessage());
+        }
+        return zoneProductionRepository.save(zoneProduction);
     }
 }

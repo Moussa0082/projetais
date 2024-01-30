@@ -64,7 +64,7 @@ public class CategorieService {
             ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
             
             categorieProduits.setDateModif(dates);
-        return categorieProduitRepository.save(categorieProduit);
+        return categorieProduitRepository.save(categorieProduits);
     }
 
     public List<CategorieProduit> getAllCategorie(){
@@ -96,5 +96,27 @@ public class CategorieService {
 
         categorieProduitRepository.delete(categorieProduit); 
         return "Supprimé avec succèss";
+    }
+
+    public CategorieProduit active(Integer id) throws Exception{
+        CategorieProduit cat = categorieProduitRepository.findById(id).orElseThrow(null);
+
+        try {
+            cat.setStatutCategorie(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation  de la categorie : " + e.getMessage());
+        }
+        return categorieProduitRepository.save(cat);
+    }
+
+    public CategorieProduit desactive(Integer id) throws Exception{
+        CategorieProduit cat = categorieProduitRepository.findById(id).orElseThrow(null);
+
+        try {
+            cat.setStatutCategorie(false);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation  de la categorie : " + e.getMessage());
+        }
+        return categorieProduitRepository.save(cat);
     }
 }

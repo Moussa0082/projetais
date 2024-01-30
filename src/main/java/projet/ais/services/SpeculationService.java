@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import projet.ais.CodeGenerator;
 import projet.ais.models.CategorieProduit;
+import projet.ais.models.RenvoieParametre;
 import projet.ais.models.Speculation;
 import projet.ais.repository.CategorieProduitRepository;
 import projet.ais.repository.SpeculationRepository;
@@ -94,5 +95,27 @@ public class SpeculationService {
 
         speculationRepository.delete(speculation);
         return "Supprimer avec succèss";
+    }
+
+    public Speculation active(Integer id) throws Exception{
+        Speculation speculation = speculationRepository.findById(id).orElseThrow(null);
+
+        try {
+            speculation.setStatutSpeculation(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation : " + e.getMessage());
+        }
+        return speculationRepository.save(speculation);
+    }
+
+    public Speculation desactive(Integer id) throws Exception{
+        Speculation speculation = speculationRepository.findById(id).orElseThrow(null);
+
+        try {
+            speculation.setStatutSpeculation(false);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de la desactivation : " + e.getMessage());
+        }
+        return speculationRepository.save(speculation);
     }
 }

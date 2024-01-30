@@ -36,6 +36,12 @@ public class ZoneProduction {
     @Column(nullable=true)
     private Date dateModif;
 
+    @Column(nullable=true)
+    private String personneAjout;
+    
+    @Column(nullable = false)
+    private boolean statutZone = true;
+    
     @OneToMany
     (mappedBy = "zoneProduction")
     @JsonIgnore

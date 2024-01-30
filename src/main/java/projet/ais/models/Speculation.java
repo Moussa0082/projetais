@@ -37,6 +37,9 @@ public class Speculation {
     @Column(nullable=true)
     private Date dateModif;
     
+    @Column(nullable=true)
+    private String personneAjout;
+    
     @OneToMany
     (mappedBy = "speculation")
     @JsonIgnore

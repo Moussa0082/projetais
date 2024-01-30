@@ -38,6 +38,18 @@ public class RegroupementController {
     public ResponseEntity<RegroupementParametre> updatedParametre(@RequestBody RegroupementParametre regroupementParametre, @PathVariable Integer id){
         return new ResponseEntity<>(regroupementSevice.updateParametreRegroupement(regroupementParametre, id), HttpStatus.CREATED);
     }
+    
+    @PutMapping("/activer/{id}")
+    @Operation(summary = "activation du regroupement parametre")
+    public ResponseEntity<RegroupementParametre> activeParametre(@PathVariable Integer id) throws Exception{
+        return new ResponseEntity<>(regroupementSevice.active(id), HttpStatus.CREATED);
+    }
+   
+    @PutMapping("/desactiver/{id}")
+    @Operation(summary = "desactivation du regroupement parametre")
+    public ResponseEntity<RegroupementParametre> desactivationParametre(@PathVariable Integer id) throws Exception{
+        return new ResponseEntity<>(regroupementSevice.desactive(id), HttpStatus.CREATED);
+    }
 
     @GetMapping("/getAllParametre")
     @Operation(summary = "Get all parameters")

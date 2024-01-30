@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import projet.ais.CodeGenerator;
+import projet.ais.models.Stock;
 import projet.ais.models.Unite;
 import projet.ais.repository.UniteRepository;
 
@@ -64,5 +65,27 @@ public class UniteService {
 
         uniteRepository.delete(unite);
         return "Supprimé avec success";
+    }
+
+    public Unite active(Integer id) throws Exception{
+        Unite unite = uniteRepository.findById(id).orElseThrow(null);
+
+        try {
+            unite.setStatutUnite(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation : " + e.getMessage());
+        }
+        return uniteRepository.save(unite);
+    }
+
+    public Unite desactive(Integer id) throws Exception{
+        Unite unite = uniteRepository.findById(id).orElseThrow(null);
+
+        try {
+            unite.setStatutUnite(false);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de la desactivation : " + e.getMessage());
+        }
+        return uniteRepository.save(unite);
     }
 }

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
 import java.util.*;
 
 @Entity
@@ -34,6 +33,9 @@ public class Filiere {
 
     @Column(nullable=true)
     private Date dateModif;
+
+    @Column(nullable=true)
+    private String personneAjout;
 
     @OneToMany
     (mappedBy = "filiere")

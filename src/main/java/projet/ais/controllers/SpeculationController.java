@@ -39,6 +39,18 @@ public class SpeculationController {
     public ResponseEntity<Speculation> updateSpeculations(@PathVariable Integer id, @RequestBody Speculation speculation) {
         return new ResponseEntity<>(speculationService.updateSpeculation(speculation, id), HttpStatus.OK);
     }
+    
+    @PutMapping("/activer/{id}")
+    @Operation(summary="Activation de la spéculation en fonction de l'id")
+    public ResponseEntity<Speculation> activeSpeculations(@PathVariable Integer id) throws Exception {
+        return new ResponseEntity<>(speculationService.active(id), HttpStatus.OK);
+    }
+    
+    @PutMapping("/desactiver/{id}")
+    @Operation(summary="Desactivation de la spéculation en fonction de l'id")
+    public ResponseEntity<Speculation> desactiveSpeculations(@PathVariable Integer id) throws Exception {
+        return new ResponseEntity<>(speculationService.desactive(id), HttpStatus.OK);
+    }
 
     @GetMapping("/getAllSpeculation")
     @Operation(summary="Récuperation des spéculations")

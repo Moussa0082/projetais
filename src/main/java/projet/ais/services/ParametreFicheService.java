@@ -3,13 +3,13 @@ package projet.ais.services;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import projet.ais.CodeGenerator;
+import projet.ais.models.Magasin;
 import projet.ais.models.ParametreFiche;
 import projet.ais.repository.ParametreFicheRepository;
 
@@ -69,5 +69,27 @@ public class ParametreFicheService {
 
         parametreFicheRepository.delete(parametreFiche);
         return "supprimé avec succèss";
+    }
+
+    public ParametreFiche active(Integer id) throws Exception{
+        ParametreFiche parametreFiche = parametreFicheRepository.findById(id).orElseThrow(null);
+
+        try {
+            parametreFiche.setStatutParametre(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation : " + e.getMessage());
+        }
+        return parametreFicheRepository.save(parametreFiche);
+    }
+
+    public ParametreFiche desactive(Integer id) throws Exception{
+        ParametreFiche parametreFiche = parametreFicheRepository.findById(id).orElseThrow(null);
+
+        try {
+            parametreFiche.setStatutParametre(false);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de desactiver  : " + e.getMessage());
+        }
+        return parametreFicheRepository.save(parametreFiche);
     }
 }

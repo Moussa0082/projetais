@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import projet.ais.CodeGenerator;
 import projet.ais.models.Acteur;
+import projet.ais.models.Filiere;
 import projet.ais.models.Magasin;
 import projet.ais.models.Stock;
 import projet.ais.repository.ActeurRepository;
@@ -138,5 +139,27 @@ public class MagasinService {
         magasinRepository.delete(magasin);
 
         return "supprimé avec success";
+    }
+
+    public Magasin active(Integer id) throws Exception{
+        Magasin mag = magasinRepository.findById(id).orElseThrow(null);
+
+        try {
+          mag.setStatutMagasin(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation  de la magasin : " + e.getMessage());
+        }
+        return magasinRepository.save(mag);
+    }
+
+    public Magasin desactive(Integer id) throws Exception{
+        Magasin mag = magasinRepository.findById(id).orElseThrow(null);
+
+        try {
+        mag.setStatutMagasin(false);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de desactivation : " + e.getMessage());
+        }
+        return magasinRepository.save(mag);
     }
 }

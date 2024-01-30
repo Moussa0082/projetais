@@ -22,11 +22,17 @@ public class RenvoieParametre {
     @Column(nullable=true)
     private Date dateModif;
 
+    @Column(nullable=true)
+    private String personneAjout;
+
     @Column(nullable = false)
     private String valeurConditionRenvoi;
 
     @Column(nullable = false)
     private String descriptionRenvoie;
+
+    @Column(nullable = false)
+    private boolean statutRenvoie = true;
 
     @OneToOne
     private ParametreFiche parametreFiche;

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import projet.ais.models.ParametreFiche;
+import projet.ais.models.RegroupementParametre;
 import projet.ais.models.RenvoieParametre;
 import projet.ais.repository.ParametreFicheRepository;
 import projet.ais.repository.RenvoieParametreRepository;
@@ -44,10 +45,8 @@ public class RenvoieParametreService {
     ren.setConditionRenvoi(renvoieParametre.getConditionRenvoi());
     ren.setValeurConditionRenvoi(renvoieParametre.getValeurConditionRenvoi());
     ren.setDescriptionRenvoie(renvoieParametre.getDescriptionRenvoie());
-        ren.setDateAjout(ren.getDateAjout());
-    //    if(renvoieParametre.getParametreFicheDonnees() != null){
-    //     ren.setParametreFicheDonnees(renvoieParametre.getParametreFicheDonnees());
-    //    }
+    ren.setDateAjout(ren.getDateAjout());
+
     Date dates = new Date();
     Instant instant = dates.toInstant();
     ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
@@ -76,5 +75,27 @@ public class RenvoieParametreService {
 
         renvoieParametreRepository.delete(ren);
         return "Supprimé avec succèss";
+    }
+
+    public RenvoieParametre active(Integer id) throws Exception{
+        RenvoieParametre ren = renvoieParametreRepository.findById(id).orElseThrow(null);
+
+        try {
+            ren.setStatutRenvoie(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation : " + e.getMessage());
+        }
+        return renvoieParametreRepository.save(ren);
+    }
+
+    public RenvoieParametre desactive(Integer id) throws Exception{
+        RenvoieParametre ren = renvoieParametreRepository.findById(id).orElseThrow(null);
+
+        try {
+            ren.setStatutRenvoie(false);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de la desactivation : " + e.getMessage());
+        }
+        return renvoieParametreRepository.save(ren);
     }
 }

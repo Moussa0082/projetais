@@ -28,6 +28,12 @@ public class Unite {
     @Column(nullable=true)
     private Date dateModif;
     
+    @Column(nullable = false)
+    private boolean statutUnite = true;
+
+    @Column(nullable=true)
+    private String personneAjout;
+    
     @OneToMany
     (mappedBy = "unite")
     @JsonIgnore

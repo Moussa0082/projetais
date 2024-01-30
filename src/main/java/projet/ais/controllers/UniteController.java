@@ -38,6 +38,18 @@ public class UniteController {
         return new ResponseEntity<>(uniteService.updateUnite(unite,id), HttpStatus.CREATED);
     }
 
+    @PutMapping("/activer/{id}")
+    @Operation(summary = "activation d'unité")
+    public ResponseEntity<Unite> activeUnite(@PathVariable Integer id) throws Exception {
+        return new ResponseEntity<>(uniteService.active(id), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/desactiver/{id}")
+    @Operation(summary = "Modification d'unité")
+    public ResponseEntity<Unite> desactiveUnite(@PathVariable Integer id) throws Exception {
+        return new ResponseEntity<>(uniteService.desactive(id), HttpStatus.CREATED);
+    }
+
     @GetMapping("/getAllUnite")
     public ResponseEntity<List<Unite>> listeUnite() {
         return new ResponseEntity<>(uniteService.getAllUnites(), HttpStatus.CREATED);

@@ -230,4 +230,26 @@ public class StockService {
 
         return "Supprimé avec success";
     }
+
+    public Stock active(Integer id) throws Exception{
+        Stock stock = stockRepository.findById(id).orElseThrow(null);
+
+        try {
+            stock.setStatutSotck(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation : " + e.getMessage());
+        }
+        return stockRepository.save(stock);
+    }
+
+    public Stock desactive(Integer id) throws Exception{
+        Stock stock = stockRepository.findById(id).orElseThrow(null);
+
+        try {
+            stock.setStatutSotck(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation : " + e.getMessage());
+        }
+        return stockRepository.save(stock);
+    }
 }

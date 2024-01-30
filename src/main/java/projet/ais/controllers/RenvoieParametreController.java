@@ -39,6 +39,18 @@ public class RenvoieParametreController {
     public ResponseEntity<RenvoieParametre> updateParam(@RequestBody RenvoieParametre renvoieParametre, @PathVariable Integer id){
         return new ResponseEntity<>(renvoieParametreService.updateParametreRenvoie(renvoieParametre,id), HttpStatus.CREATED);
     }
+    
+    @PutMapping("/activer/{id}")
+    @Operation(summary = "Activation du parametre renvoie")
+    public ResponseEntity<RenvoieParametre> activeParam(@PathVariable Integer id) throws Exception{
+        return new ResponseEntity<>(renvoieParametreService.active(id), HttpStatus.CREATED);
+    }
+    
+    @PutMapping("/desactiver/{id}")
+    @Operation(summary = "Desactivation du parametre renvoie")
+    public ResponseEntity<RenvoieParametre> desactiveParam(@PathVariable Integer id) throws Exception{
+        return new ResponseEntity<>(renvoieParametreService.desactive(id), HttpStatus.CREATED);
+    }
 
     @GetMapping("/getAllParametre")
     @Operation(summary = "Liste du parametre")

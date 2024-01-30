@@ -19,7 +19,7 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.stream.Collectors;
 import java.util.NoSuchElementException;
 
-
+import projet.ais.IdGenerator;
 import projet.ais.Exception.NoContentException;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
@@ -32,7 +32,8 @@ public class TypeActeurService {
 
     @Autowired
     private TypeActeurRepository typeActeurRepository;
-
+    @Autowired
+    IdGenerator idGenerator ;
    
   
     //  Ajouter type acteur 
@@ -40,7 +41,8 @@ public class TypeActeurService {
 
         // Générer un numéro aléatoire
         String codeTypeActeur = genererCode();
-    
+        String idCode = idGenerator.genererCode();
+        // typeActeur.setIdType(idCode);
         // Attribuer le numéro aléatoire au type d'acteur
         typeActeur.setCodeTypeActeur(codeTypeActeur);
     

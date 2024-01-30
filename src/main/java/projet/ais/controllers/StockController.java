@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import projet.ais.models.Speculation;
 import projet.ais.models.Stock;
 import projet.ais.services.StockService;
 
@@ -53,7 +54,7 @@ public class StockController {
     @Operation(summary = "Modification de stock")
     public ResponseEntity<Stock> updatedStock(
         @Valid @RequestParam("stock")  String addstocks,
-        @Valid @RequestParam(value = "image") MultipartFile imageFile,
+        @Valid @RequestParam(value = "image",required = false) MultipartFile imageFile,
         @PathVariable Integer id
         ) throws Exception{
             Stock stock = new Stock();
@@ -68,7 +69,15 @@ public class StockController {
             return new ResponseEntity<>(saveStock, HttpStatus.OK);
         }
 
-        
+        @PutMapping("/activer/{id}")
+    public ResponseEntity<Stock> activeStock(@PathVariable Integer id) throws Exception {
+        return new ResponseEntity<>(stockservice.active(id), HttpStatus.OK);
+    }
+
+        @PutMapping("/desactiver/{id}")
+    public ResponseEntity<Stock> desactiveStock(@PathVariable Integer id) throws Exception {
+        return new ResponseEntity<>(stockservice.desactive(id), HttpStatus.OK);
+    }
 
         @PutMapping("/updateQuantiteStock/{id}")
     @Operation(summary = "Modification de stock")

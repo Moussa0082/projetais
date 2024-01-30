@@ -40,6 +40,18 @@ public class CategorieController {
         return new ResponseEntity<>(categorieService.updateCategorie(categorieProduit, id), HttpStatus.OK);
     }
 
+    @PutMapping("/activer/{id}")
+    @Operation(summary="Activation de categorie de produit à travers son id")
+    public ResponseEntity<CategorieProduit> activeCategories(@PathVariable Integer id) throws Exception {
+        return new ResponseEntity<>(categorieService.active(id), HttpStatus.OK);
+    }
+
+    @PutMapping("/desactiver/{id}")
+    @Operation(summary="Desactivation de categorie de produit à travers son id")
+    public ResponseEntity<CategorieProduit> desactiveCategories(@PathVariable Integer id) throws Exception {
+        return new ResponseEntity<>(categorieService.desactive(id), HttpStatus.OK);
+    }
+
     @GetMapping("/allCategorie")
     @Operation(summary="Récuperation de tout les catégories de categorie de produit")
     public ResponseEntity<List<CategorieProduit>> getAllCategories() {
@@ -57,4 +69,6 @@ public class CategorieController {
     public String deleteFilieres(@PathVariable Integer id) {
         return categorieService.deleteCategorie(id);
     }
+
+
 }

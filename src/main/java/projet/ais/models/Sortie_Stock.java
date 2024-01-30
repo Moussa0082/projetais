@@ -35,8 +35,10 @@ public class Sortie_Stock {
     @Column(nullable=true)
     private Date dateModif;
 
-    @ManyToOne
+    @Column(nullable=true)
+    private String personneAjout;
     
+    @ManyToOne
     @JoinColumn(name = "idStock")
     private Stock stock;
 }

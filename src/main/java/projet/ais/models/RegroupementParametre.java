@@ -21,6 +21,9 @@ public class RegroupementParametre {
     @Column(nullable=true)
     private Date dateModif;
 
+    @Column(nullable = false)
+    private boolean statutRegroupement = true;
+
     @OneToOne
     private ParametreFiche parametreFiche;
 }
