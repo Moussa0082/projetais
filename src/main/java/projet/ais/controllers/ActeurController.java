@@ -148,7 +148,6 @@ public class ActeurController {
              @GetMapping("/send-email-to-all-user")
     public ResponseEntity<String> sendEmailToAllUsers(@RequestParam ("emails") List<String> emails, @RequestParam("sujet")String sujet, @RequestParam("message")String message) {
        
-
         //  acteurService.sendMailToAllUser(email, sujet, message);
          if(!emails.isEmpty()){
             for (String email : emails) {

@@ -128,8 +128,9 @@ public class ActeurService {
             
             
             
+            Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
             // Enregistrement de l'acteur
-    if ((acteur.getTypeActeur().getLibelle()) == "Admin") {
+    if ((admins.getTypeActeur().getLibelle()) == "Admin") {
         System.out.println(acteur.getTypeActeur().getLibelle());
         acteur.setStatutActeur(true);
     } else {
@@ -141,7 +142,6 @@ public class ActeurService {
      String dt = sdf.format(d);
      acteur.setDateAjout(dt);
             Acteur savedActeur = acteurRepository.save(acteur);
-            Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
                if(admins != null && admins.getTypeActeur().getLibelle() != "Admin"){
               System.out.println(admins.getEmailActeur());
               // Envoyer un email à chaque administrateur
@@ -155,34 +155,11 @@ public class ActeurService {
                 System.out.println("Acteur non trouver");
                }
 
-            //     }
-            
-        
-    
-// }
-
 
     return savedActeur;
-        // } 
-        // else {
-        //     throw new IllegalArgumentException("L'email " + acteur.getEmailActeur() + " existe déjà");
-        // }
+   
     }
 
-    // public ResponseEntity<String> sendMailToAllUser(Acteur acteur){
-    //     // Assuming you have a method to send emails
-    //     Alerte alerte = new Alerte();
-    //     // Iterate over all users and check if their type is not "Admin", then send an email
-    //     for (Acteur user : getAllUsers(acteur)) {
-    //         if (user.getTypeActeur().getLibelle() != "Admin") {
-    //            Alerte al = new Alerte(user.getEmailActeur(), alerte.getMessage(), alerte.getSujet());
-    //            alerteRepository.save(al);
-    //            emailService.sendSimpleMail(al);
-    //             // Your email sending logic goes here
-    //         }
-    //     }
-    //     return new ResponseEntity<>("Email envoyé à tous les utilisateurs avec succès", HttpStatus.ACCEPTED);
-    // }
 
     
 
@@ -200,7 +177,6 @@ public class ActeurService {
             }
         }
             
-        // }
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
@@ -208,7 +184,7 @@ public class ActeurService {
 
 
     
-public String genererCode() {
+    public String genererCode() {
     // Générer 2 lettres aléatoires
     String lettresAleatoires = genererLettresAleatoires(2);
 
@@ -221,19 +197,19 @@ public String genererCode() {
     String codeFinal = lettresAleatoires + chiffresAleatoires ;
 
     return codeFinal;
-}
+    }
 
-private String genererLettresAleatoires(int longueur) {
+    private String genererLettresAleatoires(int longueur) {
     String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     return genererChaineAleatoire(alphabet, longueur);
-}
+    }
 
-private String genererChiffresAleatoires(int longueur) {
+   private String genererChiffresAleatoires(int longueur) {
     String chiffres = "0123456789";
     return genererChaineAleatoire(chiffres, longueur);
-}
+    }
 
-private String genererChaineAleatoire(String source, int longueur) {
+    private String genererChaineAleatoire(String source, int longueur) {
     Random random = new Random();
     StringBuilder resultat = new StringBuilder();
     for (int i = 0; i < longueur; i++) {
@@ -241,7 +217,7 @@ private String genererChaineAleatoire(String source, int longueur) {
         resultat.append(source.charAt(index));
     }
     return resultat.toString();
-}
+    }
     
     //créer un user
       public Acteur updateActeur(Acteur acteur, Integer id, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
@@ -403,8 +379,9 @@ private String genererChaineAleatoire(String source, int longueur) {
     //     return utilisateurRepository.save(utilisateur);
     // }
 
-    //Fonction pour verifier l'email de l'utilisateur
+    //Fonction pour envoyer un code de verification à l'email de l'utilisateur
     String code = getRandomNumberString();
+
     public String verifyUserEmail(String email) throws Exception {
         Acteur userVerif = acteurRepository.findByEmailActeur(email);
         if (userVerif == null)
