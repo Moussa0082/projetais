@@ -26,7 +26,7 @@ public class Niveau2Pays {
     private String descriptionN2;
 
     @Column(nullable = false)
-    private String statutN2;
+    private boolean statutN2 = true;
 
     @Column(nullable=true)
     private Date dateAjout;

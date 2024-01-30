@@ -38,7 +38,7 @@ public class ZoneProductionController {
     @Operation(summary = "Création de zone de production")
     public ResponseEntity<ZoneProduction> createZone(
          @Valid @RequestParam("zone") String zoneProduction,
-         @Valid @RequestParam(value = "image") MultipartFile imageFile) throws Exception{
+         @Valid @RequestParam(value = "image", required = false)  MultipartFile imageFile) throws Exception{
 
             ZoneProduction zoneProductions = new  ZoneProduction();
             try {

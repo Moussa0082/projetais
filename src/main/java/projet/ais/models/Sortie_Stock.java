@@ -36,7 +36,6 @@ public class Sortie_Stock {
     private Date dateModif;
 
     @ManyToOne
-    
     @JoinColumn(name = "idStock")
     private Stock stock;
 }

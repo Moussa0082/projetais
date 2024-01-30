@@ -84,7 +84,6 @@ private String genererChaineAleatoire(String source, int longueur) {
 
      SousRegion sousRegionExistant = sousRegionRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Sous Region introuvable "));
      sousRegionExistant.setNomSousRegion(sousRegion.getNomSousRegion());
-     sousRegionExistant.setStatutSousRegion(sousRegion.getStatutSousRegion());
      sousRegionExistant.setContinent(sousRegion.getContinent());
   
 

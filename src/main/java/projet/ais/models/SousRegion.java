@@ -22,7 +22,7 @@ public class SousRegion {
     private String nomSousRegion;
 
     @Column(nullable = false)
-    private String statutSousRegion;
+    private boolean statutSousRegion = true;
 
     @Column(nullable=true)
     private Date dateAjout;

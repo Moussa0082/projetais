@@ -22,6 +22,9 @@ public class ZoneProduction {
     private String nomZoneProduction;
 
     @Column(nullable = false)
+    private boolean statutZoneProduction = true;
+
+    @Column(nullable = false)
     private String latitude;
 
     @Column(nullable = false)

@@ -16,11 +16,14 @@ public class Alerte {
     @Column(nullable = true)
     private String sujet;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String email;
 
     @Column(length = 2000, nullable = false)
     private String message;
+
+    @ManyToOne
+    private Acteur acteur;
 
     // Constructeur par défaut
     public Alerte() {
@@ -32,12 +35,27 @@ public class Alerte {
      this.sujet = sujet;
     }
 
+    public Alerte(Acteur acteur, String message, String sujet){
+     this.acteur = acteur;
+     this.message = message;
+     this.sujet = sujet;
+    }
+
+    public Alerte(String email, String message, String sujet, Acteur acteur){
+      this.email = email;
+      this.message = message;
+      this.sujet = sujet;
+      this.acteur = acteur;
+    }
+
   public Alerte(String email, String message){
 
     this.email = email;
     this.message = message;
 
   }
+
+
 
 
 }

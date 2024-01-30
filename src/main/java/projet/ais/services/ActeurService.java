@@ -1,15 +1,20 @@
 package projet.ais.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.EntityNotFoundException;
-import java.util.Random;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
@@ -18,8 +23,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
-import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
@@ -29,6 +32,9 @@ import projet.ais.repository.TypeActeurRepository;
 
 @Service
 public class ActeurService {
+
+    private static final long EXPIRE_TOKEN=30;
+
 
     @Autowired
     private ActeurRepository acteurRepository;
@@ -41,6 +47,15 @@ public class ActeurService {
 
     @Autowired
     private TypeActeurRepository typeActeurRepository;
+
+    private Map<String, LocalDateTime> verificationCodeTimestamps = new HashMap<>();
+
+
+     @Autowired
+     JavaMailSender javaMailSender;
+
+     @Value("bane8251@gmail.com")
+     String sender;
 
 
     @Autowired
@@ -132,8 +147,8 @@ public class ActeurService {
               String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez activer son compte dans les plus brefs délais !";
               // for (Acteur admin : admins) {
                   
-                //   Alerte alerte = new Alerte(admins.getEmailActeur(), msg, "Création d'un nouveau compte");
-                //   emailService.sendSimpleMail(alerte);
+                  Alerte alerte = new Alerte(admins.getEmailActeur(), msg, "Création d'un nouveau compte");
+                  emailService.sendSimpleMail(alerte);
                 //   System.out.println(emailService.sendSimpleMail(alerte));
                }  else{
                 System.out.println("Acteur non trouver");
@@ -152,6 +167,41 @@ public class ActeurService {
         //     throw new IllegalArgumentException("L'email " + acteur.getEmailActeur() + " existe déjà");
         // }
     }
+
+    // public ResponseEntity<String> sendMailToAllUser(Acteur acteur){
+    //     // Assuming you have a method to send emails
+    //     Alerte alerte = new Alerte();
+    //     // Iterate over all users and check if their type is not "Admin", then send an email
+    //     for (Acteur user : getAllUsers(acteur)) {
+    //         if (user.getTypeActeur().getLibelle() != "Admin") {
+    //            Alerte al = new Alerte(user.getEmailActeur(), alerte.getMessage(), alerte.getSujet());
+    //            alerteRepository.save(al);
+    //            emailService.sendSimpleMail(al);
+    //             // Your email sending logic goes here
+    //         }
+    //     }
+    //     return new ResponseEntity<>("Email envoyé à tous les utilisateurs avec succès", HttpStatus.ACCEPTED);
+    // }
+
+
+    public ResponseEntity<String> sendMailToAllUser(Alerte alerte){
+        // Assuming you have a method to send emails
+        //  Acteur acteur = new Acteur();
+        //  Alerte alerteExistant = alerteRepository.findByActeurIdActeur(alerte.getActeur().getIdActeur());
+            // if (user.getTypeActeur().getLibelle() != "Admin") {
+               Alerte al = new Alerte(alerte.getActeur().getEmailActeur(), alerte.getMessage(), alerte.getSujet());
+               alerteRepository.save(al);
+               emailService.sendSimpleMail(al);
+                // Your email sending logic goes here
+            
+        // }
+        return new ResponseEntity<>("Email envoyé à "+ alerte.getActeur().getEmailActeur() +" avec succès", HttpStatus.ACCEPTED);
+    }
+
+    // private List<Acteur> getAllUsers(Acteur acteur) {
+    // List<Acteur> users = acteurRepository.findByTypeActeur(acteur.getTypeActeur());
+    //     return users;
+    // }
 
 
     
@@ -244,19 +294,13 @@ private String genererChaineAleatoire(String source, int longueur) {
          ac.setFiliereActeur(acteur.getFiliereActeur());
          ac.setTypeActeur(acteur.getTypeActeur());
 
-
+                       
     // Mettez à jour le mot de passe si un nouveau mot de passe est fourni
     if (acteur.getPassword() != null && !acteur.getPassword().isEmpty()) {
         String hashedPassword = passwordEncoder.encode(acteur.getPassword());
         ac.setPassword(hashedPassword);
     }
-        
-    
-            
-
-
             return acteurRepository.save(ac);
-        
         
     }
     
@@ -286,6 +330,222 @@ private String genererChaineAleatoire(String source, int longueur) {
             return new ResponseEntity<>("Admin non trouvé avec l'ID " + id, HttpStatus.BAD_REQUEST);
         }
     }
+
+
+
+      //Fonction pour un email à un utilisateur
+      public String verifyNewUserMail(String email, String sujet, String message) throws Exception {
+        Acteur userVerif =  acteurRepository.findByEmailActeur(email);
+        if (userVerif == null)
+            throw new Exception("Cet email n'existe pas dans notre système");
+
+        userVerif = new Acteur();
+        userVerif.setEmailActeur(email);
+        String code = getRandomNumberString();
+        sendMail(userVerif,code);
+        return code;
+    }
+
+
+
+
+    //Mot de pass oublier 
+
+
+     //Fonction pour verifier l'email du nouveau utilisateur s'il existe déjà
+    public String verifyNewUserMail(String email) throws Exception {
+        Acteur userVerif =  acteurRepository.findByEmailActeur(email);
+        if (userVerif != null)
+            throw new Exception("exist");
+
+        userVerif = new Acteur();
+        userVerif.setEmailActeur(email);
+        String code = getRandomNumberString();
+        sendMail(userVerif,code);
+        return code;
+    }
+
+
+    //Envoi email à un utilisateur specifique
+    public String sendToUser(String mail, String sujet, String message) throws Exception {
+        Acteur userVerif =  acteurRepository.findByEmailActeur(mail);
+        if (userVerif == null){
+
+            throw new Exception("Cet email n'existe pas");
+        }else{
+
+    sendMailAuUser(mail, sujet, message);
+            return "Email correcte";
+        }
+         
+    }
+
+    // fin logique email à un utilisateur specifique
+   
+
+
+
+    //Fonction pour modifer un utilisateur
+    // public Utilisateur updateUser(Utilisateur utilisateur, String... oldPass){
+    //     Utilisateur userVerif = utilisateurRepository.findByIdUtilisateur(utilisateur.getIdUtilisateur());
+    //     if (userVerif == null)
+    //         throw new NotFoundException("invalid");
+
+    //     if (oldPass.length != 0){
+    //         if(!passwordEncoder.matches(oldPass[0], userVerif.getMotDePasse()))
+    //             throw new NotFoundException("old invalid");
+    //         utilisateur.setMotDePasse(passwordEncoder.encode(utilisateur.getMotDePasse()));
+    //         return utilisateurRepository.save(utilisateur);
+    //     }
+    //     return utilisateurRepository.save(utilisateur);
+    // }
+
+    //Fonction pour verifier l'email de l'utilisateur
+    String code = getRandomNumberString();
+    public String verifyUserEmail(String email) throws Exception {
+        Acteur userVerif = acteurRepository.findByEmailActeur(email);
+        if (userVerif == null)
+            throw new Exception("invalid");
+
+        sendMail(userVerif,code);
+        return code;
+    }
+
+     // Fonction pour vérifier si le code est expiré
+     private boolean isCodeExpired(String code) {
+        LocalDateTime timestamp = verificationCodeTimestamps.get(code);
+        if (timestamp == null) {
+            return true; // Code non trouvé (expiré)
+        }
+
+        // Comparer avec le timestamp actuel
+        LocalDateTime now = LocalDateTime.now();
+        Duration duration = Duration.between(timestamp, now);
+        return duration.getSeconds() > 30; // Code expiré après 30 secondes
+    }
+
+    //Fonction pour reinitialiser le mot de passe
+    public Acteur resetPassword(String email, String password) throws Exception{
+        Acteur userVerif = acteurRepository.findByEmailActeur(email);
+        // Vérifier si le code est expiré
+        if (isCodeExpired(code)) {
+            throw new Exception("Code expiré");
+        }
+        
+        userVerif.setPassword(passwordEncoder.encode(password));
+
+        return acteurRepository.save(userVerif);
+    }
+
+    //Fonction pour générer 6 chiffres en chaîne de caractère
+    private String getRandomNumberString() {
+        // It will generate 6 digit random Number.
+        // from 0 to 999999
+        Random rnd = new Random();
+        int number = rnd.nextInt(999999);
+
+        // this will convert any number sequence into 6 character.
+        return String.format("%06d", number);
+    }
+
+    private void sendMail(Acteur acteur, String code) throws Exception {
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        try {
+            mailMessage.setFrom(sender);
+            mailMessage.setTo(acteur.getEmailActeur());
+            mailMessage.setText("Votre code de verification est "+code);
+            mailMessage.setSubject("Validation email");
+
+            javaMailSender.send(mailMessage);
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    private void sendMailAuUser(String email, String sujet, String message) throws Exception {
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        try {
+            mailMessage.setFrom(sender);
+            mailMessage.setTo(email);
+            mailMessage.setText(message);
+            mailMessage.setSubject(sujet);
+
+            javaMailSender.send(mailMessage);
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
+
+  
+    // public String forgotPass(Acteur acteur){
+    //     Acteur userOptional = acteurRepository.findByEmailActeur(acteur.getEmailActeur());
+
+    //     // if(userOptional == null){
+    //     //     return "Cet email n'existe pas dans notre base de données ";
+    //     // }
+    //     if(userOptional.getEmailActeur() == null){
+    //             return "Cet email n'existe pas dans notre base de données ";
+            
+
+    //     }else{
+    //         System.out.println(acteur.getEmailActeur());
+    //         System.out.println("Email non trouver");
+    //     }
+
+    //     Acteur user= userOptional;
+    //     String tk = genererCode();
+    //     user.setResetToken(tk);
+    //     user.setTokenCreationDate(LocalDateTime.now());
+    //   // Envoyer le code de réinitialisation à l'utilisateur (par exemple, par e-mail ou SMS)
+    //   Alerte al = new Alerte(acteur.getEmailActeur(), "Vueiller saisir le code de confirmation "+ tk +" qui \n expire dans 30 s pour passer à l'etape de réinitialisation de votre mot de passe", "Code de confirmation");
+    //   emailService.sendSimpleMail(al);
+    //     user=acteurRepository.save(user);
+    //     return user.getResetToken();
+    // }
+
+    // public String resetPass(String resetToken, String password){
+    //     Optional<Optional<Acteur>> userOptional= Optional.ofNullable(acteurRepository.findByResetToken(resetToken));
+
+    //     if(!userOptional.isPresent()){
+    //         return "Code invalide";
+    //     }
+    //     LocalDateTime tokenCreationDate = userOptional.get().get().getTokenCreationDate();
+
+    //     if (isTokenExpired(tokenCreationDate)) {
+    //         return "Code expiré.";
+
+    //     }
+
+    //     Acteur user = userOptional.get().get();
+
+    //     user.setPassword(password);
+    //     user.setResetToken(null);
+    //     user.setTokenCreationDate(null);
+
+    //     acteurRepository.save(user);
+
+    //     return "Mot de passe modifier avec succès.";
+    // }
+
+    // private String generateToken() {
+    //     StringBuilder token = new StringBuilder();
+
+    //     return token.append(UUID.randomUUID().toString())
+    //             .append(UUID.randomUUID().toString()).toString();
+    // }
+
+    // private boolean isTokenExpired(final LocalDateTime tokenCreationDate) {
+
+    //     LocalDateTime now = LocalDateTime.now();
+    //     Duration diff = Duration.between(tokenCreationDate, now);
+
+    //     return diff.toMinutes() >=EXPIRE_TOKEN;
+    // }
+
+    // fin logique service mot de passe oublier 
    
     //activer un acteur
     public ResponseEntity<String> enableActeur(Integer id) {

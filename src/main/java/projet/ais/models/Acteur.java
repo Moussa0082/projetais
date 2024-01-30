@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.util.*;
 
+import java.time.LocalDateTime;
+
 
 
 @Entity
@@ -16,6 +18,12 @@ public class Acteur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idActeur;
+
+    @Column(name = "reset_token", nullable = true)
+	private String resetToken;
+
+    @Column(columnDefinition = "TIMESTAMP", nullable = true)
+    private LocalDateTime tokenCreationDate;
 
     @Column(nullable = false)
     private String codeActeur;
@@ -90,6 +98,11 @@ public class Acteur {
    @ManyToOne
    @JoinColumn(name = "idTypeActeur")
    private TypeActeur typeActeur;
+
+   @OneToMany
+   (mappedBy = "acteur")
+   @JsonIgnore
+   private List<Alerte> alerteList;
 
 }
 

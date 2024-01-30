@@ -87,7 +87,6 @@ private String genererChaineAleatoire(String source, int longueur) {
      Niveau3Pays niveau3PaysExistant= niveau3PaysRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Niveau1Pays introuvable"));
      niveau3PaysExistant.setNomN3(niveau3Pays.getNomN3());
     niveau3PaysExistant.setDescriptionN3(niveau3Pays.getDescriptionN3());
-    niveau3PaysExistant.setStatutN3(niveau3Pays.getStatutN3());
     niveau3PaysExistant.setNiveau2Pays(niveau3Pays.getNiveau2Pays());
 
     return niveau3PaysRepository.save(niveau3PaysExistant);

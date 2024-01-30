@@ -27,7 +27,7 @@ public class Continent {
     private String descriptionContinent;
 
     @Column(nullable = false)
-    private String statutContinent;
+    private boolean statutContinent = true;
 
     @Column(nullable=true)
     private Date dateAjout;

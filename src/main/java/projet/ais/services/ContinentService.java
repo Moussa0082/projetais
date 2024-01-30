@@ -82,7 +82,6 @@ public class ContinentService {
          Continent continentExistant = continentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Continent introuvable "));
          continentExistant.setNomContinent(continent.getNomContinent());
          continentExistant.setDescriptionContinent(continent.getDescriptionContinent());
-         continentExistant.setStatutContinent(continent.getStatutContinent());
     
         return continentRepository.save(continentExistant);
       }
