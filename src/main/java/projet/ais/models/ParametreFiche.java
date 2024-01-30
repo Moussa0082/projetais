@@ -14,8 +14,8 @@ import lombok.Data;
 public class ParametreFiche {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idParametreFiche;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idParametreFiche;
 
     @Column(nullable = false)
     private String classeParametre;

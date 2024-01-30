@@ -10,8 +10,8 @@ import java.util.*;
 public class Niveau3Pays {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idNiveau3Pays;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idNiveau3Pays;
 
     @Column(nullable = false)
     private String codeN3;

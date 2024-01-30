@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import projet.ais.IdGenerator;
 import projet.ais.models.ParametreFiche;
 import projet.ais.models.RegroupementParametre;
 import projet.ais.models.RenvoieParametre;
@@ -23,7 +24,8 @@ public class RenvoieParametreService {
     RenvoieParametreRepository renvoieParametreRepository;
     @Autowired
     ParametreFicheRepository parametreFicheRepository;
-    
+      @Autowired
+    IdGenerator idGenerator ;
 
     public RenvoieParametre createParametreRenvoie(RenvoieParametre renvoieParametre){
         ParametreFiche param = parametreFicheRepository.findByIdParametreFiche(renvoieParametre.getIdRenvoiParametre());
@@ -31,6 +33,8 @@ public class RenvoieParametreService {
         if(param == null)
             throw new IllegalArgumentException("Aucune parametre trouvé");
 
+        String code = idGenerator.genererCode();
+        renvoieParametre.setIdRenvoiParametre(code);
         Date dates = new Date();
         Instant instant = dates.toInstant();
         ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
@@ -39,7 +43,7 @@ public class RenvoieParametreService {
         return renvoieParametreRepository.save(renvoieParametre);
     }
 
-    public RenvoieParametre updateParametreRenvoie(RenvoieParametre renvoieParametre, Integer id){
+    public RenvoieParametre updateParametreRenvoie(RenvoieParametre renvoieParametre, String id){
 
         RenvoieParametre ren = renvoieParametreRepository.findById(id).orElseThrow(null);
     ren.setConditionRenvoi(renvoieParametre.getConditionRenvoi());
@@ -70,14 +74,14 @@ public class RenvoieParametreService {
     //      return renvoieList;
     // }
 
-    public String deleteParametreRenvoie(Integer id){
+    public String deleteParametreRenvoie(String id){
         RenvoieParametre ren = renvoieParametreRepository.findById(id).orElseThrow(null);
 
         renvoieParametreRepository.delete(ren);
         return "Supprimé avec succèss";
     }
 
-    public RenvoieParametre active(Integer id) throws Exception{
+    public RenvoieParametre active(String id) throws Exception{
         RenvoieParametre ren = renvoieParametreRepository.findById(id).orElseThrow(null);
 
         try {
@@ -88,7 +92,7 @@ public class RenvoieParametreService {
         return renvoieParametreRepository.save(ren);
     }
 
-    public RenvoieParametre desactive(Integer id) throws Exception{
+    public RenvoieParametre desactive(String id) throws Exception{
         RenvoieParametre ren = renvoieParametreRepository.findById(id).orElseThrow(null);
 
         try {

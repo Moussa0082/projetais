@@ -12,13 +12,13 @@ public class IdGenerator {
     
     public String genererCode() {
         // Générer 2 lettres aléatoires
-        String lettresAleatoires = genererLettresAleatoires(2);
+        String lettresAleatoires = genererLettresAleatoires(4);
 
         // Générer 3 chiffres aléatoires
-        String chiffresAleatoires = genererChiffresAleatoires(3);
+        String chiffresAleatoires = genererChiffresAleatoires(4);
 
         // Générer une combinaison de 9 caractères aléatoires (14 - 2 - 3)
-        String combinaisonAleatoire = genererCombinaisonAleatoire(9);
+        String combinaisonAleatoire = genererCombinaisonAleatoire(12);
 
         // Concaténer les parties pour former le code final
         String codeFinal = lettresAleatoires + chiffresAleatoires + combinaisonAleatoire;

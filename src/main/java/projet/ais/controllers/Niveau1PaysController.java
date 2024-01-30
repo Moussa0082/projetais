@@ -50,7 +50,7 @@ public class Niveau1PaysController {
 
     @PutMapping("/update/{id}")
     @Operation(summary = "Modifier niveau 1 pays")
-public ResponseEntity<String> updateNiveau1Pays(@RequestBody Niveau1Pays niveau1Pays, @PathVariable Integer id) {
+public ResponseEntity<String> updateNiveau1Pays(@RequestBody Niveau1Pays niveau1Pays, @PathVariable String id) {
     Niveau1Pays niveau1PaysExistant = niveau1PaysRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("type d'acteur introuvable avec id :" +id));;
 
     if (niveau1PaysExistant != null) {
@@ -64,7 +64,7 @@ public ResponseEntity<String> updateNiveau1Pays(@RequestBody Niveau1Pays niveau1
     //liste 
     @GetMapping("/listeNiveau1PaysByIdPays/{id}")
     @Operation(summary = "affichage de la liste des niveau 1 pays par pays")
-    public ResponseEntity<List<Niveau1Pays>> listeNiveau1PaysByIdPays(@PathVariable Integer id){
+    public ResponseEntity<List<Niveau1Pays>> listeNiveau1PaysByIdPays(@PathVariable String id){
         return  new ResponseEntity<>(niveau1PaysService.getAllNiveau1PaysByPays(id), HttpStatus.OK);
     }
 
@@ -78,7 +78,7 @@ public ResponseEntity<String> updateNiveau1Pays(@RequestBody Niveau1Pays niveau1
     //Supprimer Niveau 1 Pays
            @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression d'un niveau 1 pays")
-    public ResponseEntity<String> deleteNiveau1Pays(@PathVariable Integer id){
+    public ResponseEntity<String> deleteNiveau1Pays(@PathVariable String id){
         return new ResponseEntity<>(niveau1PaysService.deleteByIdNiveau1Pays(id), HttpStatus.OK);
     }
 

@@ -14,8 +14,8 @@ import java.util.List;
 public class CategorieProduit {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idCategorieProduit;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idCategorieProduit;
 
     @Column(nullable = false)
     private String codeCategorie;

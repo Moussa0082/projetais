@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import projet.ais.IdGenerator;
 import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Niveau2Pays;
 import projet.ais.repository.Niveau2PaysRepository;
@@ -19,7 +20,8 @@ public class Niveau2PaysService {
 
     @Autowired
     private Niveau2PaysRepository niveau2PaysRepository;
-
+        @Autowired
+    IdGenerator idGenerator ;
 
     
      //  Ajouter niveau 2 pays 
@@ -27,9 +29,11 @@ public class Niveau2PaysService {
 
         // Générer un numéro aléatoire
         String codeN2 = genererCode();
+        String code = idGenerator.genererCode();
     
         // Attribuer le numéro aléatoire au niveau1
         niveau2Pays.setCodeN2(codeN2);
+        niveau2Pays.setIdNiveau2Pays(code);
     
         // Vérifier si le niveau2Pays existe déjà
         Niveau2Pays niveau2PaysExistant = niveau2PaysRepository.findByNomN2(niveau2Pays.getNomN2());
@@ -83,7 +87,7 @@ private String genererChaineAleatoire(String source, int longueur) {
     //Modifier niveau2Pays methode
    
 
-     public Niveau2Pays updateNiveau2Pays(Niveau2Pays niveau2Pays, Integer id){
+     public Niveau2Pays updateNiveau2Pays(Niveau2Pays niveau2Pays, String id){
 
      Niveau2Pays niveau2PaysExistant= niveau2PaysRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Niveau1Pays introuvable"));
      niveau2PaysExistant.setNomN2(niveau2Pays.getNomN2());
@@ -109,7 +113,7 @@ private String genererChaineAleatoire(String source, int longueur) {
     }
 
       //Liste Niveau2Pays par pays
-    public List<Niveau2Pays> getAllNiveau2PaysByIdNiveau1Pays(Integer id){
+    public List<Niveau2Pays> getAllNiveau2PaysByIdNiveau1Pays(String id){
         List<Niveau2Pays>  niveau2PaysList = niveau2PaysRepository.findByNiveau1PaysIdNiveau1Pays(id);
 
         if(niveau2PaysList.isEmpty()){
@@ -123,7 +127,7 @@ private String genererChaineAleatoire(String source, int longueur) {
 
 
     //  Supprimer niveau 2 pays
-      public String deleteByIdNiveau2Pays(Integer id){
+      public String deleteByIdNiveau2Pays(String id){
         Niveau2Pays niveau2Pays = niveau2PaysRepository.findByIdNiveau2Pays(id);
         if(niveau2Pays == null){
             throw new EntityNotFoundException("Désolé le niveau 2 pays à supprimer n'existe pas");

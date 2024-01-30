@@ -9,9 +9,9 @@ import lombok.Data;
 @Data
 public class Alerte {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-     private int id;
+     private String id;
 
     @Column(nullable = true)
     private String sujet;

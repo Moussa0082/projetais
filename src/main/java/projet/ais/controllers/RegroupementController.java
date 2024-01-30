@@ -35,19 +35,19 @@ public class RegroupementController {
 
     @PutMapping("/update/{id}")
     @Operation(summary = "Modification du regroupement parametre")
-    public ResponseEntity<RegroupementParametre> updatedParametre(@RequestBody RegroupementParametre regroupementParametre, @PathVariable Integer id){
+    public ResponseEntity<RegroupementParametre> updatedParametre(@RequestBody RegroupementParametre regroupementParametre, @PathVariable String id){
         return new ResponseEntity<>(regroupementSevice.updateParametreRegroupement(regroupementParametre, id), HttpStatus.CREATED);
     }
     
     @PutMapping("/activer/{id}")
     @Operation(summary = "activation du regroupement parametre")
-    public ResponseEntity<RegroupementParametre> activeParametre(@PathVariable Integer id) throws Exception{
+    public ResponseEntity<RegroupementParametre> activeParametre(@PathVariable String id) throws Exception{
         return new ResponseEntity<>(regroupementSevice.active(id), HttpStatus.CREATED);
     }
    
     @PutMapping("/desactiver/{id}")
     @Operation(summary = "desactivation du regroupement parametre")
-    public ResponseEntity<RegroupementParametre> desactivationParametre(@PathVariable Integer id) throws Exception{
+    public ResponseEntity<RegroupementParametre> desactivationParametre(@PathVariable String id) throws Exception{
         return new ResponseEntity<>(regroupementSevice.desactive(id), HttpStatus.CREATED);
     }
 
@@ -59,7 +59,7 @@ public class RegroupementController {
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression")
-    public String  supprimer(@PathVariable Integer id){
+    public String  supprimer(@PathVariable String id){
         return regroupementSevice.deleteRegroupement(id);
     }
 }

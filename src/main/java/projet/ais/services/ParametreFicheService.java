@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import projet.ais.CodeGenerator;
+import projet.ais.IdGenerator;
 import projet.ais.models.Magasin;
 import projet.ais.models.ParametreFiche;
 import projet.ais.repository.ParametreFicheRepository;
@@ -21,11 +22,15 @@ public class ParametreFicheService {
     
     @Autowired
     CodeGenerator codeGenerator;
+      @Autowired
+    IdGenerator idGenerator ;
 
     public ParametreFiche createParametreFiche(ParametreFiche parametreFiche){
 
         String codes = codeGenerator.genererCode();
+        String Idcodes = idGenerator.genererCode();
         parametreFiche.setCodeParametre(codes);
+        parametreFiche.setIdParametreFiche(codes);
         Date dates = new Date();
             Instant instant = dates.toInstant();
             ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
@@ -36,7 +41,7 @@ public class ParametreFicheService {
     }
 
 
-    public ParametreFiche updateParametreFiche(ParametreFiche parametreFiche, Integer id){
+    public ParametreFiche updateParametreFiche(ParametreFiche parametreFiche, String id){
 
         ParametreFiche param = parametreFicheRepository.findById(id).orElseThrow(null);
         param.setClasseParametre(parametreFiche.getClasseParametre());
@@ -64,14 +69,14 @@ public class ParametreFicheService {
         return paramList;
     }
     
-    public String deleteParametreFiche(Integer id){
+    public String deleteParametreFiche(String id){
         ParametreFiche parametreFiche = parametreFicheRepository.findById(id).orElseThrow(null);
 
         parametreFicheRepository.delete(parametreFiche);
         return "supprimé avec succèss";
     }
 
-    public ParametreFiche active(Integer id) throws Exception{
+    public ParametreFiche active(String id) throws Exception{
         ParametreFiche parametreFiche = parametreFicheRepository.findById(id).orElseThrow(null);
 
         try {
@@ -82,7 +87,7 @@ public class ParametreFicheService {
         return parametreFicheRepository.save(parametreFiche);
     }
 
-    public ParametreFiche desactive(Integer id) throws Exception{
+    public ParametreFiche desactive(String id) throws Exception{
         ParametreFiche parametreFiche = parametreFicheRepository.findById(id).orElseThrow(null);
 
         try {

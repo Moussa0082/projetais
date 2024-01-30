@@ -13,8 +13,8 @@ import java.util.List;
 public class Unite {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idUnite;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idUnite;
 
     @Column(nullable = false)
     private String codeUnite;

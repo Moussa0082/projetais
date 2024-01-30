@@ -48,7 +48,7 @@ public class SousRegionController {
     
     @PutMapping("/update/{id}")
     @Operation(summary = "Modifier une sous region")
-   public ResponseEntity<String> updateSousRegion(@RequestBody SousRegion sousRegion, @PathVariable Integer id) {
+   public ResponseEntity<String> updateSousRegion(@RequestBody SousRegion sousRegion, @PathVariable String id) {
     SousRegion sousRegionExistant = sousRegionRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Sous region introuvable "));;
 
     if (sousRegionExistant != null) {
@@ -62,7 +62,7 @@ public class SousRegionController {
      //liste sous region par continent
     @GetMapping("/listeSousRegionByContinent/{id}")
     @Operation(summary = "affichage de la liste des  sous region par continent")
-    public ResponseEntity<List<SousRegion>> listeSousRegionBycontinent(@PathVariable Integer id){
+    public ResponseEntity<List<SousRegion>> listeSousRegionBycontinent(@PathVariable String id){
         return  new ResponseEntity<>(sousRegionService.getAllSousRegionByContinent(id), HttpStatus.OK);
     }
 
@@ -77,7 +77,7 @@ public class SousRegionController {
     //Suppression d'un pays methode
            @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression d'une sous region")
-    public ResponseEntity<String> deleteSousRegion(@PathVariable Integer id){
+    public ResponseEntity<String> deleteSousRegion(@PathVariable String id){
         return new ResponseEntity<>(sousRegionService.deleteByIdSousRegion(id), HttpStatus.OK);
     }
 

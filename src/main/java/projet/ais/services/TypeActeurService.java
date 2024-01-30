@@ -45,6 +45,7 @@ public class TypeActeurService {
         // typeActeur.setIdType(idCode);
         // Attribuer le numéro aléatoire au type d'acteur
         typeActeur.setCodeTypeActeur(codeTypeActeur);
+        typeActeur.setIdTypeActeur(idCode);
     
         // Vérifier si le type d'acteur existe déjà
         TypeActeur typeActeurExistant = typeActeurRepository.findByLibelle(typeActeur.getLibelle());
@@ -98,7 +99,7 @@ private String genererChaineAleatoire(String source, int longueur) {
     //Modifier type acteur methode
    
 
-     public TypeActeur updateTypeActeur(TypeActeur typeActeur, Integer id){
+     public TypeActeur updateTypeActeur(TypeActeur typeActeur, String id){
 
      TypeActeur typeActeurExistant= typeActeurRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("type d'acteur introuvable avec id :" +id));
     typeActeurExistant.setLibelle(typeActeur.getLibelle());
@@ -125,7 +126,7 @@ private String genererChaineAleatoire(String source, int longueur) {
 
 
     //  Supprimer type acteur
-      public String deleteByIdTypeActeur(Integer id){
+      public String deleteByIdTypeActeur(String id){
         TypeActeur typeActeur = typeActeurRepository.findByIdTypeActeur(id);
         if(typeActeur == null){
             throw new EntityNotFoundException("Désolé le type d'acteur à supprimer n'existe pas");

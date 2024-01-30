@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.stream.Collectors;
 
 import jakarta.persistence.EntityNotFoundException;
+import projet.ais.IdGenerator;
 import projet.ais.models.Continent;
 import projet.ais.repository.ContinentRepository;
 
@@ -16,6 +17,8 @@ public class ContinentService {
 
     @Autowired
     private ContinentRepository continentRepository;
+        @Autowired
+    IdGenerator idGenerator ;
 
 
         //  Ajouter continent 
@@ -25,14 +28,17 @@ public class ContinentService {
             if (contientExistant == null) {
                 // Générer un numéro aléatoire
                 String codeContinent = genererCode();
+                String code = idGenerator.genererCode();
                 // Attribuer le numéro aléatoire au continent
                     continent.setCodeContinent(codeContinent);
+                    continent.setIdContinent(code);
                 // Vérifier si la sous region existe déjà
                 continentRepository.save(continent);
                 return new ResponseEntity<>("Continent ajouté avec succès", HttpStatus.OK);
             } else {
                 
                 // Retourner un message d'erreur
+
                 return new ResponseEntity<>("Continent déjà existant.", HttpStatus.BAD_REQUEST);
             }
         }
@@ -77,7 +83,7 @@ public class ContinentService {
         //Modifier Continent methode
        
     
-         public Continent updateContinent(Continent continent, Integer id){
+         public Continent updateContinent(Continent continent, String id){
     
          Continent continentExistant = continentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Continent introuvable "));
          continentExistant.setNomContinent(continent.getNomContinent());
@@ -105,7 +111,7 @@ public class ContinentService {
     
     
         //  Supprimer sous region
-          public String deleteByIdContinent(Integer id){
+          public String deleteByIdContinent(String id){
             Continent continent = continentRepository.findByIdContinent(id);
             if(continent == null){
                 throw new EntityNotFoundException("Désolé le continent à supprimer n'existe pas");

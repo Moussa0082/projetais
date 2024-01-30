@@ -12,8 +12,8 @@ import java.util.List;
 public class Speculation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idSpeculation;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idSpeculation;
 
     @Column(nullable = false)
     private String codeSpeculation;

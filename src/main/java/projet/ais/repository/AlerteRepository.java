@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import projet.ais.models.Alerte;
 
-public interface AlerteRepository extends JpaRepository <Alerte, Integer>{
+public interface AlerteRepository extends JpaRepository <Alerte, String>{
     
 }

@@ -13,14 +13,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Sortie_Stock {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idSortieStock;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idSortieStock;
 
     @Column(nullable = false)
     private Date dateSortie;
 
     @Column(nullable = false)
-    private String  codeStock;
+    private String  codeSortie;
 
     @Column(nullable = false)
     private double quantiteSortie;

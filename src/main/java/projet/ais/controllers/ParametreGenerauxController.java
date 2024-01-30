@@ -65,7 +65,7 @@ public class ParametreGenerauxController {
       @PutMapping("/update/{id}")
     @Operation(summary = "Mise à jour d'un paramètre général par son Id ")
     public ResponseEntity<ParametreGeneraux> updateParametreGeneraux(
-            @PathVariable Integer id,
+            @PathVariable String id,
             @Valid @RequestParam("parametreGeneral") String parametreGeneralString,
             @RequestParam(value = "image", required = false) MultipartFile imageFile) {
         ParametreGeneraux parametreGeneraux = new ParametreGeneraux();
@@ -94,7 +94,7 @@ public class ParametreGenerauxController {
        
     //Lire un user spécifique
     @GetMapping("/read/{id}")
-    public ResponseEntity<?> getParametreGeneralById(@PathVariable Integer id) {
+    public ResponseEntity<?> getParametreGeneralById(@PathVariable String id) {
         return parametreGenerauxService.findById(id);
     }
 
@@ -102,7 +102,7 @@ public class ParametreGenerauxController {
         //Supprimer un paramètre général
            @DeleteMapping("/delete/{id}")
     @Operation(summary = "Supprimer un paramètre général")
-    public String delete(@Valid @PathVariable Integer id) {
+    public String delete(@Valid @PathVariable String id) {
         return parametreGenerauxService.deleteByIdParametreGeneraux(id);
     }
     

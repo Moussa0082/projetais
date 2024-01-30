@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
+import projet.ais.IdGenerator;
 import projet.ais.models.CategorieProduit;
 import projet.ais.models.Filiere;
 import projet.ais.repository.CategorieProduitRepository;
@@ -30,6 +31,8 @@ public class CategorieService {
     FiliereRepository filiereRepository;
     @Autowired
     CodeGenerator codeGenerator;
+    @Autowired
+    IdGenerator idGenerator ;
 
     public CategorieProduit createCategorie(CategorieProduit categorieProduit){
         CategorieProduit categorieProduits = categorieProduitRepository.findBylibelleCategorie(categorieProduit.getLibelleCategorie());
@@ -42,7 +45,9 @@ public class CategorieService {
             throw new EntityNotFoundException("Ce filiere n'existe pas");
         
             String codes = codeGenerator.genererCode();
+            String Idcodes = idGenerator.genererCode();
             categorieProduit.setCodeCategorie(codes);
+            categorieProduit.setIdCategorieProduit(Idcodes);
             Date dates = new Date();
             Instant instant = dates.toInstant();
             ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
@@ -52,7 +57,7 @@ public class CategorieService {
         return categorieProduitRepository.save(categorieProduit);
     }
 
-    public CategorieProduit updateCategorie(CategorieProduit categorieProduit, Integer id){
+    public CategorieProduit updateCategorie(CategorieProduit categorieProduit, String id){
         CategorieProduit categorieProduits = categorieProduitRepository.findById(id).orElseThrow(null);
 
         categorieProduits.setDescriptionCategorie(categorieProduit.getDescriptionCategorie());
@@ -79,7 +84,7 @@ public class CategorieService {
         return categorieProduitList;
     }
 
-    public List<CategorieProduit> getAllCategorieByIdFiliere(Integer id){
+    public List<CategorieProduit> getAllCategorieByIdFiliere(String id){
         List<CategorieProduit> categorieProduitList = categorieProduitRepository.findByFiliereIdFiliere(id);
 
         if(categorieProduitList.isEmpty())
@@ -91,14 +96,14 @@ public class CategorieService {
         return categorieProduitList;
     }
 
-    public String deleteCategorie(Integer id){
+    public String deleteCategorie(String id){
         CategorieProduit categorieProduit = categorieProduitRepository.findById(id).orElseThrow(null);
 
         categorieProduitRepository.delete(categorieProduit); 
         return "Supprimé avec succèss";
     }
 
-    public CategorieProduit active(Integer id) throws Exception{
+    public CategorieProduit active(String id) throws Exception{
         CategorieProduit cat = categorieProduitRepository.findById(id).orElseThrow(null);
 
         try {
@@ -109,7 +114,7 @@ public class CategorieService {
         return categorieProduitRepository.save(cat);
     }
 
-    public CategorieProduit desactive(Integer id) throws Exception{
+    public CategorieProduit desactive(String id) throws Exception{
         CategorieProduit cat = categorieProduitRepository.findById(id).orElseThrow(null);
 
         try {

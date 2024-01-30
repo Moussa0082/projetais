@@ -38,17 +38,17 @@ public class ParametreFicheController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ParametreFiche> updateParametre(@PathVariable Integer id, @RequestBody ParametreFiche parametreFiche) {        
+    public ResponseEntity<ParametreFiche> updateParametre(@PathVariable String id, @RequestBody ParametreFiche parametreFiche) {        
         return new ResponseEntity<>(parametreFicheService.updateParametreFiche(parametreFiche, id), HttpStatus.OK);
     }
     
     @PutMapping("/activer/{id}")
-    public ResponseEntity<ParametreFiche> activeParametre(@PathVariable Integer id) throws Exception {        
+    public ResponseEntity<ParametreFiche> activeParametre(@PathVariable String id) throws Exception {        
         return new ResponseEntity<>(parametreFicheService.active(id), HttpStatus.OK);
     }
   
     @PutMapping("/desactiver/{id}")
-    public ResponseEntity<ParametreFiche> desactiveParametre(@PathVariable Integer id) throws Exception {        
+    public ResponseEntity<ParametreFiche> desactiveParametre(@PathVariable String id) throws Exception {        
         return new ResponseEntity<>(parametreFicheService.desactive(id), HttpStatus.OK);
     }
 

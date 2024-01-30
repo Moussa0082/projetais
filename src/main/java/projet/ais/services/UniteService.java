@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import projet.ais.CodeGenerator;
+import projet.ais.IdGenerator;
 import projet.ais.models.Stock;
 import projet.ais.models.Unite;
 import projet.ais.repository.UniteRepository;
@@ -21,6 +22,9 @@ public class UniteService {
     UniteRepository uniteRepository;
     @Autowired
     CodeGenerator codeGenerator;
+  @Autowired
+    IdGenerator idGenerator ;
+
 
     public Unite createUnite(Unite unite){
         Unite unites = uniteRepository.findByNomUnite(unite.getNomUnite());
@@ -29,7 +33,9 @@ public class UniteService {
             throw new IllegalStateException("cet Unité existe déjà");
         
         String codes = codeGenerator.genererCode();
+        String Idcodes = idGenerator.genererCode();
         unite.setCodeUnite(codes);
+        unite.setIdUnite(Idcodes);
         Date dates = new Date();
         Instant instant = dates.toInstant();
         ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
@@ -38,7 +44,7 @@ public class UniteService {
         return uniteRepository.save(unite);
     }
 
-    public Unite updateUnite(Unite unite, Integer id){
+    public Unite updateUnite(Unite unite, String id){
         Unite unites = uniteRepository.findById(id).orElseThrow(null);
 
         unites.setNomUnite(unite.getNomUnite());
@@ -60,14 +66,14 @@ public class UniteService {
         return uniteList;
     }
 
-    public String deleteUnite(Integer id){
+    public String deleteUnite(String id){
         Unite unite = uniteRepository.findById(id).orElseThrow(null);
 
         uniteRepository.delete(unite);
         return "Supprimé avec success";
     }
 
-    public Unite active(Integer id) throws Exception{
+    public Unite active(String id) throws Exception{
         Unite unite = uniteRepository.findById(id).orElseThrow(null);
 
         try {
@@ -78,7 +84,7 @@ public class UniteService {
         return uniteRepository.save(unite);
     }
 
-    public Unite desactive(Integer id) throws Exception{
+    public Unite desactive(String id) throws Exception{
         Unite unite = uniteRepository.findById(id).orElseThrow(null);
 
         try {

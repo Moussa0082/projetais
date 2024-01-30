@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import projet.ais.CodeGenerator;
+import projet.ais.IdGenerator;
 import projet.ais.models.Unite;
 import projet.ais.models.ZoneProduction;
 import projet.ais.repository.ZoneProductionRepository;
@@ -31,6 +32,8 @@ public class ZoneProductionService {
     ZoneProductionRepository zoneProductionRepository;
     @Autowired
     CodeGenerator codeGenerator;
+    @Autowired
+    IdGenerator idGenerator ;
 
     public ZoneProduction createZoneProduction(ZoneProduction zoneProduction, MultipartFile imageFile) throws Exception{
         ZoneProduction zoneProductions = zoneProductionRepository.findByNomZoneProduction(zoneProduction.getNomZoneProduction());
@@ -55,17 +58,18 @@ public class ZoneProductionService {
                 }
             }
             String codes = codeGenerator.genererCode();
-            
+            String idCodes = idGenerator.genererCode();
         Date dates = new Date();
         Instant instant = dates.toInstant();
         ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
         zoneProduction.setCodeZone(codes);
+        zoneProduction.setIdZoneProduction(idCodes);
         zoneProduction.setDateAjout(dates);
         zoneProduction.setDateModif(dates);
         return zoneProductionRepository.save(zoneProduction);
     }
 
-    public ZoneProduction updateZoneProduction(ZoneProduction zoneProduction, Integer id,MultipartFile imageFile) throws Exception{
+    public ZoneProduction updateZoneProduction(ZoneProduction zoneProduction, String id,MultipartFile imageFile) throws Exception{
         ZoneProduction zoneProductions = zoneProductionRepository.findById(id).orElseThrow(null);
 
         zoneProductions.setNomZoneProduction(zoneProduction.getNomZoneProduction());
@@ -107,14 +111,14 @@ public class ZoneProductionService {
         return zoneProductionList;
     }
 
-    public String deleteZoneProduction(Integer id){
+    public String deleteZoneProduction(String id){
         ZoneProduction zoneProduction = zoneProductionRepository.findById(id).orElseThrow(null);
 
         zoneProductionRepository.delete(zoneProduction);
         return "Supprimé avec success";
     }
 
-    public ZoneProduction active(Integer id) throws Exception{
+    public ZoneProduction active(String id) throws Exception{
         ZoneProduction zoneProduction = zoneProductionRepository.findById(id).orElseThrow(null);
 
         try {
@@ -125,7 +129,7 @@ public class ZoneProductionService {
         return zoneProductionRepository.save(zoneProduction);
     }
 
-    public ZoneProduction desactive(Integer id) throws Exception{
+    public ZoneProduction desactive(String id) throws Exception{
         ZoneProduction zoneProduction = zoneProductionRepository.findById(id).orElseThrow(null);
 
         try {

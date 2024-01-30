@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import projet.ais.IdGenerator;
 import projet.ais.models.Pays;
 import projet.ais.models.SousRegion;
 import projet.ais.repository.SousRegionRepository;
@@ -19,6 +20,8 @@ public class SousRegionService {
 
     @Autowired
     private SousRegionRepository sousRegionRepository;
+        @Autowired
+    IdGenerator idGenerator ;
 
 
       //  Ajouter sous region 
@@ -28,8 +31,10 @@ public class SousRegionService {
         if (sousRegionExistant == null) {
             // Générer un numéro aléatoire
             String codeSousRegion = genererCode();
+            String code = idGenerator.genererCode();
             // Attribuer le numéro aléatoire au type d'acteur
                 sousRegion.setCodeSousRegion(codeSousRegion);
+                sousRegion.setIdSousRegion(code);
             // Vérifier si la sous region existe déjà
             sousRegionRepository.save(sousRegion);
             return new ResponseEntity<>("Sous region ajouté avec succès", HttpStatus.OK);
@@ -80,7 +85,7 @@ private String genererChaineAleatoire(String source, int longueur) {
     //Modifier sous region methode
    
 
-     public SousRegion updateSousRegion(SousRegion sousRegion, Integer id){
+     public SousRegion updateSousRegion(SousRegion sousRegion, String id){
 
      SousRegion sousRegionExistant = sousRegionRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Sous Region introuvable "));
      sousRegionExistant.setNomSousRegion(sousRegion.getNomSousRegion());
@@ -106,7 +111,7 @@ private String genererChaineAleatoire(String source, int longueur) {
     }
 
      //Liste sous region par continent
-    public List<SousRegion> getAllSousRegionByContinent(Integer id){
+    public List<SousRegion> getAllSousRegionByContinent(String id){
         List<SousRegion>  sousRegionList = sousRegionRepository.findByContinentIdContinent(id);
 
         if(sousRegionList.isEmpty()){
@@ -120,7 +125,7 @@ private String genererChaineAleatoire(String source, int longueur) {
 
 
     //  Supprimer sous region
-      public String deleteByIdSousRegion(Integer id){
+      public String deleteByIdSousRegion(String id){
         SousRegion sousRegion = sousRegionRepository.findByIdSousRegion(id);
         if(sousRegion == null){
             throw new EntityNotFoundException("Désolé la sous region à supprimer n'existe pas");

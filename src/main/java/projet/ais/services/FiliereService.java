@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
+import projet.ais.IdGenerator;
 import projet.ais.models.CategorieProduit;
 import projet.ais.models.Filiere;
 import projet.ais.repository.FiliereRepository;
@@ -23,6 +24,8 @@ public class FiliereService {
     FiliereRepository filiereRepository;
     @Autowired
     CodeGenerator codeGenerator;
+  @Autowired
+    IdGenerator idGenerator ;
 
   public Filiere createFiliere(Filiere filiere){
     Filiere filieres = filiereRepository.findByLibelleFiliere(filiere.getLibelleFiliere());
@@ -31,7 +34,9 @@ public class FiliereService {
         throw new DataIntegrityViolationException("Ce filiere existe déjà");
     
     String codes = codeGenerator.genererCode();
+    String Idcodes = idGenerator.genererCode();
     filiere.setCodeFiliere(codes);
+    filiere.setIdFiliere(Idcodes);
      Date dates = new Date();
             Instant instant = dates.toInstant();
             ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
@@ -41,7 +46,7 @@ public class FiliereService {
   }
 
   
-  public Filiere updateFiliere(Filiere filiere, Integer id){
+  public Filiere updateFiliere(Filiere filiere, String id){
 
     Filiere filieres = filiereRepository.findById(id).orElseThrow(null);
 
@@ -68,7 +73,7 @@ public class FiliereService {
     return filiereList;
   }
 
-  public String DeleteFiliere(Integer id){
+  public String DeleteFiliere(String id){
     Filiere filiere = filiereRepository.findById(id).orElseThrow(null);
 
     filiereRepository.delete(filiere);
@@ -76,7 +81,7 @@ public class FiliereService {
     return "Supprimer avec succèss";
   }
 
-  public Filiere active(Integer id) throws Exception{
+  public Filiere active(String id) throws Exception{
     Filiere filieres = filiereRepository.findById(id).orElseThrow(null);
 
         try {
@@ -87,7 +92,7 @@ public class FiliereService {
         return filiereRepository.save(filieres);
     }
 
-    public Filiere desactive(Integer id) throws Exception{
+    public Filiere desactive(String id) throws Exception{
       Filiere filieres = filiereRepository.findById(id).orElseThrow(null);
 
       try {

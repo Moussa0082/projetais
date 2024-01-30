@@ -55,7 +55,7 @@ public class StockController {
     public ResponseEntity<Stock> updatedStock(
         @Valid @RequestParam("stock")  String addstocks,
         @Valid @RequestParam(value = "image",required = false) MultipartFile imageFile,
-        @PathVariable Integer id
+        @PathVariable String id
         ) throws Exception{
             Stock stock = new Stock();
 
@@ -70,12 +70,12 @@ public class StockController {
         }
 
         @PutMapping("/activer/{id}")
-    public ResponseEntity<Stock> activeStock(@PathVariable Integer id) throws Exception {
+    public ResponseEntity<Stock> activeStock(@PathVariable String id) throws Exception {
         return new ResponseEntity<>(stockservice.active(id), HttpStatus.OK);
     }
 
         @PutMapping("/desactiver/{id}")
-    public ResponseEntity<Stock> desactiveStock(@PathVariable Integer id) throws Exception {
+    public ResponseEntity<Stock> desactiveStock(@PathVariable String id) throws Exception {
         return new ResponseEntity<>(stockservice.desactive(id), HttpStatus.OK);
     }
 
@@ -83,7 +83,7 @@ public class StockController {
     @Operation(summary = "Modification de stock")
     public ResponseEntity<Stock> updatedQuantiteStock(
         @Valid @RequestParam("stock")  String updateQuantiteStocks,
-        @PathVariable Integer id
+        @PathVariable String id
         ) throws Exception{
             Stock stock = new Stock();
 
@@ -105,19 +105,19 @@ public class StockController {
 
         @GetMapping("/getAllStocksByActeurs/{id}")
         @Operation(summary = "Liste des stocks par d'un acteur ")
-        public ResponseEntity<List<Stock>> listeStockParActeur(@PathVariable Integer id){
+        public ResponseEntity<List<Stock>> listeStockParActeur(@PathVariable String id){
             return new ResponseEntity<>(stockservice.getAllStockByActeur(id), HttpStatus.OK);
         }
 
         @GetMapping("/getAllStocksByIdMagasin/{id}")
         @Operation(summary = "Liste des stocks par d'un magasin ")
-        public ResponseEntity<List<Stock>> listeStockParMagasin(@PathVariable Integer id){
+        public ResponseEntity<List<Stock>> listeStockParMagasin(@PathVariable String id){
             return new ResponseEntity<>(stockservice.getAllStockByMagasin(id), HttpStatus.OK);
         }
 
         @DeleteMapping("/deleteStocks")
         @Operation(summary = "Suppression des stocks")
-        public String supprimer(@PathVariable Integer id){
+        public String supprimer(@PathVariable String id){
             return stockservice.deleteStock(id);
         }
 }

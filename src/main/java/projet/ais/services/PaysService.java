@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import projet.ais.IdGenerator;
 import projet.ais.models.Niveau2Pays;
 import projet.ais.models.Pays;
 import projet.ais.repository.PaysRepository;
@@ -17,7 +18,8 @@ public class PaysService {
 
     @Autowired
     private PaysRepository paysRepository;
-
+    @Autowired
+    IdGenerator idGenerator ;
 
      //  Ajouter pays 
     public ResponseEntity<String> createPays(Pays pays) {
@@ -26,8 +28,10 @@ public class PaysService {
         if (paysExistant == null) {
             // Générer un numéro aléatoire
             String codePays = genererCode();
+            String code = idGenerator.genererCode();
             // Attribuer le numéro aléatoire au type d'acteur
                 pays.setCodePays(codePays);
+                pays.setIdPays(code);
             // Vérifier si le pays existe déjà
             paysRepository.save(pays);
             return new ResponseEntity<>("Pays ajouté avec succès", HttpStatus.OK);
@@ -75,7 +79,7 @@ private String genererChaineAleatoire(String source, int longueur) {
 
 
     //Liste Pays  par sous region
-    public List<Pays> getAllPaysBySousRegion(Integer id){
+    public List<Pays> getAllPaysBySousRegion(String id){
         List<Pays>  paysList = paysRepository.findBySousRegionIdSousRegion(id);
 
         if(paysList.isEmpty()){
@@ -89,7 +93,7 @@ private String genererChaineAleatoire(String source, int longueur) {
 
     //Modifier pays methode
 
-     public Pays updatePays(Pays pays, Integer id){
+     public Pays updatePays(Pays pays, String id){
 
     Pays paysExistant = paysRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("type d'acteur introuvable avec id :" +id));
     paysExistant.setNomPays(pays.getNomPays());
@@ -118,7 +122,7 @@ private String genererChaineAleatoire(String source, int longueur) {
 
 
     //  Supprimer pays
-      public String deleteByIdPays(Integer id){
+      public String deleteByIdPays(String id){
         Pays pays = paysRepository.findByIdPays(id);
         if(pays == null){
             throw new EntityNotFoundException("Désolé le pays à supprimer n'existe pas");

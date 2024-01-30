@@ -48,13 +48,13 @@ public class PaysController {
     //liste pays par sous region
     @GetMapping("/listePaysBySousRegion/{id}")
     @Operation(summary = "affichage de la liste des pays par sous region")
-    public ResponseEntity<List<Pays>> listePaysBysousregion(@PathVariable Integer id){
+    public ResponseEntity<List<Pays>> listePaysBysousregion(@PathVariable String id){
         return  new ResponseEntity<>(paysService.getAllPaysBySousRegion(id), HttpStatus.OK);
     }
     
     @PutMapping("/update/{id}")
     @Operation(summary = "Modifier un pays")
-   public ResponseEntity<String> updatePays(@RequestBody Pays pays, @PathVariable Integer id) {
+   public ResponseEntity<String> updatePays(@RequestBody Pays pays, @PathVariable String id) {
     Pays paysExistant = paysRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pays introuvable avec id :" +id));;
 
     if (paysExistant != null) {
@@ -76,7 +76,7 @@ public class PaysController {
     //Suppression d'un pays methode
            @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression d'un pays")
-    public ResponseEntity<String> deletePays(@PathVariable Integer id){
+    public ResponseEntity<String> deletePays(@PathVariable String id){
         return new ResponseEntity<>(paysService.deleteByIdPays(id), HttpStatus.OK);
     }
 

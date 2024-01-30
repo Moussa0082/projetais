@@ -7,9 +7,9 @@ import projet.ais.models.Filiere;
 
 
 @Repository
-public interface FiliereRepository  extends JpaRepository<Filiere , Integer>{
+public interface FiliereRepository  extends JpaRepository<Filiere , String>{
     
-    Filiere findByIdFiliere(Integer idFiliere);
+    Filiere findByIdFiliere(String idFiliere);
 
     Filiere findByLibelleFiliere(String libelle);
 

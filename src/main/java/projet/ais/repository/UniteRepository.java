@@ -6,9 +6,9 @@ import org.springframework.stereotype.Repository;
 import projet.ais.models.Unite;
 
 @Repository
-public interface UniteRepository extends JpaRepository<Unite, Integer>{
+public interface UniteRepository extends JpaRepository<Unite, String>{
     
-    Unite findByIdUnite(Integer id);
+    Unite findByIdUnite(String id);
 
     Unite findByNomUnite(String nom);
 }

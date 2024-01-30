@@ -10,8 +10,8 @@ import lombok.Data;
 public class RenvoieParametre {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idRenvoiParametre;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idRenvoiParametre;
 
     @Column(nullable = false)
     private String conditionRenvoi;

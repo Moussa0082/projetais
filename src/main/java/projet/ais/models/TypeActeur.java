@@ -11,8 +11,8 @@ import java.util.*;
 public class TypeActeur {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idTypeActeur;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idTypeActeur;
 
     @Column(nullable = false)
     private String libelle;

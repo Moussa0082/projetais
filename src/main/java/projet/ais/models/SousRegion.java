@@ -12,8 +12,8 @@ import java.util.*;
 public class SousRegion {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idSousRegion;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idSousRegion;
 
     @Column(nullable = false)
     private String codeSousRegion;

@@ -7,9 +7,9 @@ import java.util.*;
 
 import projet.ais.models.TypeActeur;
 
-public interface ActeurRepository extends JpaRepository<Acteur, Integer>{
+public interface ActeurRepository extends JpaRepository<Acteur, String>{
 
-     Acteur findByIdActeur(Integer idActeur);
+     Acteur findByIdActeur(String idActeur);
 
      Acteur findByEmailActeurAndPassword(String emailActeur, String Password);
 
@@ -19,7 +19,7 @@ public interface ActeurRepository extends JpaRepository<Acteur, Integer>{
 
      Acteur findByTypeActeurLibelle(String libelle);     
 
-     List<Acteur> findByTypeActeurIdTypeActeur(Integer idTypeActeur);
+     List<Acteur> findByTypeActeurIdTypeActeur(String idTypeActeur);
 
      Acteur findByTypeActeur(Acteur acteur);
 

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import projet.ais.CodeGenerator;
+import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Magasin;
 import projet.ais.models.Speculation;
@@ -47,7 +48,9 @@ public class StockService {
     ZoneProductionRepository zoneProductionRepository;
     @Autowired
     CodeGenerator codeGenerator;
-
+      @Autowired
+    IdGenerator idGenerator ;
+    
     public Stock createStock(Stock stock, MultipartFile imageFile) throws Exception {
         Unite unite = uniteRepository.findByIdUnite(stock.getUnite().getIdUnite());
         Magasin magasin = magasinRepository.findByIdMagasin(stock.getMagasin().getIdMagasin());
@@ -83,7 +86,10 @@ public class StockService {
                 }
             }
             String codes = codeGenerator.genererCode();
+            String idCode = idGenerator.genererCode();
+
             stock.setCodeStock(codes);
+            stock.setIdStock(idCode);
               Date dates = new Date();
         Instant instant = dates.toInstant();
         ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
@@ -92,7 +98,7 @@ public class StockService {
             return stockRepository.save(stock);
     }
 
-    public Stock updateStock(Stock stock, MultipartFile imageFile,Integer id) throws Exception {
+    public Stock updateStock(Stock stock, MultipartFile imageFile,String id) throws Exception {
         Stock stocks = stockRepository.findById(id).orElseThrow(null);
 
         stocks.setNomProduit(stock.getNomProduit());
@@ -145,7 +151,7 @@ public class StockService {
     }
 
 
-    public Stock updateQuantiteStock(Stock stock,Integer id) throws Exception {
+    public Stock updateQuantiteStock(Stock stock,String id) throws Exception {
         Stock stocks = stockRepository.findById(id).orElseThrow(null);
 
          
@@ -197,7 +203,7 @@ public class StockService {
         return stockList;
     }
 
-    public List<Stock> getAllStockByActeur(Integer id){
+    public List<Stock> getAllStockByActeur(String id){
         List<Stock> stockList = stockRepository.findByActeurIdActeur(id);
 
         if(stockList.isEmpty())
@@ -210,7 +216,7 @@ public class StockService {
         return stockList;
     }
 
-    public List<Stock> getAllStockByMagasin(Integer id){
+    public List<Stock> getAllStockByMagasin(String id){
         List<Stock> stockList = stockRepository.findByMagasinIdMagasin(id);
 
         if(stockList.isEmpty())
@@ -223,7 +229,7 @@ public class StockService {
         return stockList;
     }
 
-    public String deleteStock(Integer id){
+    public String deleteStock(String id){
         Stock stock = stockRepository.findById(id).orElseThrow(null);
 
         stockRepository.delete(stock);
@@ -231,7 +237,7 @@ public class StockService {
         return "Supprimé avec success";
     }
 
-    public Stock active(Integer id) throws Exception{
+    public Stock active(String id) throws Exception{
         Stock stock = stockRepository.findById(id).orElseThrow(null);
 
         try {
@@ -242,7 +248,7 @@ public class StockService {
         return stockRepository.save(stock);
     }
 
-    public Stock desactive(Integer id) throws Exception{
+    public Stock desactive(String id) throws Exception{
         Stock stock = stockRepository.findById(id).orElseThrow(null);
 
         try {

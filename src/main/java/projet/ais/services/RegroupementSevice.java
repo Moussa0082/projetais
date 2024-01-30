@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import projet.ais.IdGenerator;
 import projet.ais.models.ParametreFiche;
 import projet.ais.models.RegroupementParametre;
 import projet.ais.repository.ParametreFicheRepository;
@@ -23,6 +24,8 @@ public class RegroupementSevice {
 
     @Autowired
     ParametreFicheRepository parametreFicheRepository;
+  @Autowired
+    IdGenerator idGenerator ;
 
     public RegroupementParametre createParametreRegroupement(RegroupementParametre regroupementParametre){
         ParametreFiche parametreFicheDonnees = parametreFicheRepository.findByIdParametreFiche(regroupementParametre.getParametreFiche().getIdParametreFiche());
@@ -30,6 +33,8 @@ public class RegroupementSevice {
         if(parametreFicheDonnees == null)
             throw new IllegalArgumentException("Aucune parametre trouvé pour le regroupement");
         
+        String code = idGenerator.genererCode();
+        regroupementParametre.setIdRegroupement(code);
         Date dates = new Date();
         Instant instant = dates.toInstant();
         ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
@@ -38,7 +43,7 @@ public class RegroupementSevice {
         return regroupementParametreRepository.save(regroupementParametre);
     }
 
-    public RegroupementParametre updateParametreRegroupement(RegroupementParametre regroupementParametre, Integer id){
+    public RegroupementParametre updateParametreRegroupement(RegroupementParametre regroupementParametre, String id){
         RegroupementParametre regroupementParametres = regroupementParametreRepository.findById(id).orElseThrow(null);
         regroupementParametres.setParametreRegroupe(regroupementParametre.getParametreRegroupe());
         regroupementParametres.setDateAjout(regroupementParametres.getDateAjout());
@@ -59,14 +64,14 @@ public class RegroupementSevice {
     return regroupementParam;
     }
 
-    public String deleteRegroupement(Integer id){
+    public String deleteRegroupement(String id){
         RegroupementParametre regroupementParam = regroupementParametreRepository.findById(id).orElseThrow(null);
 
         regroupementParametreRepository.delete(regroupementParam);
         return "Supprimé avec success";
     }
 
-    public RegroupementParametre active(Integer id) throws Exception{
+    public RegroupementParametre active(String id) throws Exception{
         RegroupementParametre regroupementParam = regroupementParametreRepository.findById(id).orElseThrow(null);
 
         try {
@@ -77,7 +82,7 @@ public class RegroupementSevice {
         return regroupementParametreRepository.save(regroupementParam);
     }
 
-    public RegroupementParametre desactive(Integer id) throws Exception{
+    public RegroupementParametre desactive(String id) throws Exception{
         RegroupementParametre regroupementParam = regroupementParametreRepository.findById(id).orElseThrow(null);
 
         try {

@@ -14,8 +14,8 @@ import java.util.*;
 public class Acteur {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idActeur;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idActeur;
 
     @Column(nullable = false)
     private String codeActeur;

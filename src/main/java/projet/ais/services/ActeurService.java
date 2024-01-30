@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.EntityNotFoundException;
-import java.util.Random;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
@@ -18,9 +18,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
-import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
+
+import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
 import projet.ais.repository.ActeurRepository;
@@ -45,6 +45,8 @@ public class ActeurService {
 
     @Autowired
     EmailService emailService;
+        @Autowired
+    IdGenerator idGenerator ;
 
     // @Autowired
     // private TypeActeurRepository typeActeurRepository;
@@ -107,7 +109,9 @@ public class ActeurService {
             }
 
             String codeActeur = genererCode();
+            String code = idGenerator.genererCode();
             acteur.setCodeActeur(codeActeur);
+            acteur.setIdActeur(code);
             
             
             
@@ -191,7 +195,7 @@ private String genererChaineAleatoire(String source, int longueur) {
 }
     
     //créer un user
-      public Acteur updateActeur(Acteur acteur, Integer id, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
+      public Acteur updateActeur(Acteur acteur, String id, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
         // TypeActeur typeActeur = typeActeurRepository.findByIdTypeActeur(acteur.getTypeActeur());
         Acteur ac = acteurRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Acteur non trouver avec l'id " + id));
         
@@ -274,7 +278,7 @@ private String genererChaineAleatoire(String source, int longueur) {
 
     //Desactiver un acteur
 
-    public ResponseEntity<String> disableActeur(Integer id) {
+    public ResponseEntity<String> disableActeur(String id) {
         Optional<Acteur> acteur = acteurRepository.findById(id);
         if (acteur.isPresent()) {
             acteur.get().setStatutActeur(false);
@@ -288,7 +292,7 @@ private String genererChaineAleatoire(String source, int longueur) {
     }
    
     //activer un acteur
-    public ResponseEntity<String> enableActeur(Integer id) {
+    public ResponseEntity<String> enableActeur(String id) {
         Optional<Acteur> acteur = acteurRepository.findById(id);
         if (acteur.isPresent()) {
             acteur.get().setStatutActeur(true);
@@ -303,7 +307,7 @@ private String genererChaineAleatoire(String source, int longueur) {
 
 
      //Liste type acteur par acteur
-    public List<Acteur> getAllActeurByTypeActeur(Integer id){
+    public List<Acteur> getAllActeurByTypeActeur(String id){
         List<Acteur>  acteurList = acteurRepository.findByTypeActeurIdTypeActeur(id);
 
         if(acteurList.isEmpty()){
@@ -318,7 +322,7 @@ private String genererChaineAleatoire(String source, int longueur) {
 
   
       //Supprimer acteur
-    public String deleteByIdActeur(Integer id){
+    public String deleteByIdActeur(String id){
         Acteur acteur = acteurRepository.findByIdActeur(id);
         if(acteur == null){
             throw new EntityNotFoundException("Désolé l'acteur à supprimer n'existe pas");

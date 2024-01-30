@@ -12,8 +12,8 @@ import java.util.List;
 public class ZoneProduction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idZoneProduction;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idZoneProduction;
 
     @Column(nullable = false)
     private String codeZone;

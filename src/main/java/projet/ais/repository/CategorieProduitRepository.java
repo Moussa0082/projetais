@@ -8,11 +8,11 @@ import java.util.List;
 
 
 @Repository
-public interface CategorieProduitRepository  extends JpaRepository<CategorieProduit, Integer>{
+public interface CategorieProduitRepository  extends JpaRepository<CategorieProduit, String>{
     
-    CategorieProduit findByIdCategorieProduit(Integer idCategorieProduit);
+    CategorieProduit findByIdCategorieProduit(String idCategorieProduit);
 
     CategorieProduit findBylibelleCategorie(String libelle);
     
-    List<CategorieProduit> findByFiliereIdFiliere(Integer idFiliere);
+    List<CategorieProduit> findByFiliereIdFiliere(String idFiliere);
 }

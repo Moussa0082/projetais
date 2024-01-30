@@ -46,7 +46,7 @@ public class TypeActeurController {
     
     @PutMapping("/update/{id}")
     @Operation(summary = "Modifier type acteur")
-    public ResponseEntity<String> updateTypeActeur(@RequestBody TypeActeur typeActeur, @PathVariable Integer id) {
+    public ResponseEntity<String> updateTypeActeur(@RequestBody TypeActeur typeActeur, @PathVariable String id) {
         TypeActeur typeActeurExistant = typeActeurRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("type d'acteur introuvable avec id :" +id));;
 
         if (typeActeurExistant != null) {
@@ -68,7 +68,7 @@ public class TypeActeurController {
        //Supprimer type acteur
            @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression d'un type d'acteur")
-    public ResponseEntity<String> deleteTypeActeur(@PathVariable Integer id){
+    public ResponseEntity<String> deleteTypeActeur(@PathVariable String id){
         return new ResponseEntity<>(typeActeurService.deleteByIdTypeActeur(id), HttpStatus.OK);
     }
 

@@ -52,7 +52,7 @@ public class Niveau3PaysController {
 
     @PutMapping("/update/{id}")
     @Operation(summary = "Modifier niveau 3 pays")
-public ResponseEntity<String> updateNiveau3Pays(@RequestBody Niveau3Pays niveau3Pays, @PathVariable Integer id) {
+public ResponseEntity<String> updateNiveau3Pays(@RequestBody Niveau3Pays niveau3Pays, @PathVariable String id) {
     Niveau3Pays niveau3PaysExistant = niveau3PaysRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Niveau 3 pays introuvable " ));;
 
     if (niveau3PaysExistant != null) {
@@ -66,7 +66,7 @@ public ResponseEntity<String> updateNiveau3Pays(@RequestBody Niveau3Pays niveau3
     //liste 
     @GetMapping("/listeNiveau3PaysByIdNiveau2Pays/{id}")
     @Operation(summary = "affichage de la liste des niveau 2 pays par pays")
-    public ResponseEntity<List<Niveau3Pays>> listeNiveau3PaysByIdPays(@PathVariable Integer id){
+    public ResponseEntity<List<Niveau3Pays>> listeNiveau3PaysByIdPays(@PathVariable String id){
         return  new ResponseEntity<>(niveau3PaysService.getAllNiveau3PaysByIdNiveau2Pays(id), HttpStatus.OK);
     }
 
@@ -80,7 +80,7 @@ public ResponseEntity<String> updateNiveau3Pays(@RequestBody Niveau3Pays niveau3
     //Supprimer Niveau 1 Pays
            @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression d'un niveau 3 pays")
-    public ResponseEntity<String> deleteNiveau3Pays(@PathVariable Integer id){
+    public ResponseEntity<String> deleteNiveau3Pays(@PathVariable String id){
         return new ResponseEntity<>(niveau3PaysService.deleteByIdNiveau3Pays(id), HttpStatus.OK);
     }
 

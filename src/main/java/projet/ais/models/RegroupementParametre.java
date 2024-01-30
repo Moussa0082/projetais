@@ -9,8 +9,8 @@ import lombok.Data;
 public class RegroupementParametre {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idRegroupement;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idRegroupement;
 
     @Column(nullable = false)
     private String parametreRegroupe;

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import projet.ais.CodeGenerator;
+import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Filiere;
 import projet.ais.models.Magasin;
@@ -38,6 +39,8 @@ public class MagasinService {
     StockRepository stockRepository;
     @Autowired
     CodeGenerator codeGenerator;
+      @Autowired
+    IdGenerator idGenerator ;
 
     public Magasin createMagasin(Magasin magasin, MultipartFile imageFile) throws Exception{
         Acteur acteur = acteurRepository.findByIdActeur(magasin.getActeur().getIdActeur());
@@ -62,7 +65,9 @@ public class MagasinService {
                 }
             }
             String codes = codeGenerator.genererCode();
+            String idcodes = idGenerator.genererCode();
             magasin.setCodeMagasin(codes);
+            magasin.setIdMagasin(idcodes);
 
             Date dates = new Date();
             Instant instant = dates.toInstant();
@@ -72,7 +77,7 @@ public class MagasinService {
         return magasinRepository.save(magasin);
     }
 
-    public Magasin updateMagasin(Magasin magasin, MultipartFile imageFile, Integer id) throws Exception{
+    public Magasin updateMagasin(Magasin magasin, MultipartFile imageFile, String id) throws Exception{
     
         // Stock stock = stockRepository.findByIdStock(magasin.getStock().getIdStock());
         Magasin mag= magasinRepository.findById(id).orElseThrow(null);
@@ -121,7 +126,7 @@ public class MagasinService {
         return magasinList;
     }
 
-    public List<Magasin> getMagasinByActeur(Integer id) {
+    public List<Magasin> getMagasinByActeur(String id) {
         List<Magasin> magasinList = magasinRepository.findByActeurIdActeur(id);
 
         if(magasinList.isEmpty())
@@ -133,7 +138,7 @@ public class MagasinService {
 
         return magasinList;
     }
-    public String supprimerMagagin(Integer id){
+    public String supprimerMagagin(String id){
         Magasin magasin = magasinRepository.findById(id).orElseThrow(null);
 
         magasinRepository.delete(magasin);
@@ -141,7 +146,7 @@ public class MagasinService {
         return "supprimé avec success";
     }
 
-    public Magasin active(Integer id) throws Exception{
+    public Magasin active(String id) throws Exception{
         Magasin mag = magasinRepository.findById(id).orElseThrow(null);
 
         try {
@@ -152,7 +157,7 @@ public class MagasinService {
         return magasinRepository.save(mag);
     }
 
-    public Magasin desactive(Integer id) throws Exception{
+    public Magasin desactive(String id) throws Exception{
         Magasin mag = magasinRepository.findById(id).orElseThrow(null);
 
         try {

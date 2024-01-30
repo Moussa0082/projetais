@@ -19,12 +19,9 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import projet.ais.models.Filiere;
 import projet.ais.models.Magasin;
-import projet.ais.models.ZoneProduction;
 import projet.ais.services.MagasinService;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
 
@@ -55,7 +52,7 @@ public class MagasinController {
     @PutMapping("/update/{id}")
     public ResponseEntity<Magasin> updatedMagasin(
         @Valid @RequestParam("magasin") String magasins,
-        @Valid @RequestParam(value = "image",required = false) MultipartFile imageFile, @PathVariable Integer id) throws Exception{
+        @Valid @RequestParam(value = "image",required = false) MultipartFile imageFile, @PathVariable String id) throws Exception{
 
             Magasin magasin1 = new Magasin();
             try {
@@ -69,13 +66,13 @@ public class MagasinController {
 
     @PutMapping("/activer/{id}")
     @Operation(summary="Activation de magasin fonction de l'id de filiere")
-    public ResponseEntity<Magasin> activeMagasin(@PathVariable Integer id) throws Exception {
+    public ResponseEntity<Magasin> activeMagasin(@PathVariable String id) throws Exception {
         return new ResponseEntity<>(magasinService.active(id), HttpStatus.OK);
     }
 
     @PutMapping("/desactiver/{id}")
     @Operation(summary="Desactivation de magasin fonction de l'id de filiere")
-    public ResponseEntity<Magasin> desactiveMagasin(@PathVariable Integer id) throws Exception {
+    public ResponseEntity<Magasin> desactiveMagasin(@PathVariable String id) throws Exception {
         return new ResponseEntity<>(magasinService.desactive(id), HttpStatus.OK);
     }
     @GetMapping("/getAllMagagin")
@@ -86,13 +83,13 @@ public class MagasinController {
 
     @GetMapping("/getAllMagaginByActeur/{id}")
     @Operation(summary = "Liste des magasins")
-    public ResponseEntity<List<Magasin>> listeMagasinByActeur(@PathVariable Integer id){
+    public ResponseEntity<List<Magasin>> listeMagasinByActeur(@PathVariable String id){
         return new ResponseEntity<>(magasinService.getMagasinByActeur(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression du magasin")
-    public String supprimer(@PathVariable Integer id){
+    public String supprimer(@PathVariable String id){
         return magasinService.supprimerMagagin(id);
     }
 }

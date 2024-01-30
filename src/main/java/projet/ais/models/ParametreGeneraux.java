@@ -11,8 +11,8 @@ import java.util.*;
 public class ParametreGeneraux {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idParametreGeneraux;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idParametreGeneraux;
 
     @Column(nullable = false)
     private String sigleStructure;

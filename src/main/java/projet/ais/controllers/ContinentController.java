@@ -49,7 +49,7 @@ public class ContinentController {
     //Modifier un continent
     @PutMapping("/update/{id}")
     @Operation(summary = "Modifier un continent")
-   public ResponseEntity<String> updateContinent(@RequestBody Continent continent, @PathVariable Integer id) {
+   public ResponseEntity<String> updateContinent(@RequestBody Continent continent, @PathVariable String id) {
     Continent continentExistant = continentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Continent introuvable "));;
 
     if (continentExistant != null) {
@@ -73,7 +73,7 @@ public class ContinentController {
     //Suppression d'un continent
            @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression d'un continent")
-    public ResponseEntity<String> deleteContinent(@PathVariable Integer id){
+    public ResponseEntity<String> deleteContinent(@PathVariable String id){
         return new ResponseEntity<>(continentService.deleteByIdContinent(id), HttpStatus.OK);
     }
 

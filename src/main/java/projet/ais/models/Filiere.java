@@ -13,8 +13,8 @@ import java.util.*;
 public class Filiere {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idFiliere;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idFiliere;
 
     @Column(nullable = false)
     private String codeFiliere;

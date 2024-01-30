@@ -14,8 +14,8 @@ import java.util.*;
 public class Continent {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idContinent;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idContinent;
 
     @Column(nullable = false)
     private String codeContinent;

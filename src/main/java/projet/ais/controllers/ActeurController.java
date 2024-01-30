@@ -62,7 +62,7 @@ public class ActeurController {
       @PutMapping("/update/{id}")
       @Operation(summary = "Mise à jour d'un acteur ")
       public ResponseEntity<Acteur> updateActeur(
-              @PathVariable Integer id,
+              @PathVariable String id,
               @Valid @RequestParam("acteur") String acteurString,
               @RequestParam(value = "image1", required = false)  MultipartFile imageFile1,
               @RequestParam(value = "image2", required = false) MultipartFile imageFile2) {
@@ -94,7 +94,7 @@ public class ActeurController {
     @PutMapping("/disable/{id}")
     //Desactiver un admin methode
     @Operation(summary = "Désactiver acteur ")
-    public ResponseEntity <String> disableActeur(@PathVariable Integer id){
+    public ResponseEntity <String> disableActeur(@PathVariable String id){
     
         acteurService.disableActeur(id);
         return new ResponseEntity<>("Acteur desactiver avec succes", HttpStatus.ACCEPTED);
@@ -104,7 +104,7 @@ public class ActeurController {
       @PutMapping("/enable/{id}")
     //Desactiver un admin methode
     @Operation(summary = "Activer acteur ")
-    public ResponseEntity <String> enableAdmin(@PathVariable Integer id){
+    public ResponseEntity <String> enableAdmin(@PathVariable String id){
     
         acteurService.enableActeur(id);
         return new ResponseEntity<>("Acteur activer avec succes", HttpStatus.ACCEPTED);
@@ -114,14 +114,14 @@ public class ActeurController {
     //liste acteur par type acteur
     @GetMapping("/listeByTypeActeur/{id}")
     @Operation(summary = "affichage de la liste des acteur par type acteur")
-    public ResponseEntity<List<Acteur>> listeActeurByTypeActeur(@PathVariable Integer id){
+    public ResponseEntity<List<Acteur>> listeActeurByTypeActeur(@PathVariable String id){
         return  new ResponseEntity<>(acteurService.getAllActeurByTypeActeur(id), HttpStatus.OK);
     }
 
            //Supprimer un acteur
            @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression d'un acteur")
-    public ResponseEntity<String> deleteActeur(@PathVariable Integer id){
+    public ResponseEntity<String> deleteActeur(@PathVariable String id){
         return new ResponseEntity<>(acteurService.deleteByIdActeur(id), HttpStatus.OK);
     }
 

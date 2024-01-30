@@ -15,8 +15,8 @@ import lombok.Data;
 public class Magasin {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idMagasin;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idMagasin;
 
     @Column(nullable = false)
     private String codeMagasin;
