@@ -1,5 +1,6 @@
 package projet.ais.services;
 
+import org.aspectj.weaver.loadtime.Agent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -183,25 +184,27 @@ public class ActeurService {
     //     return new ResponseEntity<>("Email envoyé à tous les utilisateurs avec succès", HttpStatus.ACCEPTED);
     // }
 
+    
 
-    public ResponseEntity<String> sendMailToAllUser(Alerte alerte){
-        // Assuming you have a method to send emails
-        //  Acteur acteur = new Acteur();
-        //  Alerte alerteExistant = alerteRepository.findByActeurIdActeur(alerte.getActeur().getIdActeur());
-            // if (user.getTypeActeur().getLibelle() != "Admin") {
-               Alerte al = new Alerte(alerte.getActeur().getEmailActeur(), alerte.getMessage(), alerte.getSujet());
-               alerteRepository.save(al);
-               emailService.sendSimpleMail(al);
-                // Your email sending logic goes here
+
+    public ResponseEntity<Void> sendMailToAllUser(String email, String sujet, String message){
+        
+        List<Acteur> allActeurs = acteurRepository.findAllByEmailActeur(email);
+
+        // Envoyer un e-mail aux autres agents de la banque
+        for (Acteur ac : allActeurs) {
+            if (ac.getTypeActeur().getLibelle() != "Admin") {
+        Alerte alerte = new Alerte(ac.getEmailActeur(), message,sujet);
+                emailService.sendSimpleMail(alerte);
+                System.out.println(ac.getEmailActeur());
+            }
+        }
             
         // }
-        return new ResponseEntity<>("Email envoyé à "+ alerte.getActeur().getEmailActeur() +" avec succès", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
-    // private List<Acteur> getAllUsers(Acteur acteur) {
-    // List<Acteur> users = acteurRepository.findByTypeActeur(acteur.getTypeActeur());
-    //     return users;
-    // }
+   
 
 
     
@@ -463,6 +466,7 @@ private String genererChaineAleatoire(String source, int longueur) {
         }
     }
 
+    // Methode d'envoi d'email à un user 
     private void sendMailAuUser(String email, String sujet, String message) throws Exception {
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -477,6 +481,8 @@ private String genererChaineAleatoire(String source, int longueur) {
             throw new Exception(e.getMessage());
         }
     }
+
+    // fin methode d'envoi d'eamil à un user
 
 
   

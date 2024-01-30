@@ -128,7 +128,7 @@ public class ActeurController {
         acteurService.sendToUser(email, sujet, message);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    
+
 
     @PutMapping("/resetpassword")
     @Operation(summary = "Réinitialise le mot de passe de l'utilisateur")
@@ -145,11 +145,23 @@ public class ActeurController {
 
 
 
-             @PostMapping("/send-email-to-user")
-    public ResponseEntity<String> sendEmailToUsers(@RequestBody  Alerte alerte) {
+             @GetMapping("/send-email-to-all-user")
+    public ResponseEntity<String> sendEmailToAllUsers(@RequestParam ("emails") List<String> emails, @RequestParam("sujet")String sujet, @RequestParam("message")String message) {
+       
 
-         acteurService.sendMailToAllUser(alerte);
-        return new ResponseEntity<>("Email envoyé à un utilisateur avec succès", HttpStatus.ACCEPTED);
+        //  acteurService.sendMailToAllUser(email, sujet, message);
+         if(!emails.isEmpty()){
+            for (String email : emails) {
+                acteurService.sendMailToAllUser(email, sujet, message);
+                Alerte al = new Alerte(email, message, sujet);
+                emailService.sendSimpleMail(al);
+                System.out.println(email);
+            }
+            return new ResponseEntity<>("Email envoyé à tous les utilisateurs avec succès", HttpStatus.OK);
+        } else {
+            // Log the exception for debugging
+            return new ResponseEntity<>("Failed to send emails", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     

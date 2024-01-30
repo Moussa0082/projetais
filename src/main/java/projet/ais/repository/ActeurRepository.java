@@ -17,6 +17,9 @@ public interface ActeurRepository extends JpaRepository<Acteur, Integer>{
 
      Acteur findByEmailActeur(String emailActeur);
 
+    //  Recuperer la liste des mails acteurs existants dans la base de donnés 
+     List<Acteur> findAllByEmailActeur(String emailActeur);
+
     //  Acteur findByAlerte(Alerte alerteList);
     //  Acteur findByTypeActeur(TypeActeur typeActeur);
 
