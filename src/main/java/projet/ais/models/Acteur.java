@@ -117,7 +117,17 @@ public class Acteur {
    @OneToMany
    (mappedBy = "acteur")
    @JsonIgnore
+   private List<Materiel> materielList;
+
+   @OneToMany
+   (mappedBy = "acteur")
+   @JsonIgnore
    private List<Vehicule> vehiculeList;
+   
+   @OneToMany
+   (mappedBy = "acteur")
+   @JsonIgnore
+   private List<Commande> commandeList;
 
 }
 
