@@ -5,6 +5,8 @@ package projet.ais.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.Date;
 import java.util.List;
@@ -29,11 +31,11 @@ public class CategorieProduit {
     @Column(nullable = false)
     private boolean statutCategorie = true;
     
-    @Column(nullable=true)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
-    @Column(nullable=true)
-    private Date dateModif;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
     
     @OneToMany
     (mappedBy = "categorieProduit")

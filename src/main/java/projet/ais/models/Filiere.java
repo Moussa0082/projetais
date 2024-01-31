@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -28,11 +29,11 @@ public class Filiere {
     @Column(nullable = false)
     private boolean statutFiliere = true;
 
-    @Column(nullable=true)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
-    @Column(nullable=true)
-    private Date dateModif;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
 
     @Column(nullable=true)
     private String personneAjout;

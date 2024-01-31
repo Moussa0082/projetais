@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -20,14 +21,17 @@ public class TypeActeur {
     @Column(nullable = false)
     private String codeTypeActeur;
 
+    @Column(nullable = true)
+    private boolean statutTypeActeur;
+
     @Column(nullable = false)
     private String descriptionTypeActeur;
 
-    @Column(nullable=true)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
-    @Column(nullable=true)
-    private Date dateModif;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
 
     @OneToMany
     (mappedBy = "typeActeur")

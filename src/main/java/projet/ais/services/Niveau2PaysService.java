@@ -92,7 +92,6 @@ private String genererChaineAleatoire(String source, int longueur) {
      Niveau2Pays niveau2PaysExistant= niveau2PaysRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Niveau1Pays introuvable"));
      niveau2PaysExistant.setNomN2(niveau2Pays.getNomN2());
     niveau2PaysExistant.setDescriptionN2(niveau2Pays.getDescriptionN2());
-    niveau2PaysExistant.setStatutN2(niveau2Pays.getStatutN2());
     niveau2PaysExistant.setNiveau1Pays(niveau2Pays.getNiveau1Pays());
 
     return niveau2PaysRepository.save(niveau2PaysExistant);
@@ -124,6 +123,37 @@ private String genererChaineAleatoire(String source, int longueur) {
                 .collect(Collectors.toList());
         return niveau2PaysList;
     } 
+
+
+           //Activer un niveau 2 pays
+           public Niveau2Pays active(String id) throws Exception{
+            Niveau2Pays n2 = niveau2PaysRepository.findByIdNiveau2Pays(id);
+            if(n2 == null){
+                throw new IllegalStateException("Niveau 2 pays non existant avec l'id" + id );
+            }
+    
+            try {
+              n2.setStatutN2(true);
+            } catch (Exception e) {
+                throw new Exception("Erreur lors de l'activation  du niveau 2 pays : " + e.getMessage());
+            }
+            return niveau2PaysRepository.save(n2);
+        }
+    
+        //Desactiver niveau 2 pays
+        public Niveau2Pays desactive(String id) throws Exception{
+            Niveau2Pays n2 = niveau2PaysRepository.findByIdNiveau2Pays(id);
+            if(n2 == null){
+                throw new IllegalStateException("Niveau 2 pays non existant avec l'id" + id );
+            }
+    
+            try {
+            n2.setStatutN2(false);
+            } catch (Exception e) {
+                throw new Exception("Erreur lors de desactivation  du niveau 2 pays: " + e.getMessage());
+            }
+            return niveau2PaysRepository.save(n2);
+        }
 
 
     //  Supprimer niveau 2 pays

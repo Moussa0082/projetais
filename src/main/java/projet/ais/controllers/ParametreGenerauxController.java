@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import projet.ais.models.Niveau1Pays;
 import projet.ais.models.ParametreGeneraux;
 import projet.ais.repository.ParametreGenerauxRepository;
 import projet.ais.services.ParametreGenerauxService;
@@ -98,6 +99,7 @@ public class ParametreGenerauxController {
         return parametreGenerauxService.findById(id);
     }
 
+    
 
         //Supprimer un paramètre général
            @DeleteMapping("/delete/{id}")

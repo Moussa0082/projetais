@@ -1,5 +1,6 @@
 package projet.ais.models;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import jakarta.persistence.*;
@@ -16,11 +17,12 @@ public class RenvoieParametre {
     @Column(nullable = false)
     private String conditionRenvoi;
 
-    @Column(nullable=true)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
-    @Column(nullable=true)
-    private Date dateModif;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
 
     @Column(nullable=true)
     private String personneAjout;

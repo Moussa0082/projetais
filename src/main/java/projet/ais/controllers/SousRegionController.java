@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
+import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Pays;
 import projet.ais.models.SousRegion;
 import projet.ais.repository.SousRegionRepository;
@@ -79,6 +80,21 @@ public class SousRegionController {
     @Operation(summary = "Suppression d'une sous region")
     public ResponseEntity<String> deleteSousRegion(@PathVariable String id){
         return new ResponseEntity<>(sousRegionService.deleteByIdSousRegion(id), HttpStatus.OK);
+    }
+
+
+               //Activer sous region
+       @PutMapping("/activer/{id}")
+    @Operation(summary="Activation d'une sous region à travers son id")
+    public ResponseEntity<SousRegion> activeSousRegion(@PathVariable String id) throws Exception {
+        return new ResponseEntity<>(sousRegionService.active(id), HttpStatus.OK);
+    }
+
+    //Desativer niveau 1 pays
+    @PutMapping("/desactiver/{id}")
+    @Operation(summary="Desactivation d'une sous region à travers son id")
+    public ResponseEntity<SousRegion> desactiveSousRegion(@PathVariable String id) throws Exception {
+        return new ResponseEntity<>(sousRegionService.desactive(id), HttpStatus.OK);
     }
 
 

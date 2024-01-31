@@ -39,7 +39,8 @@ public class ZoneProductionController {
     @Operation(summary = "Création de zone de production")
     public ResponseEntity<ZoneProduction> createZone(
          @Valid @RequestParam("zone") String zoneProduction,
-         @Valid @RequestParam(value = "image",required = false) MultipartFile imageFile) throws Exception{
+         @Valid @RequestParam(value = "image", required = false)  MultipartFile imageFile) throws Exception{
+
 
             ZoneProduction zoneProductions = new  ZoneProduction();
             try {
@@ -70,13 +71,13 @@ public class ZoneProductionController {
         }
 
     @PutMapping("/activer/{id}")
-    @Operation(summary = "activation de la zone")
+    @Operation(summary = "activation de la zone de production")
     public ResponseEntity<ZoneProduction> activeZone(@PathVariable String id) throws Exception {
         return new ResponseEntity<>(zoneProductionService.active(id), HttpStatus.CREATED);
     }
 
     @PutMapping("/desactiver/{id}")
-    @Operation(summary = "desactivation de la zone")
+    @Operation(summary = "desactivation de la zone  de production" )
     public ResponseEntity<ZoneProduction> desactiveZone(@PathVariable String id) throws Exception {
         return new ResponseEntity<>(zoneProductionService.desactive(id), HttpStatus.CREATED);
     }

@@ -16,6 +16,7 @@ import java.util.*;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.models.Acteur;
+import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Pays;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.PaysRepository;
@@ -80,7 +81,19 @@ public class PaysController {
         return new ResponseEntity<>(paysService.deleteByIdPays(id), HttpStatus.OK);
     }
 
+              //Activer  pays
+       @PutMapping("/activer/{id}")
+    @Operation(summary="Activation d'un pays à travers son id")
+    public ResponseEntity<Pays> activePays(@PathVariable String id) throws Exception {
+        return new ResponseEntity<>(paysService.active(id), HttpStatus.OK);
+    }
 
+    //Desativer  pays
+    @PutMapping("/desactiver/{id}")
+    @Operation(summary="Desactivation d'un pays à travers son id")
+    public ResponseEntity<Pays> desactivePays(@PathVariable String id) throws Exception {
+        return new ResponseEntity<>(paysService.desactive(id), HttpStatus.OK);
+    }
 
     
 }

@@ -2,6 +2,7 @@ package projet.ais.services;
 
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -35,11 +36,9 @@ public class RenvoieParametreService {
 
         String code = idGenerator.genererCode();
         renvoieParametre.setIdRenvoiParametre(code);
-        Date dates = new Date();
-        Instant instant = dates.toInstant();
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        renvoieParametre.setDateModif(dates);
-        renvoieParametre.setDateAjout(dates);
+
+        renvoieParametre.setDateModif(LocalDateTime.now());
+        renvoieParametre.setDateAjout(LocalDateTime.now());
         return renvoieParametreRepository.save(renvoieParametre);
     }
 
@@ -51,10 +50,7 @@ public class RenvoieParametreService {
     ren.setDescriptionRenvoie(renvoieParametre.getDescriptionRenvoie());
     ren.setDateAjout(ren.getDateAjout());
 
-    Date dates = new Date();
-    Instant instant = dates.toInstant();
-    ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-    ren.setDateModif(dates);
+    ren.setDateModif(LocalDateTime.now());
         return renvoieParametreRepository.save(ren);
     }
 

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.IdGenerator;
+import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Pays;
 import projet.ais.models.SousRegion;
 import projet.ais.repository.SousRegionRepository;
@@ -89,7 +90,6 @@ private String genererChaineAleatoire(String source, int longueur) {
 
      SousRegion sousRegionExistant = sousRegionRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Sous Region introuvable "));
      sousRegionExistant.setNomSousRegion(sousRegion.getNomSousRegion());
-     sousRegionExistant.setStatutSousRegion(sousRegion.getStatutSousRegion());
      sousRegionExistant.setContinent(sousRegion.getContinent());
   
 
@@ -123,6 +123,36 @@ private String genererChaineAleatoire(String source, int longueur) {
         return sousRegionList;
     }
 
+
+           //Activer sous region
+        public SousRegion active(String id) throws Exception{
+        SousRegion s = sousRegionRepository.findByIdSousRegion(id);
+        if(s == null){
+            throw new IllegalStateException("Sous region non existant avec l'id" + id );
+        }
+
+        try {
+          s.setStatutSousRegion(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation  de la sous region : " + e.getMessage());
+        }
+        return sousRegionRepository.save(s);
+    }
+
+    //Desactiver sous region
+    public SousRegion desactive(String id) throws Exception{
+        SousRegion p = sousRegionRepository.findByIdSousRegion(id);
+        if(p == null){
+            throw new IllegalStateException("Sous region non existant avec l'id" + id );
+        }
+
+        try {
+        p.setStatutSousRegion(false);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de desactivation  de la sous region: " + e.getMessage());
+        }
+        return sousRegionRepository.save(p);
+    }
 
     //  Supprimer sous region
       public String deleteByIdSousRegion(String id){

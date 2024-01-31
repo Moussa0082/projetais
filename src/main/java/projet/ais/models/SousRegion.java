@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -22,13 +23,14 @@ public class SousRegion {
     private String nomSousRegion;
 
     @Column(nullable = false)
-    private String statutSousRegion;
+    private boolean statutSousRegion = true;
 
-    @Column(nullable=true)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
-    @Column(nullable=true)
-    private Date dateModif;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
 
     @OneToMany
     (mappedBy = "sousRegion")

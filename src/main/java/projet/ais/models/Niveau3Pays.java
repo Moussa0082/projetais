@@ -3,6 +3,8 @@ package projet.ais.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -23,13 +25,13 @@ public class Niveau3Pays {
     private String descriptionN3;
 
     @Column(nullable = false)
-    private String statutN3;
+    private boolean statutN3 = true;
 
-    @Column(nullable=true)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
-    @Column(nullable=true)
-    private Date dateModif;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
 
     @ManyToOne
     @JoinColumn( name = "idNiveau2Pays") 

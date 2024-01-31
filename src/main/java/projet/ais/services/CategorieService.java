@@ -1,6 +1,7 @@
 package projet.ais.services;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -48,11 +49,9 @@ public class CategorieService {
             String Idcodes = idGenerator.genererCode();
             categorieProduit.setCodeCategorie(codes);
             categorieProduit.setIdCategorieProduit(Idcodes);
-            Date dates = new Date();
-            Instant instant = dates.toInstant();
-            ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-            categorieProduit.setDateAjout(dates);
-            categorieProduit.setDateModif(dates);
+
+            categorieProduit.setDateAjout(LocalDateTime.now());
+            categorieProduit.setDateModif(LocalDateTime.now());
 
         return categorieProduitRepository.save(categorieProduit);
     }
@@ -64,11 +63,11 @@ public class CategorieService {
         categorieProduits.setLibelleCategorie(categorieProduit.getLibelleCategorie());
         categorieProduits.setFiliere(categorieProduit.getFiliere());
         categorieProduits.setDateAjout(categorieProduits.getDateAjout());
-        Date dates = new Date();
-            Instant instant = dates.toInstant();
-            ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+        // Date dates = new Date();
+        //     Instant instant = dates.toInstant();
+        //     ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
             
-            categorieProduits.setDateModif(dates);
+            categorieProduits.setDateModif(LocalDateTime.now());
         return categorieProduitRepository.save(categorieProduits);
     }
 

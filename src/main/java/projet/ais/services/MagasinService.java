@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -72,8 +73,8 @@ public class MagasinService {
             Date dates = new Date();
             Instant instant = dates.toInstant();
             ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-            magasin.setDateAjout(dates);
-            magasin.setDateModif(dates);
+            magasin.setDateAjout(LocalDateTime.now());
+            magasin.setDateModif(LocalDateTime.now());
         return magasinRepository.save(magasin);
     }
 
@@ -106,10 +107,8 @@ public class MagasinService {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
             }
-            Date dates = new Date();
-            Instant instant = dates.toInstant();
-            ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-            mag.setDateModif(dates);
+
+            mag.setDateModif(LocalDateTime.now());
         return magasinRepository.save(mag);
     }
 

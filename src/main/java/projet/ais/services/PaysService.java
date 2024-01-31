@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.IdGenerator;
+import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Niveau2Pays;
 import projet.ais.models.Pays;
 import projet.ais.repository.PaysRepository;
@@ -98,7 +99,6 @@ private String genererChaineAleatoire(String source, int longueur) {
     Pays paysExistant = paysRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("type d'acteur introuvable avec id :" +id));
     paysExistant.setNomPays(pays.getNomPays());
     paysExistant.setDescriptionPays(pays.getDescriptionPays());
-    paysExistant.setStatutPays(pays.getStatutPays());
     paysExistant.setSousRegion(pays.getSousRegion());
 
     return paysRepository.save(paysExistant);
@@ -118,7 +118,35 @@ private String genererChaineAleatoire(String source, int longueur) {
         return paysList;
     }
 
-    
+           //Activer un  pays
+        public Pays active(String id) throws Exception{
+        Pays p = paysRepository.findByIdPays(id);
+        if(p == null){
+            throw new IllegalStateException("Pays non existant avec l'id" + id );
+        }
+
+        try {
+          p.setStatutPays(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation  du  pays : " + e.getMessage());
+        }
+        return paysRepository.save(p);
+    }
+
+    //Desactiver pays
+    public Pays desactive(String id) throws Exception{
+        Pays p = paysRepository.findByIdPays(id);
+        if(p == null){
+            throw new IllegalStateException("Pays non existant avec l'id" + id );
+        }
+
+        try {
+        p.setStatutPays(false);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de desactivation  du pays: " + e.getMessage());
+        }
+        return paysRepository.save(p);
+    }
 
 
     //  Supprimer pays

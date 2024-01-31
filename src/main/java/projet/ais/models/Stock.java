@@ -3,6 +3,7 @@ package projet.ais.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -47,11 +48,11 @@ public class Stock {
     @JoinColumn(name = "idZoneProduction")
     private ZoneProduction zoneProduction;
 
-    @Column(nullable=true)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
-    @Column(nullable=true)
-    private Date dateModif;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
     
     @Column(nullable = false)
     private boolean statutSotck = true;

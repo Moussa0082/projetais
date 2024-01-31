@@ -11,6 +11,7 @@ import projet.ais.models.Filiere;
 import projet.ais.repository.FiliereRepository;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -37,11 +38,9 @@ public class FiliereService {
     String Idcodes = idGenerator.genererCode();
     filiere.setCodeFiliere(codes);
     filiere.setIdFiliere(Idcodes);
-     Date dates = new Date();
-            Instant instant = dates.toInstant();
-            ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-            filiere.setDateAjout(dates);
-            filiere.setDateModif(dates);
+
+            filiere.setDateAjout(LocalDateTime.now());
+            filiere.setDateModif(LocalDateTime.now());
     return filiereRepository.save(filiere);
   }
 
@@ -54,10 +53,8 @@ public class FiliereService {
     filieres.setLibelleFiliere(filiere.getLibelleFiliere());
     filieres.setDateAjout(filieres.getDateAjout());
 
-    Date dates = new Date();
-    Instant instant = dates.toInstant();
-    ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-    filieres.setDateModif(dates);
+
+    filieres.setDateModif(LocalDateTime.now());
     return filiereRepository.save(filieres);
   }
 

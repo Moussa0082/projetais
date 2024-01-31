@@ -2,6 +2,7 @@ package projet.ais.models;
 
 
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -44,11 +45,11 @@ public class Magasin {
     @Column(nullable = false)
     private boolean statutMagasin = true;
 
-    @Column(nullable=true)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
-    @Column(nullable=true)
-    private Date dateModif;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
 
     @Column(nullable = true)
     private String photo;

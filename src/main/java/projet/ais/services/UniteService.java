@@ -10,6 +10,7 @@ import projet.ais.models.Unite;
 import projet.ais.repository.UniteRepository;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -36,11 +37,9 @@ public class UniteService {
         String Idcodes = idGenerator.genererCode();
         unite.setCodeUnite(codes);
         unite.setIdUnite(Idcodes);
-        Date dates = new Date();
-        Instant instant = dates.toInstant();
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        unite.setDateModif(dates);
-        unite.setDateAjout(dates);
+
+        unite.setDateModif(LocalDateTime.now());
+        unite.setDateAjout(LocalDateTime.now());
         return uniteRepository.save(unite);
     }
 
@@ -49,10 +48,8 @@ public class UniteService {
 
         unites.setNomUnite(unite.getNomUnite());
         unites.setDateAjout(unites.getDateAjout());
-        Date dates = new Date();
-        Instant instant = dates.toInstant();
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        unite.setDateModif(dates);
+
+        unite.setDateModif(LocalDateTime.now());
         return uniteRepository.save(unites);
     }
 

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.IdGenerator;
+import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Niveau2Pays;
 import projet.ais.models.Niveau3Pays;
 import projet.ais.repository.Niveau3PaysRepository;
@@ -91,7 +92,6 @@ private String genererChaineAleatoire(String source, int longueur) {
      Niveau3Pays niveau3PaysExistant= niveau3PaysRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Niveau1Pays introuvable"));
      niveau3PaysExistant.setNomN3(niveau3Pays.getNomN3());
     niveau3PaysExistant.setDescriptionN3(niveau3Pays.getDescriptionN3());
-    niveau3PaysExistant.setStatutN3(niveau3Pays.getStatutN3());
     niveau3PaysExistant.setNiveau2Pays(niveau3Pays.getNiveau2Pays());
 
     return niveau3PaysRepository.save(niveau3PaysExistant);
@@ -124,6 +124,35 @@ private String genererChaineAleatoire(String source, int longueur) {
         return niveau3PaysList;
     } 
 
+           //Activer un niveau 3 pays
+        public Niveau3Pays active(String id) throws Exception{
+        Niveau3Pays n3 = niveau3PaysRepository.findByIdNiveau3Pays(id);
+        if(n3 == null){
+            throw new IllegalStateException("Niveau 3 pays non existant avec l'id" + id );
+        }
+
+        try {
+          n3.setStatutN3(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation  du niveau 3 pays : " + e.getMessage());
+        }
+        return niveau3PaysRepository.save(n3);
+    }
+
+    //Desactiver niveau 3 pays
+    public Niveau3Pays desactive(String id) throws Exception{
+        Niveau3Pays n3 = niveau3PaysRepository.findByIdNiveau3Pays(id);
+        if(n3 == null){
+            throw new IllegalStateException("Niveau 3 pays non existant avec l'id" + id );
+        }
+
+        try {
+        n3.setStatutN3(false);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de desactivation  du niveau 3 pays: " + e.getMessage());
+        }
+        return niveau3PaysRepository.save(n3);
+    }
 
     //  Supprimer niveau 3 pays
       public String deleteByIdNiveau3Pays(String id){

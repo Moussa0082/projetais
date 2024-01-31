@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -64,8 +65,8 @@ public class ZoneProductionService {
         ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
         zoneProduction.setCodeZone(codes);
         zoneProduction.setIdZoneProduction(idCodes);
-        zoneProduction.setDateAjout(dates);
-        zoneProduction.setDateModif(dates);
+        zoneProduction.setDateAjout(LocalDateTime.now());
+        zoneProduction.setDateModif(LocalDateTime.now());
         return zoneProductionRepository.save(zoneProduction);
     }
 
@@ -95,7 +96,7 @@ public class ZoneProductionService {
         Date dates = new Date();
         Instant instant = dates.toInstant();
         ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        zoneProductions.setDateModif(dates);
+        zoneProductions.setDateModif(LocalDateTime.now());
         return zoneProductionRepository.save(zoneProductions);
     }
 
@@ -124,7 +125,7 @@ public class ZoneProductionService {
         try {
             zoneProduction.setStatutZone(true);
         } catch (Exception e) {
-            throw new Exception("Erreur lors de l'activation : " + e.getMessage());
+            throw new Exception("Erreur lors de l'activation  de la zone de production : " + e.getMessage());
         }
         return zoneProductionRepository.save(zoneProduction);
     }
@@ -135,7 +136,7 @@ public class ZoneProductionService {
         try {
             zoneProduction.setStatutZone(false);
         } catch (Exception e) {
-            throw new Exception("Erreur lors de la descativation : " + e.getMessage());
+            throw new Exception("Erreur lors de la descativation de la zone de production : " + e.getMessage());
         }
         return zoneProductionRepository.save(zoneProduction);
     }

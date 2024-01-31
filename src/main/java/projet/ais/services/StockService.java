@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -90,11 +91,9 @@ public class StockService {
 
             stock.setCodeStock(codes);
             stock.setIdStock(idCode);
-              Date dates = new Date();
-        Instant instant = dates.toInstant();
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        stock.setDateModif(dates);
-        stock.setDateAjout(dates);
+              
+        stock.setDateModif(LocalDateTime.now());
+        stock.setDateAjout(LocalDateTime.now());
             return stockRepository.save(stock);
     }
 
@@ -111,7 +110,7 @@ public class StockService {
         Date dates = new Date();
         Instant instant = dates.toInstant();
         ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        stocks.setDateModif(dates);
+        stocks.setDateModif(LocalDateTime.now());
 
         if(stock.getUnite() != null){
             stocks.setUnite(stock.getUnite());
@@ -161,10 +160,8 @@ public class StockService {
 
         stocks.setDateAjout(stocks.getDateAjout());
         
-        Date dates = new Date();
-        Instant instant = dates.toInstant();
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        stocks.setDateModif(dates);
+
+        stocks.setDateModif(LocalDateTime.now());
 
         if(stock.getUnite() != null){
             stocks.setUnite(stock.getUnite());

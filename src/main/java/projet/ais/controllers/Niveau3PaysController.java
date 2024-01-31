@@ -85,6 +85,21 @@ public ResponseEntity<String> updateNiveau3Pays(@RequestBody Niveau3Pays niveau3
     }
 
 
+               //Activer niveau 3 pays
+               @PutMapping("/activer/{id}")
+               @Operation(summary="Activation de niveau 2 pays à travers son id")
+               public ResponseEntity<Niveau3Pays> activeNiveau3Pays(@PathVariable String id) throws Exception {
+                   return new ResponseEntity<>(niveau3PaysService.active(id), HttpStatus.OK);
+               }
+           
+               //Desativer niveau 3 pays
+               @PutMapping("/desactiver/{id}")
+               @Operation(summary="Desactivation de niveau 3 pays à travers son id")
+               public ResponseEntity<Niveau3Pays> desactiveNiveau3Pays(@PathVariable String id) throws Exception {
+                   return new ResponseEntity<>(niveau3PaysService.desactive(id), HttpStatus.OK);
+               }
+
+
 
     
 }

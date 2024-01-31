@@ -1,6 +1,7 @@
 package projet.ais.services;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -38,8 +39,8 @@ public class RegroupementSevice {
         Date dates = new Date();
         Instant instant = dates.toInstant();
         ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        regroupementParametre.setDateModif(dates);
-        regroupementParametre.setDateAjout(dates);
+        regroupementParametre.setDateModif(LocalDateTime.now());
+        regroupementParametre.setDateAjout(LocalDateTime.now());
         return regroupementParametreRepository.save(regroupementParametre);
     }
 
@@ -51,7 +52,7 @@ public class RegroupementSevice {
         Date dates = new Date();
         Instant instant = dates.toInstant();
         ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        regroupementParametres.setDateModif(dates);
+        regroupementParametres.setDateModif(LocalDateTime.now());
         return regroupementParametreRepository.save(regroupementParametres);
     }
 

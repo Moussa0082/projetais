@@ -1,6 +1,7 @@
 package projet.ais.services;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
@@ -31,11 +32,9 @@ public class ParametreFicheService {
         String Idcodes = idGenerator.genererCode();
         parametreFiche.setCodeParametre(codes);
         parametreFiche.setIdParametreFiche(codes);
-        Date dates = new Date();
-            Instant instant = dates.toInstant();
-            ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-            parametreFiche.setDateAjout(dates);
-            parametreFiche.setDateModif(dates);
+     
+            parametreFiche.setDateAjout(LocalDateTime.now());
+            parametreFiche.setDateModif(LocalDateTime.now());
 
         return parametreFicheRepository.save(parametreFiche);
     }
@@ -58,7 +57,7 @@ public class ParametreFicheService {
         Date dates = new Date();
             Instant instant = dates.toInstant();
             ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-            param.setDateModif(dates);
+            param.setDateModif(LocalDateTime.now());
 
         return parametreFicheRepository.save(param);
     }

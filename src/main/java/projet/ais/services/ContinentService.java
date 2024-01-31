@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.IdGenerator;
+import projet.ais.models.CategorieProduit;
 import projet.ais.models.Continent;
 import projet.ais.repository.ContinentRepository;
 
@@ -88,7 +89,6 @@ public class ContinentService {
          Continent continentExistant = continentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Continent introuvable "));
          continentExistant.setNomContinent(continent.getNomContinent());
          continentExistant.setDescriptionContinent(continent.getDescriptionContinent());
-         continentExistant.setStatutContinent(continent.getStatutContinent());
     
         return continentRepository.save(continentExistant);
       }
@@ -107,7 +107,35 @@ public class ContinentService {
             return continentList;
         }
     
-        
+        //activer un continent
+          public Continent active(String id) throws Exception{
+        Continent ct = continentRepository.findByIdContinent(id);
+        if(ct == null){
+            throw new IllegalStateException("Le continent à activer n'existe pas");
+        }
+
+        try {
+            ct.setStatutContinent(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation du continent : " + e.getMessage());
+        }
+        return continentRepository.save(ct);
+    }
+
+    //Desactiver un continent
+    public Continent desactive(String id) throws Exception{
+        Continent ct = continentRepository.findByIdContinent(id);
+        if(ct == null){
+            throw new IllegalStateException("Le continent à désactiver n'existe pas");
+        }
+
+        try {
+            ct.setStatutContinent(false);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de la désactivation  du continent : " + e.getMessage());
+        }
+        return continentRepository.save(ct);
+    }
     
     
         //  Supprimer sous region

@@ -14,6 +14,7 @@ import com.sun.jdi.request.DuplicateRequestException;
 import jakarta.persistence.EntityNotFoundException;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -47,11 +48,9 @@ public class SpeculationService {
             
             speculation.setCodeSpeculation(codes);
             speculation.setIdSpeculation(Idcodes);
-            Date dates = new Date();
-        Instant instant = dates.toInstant();
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        speculation.setDateModif(dates);
-        speculation.setDateAjout(dates);
+
+        speculation.setDateModif(LocalDateTime.now());
+        speculation.setDateAjout(LocalDateTime.now());
         return speculationRepository.save(speculation);
     }
 
@@ -62,10 +61,8 @@ public class SpeculationService {
        speculations.setDescriptionSpeculation(speculation.getDescriptionSpeculation());
        speculations.setNomSpeculation(speculation.getNomSpeculation());
         speculations.setDateAjout(speculations.getDateAjout());
-       Date dates = new Date();
-       Instant instant = dates.toInstant();
-       ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-       speculations.setDateModif(dates);
+
+       speculations.setDateModif(LocalDateTime.now());
         return speculationRepository.save(speculations);
     }
 

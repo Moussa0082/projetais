@@ -48,10 +48,7 @@ public class Sortie_StockService {
         if(quantiteStock == 0){
      throw new Exception("La quantite de " + stock.getNomProduit() +  " est non disponible");
         }
-        if(quantiteSortie <= quantiteStock){
-        double newQuantity = quantiteStock - quantiteSortie;
-        sortie_Stock.setQuantiteSortie(newQuantity);
-        }
+        
                stock.setQuantiteStock(quantiteStock - quantiteSortie);
                stockRepository.save(stock);
                String code = idGenerator.genererCode();

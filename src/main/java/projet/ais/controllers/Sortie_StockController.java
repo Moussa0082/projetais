@@ -50,6 +50,7 @@ public class Sortie_StockController {
     //     List<Sortie_Stock> sortieStocks = sortie_StockService.getAllSortieStocksByActeur(stock, idActeur);
     //     return new ResponseEntity<>(sortieStocks, HttpStatus.OK);
     // }
+    
 
     @GetMapping("/betweenDates")
     @Operation(summary  = "recherches de l'historique de la sortie des stocks entre 2 dates specifiques")

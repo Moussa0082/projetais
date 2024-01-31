@@ -1,4 +1,5 @@
 package projet.ais.models;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import jakarta.persistence.*;
@@ -15,11 +16,11 @@ public class RegroupementParametre {
     @Column(nullable = false)
     private String parametreRegroupe;
 
-     @Column(nullable=true)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
-    @Column(nullable=true)
-    private Date dateModif;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
 
     @Column(nullable = false)
     private boolean statutRegroupement = true;

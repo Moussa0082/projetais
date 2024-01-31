@@ -24,6 +24,7 @@ import projet.ais.Exception.NoContentException;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
 import projet.ais.models.Filiere;
+import projet.ais.models.SousRegion;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.TypeActeurRepository;
 
@@ -123,7 +124,35 @@ private String genererChaineAleatoire(String source, int longueur) {
     }
 
     
+            //Activer type acteur
+        public TypeActeur active(String id) throws Exception{
+        TypeActeur t = typeActeurRepository.findByIdTypeActeur(id);
+        if(t == null){
+            throw new IllegalStateException("Type acteur non existant avec l'id" + id );
+        }
 
+        try {
+          t.setStatutTypeActeur(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation  du type d'acteur : " + e.getMessage());
+        }
+        return typeActeurRepository.save(t);
+    }
+
+    //Desactiver sous region
+    public TypeActeur desactive(String id) throws Exception{
+        TypeActeur t = typeActeurRepository.findByIdTypeActeur(id);
+        if(t == null){
+            throw new IllegalStateException("Type acteur non existant avec l'id" + id );
+        }
+
+        try {
+        t.setStatutTypeActeur(false);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de desactivation  du type acteur: " + e.getMessage());
+        }
+        return typeActeurRepository.save(t);
+    }
 
     //  Supprimer type acteur
       public String deleteByIdTypeActeur(String id){

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +23,9 @@ public class ZoneProduction {
     private String nomZoneProduction;
 
     @Column(nullable = false)
+    private boolean statutZoneProduction = true;
+
+    @Column(nullable = false)
     private String latitude;
 
     @Column(nullable = false)
@@ -30,11 +34,11 @@ public class ZoneProduction {
     @Column(nullable = true)
     private String photoZone;
 
-    @Column(nullable=true)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
-    @Column(nullable=true)
-    private Date dateModif;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
 
     @Column(nullable=true)
     private String personneAjout;
