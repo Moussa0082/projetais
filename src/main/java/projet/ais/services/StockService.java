@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import projet.ais.CodeGenerator;
+import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Magasin;
 import projet.ais.models.Speculation;
@@ -47,7 +49,9 @@ public class StockService {
     ZoneProductionRepository zoneProductionRepository;
     @Autowired
     CodeGenerator codeGenerator;
-
+      @Autowired
+    IdGenerator idGenerator ;
+    
     public Stock createStock(Stock stock, MultipartFile imageFile) throws Exception {
         Unite unite = uniteRepository.findByIdUnite(stock.getUnite().getIdUnite());
         Magasin magasin = magasinRepository.findByIdMagasin(stock.getMagasin().getIdMagasin());
@@ -83,16 +87,17 @@ public class StockService {
                 }
             }
             String codes = codeGenerator.genererCode();
+            String idCode = idGenerator.genererCode();
+
             stock.setCodeStock(codes);
-              Date dates = new Date();
-        Instant instant = dates.toInstant();
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        stock.setDateModif(dates);
-        stock.setDateAjout(dates);
+            stock.setIdStock(idCode);
+              
+        stock.setDateModif(LocalDateTime.now());
+        stock.setDateAjout(LocalDateTime.now());
             return stockRepository.save(stock);
     }
 
-    public Stock updateStock(Stock stock, MultipartFile imageFile,Integer id) throws Exception {
+    public Stock updateStock(Stock stock, MultipartFile imageFile,String id) throws Exception {
         Stock stocks = stockRepository.findById(id).orElseThrow(null);
 
         stocks.setNomProduit(stock.getNomProduit());
@@ -105,7 +110,7 @@ public class StockService {
         Date dates = new Date();
         Instant instant = dates.toInstant();
         ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        stocks.setDateModif(dates);
+        stocks.setDateModif(LocalDateTime.now());
 
         if(stock.getUnite() != null){
             stocks.setUnite(stock.getUnite());
@@ -145,7 +150,7 @@ public class StockService {
     }
 
 
-    public Stock updateQuantiteStock(Stock stock,Integer id) throws Exception {
+    public Stock updateQuantiteStock(Stock stock,String id) throws Exception {
         Stock stocks = stockRepository.findById(id).orElseThrow(null);
 
          
@@ -155,10 +160,8 @@ public class StockService {
 
         stocks.setDateAjout(stocks.getDateAjout());
         
-        Date dates = new Date();
-        Instant instant = dates.toInstant();
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        stocks.setDateModif(dates);
+
+        stocks.setDateModif(LocalDateTime.now());
 
         if(stock.getUnite() != null){
             stocks.setUnite(stock.getUnite());
@@ -197,7 +200,7 @@ public class StockService {
         return stockList;
     }
 
-    public List<Stock> getAllStockByActeur(Integer id){
+    public List<Stock> getAllStockByActeur(String id){
         List<Stock> stockList = stockRepository.findByActeurIdActeur(id);
 
         if(stockList.isEmpty())
@@ -210,7 +213,7 @@ public class StockService {
         return stockList;
     }
 
-    public List<Stock> getAllStockByMagasin(Integer id){
+    public List<Stock> getAllStockByMagasin(String id){
         List<Stock> stockList = stockRepository.findByMagasinIdMagasin(id);
 
         if(stockList.isEmpty())
@@ -223,11 +226,33 @@ public class StockService {
         return stockList;
     }
 
-    public String deleteStock(Integer id){
+    public String deleteStock(String id){
         Stock stock = stockRepository.findById(id).orElseThrow(null);
 
         stockRepository.delete(stock);
 
         return "Supprimé avec success";
+    }
+
+    public Stock active(String id) throws Exception{
+        Stock stock = stockRepository.findById(id).orElseThrow(null);
+
+        try {
+            stock.setStatutSotck(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation : " + e.getMessage());
+        }
+        return stockRepository.save(stock);
+    }
+
+    public Stock desactive(String id) throws Exception{
+        Stock stock = stockRepository.findById(id).orElseThrow(null);
+
+        try {
+            stock.setStatutSotck(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation : " + e.getMessage());
+        }
+        return stockRepository.save(stock);
     }
 }

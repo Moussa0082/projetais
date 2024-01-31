@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import projet.ais.models.RenvoieParametre;
 
 @Repository
-public interface RenvoieParametreRepository extends JpaRepository<RenvoieParametre, Integer>{
+public interface RenvoieParametreRepository extends JpaRepository<RenvoieParametre, String>{
     
     
-    RenvoieParametre findByIdRenvoiParametre(Integer id);
-    List<RenvoieParametre> findByParametreFicheIdParametreFiche(Integer id);
+    RenvoieParametre findByIdRenvoiParametre(String id);
+    List<RenvoieParametre> findByParametreFicheIdParametreFiche(String id);
 }

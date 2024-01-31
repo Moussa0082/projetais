@@ -1,15 +1,17 @@
 package projet.ais.services;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import projet.ais.CodeGenerator;
+import projet.ais.IdGenerator;
+import projet.ais.models.Magasin;
 import projet.ais.models.ParametreFiche;
 import projet.ais.repository.ParametreFicheRepository;
 
@@ -21,22 +23,24 @@ public class ParametreFicheService {
     
     @Autowired
     CodeGenerator codeGenerator;
+      @Autowired
+    IdGenerator idGenerator ;
 
     public ParametreFiche createParametreFiche(ParametreFiche parametreFiche){
 
         String codes = codeGenerator.genererCode();
+        String Idcodes = idGenerator.genererCode();
         parametreFiche.setCodeParametre(codes);
-        Date dates = new Date();
-            Instant instant = dates.toInstant();
-            ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-            parametreFiche.setDateAjout(dates);
-            parametreFiche.setDateModif(dates);
+        parametreFiche.setIdParametreFiche(codes);
+     
+            parametreFiche.setDateAjout(LocalDateTime.now());
+            parametreFiche.setDateModif(LocalDateTime.now());
 
         return parametreFicheRepository.save(parametreFiche);
     }
 
 
-    public ParametreFiche updateParametreFiche(ParametreFiche parametreFiche, Integer id){
+    public ParametreFiche updateParametreFiche(ParametreFiche parametreFiche, String id){
 
         ParametreFiche param = parametreFicheRepository.findById(id).orElseThrow(null);
         param.setClasseParametre(parametreFiche.getClasseParametre());
@@ -53,7 +57,7 @@ public class ParametreFicheService {
         Date dates = new Date();
             Instant instant = dates.toInstant();
             ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-            param.setDateModif(dates);
+            param.setDateModif(LocalDateTime.now());
 
         return parametreFicheRepository.save(param);
     }
@@ -64,10 +68,32 @@ public class ParametreFicheService {
         return paramList;
     }
     
-    public String deleteParametreFiche(Integer id){
+    public String deleteParametreFiche(String id){
         ParametreFiche parametreFiche = parametreFicheRepository.findById(id).orElseThrow(null);
 
         parametreFicheRepository.delete(parametreFiche);
         return "supprimé avec succèss";
+    }
+
+    public ParametreFiche active(String id) throws Exception{
+        ParametreFiche parametreFiche = parametreFicheRepository.findById(id).orElseThrow(null);
+
+        try {
+            parametreFiche.setStatutParametre(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation : " + e.getMessage());
+        }
+        return parametreFicheRepository.save(parametreFiche);
+    }
+
+    public ParametreFiche desactive(String id) throws Exception{
+        ParametreFiche parametreFiche = parametreFicheRepository.findById(id).orElseThrow(null);
+
+        try {
+            parametreFiche.setStatutParametre(false);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de desactiver  : " + e.getMessage());
+        }
+        return parametreFicheRepository.save(parametreFiche);
     }
 }

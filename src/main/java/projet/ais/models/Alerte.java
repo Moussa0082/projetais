@@ -1,5 +1,7 @@
 package projet.ais.models;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -9,9 +11,9 @@ import lombok.Data;
 @Data
 public class Alerte {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-     private int id;
+     private String id;
 
     @Column(nullable = true)
     private String sujet;
@@ -21,6 +23,9 @@ public class Alerte {
 
     @Column(length = 2000, nullable = false)
     private String message;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
     @ManyToOne
     private Acteur acteur;

@@ -11,8 +11,8 @@ import java.util.*;
 public class Pays {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idPays;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idPays;
 
     @Column(nullable = false)
     private String codePays;

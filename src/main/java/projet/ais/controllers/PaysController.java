@@ -16,6 +16,7 @@ import java.util.*;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.models.Acteur;
+import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Pays;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.PaysRepository;
@@ -48,13 +49,13 @@ public class PaysController {
     //liste pays par sous region
     @GetMapping("/listePaysBySousRegion/{id}")
     @Operation(summary = "affichage de la liste des pays par sous region")
-    public ResponseEntity<List<Pays>> listePaysBysousregion(@PathVariable Integer id){
+    public ResponseEntity<List<Pays>> listePaysBysousregion(@PathVariable String id){
         return  new ResponseEntity<>(paysService.getAllPaysBySousRegion(id), HttpStatus.OK);
     }
     
     @PutMapping("/update/{id}")
     @Operation(summary = "Modifier un pays")
-   public ResponseEntity<String> updatePays(@RequestBody Pays pays, @PathVariable Integer id) {
+   public ResponseEntity<String> updatePays(@RequestBody Pays pays, @PathVariable String id) {
     Pays paysExistant = paysRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pays introuvable avec id :" +id));;
 
     if (paysExistant != null) {
@@ -76,11 +77,23 @@ public class PaysController {
     //Suppression d'un pays methode
            @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression d'un pays")
-    public ResponseEntity<String> deletePays(@PathVariable Integer id){
+    public ResponseEntity<String> deletePays(@PathVariable String id){
         return new ResponseEntity<>(paysService.deleteByIdPays(id), HttpStatus.OK);
     }
 
+              //Activer  pays
+       @PutMapping("/activer/{id}")
+    @Operation(summary="Activation d'un pays à travers son id")
+    public ResponseEntity<Pays> activePays(@PathVariable String id) throws Exception {
+        return new ResponseEntity<>(paysService.active(id), HttpStatus.OK);
+    }
 
+    //Desativer  pays
+    @PutMapping("/desactiver/{id}")
+    @Operation(summary="Desactivation d'un pays à travers son id")
+    public ResponseEntity<Pays> desactivePays(@PathVariable String id) throws Exception {
+        return new ResponseEntity<>(paysService.desactive(id), HttpStatus.OK);
+    }
 
     
 }

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -14,8 +14,8 @@ import java.util.*;
 public class Filiere {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idFiliere;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idFiliere;
 
     @Column(nullable = false)
     private String codeFiliere;
@@ -29,11 +29,14 @@ public class Filiere {
     @Column(nullable = false)
     private boolean statutFiliere = true;
 
-    @Column(nullable=true)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
 
     @Column(nullable=true)
-    private Date dateModif;
+    private String personneAjout;
 
     @OneToMany
     (mappedBy = "filiere")

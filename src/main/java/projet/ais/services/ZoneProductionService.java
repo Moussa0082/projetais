@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import projet.ais.CodeGenerator;
+import projet.ais.IdGenerator;
+import projet.ais.models.Unite;
 import projet.ais.models.ZoneProduction;
 import projet.ais.repository.ZoneProductionRepository;
 import com.sun.jdi.request.DuplicateRequestException;
@@ -30,6 +33,8 @@ public class ZoneProductionService {
     ZoneProductionRepository zoneProductionRepository;
     @Autowired
     CodeGenerator codeGenerator;
+    @Autowired
+    IdGenerator idGenerator ;
 
     public ZoneProduction createZoneProduction(ZoneProduction zoneProduction, MultipartFile imageFile) throws Exception{
         ZoneProduction zoneProductions = zoneProductionRepository.findByNomZoneProduction(zoneProduction.getNomZoneProduction());
@@ -54,17 +59,18 @@ public class ZoneProductionService {
                 }
             }
             String codes = codeGenerator.genererCode();
-            
+            String idCodes = idGenerator.genererCode();
         Date dates = new Date();
         Instant instant = dates.toInstant();
         ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
         zoneProduction.setCodeZone(codes);
-        zoneProduction.setDateAjout(dates);
-        zoneProduction.setDateModif(dates);
+        zoneProduction.setIdZoneProduction(idCodes);
+        zoneProduction.setDateAjout(LocalDateTime.now());
+        zoneProduction.setDateModif(LocalDateTime.now());
         return zoneProductionRepository.save(zoneProduction);
     }
 
-    public ZoneProduction updateZoneProduction(ZoneProduction zoneProduction, Integer id,MultipartFile imageFile) throws Exception{
+    public ZoneProduction updateZoneProduction(ZoneProduction zoneProduction, String id,MultipartFile imageFile) throws Exception{
         ZoneProduction zoneProductions = zoneProductionRepository.findById(id).orElseThrow(null);
 
         zoneProductions.setNomZoneProduction(zoneProduction.getNomZoneProduction());
@@ -90,7 +96,7 @@ public class ZoneProductionService {
         Date dates = new Date();
         Instant instant = dates.toInstant();
         ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        zoneProductions.setDateModif(dates);
+        zoneProductions.setDateModif(LocalDateTime.now());
         return zoneProductionRepository.save(zoneProductions);
     }
 
@@ -106,10 +112,32 @@ public class ZoneProductionService {
         return zoneProductionList;
     }
 
-    public String deleteZoneProduction(Integer id){
+    public String deleteZoneProduction(String id){
         ZoneProduction zoneProduction = zoneProductionRepository.findById(id).orElseThrow(null);
 
         zoneProductionRepository.delete(zoneProduction);
         return "Supprimé avec success";
+    }
+
+    public ZoneProduction active(String id) throws Exception{
+        ZoneProduction zoneProduction = zoneProductionRepository.findById(id).orElseThrow(null);
+
+        try {
+            zoneProduction.setStatutZone(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation  de la zone de production : " + e.getMessage());
+        }
+        return zoneProductionRepository.save(zoneProduction);
+    }
+
+    public ZoneProduction desactive(String id) throws Exception{
+        ZoneProduction zoneProduction = zoneProductionRepository.findById(id).orElseThrow(null);
+
+        try {
+            zoneProduction.setStatutZone(false);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de la descativation de la zone de production : " + e.getMessage());
+        }
+        return zoneProductionRepository.save(zoneProduction);
     }
 }

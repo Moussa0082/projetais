@@ -1,5 +1,6 @@
 package projet.ais.models;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import jakarta.persistence.Column;
@@ -14,8 +15,8 @@ import lombok.Data;
 public class ParametreFiche {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idParametreFiche;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idParametreFiche;
 
     @Column(nullable = false)
     private String classeParametre;
@@ -44,12 +45,16 @@ public class ParametreFiche {
     @Column(nullable = false)
     private int valeurObligatoire;
 
-    @Column(nullable=false)
-    private Date dateAjout;
+   @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
-    @Column(nullable=false)
-    private Date dateModif;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
 
     @Column(nullable = false)
     private String critereChampParametre;
+
+    @Column(nullable = false)
+    private boolean statutParametre = true;
 }

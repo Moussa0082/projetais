@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
+import projet.ais.models.Niveau1Pays;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.TypeActeurRepository;
 import projet.ais.services.TypeActeurService;
@@ -46,7 +47,7 @@ public class TypeActeurController {
     
     @PutMapping("/update/{id}")
     @Operation(summary = "Modifier type acteur")
-    public ResponseEntity<String> updateTypeActeur(@RequestBody TypeActeur typeActeur, @PathVariable Integer id) {
+    public ResponseEntity<String> updateTypeActeur(@RequestBody TypeActeur typeActeur, @PathVariable String id) {
         TypeActeur typeActeurExistant = typeActeurRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("type d'acteur introuvable avec id :" +id));;
 
         if (typeActeurExistant != null) {
@@ -68,9 +69,23 @@ public class TypeActeurController {
        //Supprimer type acteur
            @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression d'un type d'acteur")
-    public ResponseEntity<String> deleteTypeActeur(@PathVariable Integer id){
+    public ResponseEntity<String> deleteTypeActeur(@PathVariable String id){
         return new ResponseEntity<>(typeActeurService.deleteByIdTypeActeur(id), HttpStatus.OK);
     }
 
+
+               //Activer type acteur
+       @PutMapping("/activer/{id}")
+    @Operation(summary="Activation d'un type d'acteur à travers son id")
+    public ResponseEntity<TypeActeur> activeTypeActeur(@PathVariable String id) throws Exception {
+        return new ResponseEntity<>(typeActeurService.active(id), HttpStatus.OK);
+    }
+
+    //Desativer niveau 1 pays
+    @PutMapping("/desactiver/{id}")
+    @Operation(summary="Desactivation de niveau 1 pays à travers son id")
+    public ResponseEntity<TypeActeur> desactiveTypeActeur(@PathVariable String id) throws Exception {
+        return new ResponseEntity<>(typeActeurService.desactive(id), HttpStatus.OK);
+    }
 
 }

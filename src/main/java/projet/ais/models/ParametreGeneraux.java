@@ -4,6 +4,8 @@ package projet.ais.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -11,8 +13,8 @@ import java.util.*;
 public class ParametreGeneraux {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idParametreGeneraux;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idParametreGeneraux;
 
     @Column(nullable = false)
     private String sigleStructure;
@@ -62,10 +64,11 @@ public class ParametreGeneraux {
     @Column(nullable = false)
     private String localiteStructure;
 
-    @Column(nullable=false)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
-    @Column(nullable=false)
-    private Date dateModif;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
 
 }

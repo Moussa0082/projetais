@@ -25,6 +25,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
 import projet.ais.repository.ActeurRepository;
@@ -61,6 +63,8 @@ public class ActeurService {
 
     @Autowired
     EmailService emailService;
+        @Autowired
+    IdGenerator idGenerator ;
 
     // @Autowired
     // private TypeActeurRepository typeActeurRepository;
@@ -68,6 +72,11 @@ public class ActeurService {
     //créer un acteur
       public Acteur createActeur(Acteur acteur, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
         
+        Acteur id = acteurRepository.findByIdActeur(acteur.getIdActeur());
+        if(id != null){
+
+            throw new IllegalArgumentException("Un acteur avec l'id " + id + " existe déjà");
+        }
         
     // Vérifier si l'acteur a le même mail et le même type
     Acteur existingActeurAvecMemeType = acteurRepository.findByEmailActeurAndTypeActeur(acteur.getEmailActeur(), acteur.getTypeActeur());
@@ -123,7 +132,10 @@ public class ActeurService {
             }
 
             String codeActeur = genererCode();
+            String code = idGenerator.genererCode();
             acteur.setCodeActeur(codeActeur);
+            acteur.setDateAjout(LocalDateTime.now());
+            acteur.setIdActeur(code);
             
             
             
@@ -137,10 +149,10 @@ public class ActeurService {
         acteur.setStatutActeur(false);
     }
 
-    Date d = new Date(); 
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-     String dt = sdf.format(d);
-     acteur.setDateAjout(dt);
+    // Date d = new Date(); 
+    // SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    //  String dt = sdf.format(d);
+     acteur.setDateAjout(LocalDateTime.now());
             Acteur savedActeur = acteurRepository.save(acteur);
                if(admins != null && admins.getTypeActeur().getLibelle() != "Admin"){
               System.out.println(admins.getEmailActeur());
@@ -220,7 +232,7 @@ public class ActeurService {
     }
     
     //créer un user
-      public Acteur updateActeur(Acteur acteur, Integer id, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
+      public Acteur updateActeur(Acteur acteur, String id, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
         // TypeActeur typeActeur = typeActeurRepository.findByIdTypeActeur(acteur.getTypeActeur());
         Acteur ac = acteurRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Acteur non trouver avec l'id " + id));
         
@@ -259,10 +271,10 @@ public class ActeurService {
                         }
                     }
             
-                    Date d = new Date(); 
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                     String dt = sdf.format(d);
-                     ac.setDateModif(dt);
+                    // Date d = new Date(); 
+                    // SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    //  String dt = sdf.format(d);
+                     ac.setDateModif(LocalDateTime.now());
          ac.setAdresseActeur(acteur.getAdresseActeur());
          ac.setNomActeur(acteur.getNomActeur());
          ac.setTelephoneActeur(acteur.getTelephoneActeur());
@@ -297,7 +309,7 @@ public class ActeurService {
 
     //Desactiver un acteur
 
-    public ResponseEntity<String> disableActeur(Integer id) {
+    public ResponseEntity<String> disableActeur(String id) {
         Optional<Acteur> acteur = acteurRepository.findById(id);
         if (acteur.isPresent()) {
             acteur.get().setStatutActeur(false);
@@ -531,7 +543,7 @@ public class ActeurService {
     // fin logique service mot de passe oublier 
    
     //activer un acteur
-    public ResponseEntity<String> enableActeur(Integer id) {
+    public ResponseEntity<String> enableActeur(String id) {
         Optional<Acteur> acteur = acteurRepository.findById(id);
         if (acteur.isPresent()) {
             acteur.get().setStatutActeur(true);
@@ -546,7 +558,7 @@ public class ActeurService {
 
 
      //Liste type acteur par acteur
-    public List<Acteur> getAllActeurByTypeActeur(Integer id){
+    public List<Acteur> getAllActeurByTypeActeur(String id){
         List<Acteur>  acteurList = acteurRepository.findByTypeActeurIdTypeActeur(id);
 
         if(acteurList.isEmpty()){
@@ -561,7 +573,7 @@ public class ActeurService {
 
   
       //Supprimer acteur
-    public String deleteByIdActeur(Integer id){
+    public String deleteByIdActeur(String id){
         Acteur acteur = acteurRepository.findByIdActeur(id);
         if(acteur == null){
             throw new EntityNotFoundException("Désolé l'acteur à supprimer n'existe pas");

@@ -4,10 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import projet.ais.models.ParametreGeneraux;
 
-public interface ParametreGenerauxRepository  extends JpaRepository<ParametreGeneraux, Integer>{
+public interface ParametreGenerauxRepository  extends JpaRepository<ParametreGeneraux, String>{
     
     ParametreGeneraux findByNomStructure(String nomStructure);
     
-    ParametreGeneraux findByIdParametreGeneraux(Integer idParametreGeneraux);
+    ParametreGeneraux findByIdParametreGeneraux(String idParametreGeneraux);
 
 }

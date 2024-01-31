@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.models.Acteur;
+import projet.ais.models.Continent;
 import projet.ais.models.Niveau1Pays;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.Niveau1PaysRepository;
@@ -50,7 +51,7 @@ public class Niveau1PaysController {
 
     @PutMapping("/update/{id}")
     @Operation(summary = "Modifier niveau 1 pays")
-public ResponseEntity<String> updateNiveau1Pays(@RequestBody Niveau1Pays niveau1Pays, @PathVariable Integer id) {
+public ResponseEntity<String> updateNiveau1Pays(@RequestBody Niveau1Pays niveau1Pays, @PathVariable String id) {
     Niveau1Pays niveau1PaysExistant = niveau1PaysRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("type d'acteur introuvable avec id :" +id));;
 
     if (niveau1PaysExistant != null) {
@@ -64,7 +65,7 @@ public ResponseEntity<String> updateNiveau1Pays(@RequestBody Niveau1Pays niveau1
     //liste 
     @GetMapping("/listeNiveau1PaysByIdPays/{id}")
     @Operation(summary = "affichage de la liste des niveau 1 pays par pays")
-    public ResponseEntity<List<Niveau1Pays>> listeNiveau1PaysByIdPays(@PathVariable Integer id){
+    public ResponseEntity<List<Niveau1Pays>> listeNiveau1PaysByIdPays(@PathVariable String id){
         return  new ResponseEntity<>(niveau1PaysService.getAllNiveau1PaysByPays(id), HttpStatus.OK);
     }
 
@@ -75,13 +76,26 @@ public ResponseEntity<String> updateNiveau1Pays(@RequestBody Niveau1Pays niveau1
         return new ResponseEntity<>(niveau1PaysService.getAllNiveau1Pays(), HttpStatus.OK);
     }
 
+           //Activer niveau 1 pays
+       @PutMapping("/activer/{id}")
+    @Operation(summary="Activation de niveau 1 pays à travers son id")
+    public ResponseEntity<Niveau1Pays> activeNiveau1Pays(@PathVariable String id) throws Exception {
+        return new ResponseEntity<>(niveau1PaysService.active(id), HttpStatus.OK);
+    }
+
+    //Desativer niveau 1 pays
+    @PutMapping("/desactiver/{id}")
+    @Operation(summary="Desactivation de niveau 1 pays à travers son id")
+    public ResponseEntity<Niveau1Pays> desactiveNiveau1Pays(@PathVariable String id) throws Exception {
+        return new ResponseEntity<>(niveau1PaysService.desactive(id), HttpStatus.OK);
+    }
+
     //Supprimer Niveau 1 Pays
            @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression d'un niveau 1 pays")
-    public ResponseEntity<String> deleteNiveau1Pays(@PathVariable Integer id){
+    public ResponseEntity<String> deleteNiveau1Pays(@PathVariable String id){
         return new ResponseEntity<>(niveau1PaysService.deleteByIdNiveau1Pays(id), HttpStatus.OK);
     }
-
 
     
 }

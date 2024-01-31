@@ -2,6 +2,7 @@ package projet.ais.services;
 
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -10,7 +11,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import projet.ais.IdGenerator;
 import projet.ais.models.ParametreFiche;
+import projet.ais.models.RegroupementParametre;
 import projet.ais.models.RenvoieParametre;
 import projet.ais.repository.ParametreFicheRepository;
 import projet.ais.repository.RenvoieParametreRepository;
@@ -22,7 +25,8 @@ public class RenvoieParametreService {
     RenvoieParametreRepository renvoieParametreRepository;
     @Autowired
     ParametreFicheRepository parametreFicheRepository;
-    
+      @Autowired
+    IdGenerator idGenerator ;
 
     public RenvoieParametre createParametreRenvoie(RenvoieParametre renvoieParametre){
         ParametreFiche param = parametreFicheRepository.findByIdParametreFiche(renvoieParametre.getIdRenvoiParametre());
@@ -30,28 +34,23 @@ public class RenvoieParametreService {
         if(param == null)
             throw new IllegalArgumentException("Aucune parametre trouvé");
 
-        Date dates = new Date();
-        Instant instant = dates.toInstant();
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        renvoieParametre.setDateModif(dates);
-        renvoieParametre.setDateAjout(dates);
+        String code = idGenerator.genererCode();
+        renvoieParametre.setIdRenvoiParametre(code);
+
+        renvoieParametre.setDateModif(LocalDateTime.now());
+        renvoieParametre.setDateAjout(LocalDateTime.now());
         return renvoieParametreRepository.save(renvoieParametre);
     }
 
-    public RenvoieParametre updateParametreRenvoie(RenvoieParametre renvoieParametre, Integer id){
+    public RenvoieParametre updateParametreRenvoie(RenvoieParametre renvoieParametre, String id){
 
         RenvoieParametre ren = renvoieParametreRepository.findById(id).orElseThrow(null);
     ren.setConditionRenvoi(renvoieParametre.getConditionRenvoi());
     ren.setValeurConditionRenvoi(renvoieParametre.getValeurConditionRenvoi());
     ren.setDescriptionRenvoie(renvoieParametre.getDescriptionRenvoie());
-        ren.setDateAjout(ren.getDateAjout());
-    //    if(renvoieParametre.getParametreFicheDonnees() != null){
-    //     ren.setParametreFicheDonnees(renvoieParametre.getParametreFicheDonnees());
-    //    }
-    Date dates = new Date();
-    Instant instant = dates.toInstant();
-    ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-    ren.setDateModif(dates);
+    ren.setDateAjout(ren.getDateAjout());
+
+    ren.setDateModif(LocalDateTime.now());
         return renvoieParametreRepository.save(ren);
     }
 
@@ -71,10 +70,32 @@ public class RenvoieParametreService {
     //      return renvoieList;
     // }
 
-    public String deleteParametreRenvoie(Integer id){
+    public String deleteParametreRenvoie(String id){
         RenvoieParametre ren = renvoieParametreRepository.findById(id).orElseThrow(null);
 
         renvoieParametreRepository.delete(ren);
         return "Supprimé avec succèss";
+    }
+
+    public RenvoieParametre active(String id) throws Exception{
+        RenvoieParametre ren = renvoieParametreRepository.findById(id).orElseThrow(null);
+
+        try {
+            ren.setStatutRenvoie(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation : " + e.getMessage());
+        }
+        return renvoieParametreRepository.save(ren);
+    }
+
+    public RenvoieParametre desactive(String id) throws Exception{
+        RenvoieParametre ren = renvoieParametreRepository.findById(id).orElseThrow(null);
+
+        try {
+            ren.setStatutRenvoie(false);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de la desactivation : " + e.getMessage());
+        }
+        return renvoieParametreRepository.save(ren);
     }
 }

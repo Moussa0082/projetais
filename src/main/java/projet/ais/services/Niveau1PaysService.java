@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
+import projet.ais.models.Magasin;
 import projet.ais.models.Niveau1Pays;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.Niveau1PaysRepository;
@@ -20,15 +22,19 @@ public class Niveau1PaysService {
 
     @Autowired
     private Niveau1PaysRepository niveau1PaysRepository;
+        @Autowired
+    IdGenerator idGenerator ;
 
     //  Ajouter type acteur 
     public ResponseEntity<String> createNiveau1Pays(Niveau1Pays niveau1Pays) {
 
         // Générer un numéro aléatoire
         String codeN1 = genererCode();
+        String code = idGenerator.genererCode();
     
         // Attribuer le numéro aléatoire au niveau1
         niveau1Pays.setCodeN1(codeN1);
+        niveau1Pays.setIdNiveau1Pays(code);
     
         // Vérifier si le niveau1Pays existe déjà
         Niveau1Pays niveau1PaysExistant = niveau1PaysRepository.findByNomN1(niveau1Pays.getNomN1());
@@ -82,7 +88,7 @@ private String genererChaineAleatoire(String source, int longueur) {
     //Modifier niveau1Pays methode
    
 
-     public Niveau1Pays updateNiveau1Pays(Niveau1Pays niveau1Pays, Integer id){
+     public Niveau1Pays updateNiveau1Pays(Niveau1Pays niveau1Pays, String id){
 
      Niveau1Pays niveau1PaysExistant= niveau1PaysRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Niveau1Pays introuvable"));
      niveau1PaysExistant.setNomN1(niveau1Pays.getNomN1());
@@ -107,7 +113,7 @@ private String genererChaineAleatoire(String source, int longueur) {
     }
 
       //Liste Niveau1Pays par pays
-    public List<Niveau1Pays> getAllNiveau1PaysByPays(Integer id){
+    public List<Niveau1Pays> getAllNiveau1PaysByPays(String id){
         List<Niveau1Pays>  niveau1PaysList = niveau1PaysRepository.findByPaysIdPays(id);
 
         if(niveau1PaysList.isEmpty()){
@@ -119,9 +125,39 @@ private String genererChaineAleatoire(String source, int longueur) {
         return niveau1PaysList;
     } 
 
+        //Activer un niveau 1 pays
+        public Niveau1Pays active(String id) throws Exception{
+        Niveau1Pays n1 = niveau1PaysRepository.findByIdNiveau1Pays(id);
+        if(n1 == null){
+            throw new IllegalStateException("Niveau 1 pays non existant avec l'id" + id );
+        }
+
+        try {
+          n1.setStatutN1(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation  du niveau 1 pays : " + e.getMessage());
+        }
+        return niveau1PaysRepository.save(n1);
+    }
+
+    //Desactiver niveau 1 pays
+    public Niveau1Pays desactive(String id) throws Exception{
+        Niveau1Pays n1 = niveau1PaysRepository.findByIdNiveau1Pays(id);
+        if(n1 == null){
+            throw new IllegalStateException("Niveau 1 pays non existant avec l'id" + id );
+        }
+
+        try {
+        n1.setStatutN1(false);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de desactivation  du niveau 1 pays: " + e.getMessage());
+        }
+        return niveau1PaysRepository.save(n1);
+    }
+
 
     //  Supprimer niveau 1 pays
-      public String deleteByIdNiveau1Pays(Integer id){
+      public String deleteByIdNiveau1Pays(String id){
         Niveau1Pays niveau1Pays = niveau1PaysRepository.findByIdNiveau1Pays(id);
         if(niveau1Pays == null){
             throw new EntityNotFoundException("Désolé le niveau 1 pays à supprimer n'existe pas");

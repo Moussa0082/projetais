@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -12,8 +13,8 @@ import java.util.*;
 public class Niveau1Pays {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idNiveau1Pays;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idNiveau1Pays;
 
     @Column(nullable = false)
     private String codeN1;
@@ -27,11 +28,11 @@ public class Niveau1Pays {
     @Column(nullable = false)
     private boolean statutN1 = true;
 
-    @Column(nullable=true)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
-    @Column(nullable=true)
-    private Date dateModif;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
 
     @ManyToOne
     @JoinColumn( name = "idPays")

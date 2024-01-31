@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -12,8 +13,8 @@ import java.util.List;
 public class Speculation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idSpeculation;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idSpeculation;
 
     @Column(nullable = false)
     private String codeSpeculation;
@@ -31,11 +32,15 @@ public class Speculation {
     @JoinColumn(name = "idCategorieProduit")
     private CategorieProduit categorieProduit;
 
-     @Column(nullable=true)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
+
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
+    
     @Column(nullable=true)
-    private Date dateModif;
+    private String personneAjout;
     
     @OneToMany
     (mappedBy = "speculation")

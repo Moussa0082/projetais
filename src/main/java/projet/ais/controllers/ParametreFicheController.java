@@ -1,5 +1,7 @@
 package projet.ais.controllers;
 
+import java.util.List;
+
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import projet.ais.models.ParametreFiche;
 import projet.ais.services.ParametreFicheService;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -35,13 +38,28 @@ public class ParametreFicheController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ParametreFiche> updateParametre(@PathVariable Integer id, @RequestBody ParametreFiche parametreFiche) {        
+    public ResponseEntity<ParametreFiche> updateParametre(@PathVariable String id, @RequestBody ParametreFiche parametreFiche) {        
         return new ResponseEntity<>(parametreFicheService.updateParametreFiche(parametreFiche, id), HttpStatus.OK);
     }
-
-    // @GetMapping("/getParametreFiche")
-    // public Res getMethodName(@RequestParam String param) {
-    //     return new SomeData();
-    // }
     
+    @PutMapping("/activer/{id}")
+    public ResponseEntity<ParametreFiche> activeParametre(@PathVariable String id) throws Exception {        
+        return new ResponseEntity<>(parametreFicheService.active(id), HttpStatus.OK);
+    }
+  
+    @PutMapping("/desactiver/{id}")
+    public ResponseEntity<ParametreFiche> desactiveParametre(@PathVariable String id) throws Exception {        
+        return new ResponseEntity<>(parametreFicheService.desactive(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/getParametreFiche")
+    public ResponseEntity<List<ParametreFiche>> getAllParam() {
+        return new ResponseEntity<>(parametreFicheService.getParametreFicheDonnees(), HttpStatus.OK);
+    }
+    
+    @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Suppression du parametre")
+    public String supprimerParam(@PathVariable Integer id){
+        return "Supprimé avec succèss";
+    }
 }

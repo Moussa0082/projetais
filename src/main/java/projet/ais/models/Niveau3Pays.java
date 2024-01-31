@@ -3,6 +3,8 @@ package projet.ais.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -10,8 +12,8 @@ import java.util.*;
 public class Niveau3Pays {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idNiveau3Pays;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idNiveau3Pays;
 
     @Column(nullable = false)
     private String codeN3;
@@ -25,11 +27,11 @@ public class Niveau3Pays {
     @Column(nullable = false)
     private boolean statutN3 = true;
 
-    @Column(nullable=true)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
-    @Column(nullable=true)
-    private Date dateModif;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
 
     @ManyToOne
     @JoinColumn( name = "idNiveau2Pays") 

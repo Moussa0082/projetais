@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import projet.ais.models.ParametreFiche;
 
-public interface ParametreFicheRepository extends JpaRepository<ParametreFiche , Integer>{
+public interface ParametreFicheRepository extends JpaRepository<ParametreFiche , String>{
     
-    ParametreFiche findByIdParametreFiche(Integer id);
+    ParametreFiche findByIdParametreFiche(String id);
 }

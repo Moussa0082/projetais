@@ -36,10 +36,22 @@ public class FiliereController {
     
     @PutMapping("/updateFilieres/{id}")
     @Operation(summary="Modification de filiere fonction de l'id de filiere")
-    public ResponseEntity<Filiere> updateFilieres(@PathVariable Integer id, @RequestBody Filiere filiere) {
+    public ResponseEntity<Filiere> updateFilieres(@PathVariable String id, @RequestBody Filiere filiere) {
         return new ResponseEntity<>(filiereService.updateFiliere(filiere, id), HttpStatus.OK);
     }
+
+    @PutMapping("/activer/{id}")
+    @Operation(summary="Activation de filiere fonction de l'id de filiere")
+    public ResponseEntity<Filiere> activeFilieres(@PathVariable String id) throws Exception {
+        return new ResponseEntity<>(filiereService.active(id), HttpStatus.OK);
+    }
     
+    @PutMapping("/desactiver/{id}")
+    @Operation(summary="Desactivation de filiere fonction de l'id de filiere")
+    public ResponseEntity<Filiere> desactiveFilieres(@PathVariable String id) throws Exception {
+        return new ResponseEntity<>(filiereService.desactive(id), HttpStatus.OK);
+    }
+
     @GetMapping("/getAllFiliere")
     @Operation(summary="Récuperation de tout les filieres")
     public ResponseEntity<List<Filiere>> getFiliere() {
@@ -48,7 +60,7 @@ public class FiliereController {
     
     @DeleteMapping("/delete/{id}")
     @Operation(summary="Supprimé un filiere en fonction de l'id de filiere")
-    public String deleteFilieres(@PathVariable Integer id) {
+    public String deleteFilieres(@PathVariable String id) {
         return filiereService.DeleteFiliere(id);
     }
 }

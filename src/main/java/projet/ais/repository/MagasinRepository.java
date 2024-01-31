@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import projet.ais.models.Magasin;
 
 @Repository
-public interface MagasinRepository  extends JpaRepository<Magasin, Integer>{
+public interface MagasinRepository  extends JpaRepository<Magasin, String>{
     
-    Magasin findByIdMagasin(Integer idMagasin);
+    Magasin findByIdMagasin(String idMagasin);
     
-    List<Magasin> findByActeurIdActeur(Integer idActeur);
+    List<Magasin> findByActeurIdActeur(String idActeur);
 }

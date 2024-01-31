@@ -15,6 +15,7 @@ import java.util.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
+import projet.ais.models.CategorieProduit;
 import projet.ais.models.Continent;
 import projet.ais.repository.ContinentRepository;
 import projet.ais.services.ContinentService;
@@ -49,7 +50,7 @@ public class ContinentController {
     //Modifier un continent
     @PutMapping("/update/{id}")
     @Operation(summary = "Modifier un continent")
-   public ResponseEntity<String> updateContinent(@RequestBody Continent continent, @PathVariable Integer id) {
+   public ResponseEntity<String> updateContinent(@RequestBody Continent continent, @PathVariable String id) {
     Continent continentExistant = continentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Continent introuvable "));;
 
     if (continentExistant != null) {
@@ -60,6 +61,20 @@ public class ContinentController {
     }
 }
 
+
+      //Activer continent
+       @PutMapping("/activer/{id}")
+    @Operation(summary="Activation d'un continent à travers son id")
+    public ResponseEntity<Continent> activeContinent(@PathVariable String id) throws Exception {
+        return new ResponseEntity<>(continentService.active(id), HttpStatus.OK);
+    }
+
+    //Desativer continent
+    @PutMapping("/desactiver/{id}")
+    @Operation(summary="Desactivation d'un continent produit à travers son id")
+    public ResponseEntity<Continent> desactiveContinent(@PathVariable String id) throws Exception {
+        return new ResponseEntity<>(continentService.desactive(id), HttpStatus.OK);
+    }
 
 
 
@@ -73,7 +88,7 @@ public class ContinentController {
     //Suppression d'un continent
            @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression d'un continent")
-    public ResponseEntity<String> deleteContinent(@PathVariable Integer id){
+    public ResponseEntity<String> deleteContinent(@PathVariable String id){
         return new ResponseEntity<>(continentService.deleteByIdContinent(id), HttpStatus.OK);
     }
 

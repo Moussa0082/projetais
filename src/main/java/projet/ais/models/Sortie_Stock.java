@@ -4,6 +4,7 @@ package projet.ais.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -13,14 +14,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Sortie_Stock {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idSortieStock;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idSortieStock;
 
     @Column(nullable = false)
     private Date dateSortie;
 
     @Column(nullable = false)
-    private String  codeStock;
+    private String  codeSortie;
 
     @Column(nullable = false)
     private double quantiteSortie;
@@ -28,12 +29,16 @@ public class Sortie_Stock {
     @Column(nullable = false)
     private String codeActeurDestination;
 
-    @Column(nullable = false)
-    private int prixVente;
+   @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
+
+
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
 
 
     @Column(nullable=true)
-    private Date dateModif;
+    private String personneAjout;
 
     @ManyToOne
     @JoinColumn(name = "idStock")

@@ -5,12 +5,12 @@ import java.util.*;
 
 import projet.ais.models.Niveau2Pays;
 
-public interface Niveau2PaysRepository  extends JpaRepository<Niveau2Pays, Integer>{
+public interface Niveau2PaysRepository  extends JpaRepository<Niveau2Pays, String>{
     
       Niveau2Pays findByNomN2(String nomN2);
 
-      Niveau2Pays findByIdNiveau2Pays (Integer idNiveau2Pays);
+      Niveau2Pays findByIdNiveau2Pays (String idNiveau2Pays);
 
-      List<Niveau2Pays> findByNiveau1PaysIdNiveau1Pays(Integer idNiveau1Pays); 
+      List<Niveau2Pays> findByNiveau1PaysIdNiveau1Pays(String idNiveau1Pays); 
 
 }

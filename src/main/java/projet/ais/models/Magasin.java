@@ -2,7 +2,10 @@ package projet.ais.models;
 
 
 
+import java.time.LocalDateTime;
 import java.util.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -13,8 +16,8 @@ import lombok.Data;
 public class Magasin {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idMagasin;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idMagasin;
 
     @Column(nullable = false)
     private String codeMagasin;
@@ -39,11 +42,14 @@ public class Magasin {
     @Column(nullable = false)
     private String contactMagasin;
 
-    @Column(nullable=true)
-    private Date dateAjout;
+    @Column(nullable = false)
+    private boolean statutMagasin = true;
 
-    @Column(nullable=true)
-    private Date dateModif;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
 
     @Column(nullable = true)
     private String photo;
@@ -51,5 +57,10 @@ public class Magasin {
     @ManyToOne
     @JoinColumn( name = "idActeur")
     private Acteur acteur;
+
+    @OneToMany
+    (mappedBy = "magasin")
+    @JsonIgnore
+    private List<Stock> stockList;
 }
 

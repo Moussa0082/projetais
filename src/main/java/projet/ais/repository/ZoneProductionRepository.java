@@ -7,9 +7,9 @@ import org.springframework.stereotype.Repository;
 import projet.ais.models.ZoneProduction;
 
 @Repository
-public interface ZoneProductionRepository extends JpaRepository<ZoneProduction, Integer>{
+public interface ZoneProductionRepository extends JpaRepository<ZoneProduction, String>{
     
-    ZoneProduction findByidZoneProduction(Integer idZoneProduction);
+    ZoneProduction findByidZoneProduction(String idZoneProduction);
 
     ZoneProduction findByNomZoneProduction(String nomZoneProduction);
     

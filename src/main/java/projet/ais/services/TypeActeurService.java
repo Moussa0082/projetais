@@ -19,11 +19,12 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.stream.Collectors;
 import java.util.NoSuchElementException;
 
-
+import projet.ais.IdGenerator;
 import projet.ais.Exception.NoContentException;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
 import projet.ais.models.Filiere;
+import projet.ais.models.SousRegion;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.TypeActeurRepository;
 
@@ -32,7 +33,8 @@ public class TypeActeurService {
 
     @Autowired
     private TypeActeurRepository typeActeurRepository;
-
+    @Autowired
+    IdGenerator idGenerator ;
    
   
     //  Ajouter type acteur 
@@ -40,9 +42,11 @@ public class TypeActeurService {
 
         // Générer un numéro aléatoire
         String codeTypeActeur = genererCode();
-    
+        String idCode = idGenerator.genererCode();
+        // typeActeur.setIdType(idCode);
         // Attribuer le numéro aléatoire au type d'acteur
         typeActeur.setCodeTypeActeur(codeTypeActeur);
+        typeActeur.setIdTypeActeur(idCode);
     
         // Vérifier si le type d'acteur existe déjà
         TypeActeur typeActeurExistant = typeActeurRepository.findByLibelle(typeActeur.getLibelle());
@@ -96,7 +100,7 @@ private String genererChaineAleatoire(String source, int longueur) {
     //Modifier type acteur methode
    
 
-     public TypeActeur updateTypeActeur(TypeActeur typeActeur, Integer id){
+     public TypeActeur updateTypeActeur(TypeActeur typeActeur, String id){
 
      TypeActeur typeActeurExistant= typeActeurRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("type d'acteur introuvable avec id :" +id));
     typeActeurExistant.setLibelle(typeActeur.getLibelle());
@@ -120,10 +124,38 @@ private String genererChaineAleatoire(String source, int longueur) {
     }
 
     
+            //Activer type acteur
+        public TypeActeur active(String id) throws Exception{
+        TypeActeur t = typeActeurRepository.findByIdTypeActeur(id);
+        if(t == null){
+            throw new IllegalStateException("Type acteur non existant avec l'id" + id );
+        }
 
+        try {
+          t.setStatutTypeActeur(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation  du type d'acteur : " + e.getMessage());
+        }
+        return typeActeurRepository.save(t);
+    }
+
+    //Desactiver sous region
+    public TypeActeur desactive(String id) throws Exception{
+        TypeActeur t = typeActeurRepository.findByIdTypeActeur(id);
+        if(t == null){
+            throw new IllegalStateException("Type acteur non existant avec l'id" + id );
+        }
+
+        try {
+        t.setStatutTypeActeur(false);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de desactivation  du type acteur: " + e.getMessage());
+        }
+        return typeActeurRepository.save(t);
+    }
 
     //  Supprimer type acteur
-      public String deleteByIdTypeActeur(Integer id){
+      public String deleteByIdTypeActeur(String id){
         TypeActeur typeActeur = typeActeurRepository.findByIdTypeActeur(id);
         if(typeActeur == null){
             throw new EntityNotFoundException("Désolé le type d'acteur à supprimer n'existe pas");

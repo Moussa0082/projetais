@@ -7,9 +7,11 @@ import projet.ais.models.Stock;
 import java.util.*;
 
 @Repository
-public interface StockRepository extends JpaRepository<Stock, Integer>{
+public interface StockRepository extends JpaRepository<Stock, String>{
     
-    Stock findByIdStock(Integer id);
-    List<Stock> findByActeurIdActeur(Integer id);
-    List<Stock> findByMagasinIdMagasin(Integer id);
+    Stock findByIdStock(String id);
+    List<Stock> findByActeurIdActeur(String id);
+    List<Stock> findByMagasinIdMagasin(String id);
+
+    Stock findByNomProduitAndActeurIdActeur(String nom, String id);
 }

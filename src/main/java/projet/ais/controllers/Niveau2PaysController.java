@@ -50,7 +50,7 @@ public class Niveau2PaysController {
 
     @PutMapping("/update/{id}")
     @Operation(summary = "Modifier niveau 2 pays")
-public ResponseEntity<String> updateNiveau2Pays(@RequestBody Niveau1Pays niveau1Pays, @PathVariable Integer id) {
+public ResponseEntity<String> updateNiveau2Pays(@RequestBody Niveau1Pays niveau1Pays, @PathVariable String id) {
     Niveau2Pays niveau2PaysExistant = niveau2PaysRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("type d'acteur introuvable avec id :" +id));;
 
     if (niveau2PaysExistant != null) {
@@ -64,7 +64,7 @@ public ResponseEntity<String> updateNiveau2Pays(@RequestBody Niveau1Pays niveau1
     //liste 
     @GetMapping("/listeNiveau2PaysByIdNiveau1Pays/{id}")
     @Operation(summary = "affichage de la liste des niveau 2 pays par pays")
-    public ResponseEntity<List<Niveau2Pays>> listeNiveau2PaysByIdPays(@PathVariable Integer id){
+    public ResponseEntity<List<Niveau2Pays>> listeNiveau2PaysByIdPays(@PathVariable String id){
         return  new ResponseEntity<>(niveau2PaysService.getAllNiveau2PaysByIdNiveau1Pays(id), HttpStatus.OK);
     }
 
@@ -75,15 +75,29 @@ public ResponseEntity<String> updateNiveau2Pays(@RequestBody Niveau1Pays niveau1
         return new ResponseEntity<>(niveau2PaysService.getAllNiveau2Pays(), HttpStatus.OK);
     }
 
+    
+
     //Supprimer Niveau 1 Pays
            @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression d'un niveau 2 pays")
-    public ResponseEntity<String> deleteNiveau2Pays(@PathVariable Integer id){
+    public ResponseEntity<String> deleteNiveau2Pays(@PathVariable String id){
         return new ResponseEntity<>(niveau2PaysService.deleteByIdNiveau2Pays(id), HttpStatus.OK);
     }
 
 
-
+               //Activer niveau 2 pays
+               @PutMapping("/activer/{id}")
+               @Operation(summary="Activation de niveau 2 pays à travers son id")
+               public ResponseEntity<Niveau2Pays> activeNiveau2Pays(@PathVariable String id) throws Exception {
+                   return new ResponseEntity<>(niveau2PaysService.active(id), HttpStatus.OK);
+               }
+           
+               //Desativer niveau 1 pays
+               @PutMapping("/desactiver/{id}")
+               @Operation(summary="Desactivation de niveau 2 pays à travers son id")
+               public ResponseEntity<Niveau2Pays> desactiveNiveau2Pays(@PathVariable String id) throws Exception {
+                   return new ResponseEntity<>(niveau2PaysService.desactive(id), HttpStatus.OK);
+               }
 
     
 }

@@ -34,8 +34,20 @@ public class UniteController {
     
     @PutMapping("/updateUnite/{id}")
     @Operation(summary = "Modification d'unité")
-    public ResponseEntity<Unite> updatedUnite(@RequestBody Unite unite, @PathVariable Integer id) {
+    public ResponseEntity<Unite> updatedUnite(@RequestBody Unite unite, @PathVariable String id) {
         return new ResponseEntity<>(uniteService.updateUnite(unite,id), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/activer/{id}")
+    @Operation(summary = "activation d'unité")
+    public ResponseEntity<Unite> activeUnite(@PathVariable String id) throws Exception {
+        return new ResponseEntity<>(uniteService.active(id), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/desactiver/{id}")
+    @Operation(summary = "Modification d'unité")
+    public ResponseEntity<Unite> desactiveUnite(@PathVariable String id) throws Exception {
+        return new ResponseEntity<>(uniteService.desactive(id), HttpStatus.CREATED);
     }
 
     @GetMapping("/getAllUnite")
@@ -45,7 +57,7 @@ public class UniteController {
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression des unites")
-    public String deleteUnites(@PathVariable Integer id){
+    public String deleteUnites(@PathVariable String id){
         return uniteService.deleteUnite(id);
     }
 }

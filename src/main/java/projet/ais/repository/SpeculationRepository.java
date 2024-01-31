@@ -8,11 +8,11 @@ import org.springframework.stereotype.Repository;
 import projet.ais.models.Speculation;
 
 @Repository
-public interface SpeculationRepository extends JpaRepository<Speculation, Integer>{
+public interface SpeculationRepository extends JpaRepository<Speculation, String>{
     
-    Speculation findByIdSpeculation(Integer idSpeculation);
+    Speculation findByIdSpeculation(String idSpeculation);
 
     Speculation findBynomSpeculation(String nom);
     
-    List<Speculation> findByCategorieProduitIdCategorieProduit(long idCategorieProduit);
+    List<Speculation> findByCategorieProduitIdCategorieProduit(String idCategorieProduit);
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -12,8 +13,8 @@ import java.util.List;
 public class ZoneProduction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idZoneProduction;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idZoneProduction;
 
     @Column(nullable = false)
     private String codeZone;
@@ -33,12 +34,18 @@ public class ZoneProduction {
     @Column(nullable = true)
     private String photoZone;
 
-    @Column(nullable=true)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
 
     @Column(nullable=true)
-    private Date dateModif;
-
+    private String personneAjout;
+    
+    @Column(nullable = false)
+    private boolean statutZone = true;
+    
     @OneToMany
     (mappedBy = "zoneProduction")
     @JsonIgnore

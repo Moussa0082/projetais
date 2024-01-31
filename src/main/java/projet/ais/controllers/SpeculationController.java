@@ -36,8 +36,20 @@ public class SpeculationController {
     
     @PutMapping("/update/{id}")
     @Operation(summary="Modification de la spéculation en fonction de l'id")
-    public ResponseEntity<Speculation> updateSpeculations(@PathVariable Integer id, @RequestBody Speculation speculation) {
+    public ResponseEntity<Speculation> updateSpeculations(@PathVariable String id, @RequestBody Speculation speculation) {
         return new ResponseEntity<>(speculationService.updateSpeculation(speculation, id), HttpStatus.OK);
+    }
+    
+    @PutMapping("/activer/{id}")
+    @Operation(summary="Activation de la spéculation en fonction de l'id")
+    public ResponseEntity<Speculation> activeSpeculations(@PathVariable String id) throws Exception {
+        return new ResponseEntity<>(speculationService.active(id), HttpStatus.OK);
+    }
+    
+    @PutMapping("/desactiver/{id}")
+    @Operation(summary="Desactivation de la spéculation en fonction de l'id")
+    public ResponseEntity<Speculation> desactiveSpeculations(@PathVariable String id) throws Exception {
+        return new ResponseEntity<>(speculationService.desactive(id), HttpStatus.OK);
     }
 
     @GetMapping("/getAllSpeculation")
@@ -48,13 +60,13 @@ public class SpeculationController {
     
     @GetMapping("/getAllSpeculationByCategorie/{id}")
     @Operation(summary="Récuperation des spéculations en fonction de l'id de categorie")
-    public ResponseEntity<List<Speculation>> getAllSpeculationByCate(@PathVariable Integer id) {
+    public ResponseEntity<List<Speculation>> getAllSpeculationByCate(@PathVariable String id) {
         return new ResponseEntity<>(speculationService.getAllSpeculationByCategorie(id), HttpStatus.OK);
     }
     
     @DeleteMapping("/deleteSpeculation/{id}")
     @Operation(summary="Suppression d'une spéculations en fonction de l'id")
-    public String supprimerSpeculation(@PathVariable Integer id) {
+    public String supprimerSpeculation(@PathVariable String id) {
         return speculationService.DeleteSpeculations(id);
     }
 }

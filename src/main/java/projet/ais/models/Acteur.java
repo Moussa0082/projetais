@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
 public class Acteur {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idActeur;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idActeur;
 
     @Column(name = "reset_token", nullable = true)
 	private String resetToken;
@@ -58,14 +58,14 @@ public class Acteur {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable=true)
-    private String dateAjout;
 
-    @Column(nullable=true)
-    private String dateModif;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
-    @Column(nullable=true)
-    private String personneAjout;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
+
 
     @Column(nullable=true)
     private String personneModif;
@@ -103,6 +103,21 @@ public class Acteur {
    (mappedBy = "acteur")
    @JsonIgnore
    private List<Alerte> alerteList;
+
+   @OneToMany
+   (mappedBy = "acteur")
+   @JsonIgnore
+   private List<Intrant> intrantList;
+
+   @OneToMany
+   (mappedBy = "acteur")
+   @JsonIgnore
+   private List<Conseil> conseilList;
+
+   @OneToMany
+   (mappedBy = "acteur")
+   @JsonIgnore
+   private List<Vehicule> vehiculeList;
 
 }
 

@@ -5,9 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
 
-public interface AlerteRepository extends JpaRepository <Alerte, Integer>{
+public interface AlerteRepository extends JpaRepository <Alerte, String>{
     
-    Alerte findByActeurIdActeur(Integer idActeur);
+    Alerte findByActeurIdActeur(String idActeur);
 
     Alerte findByActeur(Acteur acteur);
 

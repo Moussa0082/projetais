@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -12,8 +13,8 @@ import java.util.*;
 public class SousRegion {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idSousRegion;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idSousRegion;
 
     @Column(nullable = false)
     private String codeSousRegion;
@@ -24,11 +25,12 @@ public class SousRegion {
     @Column(nullable = false)
     private boolean statutSousRegion = true;
 
-    @Column(nullable=true)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
-    @Column(nullable=true)
-    private Date dateModif;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
 
     @OneToMany
     (mappedBy = "sousRegion")

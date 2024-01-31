@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -13,8 +14,8 @@ import java.util.List;
 public class Unite {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idUnite;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idUnite;
 
     @Column(nullable = false)
     private String codeUnite;
@@ -22,11 +23,17 @@ public class Unite {
     @Column(nullable = false)
     private String nomUnite;
 
-     @Column(nullable=true)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
+    
+    @Column(nullable = false)
+    private boolean statutUnite = true;
 
     @Column(nullable=true)
-    private Date dateModif;
+    private String personneAjout;
     
     @OneToMany
     (mappedBy = "unite")

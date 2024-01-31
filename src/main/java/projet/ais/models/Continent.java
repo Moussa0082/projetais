@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -14,8 +15,8 @@ import java.util.*;
 public class Continent {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idContinent;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idContinent;
 
     @Column(nullable = false)
     private String codeContinent;
@@ -29,11 +30,11 @@ public class Continent {
     @Column(nullable = false)
     private boolean statutContinent = true;
 
-    @Column(nullable=true)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
-    @Column(nullable=true)
-    private Date dateModif;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
 
     @OneToMany
     (mappedBy = "continent")

@@ -3,16 +3,19 @@ package projet.ais.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Data
 public class Stock {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idStock;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idStock;
 
     @Column(nullable = false)
     private String codeStock;
@@ -45,12 +48,15 @@ public class Stock {
     @JoinColumn(name = "idZoneProduction")
     private ZoneProduction zoneProduction;
 
-    @Column(nullable=true)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
-    @Column(nullable=true)
-    private Date dateModif;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
     
+    @Column(nullable = false)
+    private boolean statutSotck = true;
+
     @ManyToOne
     @JoinColumn(name = "idSpeculation")
     private Speculation speculation;
@@ -59,8 +65,8 @@ public class Stock {
     @JoinColumn(name = "idUnite")
     private Unite unite;
 
-    @OneToOne
-    // @JoinColumn(name = "idMagasin")
+    @ManyToOne
+    @JoinColumn(name = "idMagasin")
     private Magasin magasin;
 
     @ManyToOne
@@ -69,6 +75,7 @@ public class Stock {
 
     @OneToMany
     (mappedBy = "stock")
+    @JsonIgnore
     private List<Sortie_Stock> sortie_Stock;
 
 }

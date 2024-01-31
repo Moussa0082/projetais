@@ -40,7 +40,7 @@ public class Sortie_StockController {
     }
 
     @GetMapping("/byStockId/{idStock}")
-    public ResponseEntity<List<Sortie_Stock>> getSortieStocksByStockId(@PathVariable int idStock) {
+    public ResponseEntity<List<Sortie_Stock>> getSortieStocksByStockId(@PathVariable String idStock) {
         List<Sortie_Stock> sortieStocks = sortie_StockService.getAllSortieStocksByStockId(idStock);
         return new ResponseEntity<>(sortieStocks, HttpStatus.OK);
     }
@@ -50,6 +50,7 @@ public class Sortie_StockController {
     //     List<Sortie_Stock> sortieStocks = sortie_StockService.getAllSortieStocksByActeur(stock, idActeur);
     //     return new ResponseEntity<>(sortieStocks, HttpStatus.OK);
     // }
+    
 
     @GetMapping("/betweenDates")
     @Operation(summary  = "recherches de l'historique de la sortie des stocks entre 2 dates specifiques")
@@ -64,7 +65,7 @@ public class Sortie_StockController {
     //Supprimer sortie stock
            @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression d'une sortie sortie")
-    public ResponseEntity<String> deleteSortieStock(@PathVariable Integer id){
+    public ResponseEntity<String> deleteSortieStock(@PathVariable String id){
         return new ResponseEntity<>(sortie_StockService.deleteByIdSortieStock(id), HttpStatus.OK);
     }
     

@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -19,7 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import projet.ais.CodeGenerator;
+import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
+import projet.ais.models.Filiere;
 import projet.ais.models.Magasin;
 import projet.ais.models.Stock;
 import projet.ais.repository.ActeurRepository;
@@ -37,6 +40,8 @@ public class MagasinService {
     StockRepository stockRepository;
     @Autowired
     CodeGenerator codeGenerator;
+      @Autowired
+    IdGenerator idGenerator ;
 
     public Magasin createMagasin(Magasin magasin, MultipartFile imageFile) throws Exception{
         Acteur acteur = acteurRepository.findByIdActeur(magasin.getActeur().getIdActeur());
@@ -61,17 +66,19 @@ public class MagasinService {
                 }
             }
             String codes = codeGenerator.genererCode();
+            String idcodes = idGenerator.genererCode();
             magasin.setCodeMagasin(codes);
+            magasin.setIdMagasin(idcodes);
 
             Date dates = new Date();
             Instant instant = dates.toInstant();
             ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-            magasin.setDateAjout(dates);
-            magasin.setDateModif(dates);
+            magasin.setDateAjout(LocalDateTime.now());
+            magasin.setDateModif(LocalDateTime.now());
         return magasinRepository.save(magasin);
     }
 
-    public Magasin updateMagasin(Magasin magasin, MultipartFile imageFile, Integer id) throws Exception{
+    public Magasin updateMagasin(Magasin magasin, MultipartFile imageFile, String id) throws Exception{
     
         // Stock stock = stockRepository.findByIdStock(magasin.getStock().getIdStock());
         Magasin mag= magasinRepository.findById(id).orElseThrow(null);
@@ -100,10 +107,8 @@ public class MagasinService {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
             }
-            Date dates = new Date();
-            Instant instant = dates.toInstant();
-            ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-            mag.setDateModif(dates);
+
+            mag.setDateModif(LocalDateTime.now());
         return magasinRepository.save(mag);
     }
 
@@ -120,7 +125,7 @@ public class MagasinService {
         return magasinList;
     }
 
-    public List<Magasin> getMagasinByActeur(Integer id) {
+    public List<Magasin> getMagasinByActeur(String id) {
         List<Magasin> magasinList = magasinRepository.findByActeurIdActeur(id);
 
         if(magasinList.isEmpty())
@@ -132,11 +137,33 @@ public class MagasinService {
 
         return magasinList;
     }
-    public String supprimerMagagin(Integer id){
+    public String supprimerMagagin(String id){
         Magasin magasin = magasinRepository.findById(id).orElseThrow(null);
 
         magasinRepository.delete(magasin);
 
         return "supprimé avec success";
+    }
+
+    public Magasin active(String id) throws Exception{
+        Magasin mag = magasinRepository.findById(id).orElseThrow(null);
+
+        try {
+          mag.setStatutMagasin(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation  de la magasin : " + e.getMessage());
+        }
+        return magasinRepository.save(mag);
+    }
+
+    public Magasin desactive(String id) throws Exception{
+        Magasin mag = magasinRepository.findById(id).orElseThrow(null);
+
+        try {
+        mag.setStatutMagasin(false);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de desactivation : " + e.getMessage());
+        }
+        return magasinRepository.save(mag);
     }
 }

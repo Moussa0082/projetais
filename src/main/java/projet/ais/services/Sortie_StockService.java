@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import projet.ais.CodeGenerator;
+import projet.ais.IdGenerator;
 import projet.ais.models.CategorieProduit;
 import projet.ais.models.Sortie_Stock;
 import projet.ais.models.Speculation;
@@ -22,7 +24,10 @@ public class Sortie_StockService {
 
     @Autowired
     private StockRepository stockRepository;
- 
+     @Autowired
+    IdGenerator idGenerator ;
+    @Autowired
+    CodeGenerator codeGenerator ;
     
       public Sortie_Stock createSortieStock(Sortie_Stock sortie_Stock) throws Exception{
 
@@ -46,16 +51,20 @@ public class Sortie_StockService {
         
                stock.setQuantiteStock(quantiteStock - quantiteSortie);
                stockRepository.save(stock);
+               String code = idGenerator.genererCode();
+               String codes = codeGenerator.genererCode();
+               sortie_Stock.setIdSortieStock(code);
+               sortie_Stock.setCodeSortie(codes);
               return sortie_StockRepository.save(sortie_Stock);
         
     }
      
 
-     public List<Sortie_Stock> getAllSortieStocksByStockId(int idStock) {
+     public List<Sortie_Stock> getAllSortieStocksByStockId(String idStock) {
         return sortie_StockRepository.findByStockIdStock(idStock);
     }
 
-    // public List<Sortie_Stock> getAllSortieStocksByActeur(Stock stock, Integer idActeur) {
+    // public List<Sortie_Stock> getAllSortieStocksByActeur(Stock stock, String idActeur) {
     //     return sortie_StockRepository.findByStockAndActeurIdActeur(stock, idActeur);
     // }
 
@@ -64,7 +73,7 @@ public class Sortie_StockService {
     }
 
       //  Supprimer historique sortie stock
-      public String deleteByIdSortieStock(Integer id){
+      public String deleteByIdSortieStock(String id){
         Sortie_Stock sortieStock = sortie_StockRepository.findByIdSortieStock(id);
         if(sortieStock == null){
             throw new EntityNotFoundException("Désolé le sortie de stock à supprimer n'existe pas");

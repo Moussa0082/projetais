@@ -1,6 +1,7 @@
 package projet.ais.services;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
+import projet.ais.IdGenerator;
 import projet.ais.models.CategorieProduit;
 import projet.ais.models.Filiere;
 import projet.ais.repository.CategorieProduitRepository;
@@ -30,6 +32,8 @@ public class CategorieService {
     FiliereRepository filiereRepository;
     @Autowired
     CodeGenerator codeGenerator;
+    @Autowired
+    IdGenerator idGenerator ;
 
     public CategorieProduit createCategorie(CategorieProduit categorieProduit){
         CategorieProduit categorieProduits = categorieProduitRepository.findBylibelleCategorie(categorieProduit.getLibelleCategorie());
@@ -42,29 +46,29 @@ public class CategorieService {
             throw new EntityNotFoundException("Ce filiere n'existe pas");
         
             String codes = codeGenerator.genererCode();
+            String Idcodes = idGenerator.genererCode();
             categorieProduit.setCodeCategorie(codes);
-            Date dates = new Date();
-            Instant instant = dates.toInstant();
-            ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-            categorieProduit.setDateAjout(dates);
-            categorieProduit.setDateModif(dates);
+            categorieProduit.setIdCategorieProduit(Idcodes);
+
+            categorieProduit.setDateAjout(LocalDateTime.now());
+            categorieProduit.setDateModif(LocalDateTime.now());
 
         return categorieProduitRepository.save(categorieProduit);
     }
 
-    public CategorieProduit updateCategorie(CategorieProduit categorieProduit, Integer id){
+    public CategorieProduit updateCategorie(CategorieProduit categorieProduit, String id){
         CategorieProduit categorieProduits = categorieProduitRepository.findById(id).orElseThrow(null);
 
         categorieProduits.setDescriptionCategorie(categorieProduit.getDescriptionCategorie());
         categorieProduits.setLibelleCategorie(categorieProduit.getLibelleCategorie());
         categorieProduits.setFiliere(categorieProduit.getFiliere());
         categorieProduits.setDateAjout(categorieProduits.getDateAjout());
-        Date dates = new Date();
-            Instant instant = dates.toInstant();
-            ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+        // Date dates = new Date();
+        //     Instant instant = dates.toInstant();
+        //     ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
             
-            categorieProduits.setDateModif(dates);
-        return categorieProduitRepository.save(categorieProduit);
+            categorieProduits.setDateModif(LocalDateTime.now());
+        return categorieProduitRepository.save(categorieProduits);
     }
 
     public List<CategorieProduit> getAllCategorie(){
@@ -79,7 +83,7 @@ public class CategorieService {
         return categorieProduitList;
     }
 
-    public List<CategorieProduit> getAllCategorieByIdFiliere(Integer id){
+    public List<CategorieProduit> getAllCategorieByIdFiliere(String id){
         List<CategorieProduit> categorieProduitList = categorieProduitRepository.findByFiliereIdFiliere(id);
 
         if(categorieProduitList.isEmpty())
@@ -91,10 +95,32 @@ public class CategorieService {
         return categorieProduitList;
     }
 
-    public String deleteCategorie(Integer id){
+    public String deleteCategorie(String id){
         CategorieProduit categorieProduit = categorieProduitRepository.findById(id).orElseThrow(null);
 
         categorieProduitRepository.delete(categorieProduit); 
         return "Supprimé avec succèss";
+    }
+
+    public CategorieProduit active(String id) throws Exception{
+        CategorieProduit cat = categorieProduitRepository.findById(id).orElseThrow(null);
+
+        try {
+            cat.setStatutCategorie(true);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation  de la categorie : " + e.getMessage());
+        }
+        return categorieProduitRepository.save(cat);
+    }
+
+    public CategorieProduit desactive(String id) throws Exception{
+        CategorieProduit cat = categorieProduitRepository.findById(id).orElseThrow(null);
+
+        try {
+            cat.setStatutCategorie(false);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de l'activation  de la categorie : " + e.getMessage());
+        }
+        return categorieProduitRepository.save(cat);
     }
 }

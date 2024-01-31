@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import projet.ais.models.Niveau1Pays;
 import projet.ais.models.ParametreGeneraux;
 import projet.ais.repository.ParametreGenerauxRepository;
 import projet.ais.services.ParametreGenerauxService;
@@ -65,7 +66,7 @@ public class ParametreGenerauxController {
       @PutMapping("/update/{id}")
     @Operation(summary = "Mise à jour d'un paramètre général par son Id ")
     public ResponseEntity<ParametreGeneraux> updateParametreGeneraux(
-            @PathVariable Integer id,
+            @PathVariable String id,
             @Valid @RequestParam("parametreGeneral") String parametreGeneralString,
             @RequestParam(value = "image", required = false) MultipartFile imageFile) {
         ParametreGeneraux parametreGeneraux = new ParametreGeneraux();
@@ -94,15 +95,16 @@ public class ParametreGenerauxController {
        
     //Lire un user spécifique
     @GetMapping("/read/{id}")
-    public ResponseEntity<?> getParametreGeneralById(@PathVariable Integer id) {
+    public ResponseEntity<?> getParametreGeneralById(@PathVariable String id) {
         return parametreGenerauxService.findById(id);
     }
 
+    
 
         //Supprimer un paramètre général
            @DeleteMapping("/delete/{id}")
     @Operation(summary = "Supprimer un paramètre général")
-    public String delete(@Valid @PathVariable Integer id) {
+    public String delete(@Valid @PathVariable String id) {
         return parametreGenerauxService.deleteByIdParametreGeneraux(id);
     }
     

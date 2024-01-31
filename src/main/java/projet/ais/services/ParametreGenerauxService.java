@@ -18,6 +18,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import jakarta.persistence.EntityNotFoundException;
+import projet.ais.IdGenerator;
 import projet.ais.models.Continent;
 import projet.ais.models.ParametreGeneraux;
 import projet.ais.repository.ParametreGenerauxRepository;
@@ -27,15 +28,18 @@ public class ParametreGenerauxService {
 
     @Autowired
     private ParametreGenerauxRepository parametreGenerauxRepository;
-
+        @Autowired
+    IdGenerator idGenerator ;
     
 
      //Ajouter parametreGeneral 
         public ResponseEntity<String> createParametreGeneral(ParametreGeneraux parametreGeneraux,  MultipartFile imageFile1) throws Exception {
         
             String codeNiveauStructure = genererCode();
+            String code = idGenerator.genererCode();
 
             parametreGeneraux.setCodeNiveauStructure(codeNiveauStructure);
+            parametreGeneraux.setIdParametreGeneraux(code);
 
             ParametreGeneraux existantParamatreGeneraux = parametreGenerauxRepository.findByNomStructure(parametreGeneraux.getNomStructure());
             if (existantParamatreGeneraux == null) {
@@ -106,7 +110,7 @@ public class ParametreGenerauxService {
         //Modifier paramètre methode
        
     
-         public ParametreGeneraux updateParametreGeneraux(ParametreGeneraux parametreGeneraux, Integer id, MultipartFile imageFile1) throws Exception{
+         public ParametreGeneraux updateParametreGeneraux(ParametreGeneraux parametreGeneraux, String id, MultipartFile imageFile1) throws Exception{
     
  
 
@@ -163,7 +167,7 @@ public class ParametreGenerauxService {
     
 
         //Get paramètre général by ID
-    public ResponseEntity<?> findById(Integer id) {
+    public ResponseEntity<?> findById(String id) {
 
     Optional<ParametreGeneraux> parametreGeneraux = parametreGenerauxRepository.findById(id);
 
@@ -177,7 +181,7 @@ public class ParametreGenerauxService {
     
     
         //  Supprimer parametre généraux
-          public String deleteByIdParametreGeneraux(Integer id){
+          public String deleteByIdParametreGeneraux(String id){
             ParametreGeneraux parametreGeneraux = parametreGenerauxRepository.findByIdParametreGeneraux(id);
             if(parametreGeneraux == null){
                 throw new EntityNotFoundException("Désolé le paramètre général à supprimer n'existe pas");
