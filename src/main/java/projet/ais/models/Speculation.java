@@ -46,5 +46,10 @@ public class Speculation {
     (mappedBy = "speculation")
     @JsonIgnore
     private List<Stock> stockList;
+
+    @OneToMany
+    (mappedBy = "speculation")
+    @JsonIgnore
+    private List<Superficie> superficies;
 }
 

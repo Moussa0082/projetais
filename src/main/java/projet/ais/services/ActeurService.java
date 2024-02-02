@@ -92,6 +92,7 @@ public class ActeurService {
             }
             
             
+            
             //On hashe le mot de passe
             String passWordHasher = passwordEncoder.encode(acteur.getPassword());
             acteur.setPassword(passWordHasher);
@@ -141,17 +142,19 @@ public class ActeurService {
             
             
             Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
+
+            if(admins != null)
+                throw new Exception("Le compte admin existe déjà");
+
             // Enregistrement de l'acteur
-    if ((admins.getTypeActeur().getLibelle()) == "Admin") {
+        if ((admins.getTypeActeur().getLibelle()) == "Admin") {
         System.out.println(acteur.getTypeActeur().getLibelle());
         acteur.setStatutActeur(true);
-    } else {
+        } else {
         acteur.setStatutActeur(false);
-    }
+        }
 
-    // Date d = new Date(); 
-    // SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    //  String dt = sdf.format(d);
+
      acteur.setDateAjout(LocalDateTime.now());
             Acteur savedActeur = acteurRepository.save(acteur);
                if(admins != null && admins.getTypeActeur().getLibelle() != "Admin"){
@@ -160,8 +163,8 @@ public class ActeurService {
               String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez activer son compte dans les plus brefs délais !";
               // for (Acteur admin : admins) {
                   
-                  Alerte alerte = new Alerte(admins.getEmailActeur(), msg, "Création d'un nouveau compte");
-                  emailService.sendSimpleMail(alerte);
+                //   Alerte alerte = new Alerte(admins.getEmailActeur(), msg, "Création d'un nouveau compte");
+                //   emailService.sendSimpleMail(alerte);
                 //   System.out.println(emailService.sendSimpleMail(alerte));
                }  else{
                 System.out.println("Acteur non trouver");
@@ -374,23 +377,6 @@ public class ActeurService {
     // fin logique email à un utilisateur specifique
    
 
-
-
-    //Fonction pour modifer un utilisateur
-    // public Utilisateur updateUser(Utilisateur utilisateur, String... oldPass){
-    //     Utilisateur userVerif = utilisateurRepository.findByIdUtilisateur(utilisateur.getIdUtilisateur());
-    //     if (userVerif == null)
-    //         throw new NotFoundException("invalid");
-
-    //     if (oldPass.length != 0){
-    //         if(!passwordEncoder.matches(oldPass[0], userVerif.getMotDePasse()))
-    //             throw new NotFoundException("old invalid");
-    //         utilisateur.setMotDePasse(passwordEncoder.encode(utilisateur.getMotDePasse()));
-    //         return utilisateurRepository.save(utilisateur);
-    //     }
-    //     return utilisateurRepository.save(utilisateur);
-    // }
-
     //Fonction pour envoyer un code de verification à l'email de l'utilisateur
     String code = getRandomNumberString();
 
@@ -475,70 +461,7 @@ public class ActeurService {
 
 
   
-    // public String forgotPass(Acteur acteur){
-    //     Acteur userOptional = acteurRepository.findByEmailActeur(acteur.getEmailActeur());
-
-    //     // if(userOptional == null){
-    //     //     return "Cet email n'existe pas dans notre base de données ";
-    //     // }
-    //     if(userOptional.getEmailActeur() == null){
-    //             return "Cet email n'existe pas dans notre base de données ";
-            
-
-    //     }else{
-    //         System.out.println(acteur.getEmailActeur());
-    //         System.out.println("Email non trouver");
-    //     }
-
-    //     Acteur user= userOptional;
-    //     String tk = genererCode();
-    //     user.setResetToken(tk);
-    //     user.setTokenCreationDate(LocalDateTime.now());
-    //   // Envoyer le code de réinitialisation à l'utilisateur (par exemple, par e-mail ou SMS)
-    //   Alerte al = new Alerte(acteur.getEmailActeur(), "Vueiller saisir le code de confirmation "+ tk +" qui \n expire dans 30 s pour passer à l'etape de réinitialisation de votre mot de passe", "Code de confirmation");
-    //   emailService.sendSimpleMail(al);
-    //     user=acteurRepository.save(user);
-    //     return user.getResetToken();
-    // }
-
-    // public String resetPass(String resetToken, String password){
-    //     Optional<Optional<Acteur>> userOptional= Optional.ofNullable(acteurRepository.findByResetToken(resetToken));
-
-    //     if(!userOptional.isPresent()){
-    //         return "Code invalide";
-    //     }
-    //     LocalDateTime tokenCreationDate = userOptional.get().get().getTokenCreationDate();
-
-    //     if (isTokenExpired(tokenCreationDate)) {
-    //         return "Code expiré.";
-
-    //     }
-
-    //     Acteur user = userOptional.get().get();
-
-    //     user.setPassword(password);
-    //     user.setResetToken(null);
-    //     user.setTokenCreationDate(null);
-
-    //     acteurRepository.save(user);
-
-    //     return "Mot de passe modifier avec succès.";
-    // }
-
-    // private String generateToken() {
-    //     StringBuilder token = new StringBuilder();
-
-    //     return token.append(UUID.randomUUID().toString())
-    //             .append(UUID.randomUUID().toString()).toString();
-    // }
-
-    // private boolean isTokenExpired(final LocalDateTime tokenCreationDate) {
-
-    //     LocalDateTime now = LocalDateTime.now();
-    //     Duration diff = Duration.between(tokenCreationDate, now);
-
-    //     return diff.toMinutes() >=EXPIRE_TOKEN;
-    // }
+   
 
     // fin logique service mot de passe oublier 
    

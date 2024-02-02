@@ -124,10 +124,14 @@ public class Acteur {
    @JsonIgnore
    private List<Vehicule> vehiculeList;
    
+//    @OneToMany
+//    (mappedBy = "acteur")
+//    @JsonIgnore
+//    private List<Commande> commandeList;
+
    @OneToMany
    (mappedBy = "acteur")
    @JsonIgnore
-   private List<Commande> commandeList;
-
+   private List<Superficie> superficieList;
 }
 

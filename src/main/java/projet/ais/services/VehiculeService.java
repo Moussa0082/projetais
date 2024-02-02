@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.persistence.EntityNotFoundException;
+import projet.ais.IdGenerator;
+import projet.ais.models.Acteur;
 import projet.ais.models.Unite;
 import projet.ais.models.Vehicule;
 import projet.ais.repository.VehiculeRepository;
@@ -23,6 +26,11 @@ public class VehiculeService {
 
     @Autowired
     private VehiculeRepository vehiculeRepository;
+  
+
+    @Autowired
+    private IdGenerator idGenerator;
+
 
      //créer un vehicule
       public Vehicule createVehicule(Vehicule vehicule, MultipartFile imageFile) throws Exception {
@@ -32,13 +40,6 @@ public class VehiculeService {
 
             throw new IllegalArgumentException("Un vehicule avec l'id " + vh + " existe déjà");
         }
-        
-    // Vérifier si le meme vehicule existe avec le même acteur
-    // Vehicule existantVehicule = vehiculeRepository.findByNomVehiculeAndCapaciteVehiculeAndActeur(vehicule.getNomVehicule(), vehicule.getCapaciteVehicule(), vehicule.getActeur());
-    // if (existantVehicule != null) {
-    //     // si le meme vehicule existe avec le même acteur
-    //     throw new IllegalArgumentException("Ce vehicule existe déjà avec le même acteur");
-    // }
 
             // Traitement du fichier image siege acteur
             if (imageFile != null) {
@@ -57,15 +58,28 @@ public class VehiculeService {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
             }
+
+            vehicule.setIdVehicule(idGenerator.genererCode());
             vehicule.setDateAjout(LocalDateTime.now());
            Vehicule savedVehicule = vehiculeRepository.save(vehicule);        
    
-    return savedVehicule;
+         return savedVehicule;
    
     }
 
 
+       //Liste des vehicules par acteur
+    public List<Vehicule> getAllVehiculeByActeur(String id){
+        List<Vehicule>  vehiculeList = vehiculeRepository.findAllByActeurIdActeur(id);
 
+        if(vehiculeList.isEmpty()){
+            throw new EntityNotFoundException("Aucun vehicule trouvé");
+        }
+        vehiculeList = vehiculeList
+                .stream().sorted((d1, d2) -> d2.getNomVehicule().compareTo(d1.getNomVehicule()))
+                .collect(Collectors.toList());
+        return vehiculeList;
+    } 
 
 
       //Modifier vehicule
@@ -150,6 +164,8 @@ public class VehiculeService {
         }
         return vehiculeRepository.save(vehicule);
     }
+
+    
     
 }
 
