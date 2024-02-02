@@ -2,7 +2,6 @@ package projet.ais.models;
 
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.ManyToAny;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,19 +18,30 @@ public class Intrant {
     private String idIntrant;
 
     @Column(nullable = false)
-    private String nomIntant;
+    private String nomIntrant;
 
     @Column(nullable = false)
     private double quantiteIntrant;
     
+    @Column(nullable = false)
+    private String condeIntrant;
+
+    
     @Column(nullable = true)
     private String descriptionIntrant;
+
+    @Column(nullable = true)
+    private String photoIntrant;
     
     @Column
     private boolean statutIntrant;
 
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateAjout;
+    
+    // @Column(columnDefinition = "TIMESTAMP")
+    // private LocalDateTime dateApplication;
+
 
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateModif;

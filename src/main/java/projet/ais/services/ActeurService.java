@@ -374,23 +374,6 @@ public class ActeurService {
     // fin logique email à un utilisateur specifique
    
 
-
-
-    //Fonction pour modifer un utilisateur
-    // public Utilisateur updateUser(Utilisateur utilisateur, String... oldPass){
-    //     Utilisateur userVerif = utilisateurRepository.findByIdUtilisateur(utilisateur.getIdUtilisateur());
-    //     if (userVerif == null)
-    //         throw new NotFoundException("invalid");
-
-    //     if (oldPass.length != 0){
-    //         if(!passwordEncoder.matches(oldPass[0], userVerif.getMotDePasse()))
-    //             throw new NotFoundException("old invalid");
-    //         utilisateur.setMotDePasse(passwordEncoder.encode(utilisateur.getMotDePasse()));
-    //         return utilisateurRepository.save(utilisateur);
-    //     }
-    //     return utilisateurRepository.save(utilisateur);
-    // }
-
     //Fonction pour envoyer un code de verification à l'email de l'utilisateur
     String code = getRandomNumberString();
 
@@ -475,70 +458,7 @@ public class ActeurService {
 
 
   
-    // public String forgotPass(Acteur acteur){
-    //     Acteur userOptional = acteurRepository.findByEmailActeur(acteur.getEmailActeur());
-
-    //     // if(userOptional == null){
-    //     //     return "Cet email n'existe pas dans notre base de données ";
-    //     // }
-    //     if(userOptional.getEmailActeur() == null){
-    //             return "Cet email n'existe pas dans notre base de données ";
-            
-
-    //     }else{
-    //         System.out.println(acteur.getEmailActeur());
-    //         System.out.println("Email non trouver");
-    //     }
-
-    //     Acteur user= userOptional;
-    //     String tk = genererCode();
-    //     user.setResetToken(tk);
-    //     user.setTokenCreationDate(LocalDateTime.now());
-    //   // Envoyer le code de réinitialisation à l'utilisateur (par exemple, par e-mail ou SMS)
-    //   Alerte al = new Alerte(acteur.getEmailActeur(), "Vueiller saisir le code de confirmation "+ tk +" qui \n expire dans 30 s pour passer à l'etape de réinitialisation de votre mot de passe", "Code de confirmation");
-    //   emailService.sendSimpleMail(al);
-    //     user=acteurRepository.save(user);
-    //     return user.getResetToken();
-    // }
-
-    // public String resetPass(String resetToken, String password){
-    //     Optional<Optional<Acteur>> userOptional= Optional.ofNullable(acteurRepository.findByResetToken(resetToken));
-
-    //     if(!userOptional.isPresent()){
-    //         return "Code invalide";
-    //     }
-    //     LocalDateTime tokenCreationDate = userOptional.get().get().getTokenCreationDate();
-
-    //     if (isTokenExpired(tokenCreationDate)) {
-    //         return "Code expiré.";
-
-    //     }
-
-    //     Acteur user = userOptional.get().get();
-
-    //     user.setPassword(password);
-    //     user.setResetToken(null);
-    //     user.setTokenCreationDate(null);
-
-    //     acteurRepository.save(user);
-
-    //     return "Mot de passe modifier avec succès.";
-    // }
-
-    // private String generateToken() {
-    //     StringBuilder token = new StringBuilder();
-
-    //     return token.append(UUID.randomUUID().toString())
-    //             .append(UUID.randomUUID().toString()).toString();
-    // }
-
-    // private boolean isTokenExpired(final LocalDateTime tokenCreationDate) {
-
-    //     LocalDateTime now = LocalDateTime.now();
-    //     Duration diff = Duration.between(tokenCreationDate, now);
-
-    //     return diff.toMinutes() >=EXPIRE_TOKEN;
-    // }
+   
 
     // fin logique service mot de passe oublier 
    

@@ -43,6 +43,10 @@ public class Conseil {
 
     @Column(nullable = true)
     private String audioConseil;
+    
+    
+    @Column
+    private boolean statutConseil;
 
      @ManyToOne
      @JoinColumn(name = "idActeur")
