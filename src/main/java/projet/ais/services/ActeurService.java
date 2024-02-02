@@ -134,7 +134,7 @@ public class ActeurService {
             String codeActeur = genererCode();
             String code = idGenerator.genererCode();
             acteur.setCodeActeur(codeActeur);
-            acteur.setDateAjout(LocalDateTime.now());
+            // acteur.setDateAjout(LocalDateTime.now());
             acteur.setIdActeur(code);
             
             
@@ -142,29 +142,24 @@ public class ActeurService {
             
             Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
             // Enregistrement de l'acteur
-    if ((admins.getTypeActeur().getLibelle()) == "Admin") {
-        System.out.println(acteur.getTypeActeur().getLibelle());
+    if ((acteur.getTypeActeur().getLibelle()) == "Admin") {
         acteur.setStatutActeur(true);
     } else {
         acteur.setStatutActeur(false);
     }
 
-    // Date d = new Date(); 
-    // SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    //  String dt = sdf.format(d);
-     acteur.setDateAjout(LocalDateTime.now());
+   
+    //  acteur.setDateAjout(LocalDateTime.now());
             Acteur savedActeur = acteurRepository.save(acteur);
                if(admins != null && admins.getTypeActeur().getLibelle() != "Admin"){
               System.out.println(admins.getEmailActeur());
               // Envoyer un email à chaque administrateur
               String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez activer son compte dans les plus brefs délais !";
-              // for (Acteur admin : admins) {
                   
                   Alerte alerte = new Alerte(admins.getEmailActeur(), msg, "Création d'un nouveau compte");
                   emailService.sendSimpleMail(alerte);
-                //   System.out.println(emailService.sendSimpleMail(alerte));
                }  else{
-                System.out.println("Acteur non trouver");
+                System.out.println("Admin non trouver");
                }
 
 
