@@ -75,7 +75,13 @@
     <artifactId>spring-security-crypto</artifactId>
     <version>6.2.1</version>
 </dependency>
-  
+  <!-- https://mvnrepository.com/artifact/com.green-api/whatsapp-api-client-java -->
+<dependency>
+    <groupId>com.green-api</groupId>
+    <artifactId>whatsapp-api-client-java</artifactId>
+    <version>0.1.6</version>
+</dependency>
+
 
 	</dependencies>
 

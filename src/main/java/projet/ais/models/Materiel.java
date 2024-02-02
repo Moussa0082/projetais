@@ -16,7 +16,6 @@ public class Materiel {
     @Id
     private String idMateriel;
 
-    
     @Column(nullable = false)
     private String codeMateriel;
 
