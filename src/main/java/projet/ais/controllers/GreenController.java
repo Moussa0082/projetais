@@ -7,11 +7,17 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import projet.ais.config.GreenApiConfig;
+import projet.ais.services.SendMessage;
+
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
@@ -20,35 +26,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class GreenController {
     
 
-     @Autowired
+    @Autowired
     GreenApiConfig greenApiConfig;
+    @Autowired
+    SendMessage sendMessage;
 
     
 
     @PostMapping("/sent-message")
-    public String sendMessages(){
-            String apiKey = greenApiConfig.getApiId();
-            String apiToken = greenApiConfig.getApiToken();
-        
-                var restTemplate = new RestTemplate();
-                var requestUrl = new StringBuilder();
-                requestUrl
-                .append("https://api.greenapi.com")
-                .append("/waInstance")
-                .append(apiKey)
-                .append("/sendMessage/")
-                .append(apiToken);
-                
-            var headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        
-        var jsonBody = "{\r\n\t\"chatId\": \"22383496674@c.us\",\r\n\t\"message\": \"I use Green-API to send this message to you!\"\r\n}";
-        
-        var requestEntity = new HttpEntity<>(jsonBody, headers);
-        
-        var response = restTemplate.exchange(requestUrl.toString(), HttpMethod.POST, requestEntity, String.class);
-        System.out.println(response);
-            
-        return "Message envoyé avec succéss";
+    public String sendMessageWa(@RequestParam String numero, @RequestParam String me) throws JsonProcessingException {
+        sendMessage.sendMessages(numero, me);
+        return "Message envoyé avec succèss";
     }
 }

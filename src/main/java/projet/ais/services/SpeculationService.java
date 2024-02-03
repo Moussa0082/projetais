@@ -44,10 +44,10 @@ public class SpeculationService {
             throw new DuplicateRequestException("Cette speculation existe déjà");
         
             String codes = codeGenerator.genererCode();
-            String Idcodes = idGenerator.genererCode();
+            String idcodes = idGenerator.genererCode();
             
             speculation.setCodeSpeculation(codes);
-            speculation.setIdSpeculation(Idcodes);
+            speculation.setIdSpeculation(idcodes);
 
         speculation.setDateModif(LocalDateTime.now());
         speculation.setDateAjout(LocalDateTime.now());
