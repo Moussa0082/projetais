@@ -42,7 +42,7 @@ public class GreenController {
             var headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         
-        var jsonBody = "{\r\n\t\"chatId\": \"212774653564@c.us\",\r\n\t\"message\": \"I use Green-API to send this message to you!\"\r\n}";
+        var jsonBody = "{\r\n\t\"chatId\": \"22383496674@c.us\",\r\n\t\"message\": \"I use Green-API to send this message to you!\"\r\n}";
         
         var requestEntity = new HttpEntity<>(jsonBody, headers);
         

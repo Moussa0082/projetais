@@ -135,7 +135,7 @@ public class ActeurService {
             String codeActeur = genererCode();
             String code = idGenerator.genererCode();
             acteur.setCodeActeur(codeActeur);
-            acteur.setDateAjout(LocalDateTime.now());
+            // acteur.setDateAjout(LocalDateTime.now());
             acteur.setIdActeur(code);
             
             
@@ -143,31 +143,28 @@ public class ActeurService {
             
             Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
 
-            if(admins != null)
-                throw new Exception("Le compte admin existe déjà");
+          
 
             // Enregistrement de l'acteur
-        if ((admins.getTypeActeur().getLibelle()) == "Admin") {
-        System.out.println(acteur.getTypeActeur().getLibelle());
+    if ((acteur.getTypeActeur().getLibelle()) == "Admin") {
         acteur.setStatutActeur(true);
         } else {
         acteur.setStatutActeur(false);
         }
 
 
-     acteur.setDateAjout(LocalDateTime.now());
+   
+    //  acteur.setDateAjout(LocalDateTime.now());
             Acteur savedActeur = acteurRepository.save(acteur);
                if(admins != null && admins.getTypeActeur().getLibelle() != "Admin"){
               System.out.println(admins.getEmailActeur());
               // Envoyer un email à chaque administrateur
               String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez activer son compte dans les plus brefs délais !";
-              // for (Acteur admin : admins) {
                   
-                //   Alerte alerte = new Alerte(admins.getEmailActeur(), msg, "Création d'un nouveau compte");
-                //   emailService.sendSimpleMail(alerte);
-                //   System.out.println(emailService.sendSimpleMail(alerte));
+                  Alerte alerte = new Alerte(admins.getEmailActeur(), msg, "Création d'un nouveau compte");
+                  emailService.sendSimpleMail(alerte);
                }  else{
-                System.out.println("Acteur non trouver");
+                System.out.println("Admin non trouver");
                }
 
 

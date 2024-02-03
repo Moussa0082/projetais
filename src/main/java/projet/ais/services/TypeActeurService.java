@@ -2,6 +2,8 @@ package projet.ais.services;
 
 import java.util.List;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import org.apache.el.stream.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,6 +47,7 @@ public class TypeActeurService {
         String idCode = idGenerator.genererCode();
         // typeActeur.setIdType(idCode);
         // Attribuer le numéro aléatoire au type d'acteur
+        // typeActeur.setDateAjout(LocalDateTime.now());
         typeActeur.setCodeTypeActeur(codeTypeActeur);
         typeActeur.setIdTypeActeur(idCode);
     
