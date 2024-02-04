@@ -27,18 +27,29 @@ public class MessageService {
     CodeGenerator codeGenerator;
     @Autowired
     IdGenerator idGenerator;
+    @Autowired
+    SendMessage sendMessage;
     
 
-    // https://api.greenapi.com/waInstance{{idInstance}}/sendMessage/{{apiTokenInstance}}
-    public MessageWa sendMessage(MessageWa message){
-    
+    public MessageWa sendMessageAndSave(String whatsAppActeur, String msg) throws Exception {
+        // Créer une instance de MessageWa et définir les valeurs
+        MessageWa message = new MessageWa();
+        message.setActeurConcerner("Ibrahim sy");
+        message.setText(msg);
+        message.setDateAjout(LocalDateTime.now());
+        
+        // Générer le code et l'ID
         String codes = codeGenerator.genererCode();
         String idCode = idGenerator.genererCode();
-
         message.setCodeMessage(codes);
         message.setIdMessage(idCode);
-        message.setDateAjout(LocalDateTime.now());
-
+        
+        // Enregistrer le message dans la base de données
+        messageRepository.save(message);
+        
+        // Envoyer le message
+        sendMessage.sendMessages(whatsAppActeur, msg);
+        
         return message;
     }
 }

@@ -23,6 +23,9 @@ public class MessageWa {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateAjout;
 
+    // @Column(nullable = false)
+    // private String produitConcerner;
+ 
     @Column(nullable = false)
     private String ActeurConcerner;
     
