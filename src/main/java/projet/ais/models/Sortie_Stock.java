@@ -17,24 +17,38 @@ public class Sortie_Stock {
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idSortieStock;
 
-    @Column(nullable = false)
-    private Date dateSortie;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateSortie;
 
     @Column(nullable = false)
     private String  codeSortie;
 
     @Column(nullable = false)
     private double quantiteSortie;
+    
+    @Column(nullable = false)
+    private int prixVente;
 
     @Column(nullable = false)
     private String codeActeurDestination;
 
-   @Column(columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateAjout;
+
+    @PrePersist
+    public void prePersist() {
+        dateAjout = LocalDateTime.now();
+        dateSortie = LocalDateTime.now();
+    }
 
 
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateModif;
+
+    public LocalDateTime updateDateModif(LocalDateTime dateModif) {
+        this.dateModif = dateModif;
+        return dateModif;
+    }
 
 
     @Column(nullable=true)

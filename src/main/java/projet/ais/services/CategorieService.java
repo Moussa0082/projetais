@@ -50,7 +50,6 @@ public class CategorieService {
             categorieProduit.setCodeCategorie(codes);
             categorieProduit.setIdCategorieProduit(Idcodes);
 
-            categorieProduit.setDateAjout(LocalDateTime.now());
             categorieProduit.setDateModif(LocalDateTime.now());
 
         return categorieProduitRepository.save(categorieProduit);

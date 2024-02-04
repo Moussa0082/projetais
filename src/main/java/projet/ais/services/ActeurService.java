@@ -1,6 +1,5 @@
 package projet.ais.services;
 
-import org.aspectj.weaver.loadtime.Agent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,6 @@ import jakarta.persistence.EntityNotFoundException;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.text.SimpleDateFormat;
 import java.nio.file.Path;
 
 import java.nio.file.Paths;
@@ -134,7 +132,7 @@ public class ActeurService {
             String codeActeur = genererCode();
             String code = idGenerator.genererCode();
             acteur.setCodeActeur(codeActeur);
-            // acteur.setDateAjout(LocalDateTime.now());
+            acteur.setDateAjout(LocalDateTime.now());
             acteur.setIdActeur(code);
             
             
@@ -170,7 +168,7 @@ public class ActeurService {
 
     
 
-
+    //envoi mail aux users
     public ResponseEntity<Void> sendMailToAllUser(String email, String sujet, String message){
         
         List<Acteur> allActeurs = acteurRepository.findAllByEmailActeur(email);
@@ -269,7 +267,7 @@ public class ActeurService {
                     // Date d = new Date(); 
                     // SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     //  String dt = sdf.format(d);
-                     ac.setDateModif(LocalDateTime.now());
+         ac.setDateModif(acteur.updateDateModif(LocalDateTime.now()));
          ac.setAdresseActeur(acteur.getAdresseActeur());
          ac.setNomActeur(acteur.getNomActeur());
          ac.setTelephoneActeur(acteur.getTelephoneActeur());

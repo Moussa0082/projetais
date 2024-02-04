@@ -20,12 +20,14 @@ import org.springframework.web.multipart.MultipartFile;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
+import projet.ais.models.Alerte;
 import projet.ais.models.Magasin;
 import projet.ais.models.Speculation;
 import projet.ais.models.Stock;
 import projet.ais.models.Unite;
 import projet.ais.models.ZoneProduction;
 import projet.ais.repository.ActeurRepository;
+import projet.ais.repository.AlerteRepository;
 import projet.ais.repository.MagasinRepository;
 import projet.ais.repository.SpeculationRepository;
 import projet.ais.repository.StockRepository;
@@ -37,19 +39,32 @@ public class StockService {
     
     @Autowired
     StockRepository stockRepository;
+
     @Autowired
     UniteRepository uniteRepository;
+
     @Autowired
     ActeurRepository acteurRepository;
+
     @Autowired
     MagasinRepository magasinRepository;
+
     @Autowired
     SpeculationRepository speculationRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private AlerteRepository alerteRepository;
+
     @Autowired
     ZoneProductionRepository zoneProductionRepository;
+    
     @Autowired
     CodeGenerator codeGenerator;
-      @Autowired
+
+    @Autowired
     IdGenerator idGenerator ;
     
     public Stock createStock(Stock stock, MultipartFile imageFile) throws Exception {
@@ -60,9 +75,9 @@ public class StockService {
         ZoneProduction zoneProduction = zoneProductionRepository.findByidZoneProduction(stock.getZoneProduction().getIdZoneProduction());
         
         if(zoneProduction == null)
-            throw new IllegalStateException("Aucune zone production");
+            throw new IllegalStateException("Aucune zone production trouvé");
         if(speculation == null)
-            throw new IllegalStateException("Aucune speculations ");
+            throw new IllegalStateException("Aucune speculation trouvé ");
         if(unite == null)
             throw new IllegalStateException("Aucune unité trouvé");
         if(magasin == null)
@@ -92,9 +107,34 @@ public class StockService {
             stock.setCodeStock(codes);
             stock.setIdStock(idCode);
               
+            stock.setDateProduction(LocalDateTime.now());
         stock.setDateModif(LocalDateTime.now());
         stock.setDateAjout(LocalDateTime.now());
-            return stockRepository.save(stock);
+        Stock st = stockRepository.save(stock);
+        if (st.getActeur().getTypeActeur().getLibelle().equals("Producteur")) {
+            System.out.println("Producteur mail: " + st.getActeur().getEmailActeur());
+            
+            // Récupérer tous les acteurs de type "Commerçant"
+            List<Acteur> allCommercants = acteurRepository.findAllByTypeActeur_Libelle("Commerçant");
+            
+            // Envoyer un e-mail à chaque acteur commerçant
+            for (Acteur commercant : allCommercants) {
+                if(commercant != null){
+
+                    System.out.println("E-mail commerçant: " + commercant.getEmailActeur());
+                    Alerte alerte = new Alerte(commercant.getEmailActeur(), "Nouveau produit ajouté", "Un nouveau produit a été ajouté");
+                    emailService.sendSimpleMail(alerte);
+                }else{
+                    System.out.println("E-mail commerçant non trouver " );
+
+                }
+            }
+        } else {
+            System.out.println("Type d'acteur non trouvé");
+        }
+        
+    
+            return st;
     }
 
     public Stock updateStock(Stock stock, MultipartFile imageFile,String id) throws Exception {
@@ -107,9 +147,7 @@ public class StockService {
         stocks.setDescriptionStock(stock.getDescriptionStock());
         stocks.setDateAjout(stocks.getDateAjout());
         
-        Date dates = new Date();
-        Instant instant = dates.toInstant();
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+
         stocks.setDateModif(LocalDateTime.now());
 
         if(stock.getUnite() != null){

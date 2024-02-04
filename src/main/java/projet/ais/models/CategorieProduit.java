@@ -34,8 +34,19 @@ public class CategorieProduit {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateAjout;
 
+    @PrePersist
+    public void prePersist() {
+        dateAjout = LocalDateTime.now();
+    }
+
+
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateModif;
+
+    public LocalDateTime updateDateModif(LocalDateTime dateModif) {
+        this.dateModif = dateModif;
+        return dateModif;
+    }
     
     @OneToMany
     (mappedBy = "categorieProduit")

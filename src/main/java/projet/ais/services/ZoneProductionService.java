@@ -5,10 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
-import projet.ais.models.Unite;
+
 import projet.ais.models.ZoneProduction;
 import projet.ais.repository.ZoneProductionRepository;
 import com.sun.jdi.request.DuplicateRequestException;
@@ -60,13 +57,9 @@ public class ZoneProductionService {
             }
             String codes = codeGenerator.genererCode();
             String idCodes = idGenerator.genererCode();
-        Date dates = new Date();
-        Instant instant = dates.toInstant();
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+
         zoneProduction.setCodeZone(codes);
-        zoneProduction.setIdZoneProduction(idCodes);
-        zoneProduction.setDateAjout(LocalDateTime.now());
-        zoneProduction.setDateModif(LocalDateTime.now());
+        zoneProduction.setIdZoneProduction(idCodes);        
         return zoneProductionRepository.save(zoneProduction);
     }
 
@@ -93,9 +86,7 @@ public class ZoneProductionService {
                 throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
             }
         }
-        Date dates = new Date();
-        Instant instant = dates.toInstant();
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+
         zoneProductions.setDateModif(LocalDateTime.now());
         return zoneProductionRepository.save(zoneProductions);
     }

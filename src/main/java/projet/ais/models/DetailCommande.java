@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import lombok.Data;
 
 @Entity
@@ -23,6 +26,26 @@ public class DetailCommande {
     
     @Column(nullable = false)
     private double quantiteLivree;
+
+    @Column(nullable = false)
+    private String nomProduit;
+
+     @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
+
+    @PrePersist
+    public void prePersist() {
+        dateAjout = LocalDateTime.now();
+    }
+
+
+    // @Column(columnDefinition = "TIMESTAMP")
+    // private LocalDateTime dateModif;
+
+    // public LocalDateTime updateDateModif(LocalDateTime dateModif) {
+    //     this.dateModif = dateModif;
+    //     return dateModif;
+    // }
     
     @Column(nullable = false)
     private String codeStock;
@@ -30,6 +53,8 @@ public class DetailCommande {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateDetailCommande;
 
-    
+    @ManyToOne
+    @JoinColumn(name = "idCommande")
+    private Commande commande;
 
 }

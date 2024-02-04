@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import lombok.Data;
 
 @Entity
@@ -45,12 +46,22 @@ public class ParametreFiche {
     @Column(nullable = false)
     private int valeurObligatoire;
 
-   @Column(columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateAjout;
+
+    @PrePersist
+    public void prePersist() {
+        dateAjout = LocalDateTime.now();
+    }
 
 
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateModif;
+
+    public LocalDateTime updateDateModif(LocalDateTime dateModif) {
+        this.dateModif = dateModif;
+        return dateModif;
+    }
 
     @Column(nullable = false)
     private String critereChampParametre;

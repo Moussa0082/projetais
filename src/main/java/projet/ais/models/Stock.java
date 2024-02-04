@@ -27,7 +27,7 @@ public class Stock {
     private String formeProduit;
 
     @Column(nullable = false)
-    private Date dateProduction;
+    private LocalDateTime dateProduction;
 
     @Column(nullable = false)
     private double quantiteStock;
@@ -51,8 +51,19 @@ public class Stock {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateAjout;
 
+    @PrePersist
+    public void prePersist() {
+        dateAjout = LocalDateTime.now();
+    }
+
+
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateModif;
+
+    public LocalDateTime updateDateModif(LocalDateTime dateModif) {
+        this.dateModif = dateModif;
+        return dateModif;
+    }
     
     @Column(nullable = false)
     private boolean statutSotck = true;
@@ -72,6 +83,10 @@ public class Stock {
     @ManyToOne
     @JoinColumn(name = "idActeur")
     private Acteur acteur;
+    
+    @ManyToOne
+    @JoinColumn(name = "idCommande")
+    private Commande commande;
 
     @OneToMany
     (mappedBy = "stock")

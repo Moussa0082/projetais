@@ -1,5 +1,6 @@
 package projet.ais.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -41,10 +42,10 @@ public class Niveau1PaysService {
         if (niveau1PaysExistant != null) {
     
             // Retourner un message d'erreur
-            return new ResponseEntity<>("Niveau1Pays déjà existant.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Niveau 1 Pays déjà existant.", HttpStatus.BAD_REQUEST);
         } else {
             niveau1PaysRepository.save(niveau1Pays);
-            return new ResponseEntity<>("Niveau1Pays ajouté avec succès", HttpStatus.CREATED);
+            return new ResponseEntity<>("Niveau 1 Pays ajouté avec succès", HttpStatus.CREATED);
         }
     }
 
@@ -94,6 +95,7 @@ private String genererChaineAleatoire(String source, int longueur) {
      niveau1PaysExistant.setNomN1(niveau1Pays.getNomN1());
     niveau1PaysExistant.setDescriptionN1(niveau1Pays.getDescriptionN1());
     niveau1PaysExistant.setPays(niveau1Pays.getPays());
+    niveau1PaysExistant.setDateModif(LocalDateTime.now());
 
     return niveau1PaysRepository.save(niveau1PaysExistant);
   }
