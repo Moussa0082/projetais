@@ -27,7 +27,7 @@ public class CampagneService {
     public Campagne createCampagne(Campagne campagne) {
         Campagne campagne2 = campagneRepository.findByNomCampagne(campagne.getNomCampagne());
 
-        if(campagne2 == null)
+        if(campagne2 != null)
             throw new EntityNotFoundException("Ce campagne est déjà enregister");
         
         String codes= codeGenerator.genererCode();

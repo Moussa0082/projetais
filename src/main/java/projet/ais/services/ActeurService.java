@@ -180,7 +180,7 @@ public class ActeurService {
         
         List<Acteur> allActeurs = acteurRepository.findAllByEmailActeur(email);
 
-        // Envoyer un e-mail aux autres agents de la banque
+        // Envoyer un e-mail aux autres acteurs 
         for (Acteur ac : allActeurs) {
             if (ac.getTypeActeur().getLibelle() != "Admin") {
         Alerte alerte = new Alerte(ac.getEmailActeur(), message,sujet);

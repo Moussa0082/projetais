@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,8 +51,10 @@ public class StockService {
     ZoneProductionRepository zoneProductionRepository;
     @Autowired
     CodeGenerator codeGenerator;
-      @Autowired
+    @Autowired
     IdGenerator idGenerator ;
+    @Autowired
+    MessageService messageService;
     
     public Stock createStock(Stock stock, MultipartFile imageFile) throws Exception {
         Unite unite = uniteRepository.findByIdUnite(stock.getUnite().getIdUnite());
@@ -86,15 +90,36 @@ public class StockService {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
             }
-            String codes = codeGenerator.genererCode();
-            String idCode = idGenerator.genererCode();
-
-            stock.setCodeStock(codes);
-            stock.setIdStock(idCode);
-              
+        String codes = codeGenerator.genererCode();
+        String idCode = idGenerator.genererCode();
+        stock.setCodeStock(codes);
+        stock.setIdStock(idCode);
         stock.setDateModif(LocalDateTime.now());
         stock.setDateAjout(LocalDateTime.now());
-            return stockRepository.save(stock);
+        stockRepository.save(stock);
+        
+        try {
+            sendMessageToAllActeur(stock);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return stock;
+    }
+
+    public ResponseEntity<String> sendMessageToAllActeur(Stock stock){
+        List<Acteur> allActeurs = acteurRepository.findAll();
+        //Envoie de message à tout les autres acteurs à l'exception de l'acteur courant
+        
+        for(Acteur acteur : allActeurs){
+            String mes = "Bonjour M. " + acteur.getNomActeur() + " M. " + stock.getActeur().getNomActeur() + " vient d'jouté un produit : " + stock.getNomProduit();
+            try {
+                messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes);
+
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur : " + e.getMessage());
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     public Stock updateStock(Stock stock, MultipartFile imageFile,String id) throws Exception {
