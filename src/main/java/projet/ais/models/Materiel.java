@@ -1,11 +1,15 @@
 package projet.ais.models;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
@@ -24,7 +28,7 @@ public class Materiel {
 
     @Column(nullable = false)
     private String nom;
-   
+    
     @Column(nullable = false)
     private String description;
     
@@ -49,4 +53,9 @@ public class Materiel {
     @ManyToOne
     @JoinColumn(name = "idActeur")
     private Acteur acteur;
+
+    @ManyToMany
+    @JsonIgnore
+    private List<CommandeMateriel> commandes;
+
 }

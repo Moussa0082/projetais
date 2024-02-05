@@ -35,6 +35,7 @@ import projet.ais.repository.AlerteRepository;
 import projet.ais.repository.MagasinRepository;
 import projet.ais.repository.SpeculationRepository;
 import projet.ais.repository.StockRepository;
+import projet.ais.repository.TypeActeurRepository;
 import projet.ais.repository.UniteRepository;
 import projet.ais.repository.ZoneProductionRepository;
 
@@ -64,6 +65,9 @@ public class StockService {
 
     @Autowired
     ZoneProductionRepository zoneProductionRepository;
+
+    @Autowired
+    TypeActeurRepository typeActeurRepository;
     
     @Autowired
     CodeGenerator codeGenerator;
@@ -113,7 +117,7 @@ public class StockService {
             stock.setCodeStock(codes);
             stock.setIdStock(idCode);
               
-            stock.setDateProduction(LocalDateTime.now());
+        stock.setDateProduction(LocalDateTime.now());
         stock.setDateModif(LocalDateTime.now());
         stock.setDateAjout(LocalDateTime.now());
         Stock st = stockRepository.save(stock);
@@ -143,7 +147,11 @@ public class StockService {
         System.out.println("Type d'acteur non trouvé");
     }
 
-        
+    try {
+        sendMessageToAllActeur(st);
+    } catch (Exception e) {
+        System.out.println(e.getMessage());
+    }
     
             return st;
     
@@ -153,22 +161,44 @@ public class StockService {
     public ResponseEntity<String> sendMessageToAllActeur(Stock stock) {
         List<Acteur> allActeurs = acteurRepository.findAll();
         Acteur ac = stock.getActeur();
-        // Envoi de message à tous les autres acteurs à l'exception de l'acteur courant
+
+        TypeActeur transporteur = typeActeurRepository.findByLibelle("Transporteur");
+        TypeActeur fournisseur = typeActeurRepository.findByLibelle("Fournisseur");
         for (Acteur acteur : allActeurs) {
-            // if (!acteur.getIdActeur().equals( ac.getIdActeur())) {}
-                // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock
-                String mes = "Bonjour M. " + acteur.getNomActeur() + " M. " +  ac.getNomActeur() + " habitant à " + ac.getAdresseActeur() + " vient d'ajouter un produit au stock: " 
+            if (!acteur.getIdActeur().equals(ac.getIdActeur())  && !acteur.getTypeActeur().contains(transporteur) && !acteur.getTypeActeur().contains(fournisseur)) {
+            
+            // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
+            String mes = "Bonjour M. " + acteur.getNomActeur() + " M. " +  ac.getNomActeur() + " habitant à " + ac.getAdresseActeur() + " vient d'ajouter un produit au stock: " 
                 + stock.getNomProduit() + "\n\n Lien vers le produit est : " + stock.getPhoto();
                 try {
                     messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  ac.getNomActeur());
                 } catch (Exception e) {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur : " + e.getMessage());
                 }
-            
+            }
         
         }
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
+    // public ResponseEntity<String> sendMessageToAllActeur(Stock stock) {
+    //     List<Acteur> allActeurs = acteurRepository.findAll();
+    //     Acteur ac = stock.getActeur();
+    //     // Envoi de message à tous les autres acteurs à l'exception de l'acteur courant
+    //     for (Acteur acteur : allActeurs) {
+    //         if (!acteur.getIdActeur().equals(ac.getIdActeur())) {
+    //             // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock
+    //             String mes = "Bonjour M. " + acteur.getNomActeur() + " M. " +  ac.getNomActeur() + " habitant à " + ac.getAdresseActeur() + " vient d'ajouter un produit au stock: " 
+    //             + stock.getNomProduit() + "\n\n Lien vers le produit est : " + stock.getPhoto();
+    //             try {
+    //                 messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  ac.getNomActeur());
+    //             } catch (Exception e) {
+    //                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur : " + e.getMessage());
+    //             }
+    //         }
+        
+    //     }
+    //     return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    // }
     
 
     public Stock updateStock(Stock stock, MultipartFile imageFile,String id) throws Exception {

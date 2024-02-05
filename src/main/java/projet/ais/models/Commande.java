@@ -65,11 +65,11 @@ public class Commande {
 
     @OneToMany
     (mappedBy = "commande")
-    private List<Stock> stockList; 
+    private List<Stock> stockList;
     
     @OneToMany
     (mappedBy = "commande")
     @JsonIgnore
-    private List<DetailCommande> detailCommandeList; 
+    private List<DetailCommande> detailCommandeList;
 
 }

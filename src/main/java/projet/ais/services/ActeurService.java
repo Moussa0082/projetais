@@ -86,12 +86,25 @@ public class ActeurService {
          
     // if (acteurRepository.findByEmailActeur(acteur.getEmailActeur()) == null) {
         
-            if (acteur.getTypeActeur() == null) {
-                throw new Exception("Veuillez choisir un type d'acteur pour créer un compte");
-            }
-            
-            
-            
+            // if (acteur.getTypeActeur() == null) {
+            //     throw new Exception("Veuillez choisir un type d'acteur pour créer un compte");
+            // }
+
+          // Vérifier si au moins un type d'acteur est sélectionné
+    List<TypeActeur> typeActeurList = acteur.getTypeActeur();
+    if (typeActeurList == null || typeActeurList.isEmpty()) {
+        throw new IllegalArgumentException("Veuillez sélectionner au moins un type d'acteur.");
+    }
+
+    // Récupérer les types d'acteur sélectionnés en fonction de leurs IDs
+    List<TypeActeur> selectedTypeActeurs = typeActeurRepository.findByIdTypeActeurIn(
+            typeActeurList.stream().map(TypeActeur::getIdTypeActeur).collect(Collectors.toList())
+    );
+
+    // Associer les types d'acteur à l'acteur créé
+    acteur.setTypeActeur(selectedTypeActeurs);
+
+
             //On hashe le mot de passe
             String passWordHasher = passwordEncoder.encode(acteur.getPassword());
             acteur.setPassword(passWordHasher);
@@ -151,9 +164,6 @@ public class ActeurService {
 
         acteur.setStatutActeur(isAdmin);
 
-
-
-   
     //  acteur.setDateAjout(LocalDateTime.now());
             Acteur savedActeur = acteurRepository.save(acteur);
             for (TypeActeur adminType : admins.getTypeActeur()) {
