@@ -93,6 +93,7 @@ public class ActeurService {
           // Vérifier si au moins un type d'acteur est sélectionné
     List<TypeActeur> typeActeurList = acteur.getTypeActeur();
     if (typeActeurList == null || typeActeurList.isEmpty()) {
+        System.out.println("methode type d'acteur verifier avec succèss");
         throw new IllegalArgumentException("Veuillez sélectionner au moins un type d'acteur.");
     }
 
@@ -103,6 +104,7 @@ public class ActeurService {
 
     // Associer les types d'acteur à l'acteur créé
     acteur.setTypeActeur(selectedTypeActeurs);
+    System.out.println("Apres la methode verifier");
 
 
             //On hashe le mot de passe
@@ -155,18 +157,23 @@ public class ActeurService {
                     // Enregistrement de l'acteur
             boolean isAdmin = false;
         for (TypeActeur typeActeur : acteur.getTypeActeur()) {
+            System.out.println("verification du type admin");
+
             if (typeActeur.getLibelle().equals("Admin")) {
                 isAdmin = true;
                 acteur.setStatutActeur(!isAdmin);
                 break; // Sortie de la boucle dès que "Admin" est trouvé
             }
+            System.out.println("Fin de verifiaction");
+
         }
 
         acteur.setStatutActeur(isAdmin);
-
+          System.out.println("MAJ");
     //  acteur.setDateAjout(LocalDateTime.now());
             Acteur savedActeur = acteurRepository.save(acteur);
             for (TypeActeur adminType : admins.getTypeActeur()) {
+                System.out.println("Envoie de notif");
                 if (adminType.getLibelle().equals("Admin")) {
                     // Si un administrateur est trouvé, envoyez un e-mail
                     String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez activer son compte dans les plus brefs délais !";
