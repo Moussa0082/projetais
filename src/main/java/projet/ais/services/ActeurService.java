@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
+import projet.ais.models.TypeActeur;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.AlerteRepository;
 import projet.ais.repository.TypeActeurRepository;
@@ -77,7 +78,7 @@ public class ActeurService {
         }
         
     // Vérifier si l'acteur a le même mail et le même type
-    Acteur existingActeurAvecMemeType = acteurRepository.findByEmailActeurAndTypeActeur(acteur.getEmailActeur(), acteur.getTypeActeur());
+    Acteur existingActeurAvecMemeType = acteurRepository.findByEmailActeurAndTypeActeurIn(acteur.getEmailActeur(), acteur.getTypeActeur());
     if (existingActeurAvecMemeType != null) {
         // Si un acteur avec le même email et type existe déjà
         throw new IllegalArgumentException("Un acteur avec le même email et type existe déjà");
@@ -88,6 +89,7 @@ public class ActeurService {
             if (acteur.getTypeActeur() == null) {
                 throw new Exception("Veuillez choisir un type d'acteur pour créer un compte");
             }
+            
             
             
             //On hashe le mot de passe
@@ -134,38 +136,59 @@ public class ActeurService {
             acteur.setCodeActeur(codeActeur);
             acteur.setDateAjout(LocalDateTime.now());
             acteur.setIdActeur(code);
-            
-            
-            
-            
+ 
             Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
-            // Enregistrement de l'acteur
-    if ((acteur.getTypeActeur().getLibelle()) == "Admin") {
-        acteur.setStatutActeur(true);
-    } else {
-        acteur.setStatutActeur(false);
-    }
+
+                    // Enregistrement de l'acteur
+            boolean isAdmin = false;
+        for (TypeActeur typeActeur : acteur.getTypeActeur()) {
+            if (typeActeur.getLibelle().equals("Admin")) {
+                isAdmin = true;
+                acteur.setStatutActeur(!isAdmin);
+                break; // Sortie de la boucle dès que "Admin" est trouvé
+            }
+        }
+
+        acteur.setStatutActeur(isAdmin);
+
+
 
    
     //  acteur.setDateAjout(LocalDateTime.now());
             Acteur savedActeur = acteurRepository.save(acteur);
-               if(admins != null && admins.getTypeActeur().getLibelle() != "Admin"){
-              System.out.println(admins.getEmailActeur());
-              // Envoyer un email à chaque administrateur
-              String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez activer son compte dans les plus brefs délais !";
-                  
-                  Alerte alerte = new Alerte(admins.getEmailActeur(), msg, "Création d'un nouveau compte");
-                  emailService.sendSimpleMail(alerte);
-               }  else{
-                System.out.println("Admin non trouver");
-               }
-
-
-    return savedActeur;
+            for (TypeActeur adminType : admins.getTypeActeur()) {
+                if (adminType.getLibelle().equals("Admin")) {
+                    // Si un administrateur est trouvé, envoyez un e-mail
+                    String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez activer son compte dans les plus brefs délais !";
+                    Alerte alerte = new Alerte(admins.getEmailActeur(), msg, "Création d'un nouveau compte");
+                    emailService.sendSimpleMail(alerte);
+                    System.out.println(admins.getEmailActeur());
+                    break; // Sortez de la boucle dès qu'un administrateur est trouvé
+                }
+                else{
+                    System.out.println("Admin non trouver");
+             }
+            }
+              
+               
+            return savedActeur;
    
     }
 
 
+    public Acteur addTypesToActeur(String idActeur, List<TypeActeur> typeActeurs) throws Exception{
+        Acteur acteur = acteurRepository.findByIdActeur(idActeur);
+        if (acteur == null) {
+            // Gérer le cas où aucun acteur n'est trouvé avec cet e-mail
+            throw new IllegalArgumentException("Aucun acteur n'est trouvé avec cet email");
+        }
+
+        // Associer les types d'acteur à l'acteur existant
+        acteur.getTypeActeur().addAll(typeActeurs);
+        
+        // Enregistrer les modifications
+        return acteurRepository.save(acteur);
+    }
     
 
     //envoi mail aux users
@@ -173,14 +196,19 @@ public class ActeurService {
         
         List<Acteur> allActeurs = acteurRepository.findAllByEmailActeur(email);
 
-        // Envoyer un e-mail aux autres agents de la banque
+        // Envoyer un e-mail aux autres acteurs 
         for (Acteur ac : allActeurs) {
-            if (ac.getTypeActeur().getLibelle() != "Admin") {
-        Alerte alerte = new Alerte(ac.getEmailActeur(), message,sujet);
-                emailService.sendSimpleMail(alerte);
-                System.out.println(ac.getEmailActeur());
+            for (TypeActeur typeActeur : ac.getTypeActeur()) {
+                if (!typeActeur.getLibelle().equals("Admin")) {
+                    // Envoyer un e-mail pour chaque type d'acteur différent de "Admin"
+                    Alerte alerte = new Alerte(ac.getEmailActeur(), message, sujet);
+                    emailService.sendSimpleMail(alerte);
+                    System.out.println(ac.getEmailActeur());
+                    break; // Sortez de la boucle interne dès qu'un type d'acteur différent de "Admin" est trouvé
+                }
             }
         }
+        
             
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
@@ -471,17 +499,28 @@ public class ActeurService {
 
 
      //Liste type acteur par acteur
-    public List<Acteur> getAllActeurByTypeActeur(String id){
-        List<Acteur>  acteurList = acteurRepository.findByTypeActeurIdTypeActeur(id);
-
-        if(acteurList.isEmpty()){
+     public List<Acteur> getAllActeurByTypeActeur(String id) {
+        List<Acteur> acteurList = acteurRepository.findByTypeActeurIdTypeActeur(id);
+    
+        if (acteurList.isEmpty()) {
             throw new EntityNotFoundException("Aucun acteur trouvé");
         }
-        acteurList = acteurList
-                .stream().sorted((d1, d2) -> d2.getTypeActeur().getDescriptionTypeActeur().compareTo(d1.getTypeActeur().getDescriptionTypeActeur()))
+    
+        // Trier les acteurs en fonction de la description de leur type d'acteur
+        acteurList = acteurList.stream()
+                .sorted((acteur1, acteur2) ->
+                        acteur2.getTypeActeur().stream()
+                                .map(TypeActeur::getDescriptionTypeActeur)
+                                .findFirst().orElse("").compareTo(
+                                        acteur1.getTypeActeur().stream()
+                                                .map(TypeActeur::getDescriptionTypeActeur)
+                                                .findFirst().orElse("")))
                 .collect(Collectors.toList());
+    
         return acteurList;
-    } 
+    }
+    
+    
 
 
   

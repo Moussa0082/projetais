@@ -71,5 +71,5 @@ public class Commande {
     (mappedBy = "commande")
     @JsonIgnore
     private List<DetailCommande> detailCommandeList; 
-    
+
 }

@@ -78,6 +78,17 @@ public class IntrantService {
         return intrantList;
     } 
 
+    public List<Intrant> getAllIntrantBySuperficie(String id){
+        List<Intrant>  intrantList = intrantRepository.findBySuperficieIdSuperficie(id);
+
+        if(intrantList.isEmpty()){
+            throw new EntityNotFoundException("Aucun intrant trouvé");
+        }
+        intrantList = intrantList
+                .stream().sorted((d1, d2) -> d2.getNomIntrant().compareTo(d1.getNomIntrant()))
+                .collect(Collectors.toList());
+        return intrantList;
+    } 
 
       //Modifier intrant
       public Intrant updateIntrant(Intrant intrant, MultipartFile imageFile , String id) throws Exception {

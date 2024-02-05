@@ -105,9 +105,9 @@ public class Acteur {
     @JsonIgnore
     private List<Magasin> magasinList;
 
-   @ManyToOne
-   @JoinColumn(name = "idTypeActeur")
-   private TypeActeur typeActeur;
+    @ManyToMany
+    // @JsonIgnore
+    private List<TypeActeur> typeActeur;
 
    @OneToMany
    (mappedBy = "acteur")
@@ -135,5 +135,15 @@ public class Acteur {
    @JsonIgnore
    private List<Commande> commandeList;
 
+   
+//    @OneToMany
+//    (mappedBy = "acteur")
+//    @JsonIgnore
+//    private List<Commande> commandeList;
+
+   @OneToMany
+   (mappedBy = "acteur")
+   @JsonIgnore
+   private List<Superficie> superficieList;
 }
 

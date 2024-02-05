@@ -66,8 +66,8 @@ public class Intrant {
     @JoinColumn(name = "idActeur")
     private Acteur acteur;
     
-     
-
-
+    @ManyToOne
+    @JoinColumn(name = "idSuperficie")
+    private Superficie superficie;
     
 }

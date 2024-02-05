@@ -43,10 +43,9 @@ public class TypeActeur {
         return dateModif;
     }
 
-    @OneToMany
-    (mappedBy = "typeActeur")
+    @ManyToMany
     @JsonIgnore
-    private List<Acteur> acteurList;
+    private List<Acteur> acteur;
 
 }
 
