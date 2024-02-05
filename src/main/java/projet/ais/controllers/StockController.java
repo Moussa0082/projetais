@@ -115,7 +115,7 @@ public class StockController {
             return new ResponseEntity<>(stockservice.getAllStockByMagasin(id), HttpStatus.OK);
         }
 
-        @DeleteMapping("/deleteStocks")
+        @DeleteMapping("/deleteStocks/{id}")
         @Operation(summary = "Suppression des stocks")
         public String supprimer(@PathVariable String id){
             return stockservice.deleteStock(id);

@@ -94,7 +94,6 @@ public class ConseilService {
             }
 
             conseil.setIdConseil(idGenerator.genererCode());
-            conseil.setDateAjout(LocalDateTime.now());
            Conseil savedConseil = conseilRepository.save(conseil);        
    
          return savedConseil;

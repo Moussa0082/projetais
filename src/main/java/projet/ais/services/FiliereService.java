@@ -39,7 +39,6 @@ public class FiliereService {
     filiere.setCodeFiliere(codes);
     filiere.setIdFiliere(Idcodes);
 
-            filiere.setDateAjout(LocalDateTime.now());
             filiere.setDateModif(LocalDateTime.now());
     return filiereRepository.save(filiere);
   }

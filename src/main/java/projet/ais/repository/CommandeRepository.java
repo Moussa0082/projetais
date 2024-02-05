@@ -8,6 +8,7 @@ import projet.ais.models.Commande;
 @Repository
 public interface CommandeRepository extends JpaRepository<Commande,String>{
 
-    
+         Commande findByIdCommande(String idCommande);
+
     
 }

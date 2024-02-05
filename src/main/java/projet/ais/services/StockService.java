@@ -23,12 +23,15 @@ import org.springframework.web.multipart.MultipartFile;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
+import projet.ais.models.Alerte;
 import projet.ais.models.Magasin;
 import projet.ais.models.Speculation;
 import projet.ais.models.Stock;
+import projet.ais.models.TypeActeur;
 import projet.ais.models.Unite;
 import projet.ais.models.ZoneProduction;
 import projet.ais.repository.ActeurRepository;
+import projet.ais.repository.AlerteRepository;
 import projet.ais.repository.MagasinRepository;
 import projet.ais.repository.SpeculationRepository;
 import projet.ais.repository.StockRepository;
@@ -40,18 +43,31 @@ public class StockService {
     
     @Autowired
     StockRepository stockRepository;
+
     @Autowired
     UniteRepository uniteRepository;
+
     @Autowired
     ActeurRepository acteurRepository;
+
     @Autowired
     MagasinRepository magasinRepository;
+
     @Autowired
     SpeculationRepository speculationRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private AlerteRepository alerteRepository;
+
     @Autowired
     ZoneProductionRepository zoneProductionRepository;
+    
     @Autowired
     CodeGenerator codeGenerator;
+
     @Autowired
     IdGenerator idGenerator ;
     @Autowired
@@ -65,9 +81,9 @@ public class StockService {
         ZoneProduction zoneProduction = zoneProductionRepository.findByidZoneProduction(stock.getZoneProduction().getIdZoneProduction());
         
         if(zoneProduction == null)
-            throw new IllegalStateException("Aucune zone production");
+            throw new IllegalStateException("Aucune zone production trouvé");
         if(speculation == null)
-            throw new IllegalStateException("Aucune speculations ");
+            throw new IllegalStateException("Aucune speculation trouvé ");
         if(unite == null)
             throw new IllegalStateException("Aucune unité trouvé");
         if(magasin == null)
@@ -91,20 +107,46 @@ public class StockService {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
             }
-        String codes = codeGenerator.genererCode();
-        String idCode = idGenerator.genererCode();
-        stock.setCodeStock(codes);
-        stock.setIdStock(idCode);
+            String codes = codeGenerator.genererCode();
+            String idCode = idGenerator.genererCode();
+
+            stock.setCodeStock(codes);
+            stock.setIdStock(idCode);
+              
+            stock.setDateProduction(LocalDateTime.now());
         stock.setDateModif(LocalDateTime.now());
         stock.setDateAjout(LocalDateTime.now());
-        stockRepository.save(stock);
+        Stock st = stockRepository.save(stock);
         
-        try {
-            sendMessageToAllActeur(stock);
-        } catch (Exception e) {
-            System.out.println(e);
+        if (st.getActeur().getTypeActeur() != null) {
+    for (TypeActeur typeActeur : st.getActeur().getTypeActeur()) {
+        if (typeActeur.getLibelle().equals("Producteur")) {
+            System.out.println("Producteur mail: " + st.getActeur().getEmailActeur());
+            
+            // Récupérer tous les acteurs de type "Commerçant"
+            List<Acteur> allCommercants = acteurRepository.findAllByTypeActeur_Libelle("Commerçant");
+            
+            // Envoyer un e-mail à chaque acteur commerçant
+            for (Acteur commercant : allCommercants) {
+                if (commercant != null) {
+                    System.out.println("E-mail commerçant: " + commercant.getEmailActeur());
+                    Alerte alerte = new Alerte(commercant.getEmailActeur(), "Nouveau produit ajouté", "Un nouveau produit a été ajouté");
+                    emailService.sendSimpleMail(alerte);
+                } else {
+                    System.out.println("E-mail commerçant non trouvé");
+                }
+            }
+            break; // Sortir de la boucle dès que "Producteur" est trouvé
         }
-        return stock;
+    }
+    } else {
+        System.out.println("Type d'acteur non trouvé");
+    }
+
+        
+    
+            return st;
+    
     }
 
   
@@ -139,9 +181,7 @@ public class StockService {
         stocks.setDescriptionStock(stock.getDescriptionStock());
         stocks.setDateAjout(stocks.getDateAjout());
         
-        Date dates = new Date();
-        Instant instant = dates.toInstant();
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+
         stocks.setDateModif(LocalDateTime.now());
 
         if(stock.getUnite() != null){

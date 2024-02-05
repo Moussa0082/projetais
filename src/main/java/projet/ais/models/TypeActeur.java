@@ -30,13 +30,22 @@ public class TypeActeur {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateAjout;
 
+    @PrePersist
+    public void prePersist() {
+        dateAjout = LocalDateTime.now();
+    }
+
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateModif;
 
-    @OneToMany
-    (mappedBy = "typeActeur")
+    public LocalDateTime updateDateModif(LocalDateTime dateModif) {
+        this.dateModif = dateModif;
+        return dateModif;
+    }
+
+    @ManyToMany
     @JsonIgnore
-    private List<Acteur> acteurList;
+    private List<Acteur> acteur;
 
 }
 

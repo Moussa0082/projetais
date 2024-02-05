@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -26,11 +27,22 @@ public class Pays {
     @Column(nullable = true)
     private boolean statutPays = true;
 
-    @Column(nullable=true)
-    private Date dateAjout;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateAjout;
 
-    @Column(nullable=false)
-    private Date dateModif;
+    @PrePersist
+    public void prePersist() {
+        dateAjout = LocalDateTime.now();
+    }
+
+
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateModif;
+
+    public LocalDateTime updateDateModif(LocalDateTime dateModif) {
+        this.dateModif = dateModif;
+        return dateModif;
+    }
 
     @OneToMany
     (mappedBy = "pays")

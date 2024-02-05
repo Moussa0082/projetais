@@ -58,7 +58,6 @@ public class IntrantService {
             }
 
             intrant.setIdIntrant(idGenerator.genererCode());
-            intrant.setDateAjout(LocalDateTime.now());
            Intrant savedIntrant = intrantRepository.save(intrant);        
    
          return savedIntrant;

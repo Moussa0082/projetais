@@ -29,6 +29,7 @@ import java.util.*;
 import projet.ais.config.ResponseHandler;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
+import projet.ais.models.TypeActeur;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.services.ActeurService;
 import projet.ais.services.EmailService;
@@ -71,44 +72,16 @@ public class ActeurController {
 
 
 
-            // Mot de passe oublier 
-   
-            // @PostMapping("/forgot-password")
-            // public String forgotPass(@RequestParam String email){
-            //     String response = acteurService.forgotPass(email);
-        
-            //     if(!response.startsWith("Invalid")){
-            //         response= "http://localhost:9000/reset-password?token=" + response;
-            //     }
-            //     return response;
-            // }
-        
-            // @PutMapping("/reset-password")
-            //     public String resetPass(@RequestParam String resetToken, @RequestParam String password){
-            //         return acteurService.resetPass(resetToken,password);
-            //     }
-            // @PostMapping("/forgot-password")
-            // public ResponseEntity<String> forgotPassword(@RequestBody Acteur acteur) {
-            //     String resetToken = acteurService.forgotPass(acteur);
-            //     if (resetToken == null) {
-            //         return new ResponseEntity<>("Adresse e-mail invalide.", HttpStatus.BAD_REQUEST);
-            //     } else {
-            //         // // Envoyer le code de réinitialisation à l'utilisateur (par exemple, par e-mail ou SMS)
-            //         // Alerte al = new Alerte(acteur.getEmailActeur(), "Vueiller saisir le code de confirmation "+ resetToken +" qui \n expire dans 30 s pour passer à l'etape de réinitialisation de votre mot de passe", "Code de confirmation");
-            //         // emailService.sendSimpleMail(al);
-            //         return new ResponseEntity<>(resetToken, HttpStatus.OK);
-            //     }
-            // }
-        
-            // @PostMapping("/reset-password")
-            // public ResponseEntity<String> resetPassword(@RequestBody Acteur request) {
-            //     String result = acteurService.resetPass(request.getResetToken(), request.getPassword());
-            //     if (result.equals("Mot de passe modifié avec succès")) {
-            //         return new ResponseEntity<>(result, HttpStatus.OK);
-            //     } else {
-            //         return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
-            //     }
-            // }
+               @PostMapping("/{idActeur}/types")
+        public ResponseEntity<Acteur> addTypesToActeur(@RequestBody String idActeur,
+                                                    @RequestBody List<TypeActeur> typeActeurs) throws Exception {
+        Acteur acteur = acteurService.addTypesToActeur(idActeur, typeActeurs);
+        if (acteur == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(acteur, HttpStatus.OK);
+        }
+
 
                 @GetMapping("/verifmail")
     @Operation(summary = "Verifier l'email de l'utilisateur en lui envoyant un code de verification dans son mail")

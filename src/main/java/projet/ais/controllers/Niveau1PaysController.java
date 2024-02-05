@@ -41,7 +41,7 @@ public class Niveau1PaysController {
         Niveau1Pays niveau1PaysExistant = niveau1PaysRepository.findByNomN1(niveau1Pays.getNomN1());
         if (niveau1PaysExistant == null) {
             niveau1PaysService.createNiveau1Pays(niveau1Pays);
-            return new ResponseEntity<>("Type d'acteur créer avec succès" , HttpStatus.OK);
+            return new ResponseEntity<>("Niveau 1 Pays créer avec succès" , HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Le niveau 1 pays " + niveau1PaysExistant.getNomN1() + " existe déjà", HttpStatus.BAD_REQUEST);
         }

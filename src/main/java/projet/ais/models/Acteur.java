@@ -62,9 +62,19 @@ public class Acteur {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateAjout;
 
+    @PrePersist
+    public void prePersist() {
+        dateAjout = LocalDateTime.now();
+    }
+
 
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateModif;
+
+    public LocalDateTime updateDateModif(LocalDateTime dateModif) {
+        this.dateModif = dateModif;
+        return dateModif;
+    }
 
 
     @Column(nullable=true)
@@ -95,9 +105,9 @@ public class Acteur {
     @JsonIgnore
     private List<Magasin> magasinList;
 
-   @ManyToOne
-   @JoinColumn(name = "idTypeActeur")
-   private TypeActeur typeActeur;
+    @ManyToMany
+    // @JsonIgnore
+    private List<TypeActeur> typeActeur;
 
    @OneToMany
    (mappedBy = "acteur")
@@ -119,7 +129,7 @@ public class Acteur {
    @JsonIgnore
    private List<Vehicule> vehiculeList;
    
-   
+
    @OneToMany
    (mappedBy = "acteur")
    @JsonIgnore

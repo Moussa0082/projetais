@@ -70,11 +70,7 @@ public class MagasinService {
             magasin.setCodeMagasin(codes);
             magasin.setIdMagasin(idcodes);
 
-            Date dates = new Date();
-            Instant instant = dates.toInstant();
-            ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-            magasin.setDateAjout(LocalDateTime.now());
-            magasin.setDateModif(LocalDateTime.now());
+            
         return magasinRepository.save(magasin);
     }
 
