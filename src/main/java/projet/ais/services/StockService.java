@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -106,21 +107,27 @@ public class StockService {
         return stock;
     }
 
-    public ResponseEntity<String> sendMessageToAllActeur(Stock stock){
+  
+    public ResponseEntity<String> sendMessageToAllActeur(Stock stock) {
         List<Acteur> allActeurs = acteurRepository.findAll();
-        //Envoie de message à tout les autres acteurs à l'exception de l'acteur courant
+        Acteur ac = stock.getActeur();
+        // Envoi de message à tous les autres acteurs à l'exception de l'acteur courant
+        for (Acteur acteur : allActeurs) {
+            // if (!acteur.getIdActeur().equals( ac.getIdActeur())) {}
+                // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock
+                String mes = "Bonjour M. " + acteur.getNomActeur() + " M. " +  ac.getNomActeur() + " habitant à " + ac.getAdresseActeur() + " vient d'ajouter un produit au stock: " 
+                + stock.getNomProduit() + "\n\n Lien vers le produit est : " + stock.getPhoto();
+                try {
+                    messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  ac.getNomActeur());
+                } catch (Exception e) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur : " + e.getMessage());
+                }
+            
         
-        for(Acteur acteur : allActeurs){
-            String mes = "Bonjour M. " + acteur.getNomActeur() + " M. " + stock.getActeur().getNomActeur() + " vient d'jouté un produit : " + stock.getNomProduit();
-            try {
-                messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes);
-
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur : " + e.getMessage());
-            }
         }
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
+    
 
     public Stock updateStock(Stock stock, MultipartFile imageFile,String id) throws Exception {
         Stock stocks = stockRepository.findById(id).orElseThrow(null);

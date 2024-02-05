@@ -57,10 +57,7 @@ public String sendMessages(String whatsAppActeur, String msg) throws Exception {
 
     if (response.getStatusCode() == HttpStatus.OK) {
     try{
-        // MessageWa messageWa = new MessageWa();
-        // messageWa.setActeurConcerner("Ibrahim sy");
-        // messageWa.setText(msg);
-        // messageRepository.save(messageWa);
+    
     }catch(Exception e){
         throw new Exception("Erreur lors de l'enregistrement");
         }
