@@ -46,9 +46,6 @@ public class DetailCommande {
     //     this.dateModif = dateModif;
     //     return dateModif;
     // }
-    
-    @Column(nullable = false)
-    private String codeStock;
 
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateDetailCommande;

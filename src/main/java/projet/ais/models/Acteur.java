@@ -107,6 +107,7 @@ public class Acteur {
 
     @ManyToMany
     // @JsonIgnore
+    (mappedBy = "acteur")
     private List<TypeActeur> typeActeur;
 
    @OneToMany

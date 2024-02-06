@@ -31,6 +31,7 @@ import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.ActeurRepository;
+import projet.ais.repository.TypeActeurRepository;
 import projet.ais.services.ActeurService;
 import projet.ais.services.EmailService;
 
@@ -44,6 +45,9 @@ public class ActeurController {
 
     @Autowired
     private ActeurRepository acteurRepository;
+
+    @Autowired
+    private TypeActeurRepository typeActeurRepository;
 
     @Autowired
     private EmailService emailService;
@@ -72,21 +76,68 @@ public class ActeurController {
 
 
 
-               @PostMapping("/{idActeur}/types")
-        public ResponseEntity<Acteur> addTypesToActeur(@RequestBody String idActeur,
-                                                    @RequestBody List<TypeActeur> typeActeurs) throws Exception {
-        Acteur acteur = acteurService.addTypesToActeur(idActeur, typeActeurs);
-        if (acteur == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(acteur, HttpStatus.OK);
-        }
+            // @PostMapping("/{idActeur}/types")
+            // public ResponseEntity<Acteur> addTypesToActeur(@PathVariable String idActeur,
+            //                                                 @RequestBody Map<String, Object> requestBody) throws Exception {
+            //     // Récupérer la liste des typeActeurs de la requête
+            //     List<Map<String, String>> typeActeursMapList = (List<Map<String, String>>) requestBody.get("typeActeurs");
+                
+            //     // Convertir la liste des typeActeurs de la requête en une liste de TypeActeur
+            //     List<TypeActeur> typeActeurs = new ArrayList<>();
+            //     for (Map<String, String> typeActeurMap : typeActeursMapList) {
+            //         TypeActeur typeActeur = new TypeActeur();
+            //         typeActeur.setIdTypeActeur(typeActeurMap.get("idTypeActeur"));
+            //         typeActeurs.add(typeActeur);
+            //     }
+            
+            //     // Appeler la méthode de service pour ajouter les types d'acteur à l'acteur
+            //     Acteur acteur = acteurService.addTypesToActeur(idActeur, typeActeurs);
+                
+            //     // Retourner la réponse appropriée
+            //     if (acteur == null) {
+            //         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            //     }
+            //     return new ResponseEntity<>(acteur, HttpStatus.OK);
+            // }
+            @PostMapping("/{idActeur}/types")
+            public ResponseEntity<Acteur> addTypesToActeur(@PathVariable String idActeur,
+                                                            @RequestBody Map<String, Object> requestBody) throws Exception {
+                // Récupérer la liste des typeActeurs de la requête
+                List<Map<String, String>> typeActeursMapList = (List<Map<String, String>>) requestBody.get("typeActeurs");
+                
+                // Convertir la liste des typeActeurs de la requête en une liste de TypeActeur
+                List<TypeActeur> typeActeurs = new ArrayList<>();
+                for (Map<String, String> typeActeurMap : typeActeursMapList) {
+                    String typeId = typeActeurMap.get("idTypeActeur");
+                    TypeActeur typeActeur = typeActeurRepository.findByIdTypeActeur(typeId);
+                    if (typeActeur != null) {
+                        typeActeurs.add(typeActeur);
+                    }
+                }
+            
+                // Récupérer l'acteur
+                Acteur acteur = acteurRepository.findByIdActeur(idActeur);
+                if (acteur == null) {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+                
+                // Associer les types d'acteur à l'acteur existant
+                acteur.getTypeActeur().addAll(typeActeurs);
+                
+                // Enregistrer les modifications
+                acteurRepository.save(acteur);
+            
+                return new ResponseEntity<>(acteur, HttpStatus.OK);
+            }
+            
+
+            
 
 
                 @GetMapping("/verifmail")
-    @Operation(summary = "Verifier l'email de l'utilisateur en lui envoyant un code de verification dans son mail")
+    @Operation(summary = "Verifier l'email de l'utilisateur en lui envoyant un code de verification à son adresse email")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "L'email exist et le cade a été envoyer avec succès", content = {
+            @ApiResponse(responseCode = "200",description = "L'email exist et le code a été envoyer avec succès", content = {
                     @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class))
             }),
             @ApiResponse(responseCode = "500",description = "Erreur serveur", content = @Content),
@@ -95,6 +146,7 @@ public class ActeurController {
         return ResponseHandler.generateResponse(acteurService.verifyUserEmail(email), HttpStatus.OK,null);
     }
 
+    //Envoyer un email à un utilisateur spécifique
     @GetMapping("/sendMailToUser")
     @Operation(summary = "Envoyer un mail à un utilisateur")
     public ResponseEntity<Object> sendMailToUser(@RequestParam ("email") String email, @RequestParam("sujet")String sujet, @RequestParam("message")String message) throws Exception {
@@ -127,6 +179,7 @@ public class ActeurController {
                 acteurService.sendMailToAllUser(email, sujet, message);
                 Alerte al = new Alerte(email, message, sujet);
                 emailService.sendSimpleMail(al);
+                
                 System.out.println(email);
             }
             return new ResponseEntity<>("Email envoyé à tous les utilisateurs avec succès", HttpStatus.OK);
@@ -181,7 +234,6 @@ public class ActeurController {
 
     //Aciver admin
       @PutMapping("/enable/{id}")
-    //Desactiver un admin methode
     @Operation(summary = "Activer acteur ")
     public ResponseEntity <String> enableAdmin(@PathVariable String id){
     

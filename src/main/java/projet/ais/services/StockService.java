@@ -142,10 +142,7 @@ public class StockService {
         System.out.println("Type d'acteur non trouvé");
     }
 
-        
-    
             return st;
-    
     }
 
     public ResponseEntity<String> sendMessageToAllActeur(Stock stock){
