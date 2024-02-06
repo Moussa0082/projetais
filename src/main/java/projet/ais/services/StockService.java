@@ -147,14 +147,14 @@ public class StockService {
         System.out.println("Type d'acteur non trouvé");
     }
 
+
     try {
         sendMessageToAllActeur(st);
     } catch (Exception e) {
         System.out.println(e.getMessage());
     }
     
-            return st;
-    
+        return st;
     }
 
   
@@ -172,6 +172,30 @@ public class StockService {
                 + stock.getNomProduit() + "\n\n Lien vers le produit est : " + stock.getPhoto();
                 try {
                     messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  ac.getNomActeur());
+                } catch (Exception e) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur : " + e.getMessage());
+                }
+            }
+        
+        }
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+    public ResponseEntity<String> sendEmailToAllActeur(Stock stock) {
+        List<Acteur> allActeurs = acteurRepository.findAll();
+        Acteur ac = stock.getActeur();
+
+        TypeActeur transporteur = typeActeurRepository.findByLibelle("Transporteur");
+        TypeActeur fournisseur = typeActeurRepository.findByLibelle("Fournisseur");
+        for (Acteur acteur : allActeurs) {
+            if (!acteur.getIdActeur().equals(ac.getIdActeur())  && !acteur.getTypeActeur().contains(transporteur) && !acteur.getTypeActeur().contains(fournisseur)) {
+            
+            // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
+            String mes = "Bonjour M. " + acteur.getNomActeur() + " M. " +  ac.getNomActeur() + " habitant à " + ac.getAdresseActeur() + " vient d'ajouter un produit au stock: " 
+                + stock.getNomProduit() + "\n\n Lien vers le produit est : " + stock.getPhoto();
+                try {
+                    Alerte alerte = new Alerte(acteur.getEmailActeur(), mes, "Nouveau produit");
+                    emailService.sendSimpleMail(alerte);
                 } catch (Exception e) {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur : " + e.getMessage());
                 }

@@ -15,9 +15,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.EntityNotFoundException;
+import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
+import projet.ais.models.Acteur;
 import projet.ais.models.Intrant;
 import projet.ais.models.Vehicule;
+import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.IntrantRepository;
 
 @Service
@@ -25,10 +28,13 @@ public class IntrantService {
 
     @Autowired
     private IntrantRepository intrantRepository;
-
+    @Autowired
+    ActeurRepository acteurRepository;
 
     @Autowired
     private IdGenerator idGenerator;
+    @Autowired
+    CodeGenerator codeGenerator;
 
 
      //créer un intrant
@@ -39,6 +45,11 @@ public class IntrantService {
             throw new IllegalArgumentException("Un intrant avec l'id " + it + " existe déjà");
         }
 
+        Acteur acteur = acteurRepository.findByIdActeur(intrant.getActeur().getIdActeur());
+
+        if(acteur == null)
+            throw new EntityNotFoundException("Aucun acteur trouvé");
+            
             // Traitement du fichier image siege acteur
             if (imageFile != null) {
                 String imageLocation = "C:\\xampp\\htdocs\\ais";
@@ -58,6 +69,7 @@ public class IntrantService {
             }
 
             intrant.setIdIntrant(idGenerator.genererCode());
+            intrant.setCondeIntrant(codeGenerator.genererCode());
            Intrant savedIntrant = intrantRepository.save(intrant);        
    
          return savedIntrant;

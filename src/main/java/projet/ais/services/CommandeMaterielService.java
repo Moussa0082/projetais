@@ -41,14 +41,17 @@ public class CommandeMaterielService {
     
     Map<String, CommandeMateriel> paniersEnCours = new HashMap<>();
 
-    public void ajouterAuPanier(String idActeur, String idMateriel) throws Exception {
+    public String ajouterAuPanier(String idActeur, String idMateriel) throws Exception {
     
-        Acteur acteur = acteurRepository.findById(idActeur)
-                .orElseThrow(() -> new EntityNotFoundException("Acteur non trouvé avec l'ID : " + idActeur));
-
+        Acteur acteur = acteurRepository.findByIdActeur(idActeur);
         
-        Materiel materiel = materielRepository.findById(idMateriel)
-                .orElseThrow(() -> new EntityNotFoundException("Matériel non trouvé avec l'ID : " + idMateriel));
+        if(acteur == null)
+            throw new EntityNotFoundException("Acteur non trouvée");
+                
+        Materiel materiel = materielRepository.findByIdMateriel(idMateriel);
+        
+        if(materiel == null)
+            throw new EntityNotFoundException("Materiel non trouvée");
 
         // Vérifier si l'acteur a un panier en cours, sinon en créer un
         CommandeMateriel commande = paniersEnCours.getOrDefault(idActeur, new CommandeMateriel());
@@ -64,6 +67,8 @@ public class CommandeMaterielService {
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
+
+        return "Ajouter avec success";
     }
 
     public CommandeMateriel confirmerPanier(String idActeur) throws Exception {

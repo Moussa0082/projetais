@@ -1,6 +1,7 @@
 package projet.ais.models;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -37,5 +38,9 @@ public class CommandeMateriel {
 
     @ManyToMany
     private List<Materiel> materielList;
+
+    public CommandeMateriel() {
+        this.materielList = new ArrayList<>();
+    }
     
 }

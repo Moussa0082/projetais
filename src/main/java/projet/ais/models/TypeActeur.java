@@ -44,7 +44,9 @@ public class TypeActeur {
     }
 
     @ManyToMany
-    @JsonIgnore
+    @JoinTable(name = "acteur_type_acteur",
+    joinColumns = @JoinColumn(name = "id_acteur"),
+    inverseJoinColumns = @JoinColumn(name = "id_type_acteur"))
     private List<Acteur> acteur;
 
 }

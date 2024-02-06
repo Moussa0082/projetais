@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import projet.ais.models.Commande;
 import projet.ais.models.DetailCommande;
 import projet.ais.models.Stock;
+import projet.ais.repository.AlerteRepository;
 import projet.ais.repository.CommandeRepository;
 import java.util.*;
 import projet.ais.repository.DetailCommandeRepository;
@@ -21,6 +22,15 @@ public class CommandeService {
 
     @Autowired
     private StockRepository stockRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private MessageService messageService;
+
+    @Autowired
+    private AlerteRepository alerteRepository;
 
     @Autowired
     private DetailCommandeRepository detailCommandeRepository;
@@ -41,34 +51,49 @@ public class CommandeService {
     //     return new ResponseEntity<>("Commande passer avec succès votre numéro de commande est "+ commande.getCodeCommande(), HttpStatus.OK);
     // }
 
-    public void ajouterStocksACommande(Commande commande, List<Stock> stocks) {
-        // Créer la commande s'il n'existe pas
-        Commande cm = commandeRepository.findByIdCommande(commande.getIdCommande());
-        if (commande.getIdCommande() == null) {
-            commandeRepository.save(commande);
-        }else{
-            throw new IllegalStateException("Commande déjà existante avec l'id" + cm ) ;
-        }
-         commande.setStatutCommande(false);
-        
-         // Récupérer la commande (nouvellement créée ou existante)
-       Commande savedCommande = commandeRepository.save(commande);
+    public void ajouterStocksACommande(Commande commande, List<Stock> stocks) throws Exception {
+        // Vérifier si la commande existe déjà
+        Commande existingCommande = commandeRepository.findByIdCommande(commande.getIdCommande());
+        if (existingCommande != null) {
+            // Si la commande existe déjà, vous pouvez choisir de lever une exception
+            throw new IllegalStateException("Commande déjà existante avec l'id " + existingCommande.getIdCommande());
 
+            // Ou vous pouvez choisir de mettre à jour la commande existante avec les informations fournies
+            
+            // Vous pouvez mettre à jour la commande existante ici si nécessaire
+        }
+        commande.setStatutCommande(false);
+        // Enregistrer la commande si elle n'existe pas encore
+        Commande savedCommande = commandeRepository.save(commande);
+        
+        
         // Associer les stocks à la commande
         for (Stock stock : stocks) {
+            double quantiteStock = stock.getQuantiteStock();
+            if (quantiteStock == 0) {
+                throw new Exception("La quantite de " + stock.getNomProduit() + " est non disponible");
+            }
+    
+            // Créer un détail de commande
             DetailCommande detailCommande = new DetailCommande();
-            // Remplir les colonnes de DetailCommande selon vos besoins
-            //Enregistre l'id du vendeur
-            detailCommande.setCodeProduit(stock.getCodeStock());
             detailCommande.setNomProduit(stock.getNomProduit());
+            detailCommande.setQuantiteDemande(quantiteStock);
+            detailCommande.setCodeProduit(stock.getCodeStock());
             detailCommande.setCommande(savedCommande);
-            detailCommande.setQuantiteDemande(stock.getQuantiteStock());
+            detailCommande.setQuantiteDemande(quantiteStock);
             
+            // Mettre à jour la quantité de stock
+            stock.setQuantiteStock(quantiteStock - detailCommande.getQuantiteDemande());
+            
+            // Associer l'acteur de la commande
             savedCommande.setActeur(stock.getActeur());
+            
+            // Enregistrer le détail de la commande
             detailCommandeRepository.save(detailCommande);
         }
-
     }
+    
+    
 
 
     

@@ -29,7 +29,7 @@ public class Sortie_StockService {
     @Autowired
     CodeGenerator codeGenerator ;
     
-      public Sortie_Stock createSortieStock(Sortie_Stock sortie_Stock) throws Exception{
+      public Sortie_Stock createSortieStock( Sortie_Stock sortie_Stock) throws Exception{
 
         Stock stock = stockRepository.findByIdStock(sortie_Stock.getStock().getIdStock());
        
@@ -56,7 +56,6 @@ public class Sortie_StockService {
                sortie_Stock.setIdSortieStock(code);
                sortie_Stock.setCodeSortie(codes);
               return sortie_StockRepository.save(sortie_Stock);
-        
     }
      
 

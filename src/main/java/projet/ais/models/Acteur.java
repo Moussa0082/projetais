@@ -105,15 +105,10 @@ public class Acteur {
     @JsonIgnore
     private List<Magasin> magasinList;
 
-// Dans la classe Acteur
-@ManyToMany
-@JoinTable(
-    name = "acteur_type_acteur",
-    joinColumns = @JoinColumn(name = "acteur_id"),
-    inverseJoinColumns = @JoinColumn(name = "type_acteur_id"))
-private List<TypeActeur> typeActeur;
-
-
+    @ManyToMany
+    // @JsonIgnore
+    (mappedBy = "acteur")
+    private List<TypeActeur> typeActeur;
 
    @OneToMany
    (mappedBy = "acteur")

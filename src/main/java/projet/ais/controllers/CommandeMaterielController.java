@@ -25,6 +25,16 @@ public class CommandeMaterielController {
     public ResponseEntity<String> saveCommande(@RequestParam String idActeur, @RequestParam String idMateriel) {
         try {
             commandeMaterielService.ajouterAuPanier(idActeur, idMateriel);
+            return ResponseEntity.ok("Ajouté panier avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'ajout au panier : " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/confirmer")
+    public ResponseEntity<String> ConfirmerCommande(@RequestParam String idActeur) {
+        try {
+            commandeMaterielService.confirmerPanier(idActeur);
             return ResponseEntity.ok("Article ajouté au panier avec succès");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'ajout au panier : " + e.getMessage());
