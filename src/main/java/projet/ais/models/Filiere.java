@@ -49,6 +49,10 @@ public class Filiere {
     @Column(nullable=true)
     private String personneAjout;
 
+    @ManyToOne
+    @JoinColumn( name = "idActeur")
+    private Acteur acteur;
+    
     @OneToMany
     (mappedBy = "filiere")
     @JsonIgnore

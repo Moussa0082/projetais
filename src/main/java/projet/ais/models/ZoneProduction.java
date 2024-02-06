@@ -60,5 +60,9 @@ public class ZoneProduction {
     (mappedBy = "zoneProduction")
     @JsonIgnore
     private List<Stock> stockList;
+
+    @ManyToOne
+    @JoinColumn( name = "idActeur")
+    private Acteur acteur;
 }
 

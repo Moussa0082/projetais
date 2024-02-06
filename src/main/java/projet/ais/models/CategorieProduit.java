@@ -56,5 +56,9 @@ public class CategorieProduit {
     @ManyToOne
     @JoinColumn(name = "idFiliere")
     private Filiere filiere;
+
+    @ManyToOne
+    @JoinColumn(name = "idActeur")
+    private Acteur acteur;
 }
 

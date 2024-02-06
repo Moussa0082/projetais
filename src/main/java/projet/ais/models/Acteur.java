@@ -105,6 +105,26 @@ public class Acteur {
     @JsonIgnore
     private List<Magasin> magasinList;
 
+    @OneToMany
+    (mappedBy = "acteur")
+    @JsonIgnore
+    private List<CategorieProduit> categorieProduits;
+
+    @OneToMany
+    (mappedBy = "acteur")
+    @JsonIgnore
+    private List<Filiere> filieresList;
+
+    @OneToMany
+    (mappedBy = "acteur")
+    @JsonIgnore
+    private List<ZoneProduction> zoneProductions;
+
+    @OneToMany
+    (mappedBy = "acteur")
+    @JsonIgnore
+    private List<Speculation> speculationsList;
+
     @ManyToMany
     // @JsonIgnore
     (mappedBy = "acteur")

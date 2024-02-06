@@ -42,34 +42,35 @@ public class CommandeMaterielService {
     Map<String, CommandeMateriel> paniersEnCours = new HashMap<>();
 
     public String ajouterAuPanier(String idActeur, String idMateriel) throws Exception {
-    
         Acteur acteur = acteurRepository.findByIdActeur(idActeur);
-        
         if(acteur == null)
-            throw new EntityNotFoundException("Acteur non trouvée");
-                
+            throw new EntityNotFoundException("Acteur non trouvé");
+    
         Materiel materiel = materielRepository.findByIdMateriel(idMateriel);
-        
         if(materiel == null)
-            throw new EntityNotFoundException("Materiel non trouvée");
-
+            throw new EntityNotFoundException("Materiel non trouvé");
+    
         // Vérifier si l'acteur a un panier en cours, sinon en créer un
         CommandeMateriel commande = paniersEnCours.getOrDefault(idActeur, new CommandeMateriel());
+        if (commande.getMaterielList() == null) {
+            commande.setMaterielList(new ArrayList<>()); // Initialisation de la liste si elle est nulle
+        }
         commande.setActeur(acteur);
         commande.setProprietaire(materiel.getActeur().getNomActeur());
         commande.getMaterielList().add(materiel);
         paniersEnCours.put(idActeur, commande);
         
         String mes = "Bonjour vous avez reçu une nouvelle commande de materiel :" + commande.getMaterielList() + "de la part de " + commande.getActeur().getNomActeur() ;
-
+    
         try {
             messageService.sendMessageAndSave(materiel.getActeur().getWhatsAppActeur(), mes, commande.getActeur().getNomActeur());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
-
-        return "Ajouter avec success";
+    
+        return "Ajouter avec succès";
     }
+    
 
     public CommandeMateriel confirmerPanier(String idActeur) throws Exception {
         // Récupérer le panier en cours de l'acteur
