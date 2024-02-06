@@ -48,6 +48,9 @@ public class ActeurService {
     private AlerteRepository alerteRepository;
 
     @Autowired
+    private MessageService messageService;
+
+    @Autowired
     private TypeActeurRepository typeActeurRepository;
 
     private Map<String, LocalDateTime> verificationCodeTimestamps = new HashMap<>();
@@ -136,39 +139,65 @@ public class ActeurService {
             acteur.setDateAjout(LocalDateTime.now());
             acteur.setIdActeur(code);
  
-            Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
+           
+            // Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
 
             // Enregistrement de l'acteur
-            boolean isAdmin = false;
+            // boolean isAdmin = false;
             if (acteur.getTypeActeur() != null) {
                 for (TypeActeur typeActeur : acteur.getTypeActeur()) {
                     if (typeActeur != null && typeActeur.getLibelle() != null && typeActeur.getLibelle().equals("Admin")) {
-                        isAdmin = true;
-                        acteur.setStatutActeur(isAdmin);
+                        acteur.setStatutActeur(true);
                         break; // Sortie de la boucle dès que "Admin" est trouvé
                     }
                 }
             }
-            acteur.setStatutActeur(isAdmin);
+            acteur.setStatutActeur(false);
             
             Acteur savedActeur = acteurRepository.save(acteur);
             
-            // Envoyer un e-mail à l'administrateur si un acteur "Admin" a été trouvé
-            if (admins != null) { // Vérifiez si des administrateurs ont été trouvés
-                for (TypeActeur adminType : admins.getTypeActeur()) {
-                    if (adminType.getLibelle().equals("Admin")) {
-                        // Si un administrateur est trouvé, envoyez un e-mail
-                        String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez activer son compte dans les plus brefs délais !";
-                        Alerte alerte = new Alerte(admins.getEmailActeur(), msg, "Création d'un nouveau compte");
-                        emailService.sendSimpleMail(alerte);
-                        System.out.println(admins.getEmailActeur());
-                        break; // Sortez de la boucle dès qu'un administrateur est trouvé
+            // // Envoyer un e-mail à l'administrateur si un acteur "Admin" a été trouvé
+            // if (admins != null) { // Vérifiez si des administrateurs ont été trouvés
+            //     System.out.println(admins.getEmailActeur());
+            //     for (TypeActeur adminType : admins.getTypeActeur()) {
+            //         if (adminType.getLibelle().equals("Admin")) {
+            //             // Si un administrateur est trouvé, envoyez un e-mail
+            //             String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez activer son compte dans les plus brefs délais !";
+            //             Alerte alerte = new Alerte(admins.getEmailActeur(), msg, "Création d'un nouveau compte");
+            //             emailService.sendSimpleMail(alerte);
+            //             System.out.println(admins.getEmailActeur());
+            //             break; // Sortez de la boucle dès qu'un administrateur est trouvé
+            //         }
+            //     }
+            // } else {
+            //     System.out.println("Aucun administrateur trouvé"); // Gérez le cas où aucun administrateur n'est trouvé
+            // }
+
+          // Récupérez l'administrateur
+            Acteur admin = acteurRepository.findByTypeActeurLibelle("Admin");
+
+            // Vérifiez si un administrateur a été trouvé
+            if (admin != null) {
+                // Accédez aux types d'acteurs de l'administrateur
+                List<TypeActeur> typeActeurs = admin.getTypeActeur();
+                if (typeActeurs != null) {
+                    for (TypeActeur typeActeur : typeActeurs) {
+                        if (typeActeur.getLibelle().equals("Admin")) {
+                            // Si l'administrateur a le type "Admin", envoyez un e-mail
+                            String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez le contacter à son numero "+ savedActeur.getWhatsAppActeur()+" son compte dans les plus brefs délais !";
+                            // Alerte alerte = new Alerte(admin.getEmailActeur(), msg, "Création d'un nouveau compte");
+                            // emailService.sendSimpleMail(alerte);
+                            messageService.sendMessageAndSave(admin.getWhatsAppActeur(), msg);
+                            System.out.println(admin.getEmailActeur());
+                            break; // Sortez de la boucle dès qu'un administrateur est trouvé
+                        }
                     }
                 }
             } else {
-                System.out.println("Aucun administrateur trouvé"); // Gérez le cas où aucun administrateur n'est trouvé
+                System.out.println("Aucun administrateur trouvé");
             }
-            
+
+            System.out.println(savedActeur.getTypeActeur());
             return savedActeur;
                
     }
@@ -180,6 +209,7 @@ public class ActeurService {
             // Gérer le cas où aucun acteur n'est trouvé avec cet e-mail
             throw new IllegalArgumentException("Aucun acteur n'est trouvé avec cet email");
         }
+        
 
         // Associer les types d'acteur à l'acteur existant
         acteur.getTypeActeur().addAll(typeActeurs);

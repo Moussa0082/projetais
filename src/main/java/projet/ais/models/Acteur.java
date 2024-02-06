@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.util.*;
 
+
 import java.time.LocalDateTime;
 
 
@@ -105,10 +106,12 @@ public class Acteur {
     @JsonIgnore
     private List<Magasin> magasinList;
 
-    @ManyToMany
-    // @JsonIgnore
-    (mappedBy = "acteur")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "acteur_type_acteur",
+        joinColumns = @JoinColumn(name = "id_acteur"),
+        inverseJoinColumns = @JoinColumn(name = "id_type_acteur"))
     private List<TypeActeur> typeActeur;
+    
 
    @OneToMany
    (mappedBy = "acteur")

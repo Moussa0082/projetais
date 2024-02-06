@@ -26,6 +26,7 @@ public interface ActeurRepository extends JpaRepository<Acteur, String>{
     //  Acteur findByTypeActeur(TypeActeur typeActeur);
 
      Acteur findByTypeActeurLibelle(String libelle);     
+    //  List<Acteur> findByTypeActeurLibelle(String libelle);     
 
      List<Acteur> findByTypeActeurIdTypeActeur(String idTypeActeur);
 
@@ -43,5 +44,7 @@ public interface ActeurRepository extends JpaRepository<Acteur, String>{
     List<Acteur> findAllByTypeActeur(TypeActeur typeActeur);
 
     Acteur findByEmailActeurAndTypeActeurIn(String emailActeur, List<TypeActeur> typeActeur);
+
+    List<Acteur> findAllByTypeActeurLibelle(String libelle);
     
 }

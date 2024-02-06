@@ -43,11 +43,7 @@ public class TypeActeur {
         return dateModif;
     }
 
-    @ManyToMany
-    @JsonIgnore
-    @JoinTable(name = "acteur_type_acteur",
-    joinColumns = @JoinColumn(name = "id_acteur"),
-    inverseJoinColumns = @JoinColumn(name = "id_type_acteur"))
+    @ManyToMany(mappedBy = "typeActeur", fetch = FetchType.EAGER)
     private List<Acteur> acteur;
 
 }
