@@ -23,15 +23,7 @@ public class CommandeMaterielController {
     @Autowired
     CommandeMaterielService commandeMaterielService;
 
-    @PostMapping("/addMateriel")
-    public ResponseEntity<String> saveCommande(@RequestParam String idActeur, @RequestParam String idMateriel) {
-        try {
-            commandeMaterielService.ajouterAuPanier(idActeur, idMateriel);
-            return ResponseEntity.ok("Ajouté panier avec succès");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'ajout au panier : " + e.getMessage());
-        }
-    }
+    
 
     @PostMapping("/confirmer")
     public ResponseEntity<String> ConfirmerCommande(@RequestParam String idActeur) {
@@ -44,7 +36,7 @@ public class CommandeMaterielController {
     }
 
     @GetMapping("/getAllCommande/{id}")
-    public ResponseEntity<List<CommandeMateriel>> list(@RequestParam String idActeur) {
+    public ResponseEntity<List<CommandeMateriel>> list(@PathVariable String idActeur) {
         return new ResponseEntity<>(commandeMaterielService.getAllCommandeByActeur(idActeur), HttpStatus.OK);
     }
 
@@ -53,6 +45,35 @@ public class CommandeMaterielController {
         return new ResponseEntity<>(commandeMaterielService.getCommandeByActeur(id), HttpStatus.OK);
     }
 
+    @PostMapping("/addCommande/{idMateriel}/{idActeur}")
+    public ResponseEntity<String> saveCommande(@PathVariable String idMateriel , @PathVariable String idActeur ) {
+        try {
+            commandeMaterielService.commande(idMateriel, idActeur);
+            return ResponseEntity.ok("Ajouté panier avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'ajout au panier : " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/confirmerLivraison/{id}")
+    public ResponseEntity<String> livraison(@PathVariable String idCommande) {
+        try {
+            commandeMaterielService.confirmerLivraison(idCommande);
+            return ResponseEntity.ok("Livraison Confirmer panier avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'ajout au panier : " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/confirmerCommande/{idCommande}")
+    public ResponseEntity<String> confirmer(@PathVariable String idCommande) {
+        try {
+            commandeMaterielService.confirmerCommande(idCommande);
+            return ResponseEntity.ok("Livraison Confirmer panier avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'ajout au panier : " + e.getMessage());
+        }
+    }
 
     @PostMapping("/vider")
     public ResponseEntity<String> viderPanier(@RequestParam String idActeur) {

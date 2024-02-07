@@ -31,6 +31,9 @@ public class CommandeMateriel {
     @Column
     private boolean statutCommandeLivrer = false;
 
+    @Column
+    private boolean statutConfirmation = false;
+
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateCommande;
 

@@ -128,67 +128,7 @@ public class MaterielService {
         return materielList;
     }
 
-    public String commande(String idMateriel, String idActeur) throws Exception{
-        Acteur ac = acteurRepository.findByIdActeur(idActeur);
-        Materiel mat = materielRepository.findByIdMateriel(idMateriel);
-
-        if(ac == null)
-            throw new EntityNotFoundException("Aucun acteur trouvé");
-        
-        if(mat == null)
-            throw new EntityNotFoundException("Aucun materiel trouvé");
-
-            mat.setStatutCommande(true);
-            try {
-            String codes  = codeGenerator.genererCode();
-            String idCode = idGenerator.genererCode();
-            // Création de la commande
-            CommandeMateriel commande = new CommandeMateriel();
-            commande.setIdCommandeMateriel(idCode);
-            commande.setCodeCommande(codes);
-            commande.setActeur(ac);
-            commande.setProprietaire(ac.getNomActeur());
-            commande.setDateCommande(LocalDateTime.now());
-            // Vous pouvez ajouter le matériel commandé à la liste des matériels de la commande
-            commande.setMaterielList(Arrays.asList(mat));
-            // Enregistrement de la commande
-            commandeMaterielRepository.save(commande);
-            // Envoi du message pour la commande
-            String msg = "Bonjour M. " + mat.getActeur().getNomActeur() + " vous avez une nouvelle commande pour le matériel : "
-                    + mat.getNom() + " de la part de M. " + ac.getNomActeur() + " Numéro de téléphone : "
-                    + ac.getWhatsAppActeur() + " Adresse : " + ac.getAdresseActeur();
-            // messageService.sendMessageAndSave(mat.getActeur().getWhatsAppActeur(), msg, ac.getNomActeur());
-        } catch (Exception e) {
-            throw new Exception("Erreur lors de la commande : " + e.getMessage());
-        }
-        return "Commande ajoutée avec succès";
-    }
-
-    // public String confirmerCommande() throws Exception{
-    //     Acteur ac = acteurRepository.findByIdActeur(idActeur);
-    //     Materiel mat = materielRepository.findByIdMateriel(idMateriel);
-
-    //     if(ac == null)
-    //         throw new EntityNotFoundException("Aucun acteur trouvé");
-        
-    //     if(mat == null)
-    //         throw new EntityNotFoundException("Aucun materiel trouvé");
-
-    //         mat.setStatutCommande(true);
-    //         try {
-           
-    //         // Enregistrement de la commande
-    //         commandeMaterielRepository.save(commande);
-    //         // Envoi du message pour la commande
-    //         String msg = "Bonjour M. " + mat.getActeur().getNomActeur() + " vous avez une nouvelle commande pour le matériel : "
-    //                 + mat.getNom() + " de la part de M. " + ac.getNomActeur() + " Numéro de téléphone : "
-    //                 + ac.getWhatsAppActeur() + " Adresse : " + ac.getAdresseActeur();
-    //         // messageService.sendMessageAndSave(mat.getActeur().getWhatsAppActeur(), msg, ac.getNomActeur());
-    //     } catch (Exception e) {
-    //         throw new Exception("Erreur lors de la commande : " + e.getMessage());
-    //     }
-    //     return "Commande confirmée";
-    // }
+    
 
     public String deleteMateriel(String id){
         Materiel materiel = materielRepository.findById(id).orElseThrow(null);

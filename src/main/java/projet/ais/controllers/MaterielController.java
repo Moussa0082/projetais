@@ -52,15 +52,6 @@ public class MaterielController {
        return new ResponseEntity<>(savedMateriel, HttpStatus.CREATED);
     }
 
-    @PostMapping("/addCommande")
-    public ResponseEntity<String> saveCommande(@RequestParam String idMateriel , @RequestParam String idActeur ) {
-        try {
-            materielService.commande(idMateriel, idActeur);
-            return ResponseEntity.ok("Ajouté panier avec succès");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'ajout au panier : " + e.getMessage());
-        }
-    }
     
     @PutMapping("/update/{id}")
     @Operation(summary = "Modification du materiel")
