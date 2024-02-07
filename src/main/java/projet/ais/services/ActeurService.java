@@ -278,26 +278,20 @@ public class ActeurService {
 
 
     //envoi mail aux user par type choisit par l'admin
-    public ResponseEntity<Void> sendMailToAllUserChoose(String email, String sujet, String message, String libelle){
-        
-        List<Acteur> allActeurs = acteurRepository.findAllByEmailActeur(email);
+    public ResponseEntity<Void> sendMailToAllUserChoose(String email, String sujet, String message, String libelle) {
 
-        // Envoyer un e-mail aux autres acteurs 
+        // Récupérer les acteurs avec le type d'acteur spécifié
+        List<Acteur> allActeurs = Arrays.asList(acteurRepository.findByTypeActeurLibelle(libelle));
+      
+        // Envoyer un e-mail à chaque acteur
         for (Acteur ac : allActeurs) {
-            for (TypeActeur typeActeur : ac.getTypeActeur()) {
-                if (libelle == typeActeur.getLibelle()) {
-                    // Envoyer un e-mail pour chaque type d'acteur différent de "Admin"
-                    Alerte alerte = new Alerte(ac.getEmailActeur(), message, sujet);
-                    emailService.sendSimpleMail(alerte);
-                    System.out.println(ac.getEmailActeur());
-                    break; // Sortez de la boucle interne dès qu'un type d'acteur différent de "Admin" est trouvé
-                }
-            }
+          Alerte alerte = new Alerte(ac.getEmailActeur(), message, sujet);
+          emailService.sendSimpleMail(alerte);
+          System.out.println("Email envoyé à " + ac.getEmailActeur());
         }
-        
-            
+      
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
-    }
+      }
 
    
 
