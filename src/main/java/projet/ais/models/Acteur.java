@@ -3,9 +3,12 @@ package projet.ais.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import lombok.Data;
 import java.util.*;
+
 
 import java.time.LocalDateTime;
 
@@ -105,6 +108,13 @@ public class Acteur {
     @JsonIgnore
     private List<Magasin> magasinList;
 
+
+    @OneToMany(mappedBy = "acteur")
+    @JsonManagedReference
+    @JsonIgnore
+    private List<Materiel> materiels;
+
+
     @OneToMany
     (mappedBy = "acteur")
     @JsonIgnore
@@ -125,10 +135,14 @@ public class Acteur {
     @JsonIgnore
     private List<Speculation> speculationsList;
 
-    @ManyToMany
-    // @JsonIgnore
-    (mappedBy = "acteur")
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "acteur_type_acteur",
+        joinColumns = @JoinColumn(name = "id_acteur"),
+        inverseJoinColumns = @JoinColumn(name = "id_type_acteur"))
+
     private List<TypeActeur> typeActeur;
+    
 
    @OneToMany
    (mappedBy = "acteur")
@@ -157,6 +171,7 @@ public class Acteur {
    private List<Commande> commandeList;
 
    @OneToOne(mappedBy = "acteur")
+   
     private CommandeMateriel commandeMateriel;
 
 

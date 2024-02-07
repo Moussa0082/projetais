@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.IdGenerator;
-import projet.ais.models.Niveau1Pays;
-import projet.ais.models.Niveau2Pays;
 import projet.ais.models.Niveau3Pays;
 import projet.ais.repository.Niveau3PaysRepository;
 

@@ -49,6 +49,7 @@ public class TypeActeurService {
         // Attribuer le numéro aléatoire au type d'acteur
         // typeActeur.setDateAjout(LocalDateTime.now());
         typeActeur.setCodeTypeActeur(codeTypeActeur);
+        typeActeur.setStatutTypeActeur(true);
         typeActeur.setIdTypeActeur(idCode);
     
         // Vérifier si le type d'acteur existe déjà

@@ -102,12 +102,22 @@ public class CommandeMaterielService {
     }
 
     public List<CommandeMateriel> getAllCommandeByActeur(String idActeur) {
-        // Récupérer tous les paniers de l'utilisateur depuis la base de données
+        // Récupérer tout les commandes de l'utilisateur depuis la base de données
         List<CommandeMateriel> commande = commandeMaterielRepository.findByActeurIdActeur(idActeur);
 
         commande.sort(Comparator.comparing(CommandeMateriel::getDateCommande).reversed());
 
         return commande;
+    }
+
+    public List<CommandeMateriel> getCommandeByActeur(String id){
+        List<CommandeMateriel> commandeList =commandeMaterielRepository.findAll();
+
+        if(commandeList.isEmpty())
+            throw new EntityNotFoundException("Aucune commande trouvé");
+
+            commandeList.sort(Comparator.comparing(CommandeMateriel::getDateCommande).reversed());
+        return commandeList;
     }
 
     public String supprimerMateriel(String idActeur, String idMateriel) {

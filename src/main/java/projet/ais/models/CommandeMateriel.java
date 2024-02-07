@@ -1,8 +1,9 @@
 package projet.ais.models;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,6 +25,12 @@ public class CommandeMateriel {
     @Column(nullable = false)
     private String proprietaire;
 
+    @Column(nullable = false)
+    private String codeCommande;
+
+    @Column
+    private boolean statutCommandeLivrer = false;
+
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateCommande;
 
@@ -33,14 +40,11 @@ public class CommandeMateriel {
     }
     
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "idActeur")
     private Acteur acteur;
 
     @ManyToMany
     private List<Materiel> materielList;
-
-    public CommandeMateriel() {
-        this.materielList = new ArrayList<>();
-    }
     
 }
