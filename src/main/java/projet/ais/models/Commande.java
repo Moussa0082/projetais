@@ -2,7 +2,7 @@ package projet.ais.models;
 
 import java.time.LocalDateTime;
 
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -26,7 +26,7 @@ public class Commande {
     @Column(nullable = false)
     private String codeCommande;
     
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String descriptionCommande;
     
     @Column(nullable = false)
@@ -36,8 +36,24 @@ public class Commande {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateCommande;
 
-
+    @Column(nullable = true)
+    private String codeProduit;
+    
     @Column(nullable = false)
+    private double quantiteDemande;
+    
+    @Column(nullable = false)
+    private double quantiteLivree;
+
+    //Ajouter
+    @Column(nullable = true)
+    private double quantiteNonLivree;
+
+    @Column(nullable = true)
+    private String nomProduit;
+
+
+    @Column(nullable = true)
     private String codeAcheteur;
 
      @Column(columnDefinition = "TIMESTAMP")
@@ -61,11 +77,13 @@ public class Commande {
     
     @ManyToOne
     @JoinColumn(name = "idActeur")
+    // @JsonIgnore
     private Acteur acteur;
 
     @OneToMany
-    (mappedBy = "commande")
-    private List<Stock> stockList; 
+    (mappedBy = "commande"  , cascade = CascadeType.ALL)
+    // @JsonIgnore
+    private List<Stock> stocks; 
     
     @OneToMany
     (mappedBy = "commande")

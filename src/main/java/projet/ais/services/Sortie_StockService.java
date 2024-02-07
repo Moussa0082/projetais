@@ -29,34 +29,34 @@ public class Sortie_StockService {
     @Autowired
     CodeGenerator codeGenerator ;
     
-      public Sortie_Stock createSortieStock( Sortie_Stock sortie_Stock) throws Exception{
+    //   public Sortie_Stock createSortieStock( Sortie_Stock sortie_Stock) throws Exception{
 
-        Stock stock = stockRepository.findByIdStock(sortie_Stock.getStock().getIdStock());
+    //     Stock stock = stockRepository.findByIdStock(sortie_Stock.getStock().getIdStock());
        
-        if(stock == null){
+    //     if(stock == null){
 
-            throw new EntityNotFoundException("Ce produit n'existe pas");
-        }
+    //         throw new EntityNotFoundException("Ce produit n'existe pas");
+    //     }
         
-        double quantiteStock = stock.getQuantiteStock();
-        double quantiteSortie = sortie_Stock.getQuantiteSortie();
+    //     double quantiteStock = stock.getQuantiteStock();
+    //     double quantiteSortie = sortie_Stock.getQuantiteSortie();
 
-        if(quantiteSortie >quantiteStock){
-     throw new Exception("La quantite de sortie ne peut pas être supérieur à la quantité \n de stock disponible");
-        }
+    //     if(quantiteSortie >quantiteStock){
+    //  throw new Exception("La quantite de sortie ne peut pas être supérieur à la quantité \n de stock disponible");
+    //     }
 
-        if(quantiteStock == 0){
-     throw new Exception("La quantite de " + stock.getNomProduit() +  " est non disponible");
-        }
+    //     if(quantiteStock == 0){
+    //  throw new Exception("La quantite de " + stock.getNomProduit() +  " est non disponible");
+    //     }
         
-               stock.setQuantiteStock(quantiteStock - quantiteSortie);
-               stockRepository.save(stock);
-               String code = idGenerator.genererCode();
-               String codes = codeGenerator.genererCode();
-               sortie_Stock.setIdSortieStock(code);
-               sortie_Stock.setCodeSortie(codes);
-              return sortie_StockRepository.save(sortie_Stock);
-    }
+    //            stock.setQuantiteStock(quantiteStock - quantiteSortie);
+    //            stockRepository.save(stock);
+    //            String code = idGenerator.genererCode();
+    //            String codes = codeGenerator.genererCode();
+    //            sortie_Stock.setIdSortieStock(code);
+    //            sortie_Stock.setCodeSortie(codes);
+    //           return sortie_StockRepository.save(sortie_Stock);
+    // }
      
 
      public List<Sortie_Stock> getAllSortieStocksByStockId(String idStock) {

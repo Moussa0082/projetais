@@ -44,6 +44,7 @@ public class TypeActeur {
     }
 
     @ManyToMany(mappedBy = "typeActeur", fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Acteur> acteur;
 
 }
