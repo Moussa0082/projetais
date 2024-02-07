@@ -179,6 +179,7 @@ public class ActeurService {
           // Récupérez l'administrateur
             Acteur admin = acteurRepository.findByTypeActeurLibelle("Admin");
 
+
             // Vérifiez si un administrateur a été trouvé
             if (admin != null) {
                 // Accédez aux types d'acteurs de l'administrateur

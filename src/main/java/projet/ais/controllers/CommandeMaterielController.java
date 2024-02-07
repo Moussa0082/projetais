@@ -23,7 +23,6 @@ public class CommandeMaterielController {
     @Autowired
     CommandeMaterielService commandeMaterielService;
 
-    
 
     @PostMapping("/confirmer")
     public ResponseEntity<String> ConfirmerCommande(@RequestParam String idActeur) {

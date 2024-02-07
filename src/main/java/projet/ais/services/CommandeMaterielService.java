@@ -160,7 +160,7 @@ public class CommandeMaterielService {
             throw new EntityNotFoundException("Aucun materiel trouvé");
 
             mat.setStatutCommande(false);
-            try {
+            try { 
             // Envoi du message pour la commande
             String msg = "Bonjour  " + ac.getNomActeur().toUpperCase() + " Votre commande de materiel " + mat.getNom().toUpperCase() + " a été annuler ";
              messageService.sendMessageAndSave(mat.getActeur().getWhatsAppActeur(), msg, ac.getNomActeur());

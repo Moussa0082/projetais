@@ -17,7 +17,7 @@ public class Stock {
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idStock;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String codeStock;
 
     @Column(nullable = false)
@@ -54,6 +54,7 @@ public class Stock {
     @PrePersist
     public void prePersist() {
         dateAjout = LocalDateTime.now();
+        dateProduction = LocalDateTime.now();
     }
 
 

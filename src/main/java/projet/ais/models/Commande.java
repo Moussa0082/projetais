@@ -2,11 +2,12 @@ package projet.ais.models;
 
 import java.time.LocalDateTime;
 
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
@@ -26,18 +27,39 @@ public class Commande {
     @Column(nullable = false)
     private String codeCommande;
     
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String descriptionCommande;
     
     @Column(nullable = false)
     private boolean statutCommande = false;
 
+    @Column
+    private boolean statutCommandeLivrer = false;
 
+    @Column
+    private boolean statutConfirmation = false;
+    
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateCommande;
 
+    @Column(nullable = true)
+    private String codeProduit;
+    
+    @Column(nullable = true)
+    private double quantiteDemande;
+    
+    @Column(nullable = true)
+    private double quantiteLivree;
 
-    @Column(nullable = false)
+    //Ajouter
+    @Column(nullable = true)
+    private double quantiteNonLivree;
+
+    @Column(nullable = true)
+    private String nomProduit;
+
+
+    @Column(nullable = true)
     private String codeAcheteur;
 
      @Column(columnDefinition = "TIMESTAMP")
@@ -61,12 +83,17 @@ public class Commande {
     
     @ManyToOne
     @JoinColumn(name = "idActeur")
+    // @JsonIgnore
     private Acteur acteur;
 
     @OneToMany
-    (mappedBy = "commande")
-    private List<Stock> stockList;
+    (mappedBy = "commande"  , cascade = CascadeType.ALL)
+    // @JsonIgnore
+    private List<Stock> stocks; 
     
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Materiel> materielList;
+
     @OneToMany
     (mappedBy = "commande")
     @JsonIgnore

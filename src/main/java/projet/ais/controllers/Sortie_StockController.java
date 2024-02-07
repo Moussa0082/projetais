@@ -29,15 +29,15 @@ public class Sortie_StockController {
     private Sortie_StockService sortie_StockService;
 
     
-      @PostMapping("/create")
-     @Operation(summary = "Sortie de stock")
-     public ResponseEntity<Sortie_Stock> createSortieStock(@RequestBody Sortie_Stock sortie_Stock) throws Exception {
+    //   @PostMapping("/create")
+    //  @Operation(summary = "Sortie de stock")
+    //  public ResponseEntity<Sortie_Stock> createSortieStock(@RequestBody Sortie_Stock sortie_Stock) throws Exception {
 
         
-            Sortie_Stock st =  sortie_StockService.createSortieStock(sortie_Stock);
-            return new ResponseEntity<>( st, HttpStatus.OK);
+    //         // Sortie_Stock st =  sortie_StockService.createSortieStock(sortie_Stock);
+    //         return new ResponseEntity<>( st, HttpStatus.OK);
        
-    }
+    // }
 
     @GetMapping("/byStockId/{idStock}")
     public ResponseEntity<List<Sortie_Stock>> getSortieStocksByStockId(@PathVariable String idStock) {
