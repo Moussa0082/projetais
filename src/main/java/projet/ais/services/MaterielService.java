@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -18,8 +19,10 @@ import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
+import projet.ais.models.CommandeMateriel;
 import projet.ais.models.Materiel;
 import projet.ais.repository.ActeurRepository;
+import projet.ais.repository.CommandeMaterielRepository;
 import projet.ais.repository.MaterielRepository;
 
 @Service
@@ -33,6 +36,10 @@ public class MaterielService {
     ActeurRepository acteurRepository;
     @Autowired
     CodeGenerator codeGenerator;
+    @Autowired
+    MessageService messageService;
+    @Autowired
+    CommandeMaterielRepository commandeMaterielRepository;
 
 
     public Materiel createMateriel(Materiel materiel, MultipartFile imageFile) throws Exception{
@@ -108,6 +115,20 @@ public class MaterielService {
         .collect(Collectors.toList());
         return materielList;
     }
+
+    public List<Materiel> getMaterielByActeur(String id){
+        List<Materiel> materielList = materielRepository.findAll();
+
+        if(materielList.isEmpty())
+            throw new EntityNotFoundException("Aucune matériel trouvé");
+
+        materielList = materielList
+        .stream().sorted((m1,m2) -> m2.getNom().compareTo(m1.getNom()))
+        .collect(Collectors.toList());
+        return materielList;
+    }
+
+    
 
     public String deleteMateriel(String id){
         Materiel materiel = materielRepository.findById(id).orElseThrow(null);

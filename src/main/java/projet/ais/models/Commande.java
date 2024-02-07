@@ -84,10 +84,11 @@ public class Commande {
     (mappedBy = "commande"  , cascade = CascadeType.ALL)
     // @JsonIgnore
     private List<Stock> stocks; 
+
     
     @OneToMany
     (mappedBy = "commande")
     @JsonIgnore
-    private List<DetailCommande> detailCommandeList; 
+    private List<DetailCommande> detailCommandeList;
 
 }

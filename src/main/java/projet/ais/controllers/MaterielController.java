@@ -23,6 +23,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import projet.ais.models.Materiel;
 import projet.ais.services.MaterielService;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @CrossOrigin
@@ -50,6 +52,7 @@ public class MaterielController {
        return new ResponseEntity<>(savedMateriel, HttpStatus.CREATED);
     }
 
+    
     @PutMapping("/update/{id}")
     @Operation(summary = "Modification du materiel")
     public ResponseEntity<Materiel> updatedMateriel(
@@ -81,6 +84,11 @@ public class MaterielController {
     @GetMapping("/list")
     public ResponseEntity<List<Materiel>> getAllMateriel(){
         return new ResponseEntity<>(materielService.getMateriels(), HttpStatus.OK);
+    }
+
+    @GetMapping("/readByActeur/{id}")
+    public ResponseEntity<List<Materiel>> getAllByActeur(@PathVariable String id){
+        return new ResponseEntity<>(materielService.getMaterielByActeur(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

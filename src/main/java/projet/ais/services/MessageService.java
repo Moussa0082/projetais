@@ -31,10 +31,32 @@ public class MessageService {
     SendMessage sendMessage;
     
 
-    public MessageWa sendMessageAndSave(String whatsAppActeur, String msg) throws Exception {
+    public MessageWa sendMessageAndSave(String whatsAppActeur, String msg, String acteur) throws Exception {
         // Créer une instance de MessageWa et définir les valeurs
         MessageWa message = new MessageWa();
-        message.setActeurConcerner("Ibrahim sy");
+        message.setActeurConcerner(acteur);
+        message.setText(msg);
+        message.setDateAjout(LocalDateTime.now());
+        
+        // Générer le code et l'ID
+        String codes = codeGenerator.genererCode();
+        String idCode = idGenerator.genererCode();
+        message.setCodeMessage(codes);
+        message.setIdMessage(idCode);
+        
+        // Enregistrer le message dans la base de données
+        messageRepository.save(message);
+        
+        // Envoyer le message
+        sendMessage.sendMessages(whatsAppActeur, msg);
+        
+        return message;
+    }
+
+    public MessageWa sendMessagePersonnalAndSave(String whatsAppActeur, String msg) throws Exception {
+        // Créer une instance de MessageWa et définir les valeurs
+        MessageWa message = new MessageWa();
+        message.setActeurConcerner("Admin");
         message.setText(msg);
         message.setDateAjout(LocalDateTime.now());
         

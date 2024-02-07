@@ -59,7 +59,7 @@ public class ZoneProductionService {
             String idCodes = idGenerator.genererCode();
 
         zoneProduction.setCodeZone(codes);
-        zoneProduction.setIdZoneProduction(idCodes);        
+        zoneProduction.setIdZoneProduction(idCodes);
         return zoneProductionRepository.save(zoneProduction);
     }
 

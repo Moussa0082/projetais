@@ -10,4 +10,6 @@ public interface MaterielRepository  extends JpaRepository<Materiel , String>{
     Materiel findByIdMateriel(String id);
 
     List<Materiel> findByActeurIdActeur(String id);
+
+    List<Materiel> findByIdMaterielAndActeurIdActeur(String idMaterien, String idActeur);
 }

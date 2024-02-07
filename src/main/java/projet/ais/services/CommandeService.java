@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
@@ -13,10 +14,16 @@ import projet.ais.models.Commande;
 import projet.ais.models.DetailCommande;
 import projet.ais.models.Materiel;
 import projet.ais.models.Stock;
+import projet.ais.models.TypeActeur;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.AlerteRepository;
 import projet.ais.repository.CommandeRepository;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.*;
 import projet.ais.repository.DetailCommandeRepository;
@@ -52,21 +59,21 @@ public class CommandeService {
     @Autowired
     private DetailCommandeRepository detailCommandeRepository;
 
-    //  //Passer une commande methode
-    // public ResponseEntity<String> passerCommande(Commande commande, Stock stock){
-    //     //Recuperer la commande par son id
-    //     Commande cmdExistant = commandeRepository.findByIdCommande(commande.getIdCommande());
-    //     if(cmdExistant != null){
-    //          throw new IllegalArgumentException("Une commande avec l'id "+ cmdExistant + "existe déjà");
-    //     }
-    //     Stock stockExistantAuPanier = stockRepository.findByCommandeIdCommande(commande.getIdCommande());
-    //     if(stockExistantAuPanier != null){
-    //         throw new IllegalArgumentException("Ce produit existe déjà au panier");
-    //     }
+     //Passer une commande methode
+    public ResponseEntity<String> passerCommande(Commande commande, Stock stock){
+        //Recuperer la commande par son id
+        Commande cmdExistant = commandeRepository.findByIdCommande(commande.getIdCommande());
+        if(cmdExistant != null){
+             throw new IllegalArgumentException("Une commande avec l'id "+ cmdExistant + "existe déjà");
+        }
+        Stock stockExistantAuPanier = stockRepository.findByCommandeIdCommande(commande.getIdCommande());
+        if(stockExistantAuPanier != null){
+            throw new IllegalArgumentException("Ce produit existe déjà au panier");
+        }
         
-
-    //     return new ResponseEntity<>("Commande passer avec succès votre numéro de commande est "+ commande.getCodeCommande(), HttpStatus.OK);
-    // }
+         commandeRepository.save(commande);
+        return new ResponseEntity<>("Commande passer avec succès votre numéro de commande est "+ commande.getCodeCommande(), HttpStatus.OK);
+    }
 
     // public void ajouterStocksACommande(Commande commande) throws Exception {
     //     // Vérifier si la commande existe déjà
@@ -105,60 +112,58 @@ public class CommandeService {
     //     }
     // }
     
-    public String commande(String idActeur, Commande commande, List<String> idStock) throws Exception {
-        Acteur ac = acteurRepository.findByIdActeur(idActeur);
+   public Commande passerCommande(Commande commande) throws Exception {
         
-        if (ac == null)
-            throw new EntityNotFoundException("Aucun acteur trouvé");
+        // Commande cm = commandeRepository.findByIdCommande(commande.getIdCommande());
+        // if(cm != null){
+
+        //     throw new IllegalArgumentException("Une commande avec l'id " + cm + " existe déjà");
+        // }
         
-        // Récupérer les stocks correspondant aux identifiants donnés
-        List<Stock> stocks = stockRepository.findByIdStockIn(idStock);
+    // Vérifier si  a le même mail et le même type
+      
     
-        if (stocks.isEmpty())
-            throw new EntityNotFoundException("Aucun produit trouvé");
+
+            // Traitement du fichier image siege acteur
+           
+ 
+           
+            // Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
+            commande.setIdCommande(idGenerator.genererCode());
+            commande.setCodeCommande(codeGenerator.genererCode());
+            commande.setStatutCommande(false);
+
+
+                //  List<Stock> stocks = commande.getStocks();
+    
+                //  for (Stock stock : commande.getStocks()) {
+                //      // Vérifier si le stock a suffisamment de quantité disponible
+                //      double quantiteDisponible = stock.getQuantiteStock();
+                    // if (quantiteDisponible < commande.getQuantiteDemande()) {
+                    //     throw new Exception("Le produit " + stock.getNomProduit() + " est en rupture de stock et ne peut être ajouté à la commande.");
+                    // }
+                    
+                    // Mettre à jour la quantité de stock disponible
+                    // stock.setQuantiteStock(quantiteDisponible - commande.getQuantiteDemande());
+                    
         
-        try {
-            String codes = codeGenerator.genererCode();
-            String idCode = idGenerator.genererCode();
-    
-            // Création de la commande
-            commande.setIdCommande(idCode);
-            commande.setCodeCommande(codes);
-            commande.setActeur(ac);
-            commande.setDateCommande(LocalDateTime.now());
+            // if (quantiteDisponible == 0) {
+            //     throw new Exception("Le produit " + stock.getNomProduit() + " est en rupture de stock et ne peut être ajouté à la commande.");
+            // }
             
-            // Ajouter chaque stock à la commande
-            for (Stock stock : stocks) {
-                double quantiteStock = stock.getQuantiteStock();
-    
-                if (quantiteStock == 0) {
-                    throw new Exception("Le produit " + stock.getNomProduit() + " est en rupture de stock et ne peut être ajouté à la commande.");
-                }
-                
-                // Renseigner les champs de la commande avec les informations du stock
-                Commande commandeItem = new Commande();
-                commandeItem.setNomProduit(stock.getNomProduit());
-                commandeItem.setCodeProduit(stock.getCodeStock());
-                commandeItem.setQuantiteDemande(quantiteStock);
-                commandeItem.setQuantiteNonLivree(quantiteStock);
-                
-                // Associer le stock à la commande
-                stock.setCommande(commande);
-                
-                // Mettre à jour la quantité de stock
-                stock.setQuantiteStock(quantiteStock - commandeItem.getQuantiteDemande());
-                
-                // Enregistrer le stock mis à jour
-                stockRepository.save(stock);
-            }
-            
-            // Enregistrer la commande
-            commandeRepository.save(commande);
-            
-            return "Commande ajoutée avec succès";
-        } catch (Exception e) {
-            throw new Exception("Erreur lors de la commande : " + e.getMessage());
-        }
+            // Mettre à jour la quantité de stock
+            // stock.setQuantiteStock(quantiteDisponible - commande.getQuantiteDemande());
+            // commande.setNomProduit(stock.getNomProduit());
+            // commande.setCodeProduit(stock.getCodeStock());
+            // commande.setQuantiteNonLivree(commande.getQuantiteDemande() - commande.getQuantiteLivree());
+            // // Associer le stock à la commande
+            // commandeRepository.save(commande);
+            //  stock.setCommande(commande);
+            //  stockRepository.save(stock);
+        // }
+
+            return commande;
+               
     }
     
 

@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
+import projet.ais.models.Stock;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.AlerteRepository;
@@ -52,6 +53,11 @@ public class ActeurService {
 
     @Autowired
     private TypeActeurRepository typeActeurRepository;
+    @Autowired
+    EmailService emailService;
+    @Autowired
+    IdGenerator idGenerator ;
+    
 
     private Map<String, LocalDateTime> verificationCodeTimestamps = new HashMap<>();
 
@@ -63,10 +69,7 @@ public class ActeurService {
      String sender;
 
 
-    @Autowired
-    EmailService emailService;
-        @Autowired
-    IdGenerator idGenerator ;
+   
 
     // @Autowired
     // private TypeActeurRepository typeActeurRepository;
@@ -188,7 +191,7 @@ public class ActeurService {
                             String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez le contacter à son numero "+ savedActeur.getWhatsAppActeur()+" son compte dans les plus brefs délais !";
                             // Alerte alerte = new Alerte(admin.getEmailActeur(), msg, "Création d'un nouveau compte");
                             // emailService.sendSimpleMail(alerte);
-                            messageService.sendMessageAndSave(admin.getWhatsAppActeur(), msg);
+                            // messageService.sendMessagePersonnalAndSave(admin.getWhatsAppActeur(), msg);
                             System.out.println(admin.getEmailActeur());
                             break; // Sortez de la boucle dès qu'un administrateur est trouvé
                         }
@@ -197,12 +200,42 @@ public class ActeurService {
             } else {
                 System.out.println("Aucun administrateur trouvé");
             }
+            
+            // sendMessageToAllActeur(savedActeur);
 
-            System.out.println(savedActeur.getTypeActeur());
+
+            // System.out.println(savedActeur.getTypeActeur());
+
             return savedActeur;
                
     }
 
+ public ResponseEntity<String> sendMessageToAllActeur(Acteur acteur) throws Exception {
+
+    Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
+
+    if (admins != null) { // Vérifiez si des administrateurs ont été trouvés
+        for (TypeActeur adminType : admins.getTypeActeur()) {
+            if (adminType.getLibelle().equals("Admin")) {
+                // Si un administrateur est trouvé, envoyez un e-mail
+           String msg = acteur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez activer son compte dans les plus brefs délais !";
+           try {
+            messageService.sendMessageAndSave(admins.getWhatsAppActeur(), msg,acteur.getNomActeur());
+           } catch (Exception e) {
+             throw new Exception("Erreur lors de l'envoie de message wathsapp : " +e.getMessage());
+           }
+                break; // Sortez de la boucle dès qu'un administrateur est trouvé
+            }
+        }
+    } else {
+        System.out.println("Aucun administrateur trouvé"); // Gérez le cas où aucun administrateur n'est trouvé
+    }
+        
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+
+     
 
     public Acteur addTypesToActeur(String idActeur, List<TypeActeur> typeActeurs) throws Exception{
         Acteur acteur = acteurRepository.findByIdActeur(idActeur);
@@ -229,6 +262,30 @@ public class ActeurService {
         for (Acteur ac : allActeurs) {
             for (TypeActeur typeActeur : ac.getTypeActeur()) {
                 if (!typeActeur.getLibelle().equals("Admin")) {
+                    // Envoyer un e-mail pour chaque type d'acteur différent de "Admin"
+                    Alerte alerte = new Alerte(ac.getEmailActeur(), message, sujet);
+                    emailService.sendSimpleMail(alerte);
+                    System.out.println(ac.getEmailActeur());
+                    break; // Sortez de la boucle interne dès qu'un type d'acteur différent de "Admin" est trouvé
+                }
+            }
+        }
+        
+            
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+
+
+    //envoi mail aux user par type choisit par l'admin
+    public ResponseEntity<Void> sendMailToAllUserChoose(String email, String sujet, String message, String libelle){
+        
+        List<Acteur> allActeurs = acteurRepository.findAllByEmailActeur(email);
+
+        // Envoyer un e-mail aux autres acteurs 
+        for (Acteur ac : allActeurs) {
+            for (TypeActeur typeActeur : ac.getTypeActeur()) {
+                if (libelle == typeActeur.getLibelle()) {
                     // Envoyer un e-mail pour chaque type d'acteur différent de "Admin"
                     Alerte alerte = new Alerte(ac.getEmailActeur(), message, sujet);
                     emailService.sendSimpleMail(alerte);
@@ -324,16 +381,16 @@ public class ActeurService {
                     // Date d = new Date(); 
                     // SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     //  String dt = sdf.format(d);
-         ac.setDateModif(acteur.updateDateModif(LocalDateTime.now()));
-         ac.setAdresseActeur(acteur.getAdresseActeur());
-         ac.setNomActeur(acteur.getNomActeur());
-         ac.setTelephoneActeur(acteur.getTelephoneActeur());
-         ac.setWhatsAppActeur(acteur.getWhatsAppActeur());
-         ac.setLocaliteActeur(acteur.getLocaliteActeur());
-         ac.setEmailActeur(acteur.getEmailActeur());
-         ac.setMaillonActeur(acteur.getMaillonActeur());
-         ac.setFiliereActeur(acteur.getFiliereActeur());
-         ac.setTypeActeur(acteur.getTypeActeur());
+        ac.setDateModif(acteur.updateDateModif(LocalDateTime.now()));
+        ac.setAdresseActeur(acteur.getAdresseActeur());
+        ac.setNomActeur(acteur.getNomActeur());
+        ac.setTelephoneActeur(acteur.getTelephoneActeur());
+        ac.setWhatsAppActeur(acteur.getWhatsAppActeur());
+        ac.setLocaliteActeur(acteur.getLocaliteActeur());
+        ac.setEmailActeur(acteur.getEmailActeur());
+        ac.setMaillonActeur(acteur.getMaillonActeur());
+        ac.setFiliereActeur(acteur.getFiliereActeur());
+        ac.setTypeActeur(acteur.getTypeActeur());
 
                        
     // Mettez à jour le mot de passe si un nouveau mot de passe est fourni
@@ -549,10 +606,7 @@ public class ActeurService {
         return acteurList;
     }
     
-    
 
-
-  
       //Supprimer acteur
     public String deleteByIdActeur(String id){
         Acteur acteur = acteurRepository.findByIdActeur(id);

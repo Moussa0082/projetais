@@ -32,13 +32,13 @@ public class MessageController {
     MessageService messageService;
 
     @PostMapping("/sendAndSaveMessages")
-    public ResponseEntity<String> sendAndSaveMessage(
+    public ResponseEntity<String> sendAndSaveMessagess(
             @RequestParam String whatsAppActeur,
             @RequestParam String message) {
         
         try {
             // Appeler la méthode du service pour envoyer et enregistrer le message
-            MessageWa savedMessage = messageService.sendMessageAndSave(whatsAppActeur, message);
+            MessageWa savedMessage = messageService.sendMessagePersonnalAndSave(whatsAppActeur, message);
             return ResponseEntity.ok("Message envoyé et enregistré avec succès. ID du message : " + savedMessage.getIdMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur : " + e.getMessage());
