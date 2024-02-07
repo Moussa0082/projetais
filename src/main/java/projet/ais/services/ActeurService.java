@@ -278,22 +278,62 @@ public class ActeurService {
 
 
     //envoi mail aux user par type choisit par l'admin
-    public ResponseEntity<Void> sendMailToAllUserChoose(String email, String sujet, String message, String libelle) {
+        public ResponseEntity<Void> sendMailToAllUserChoose(String email, String sujet, String message, String libelle) {
 
-        // Récupérer les acteurs avec le type d'acteur spécifié
-        List<Acteur> allActeurs = Arrays.asList(acteurRepository.findByTypeActeurLibelle(libelle));
-      
-        // Envoyer un e-mail à chaque acteur
-        for (Acteur ac : allActeurs) {
-          Alerte alerte = new Alerte(ac.getEmailActeur(), message, sujet);
-          emailService.sendSimpleMail(alerte);
-          System.out.println("Email envoyé à " + ac.getEmailActeur());
+            // Récupérer les acteurs avec le type d'acteur spécifié
+            List<Acteur> allActeurs = acteurRepository.findByTypeActeur_Libelle(libelle);
+          
+            // Envoyer un e-mail à chaque acteur
+            for (Acteur ac : allActeurs) {
+                Alerte alerte = new Alerte(ac.getEmailActeur(), message, sujet);
+                emailService.sendSimpleMail(alerte);
+                System.out.println("Email envoyé à " + ac.getEmailActeur());
+            }
+          
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
         }
-      
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
-      }
+        
 
-   
+    //envoi mail aux user par types par exemple producteur et commerçant etc.. le nombre de type  choisit par l'admin
+    public ResponseEntity<Void> sendMailToAllUserCheckedChoose(String email, String sujet, String message, List<String> libelles) {
+
+        // Set to store unique email addresses to avoid duplicates
+        Set<String> emailsSent = new HashSet<>();
+    
+        // Retrieve actors for each type label
+        List<Acteur> allActeurs = new ArrayList<>();
+        for (String libelle : libelles) {
+            List<Acteur> acteurs = acteurRepository.findByTypeActeur_Libelle(libelle);
+            allActeurs.addAll(acteurs);
+        }
+    
+        // Send emails to each actor
+        for (Acteur acteur : allActeurs) {
+            String emailActeur = Objects.requireNonNullElse(acteur.getEmailActeur(), "");
+    
+            // Skip if email is null, empty, or already sent
+            if (!emailsSent.contains(emailActeur) && !emailActeur.isEmpty()) {
+                try {
+                    Alerte alerte = new Alerte(emailActeur, message, sujet);
+                    emailService.sendSimpleMail(alerte);
+                    emailsSent.add(emailActeur);
+                    System.out.println("Email sent to " + emailActeur);
+                } catch (Exception e) {
+                    // Handle email sending error
+                    System.err.println("Error sending email to " + emailActeur + ": " + e.getMessage());
+                }
+            }
+        }
+    
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+    
+            
+      
+ 
+      
+    
+
 
 
     
