@@ -85,14 +85,16 @@ public class Stock {
     @JoinColumn(name = "idActeur")
     private Acteur acteur;
     
-    @ManyToOne
-    @JoinColumn(name = "idCommande")
-    private Commande commande;
+    @ManyToMany
+    (mappedBy = "stock")
+    private List<Commande> commande;
 
     @OneToMany
     (mappedBy = "stock")
     @JsonIgnore
     private List<Sortie_Stock> sortie_Stock;
+
+
 
 }
 

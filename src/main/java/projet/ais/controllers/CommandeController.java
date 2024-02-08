@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 
 import projet.ais.models.Commande;
+import projet.ais.models.CommandeAvecStocksDTO;
 import projet.ais.models.DetailCommande;
 import projet.ais.models.Stock;
 import projet.ais.services.CommandeService;
@@ -32,14 +33,13 @@ public class CommandeController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<String> ajouterStocksACommande(@RequestBody Commande commande) {
+    public ResponseEntity<String> ajouterCommandeAvecStocks(@RequestBody CommandeAvecStocksDTO commandeAvecStocksDTO) {
         try {
-            commandeService.passerCommande(commande);
-            return ResponseEntity.ok("Stocks ajoutés à la commande avec succès.");
+            commandeService.creerCommandeEtAjouterStocks(commandeAvecStocksDTO.getStock(), commandeAvecStocksDTO.getCommande());
+             return ResponseEntity.ok("Commande ajoutée avec succès.");
         } catch (Exception e) {
-
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Une erreur est survenue lors de l'ajout des stocks à la commande : " + e.getMessage());
+                .body("Une erreur est survenue lors de l'ajout de la commande : " + e.getMessage());
         }
     }
     

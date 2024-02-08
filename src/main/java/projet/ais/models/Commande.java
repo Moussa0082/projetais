@@ -7,6 +7,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
@@ -62,7 +64,7 @@ public class Commande {
     @PrePersist
     public void prePersist() {
         dateAjout = LocalDateTime.now();
-        this.dateCommande = LocalDateTime.now();
+        dateCommande = LocalDateTime.now();
     }
 
 
@@ -80,10 +82,15 @@ public class Commande {
     // @JsonIgnore
     private Acteur acteur;
 
-    @OneToMany
-    (mappedBy = "commande"  , cascade = CascadeType.ALL)
-    // @JsonIgnore
-    private List<Stock> stocks; 
+
+    @ManyToMany
+    @JsonIgnore
+    @JoinTable(
+        name = "commande_stock",
+        joinColumns = @JoinColumn(name = "id_commande"),
+        inverseJoinColumns = @JoinColumn(name = "id_stock")
+    )
+    private List<Stock> stock; 
 
     
     @OneToMany

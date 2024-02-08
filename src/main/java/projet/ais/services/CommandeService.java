@@ -112,59 +112,63 @@ public class CommandeService {
     //     }
     // }
     
-   public Commande passerCommande(Commande commande) throws Exception {
-        
-        // Commande cm = commandeRepository.findByIdCommande(commande.getIdCommande());
-        // if(cm != null){
-
-        //     throw new IllegalArgumentException("Une commande avec l'id " + cm + " existe déjà");
-        // }
-        
-    // Vérifier si  a le même mail et le même type
-      
+    public Commande creerCommandeEtAjouterStocks(List<Stock> stocks, Commande commande) {
+        // Créer la commande avec les détails nécessaires
+        commande.setIdCommande(idGenerator.genererCode());
+        commande.setCodeCommande(codeGenerator.genererCode());
+        commande.setDateCommande(LocalDateTime.now());
+        double quantiteDemandee = commande.getQuantiteDemande();
+        double quantiteLivree = commande.getQuantiteLivree();
+        double quantiteNonLivree = quantiteDemandee - quantiteLivree; // Calcul de la quantité non livrée
+        commande.setQuantiteNonLivree(quantiteNonLivree);
     
-
-            // Traitement du fichier image siege acteur
-           
- 
-           
-            // Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
-            commande.setIdCommande(idGenerator.genererCode());
-            commande.setCodeCommande(codeGenerator.genererCode());
-            commande.setStatutCommande(false);
-
-
-                //  List<Stock> stocks = commande.getStocks();
-    
-                //  for (Stock stock : commande.getStocks()) {
-                //      // Vérifier si le stock a suffisamment de quantité disponible
-                //      double quantiteDisponible = stock.getQuantiteStock();
-                    // if (quantiteDisponible < commande.getQuantiteDemande()) {
-                    //     throw new Exception("Le produit " + stock.getNomProduit() + " est en rupture de stock et ne peut être ajouté à la commande.");
-                    // }
-                    
-                    // Mettre à jour la quantité de stock disponible
-                    // stock.setQuantiteStock(quantiteDisponible - commande.getQuantiteDemande());
-                    
-        
-            // if (quantiteDisponible == 0) {
-            //     throw new Exception("Le produit " + stock.getNomProduit() + " est en rupture de stock et ne peut être ajouté à la commande.");
-            // }
-            
-            // Mettre à jour la quantité de stock
-            // stock.setQuantiteStock(quantiteDisponible - commande.getQuantiteDemande());
-            // commande.setNomProduit(stock.getNomProduit());
-            // commande.setCodeProduit(stock.getCodeStock());
-            // commande.setQuantiteNonLivree(commande.getQuantiteDemande() - commande.getQuantiteLivree());
-            // // Associer le stock à la commande
-            // commandeRepository.save(commande);
-            //  stock.setCommande(commande);
-            //  stockRepository.save(stock);
+        // Initialiser la liste de stocks dans la commande si elle est nulle
+        // if (commande.getStock() == null) {
+        //     commande.setStock(new ArrayList<>());
         // }
-
-            return commande;
-               
+    
+        // Enregistrer la commande dans la base de données
+        Commande savedCommande = commandeRepository.save(commande);
+    
+        // Pour chaque stock, associez-le à la commande
+        // for (Stock stock : stocks) {
+        //     // Associer le stock à la commande
+        //     stock.setQuantiteStock(stock.getQuantiteStock() - quantiteDemandee);
+    
+        //     stock.getCommande().add(savedCommande); // Assurez-vous que stock.getCommande() est initialisée
+        //     stockRepository.save(stock);
+        // }
+    
+        // Retourner la commande créée avec les stocks associés
+        return savedCommande;
     }
+    
+    
+    // public void ajouterStocksACommande(List<Stock> stocks, Commande commande) {
+    //     double quantiteDemandee = commande.getQuantiteDemande();
+    //     double quantiteLivree = commande.getQuantiteLivree();
+    //     double quantiteNonLivree = quantiteDemandee - quantiteLivree; // Calcul de la quantité non livrée
+        
+    //     // Mettre à jour la quantité non livrée de la commande
+    //     commande.setQuantiteNonLivree(quantiteNonLivree);
+        
+    //     // Pour chaque stock, associez-le à la commande et mettez à jour les informations de la commande
+    //     for (Stock stock : stocks) {
+    //         stock.setQuantiteStock(stock.getQuantiteStock() - quantiteDemandee);
+    //         // Récupérer les informations du stock et mettre à jour les champs de la commande
+    //         commande.getStock().add(stock);
+    //         commande.setNomProduit(stock.getNomProduit()); // Exemple : mettre à jour le nom du produit de la commande
+            
+    //         // Récupérer d'autres informations du stock et les mettre à jour dans la commande si nécessaire
+            
+    //         // Enregistrer la commande dans la base de données
+    //         commandeRepository.save(commande);
+    //     }
+    // }
+    
+    
+    
+    
     
 
 
