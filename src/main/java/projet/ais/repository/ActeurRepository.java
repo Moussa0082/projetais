@@ -26,7 +26,7 @@ public interface ActeurRepository extends JpaRepository<Acteur, String>{
     //  Acteur findByTypeActeur(TypeActeur typeActeur);
 
      Acteur findByTypeActeurLibelle(String libelle);     
-    //  List<Acteur> findByTypeActeurLibelle(String libelle);     
+     List<Acteur> findByTypeActeur_Libelle(String libelle);     
 
      List<Acteur> findByTypeActeurIdTypeActeur(String idTypeActeur);
 

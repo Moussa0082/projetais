@@ -191,7 +191,7 @@ public class ActeurController {
 
 
     @GetMapping("/send-email-to-all-choose")
-    public ResponseEntity<String> sendEmailToAllUsersChoose(@RequestParam ("emails") List<String> emails, @RequestParam("sujet")String sujet, @RequestParam("message")String message, String libelle) {
+    public ResponseEntity<String> sendEmailToAllUsersChoose(@RequestParam ("emails") List<String> emails, @RequestParam("sujet")String sujet, @RequestParam("message")String message, @RequestParam("libelle")String libelle) {
        
         //  acteurService.sendMailToAllUser(email, sujet, message);
          if(!emails.isEmpty()){
@@ -202,10 +202,29 @@ public class ActeurController {
                 
                 System.out.println(email);
             }
-            return new ResponseEntity<>("Email envoyé à tous les utilisateurs avec succès", HttpStatus.OK);
+            return new ResponseEntity<>("Email envoyé  avec succès à tous les " + libelle, HttpStatus.OK);
         } else {
             // Log the exception for debugging
-            return new ResponseEntity<>("Failed to send emails", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Echec de l'envoi d'emails car aucun email n'a été trouvé", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/send-email-to-all-checked-choose")
+    public ResponseEntity<String> sendMailToAllUserCheckedChoose(@RequestParam ("emails") List<String> emails, @RequestParam("sujet")String sujet, @RequestParam("message")String message, @RequestParam("libelle")List<String> libelle) {
+       
+        //  acteurService.sendMailToAllUser(email, sujet, message);
+         if(!emails.isEmpty()){
+            for (String email : emails) {
+                acteurService.sendMailToAllUserCheckedChoose(email, sujet, message, libelle);
+                Alerte al = new Alerte(email, message, sujet);
+                emailService.sendSimpleMail(al);
+                
+                System.out.println( "controller print " + email);
+            }
+            return new ResponseEntity<>("Email envoyé  avec succès à tous les " + libelle, HttpStatus.OK);
+        } else {
+            // Log the exception for debugging
+            return new ResponseEntity<>("Echec de l'envoi d'emails car aucun email n'a été trouvé", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
