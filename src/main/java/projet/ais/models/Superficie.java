@@ -42,8 +42,7 @@ public class Superficie {
     @ManyToOne
     private Acteur acteur;
 
-    @OneToMany
-    (mappedBy = "superficie")
+    @OneToMany(mappedBy = "superficie")
     private List<Intrant> intrants;
 
     @ManyToOne

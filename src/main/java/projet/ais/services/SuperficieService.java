@@ -1,6 +1,7 @@
 package projet.ais.services;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,10 +13,12 @@ import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Campagne;
+import projet.ais.models.Intrant;
 import projet.ais.models.Speculation;
 import projet.ais.models.Superficie;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.CampagneRepository;
+import projet.ais.repository.IntrantRepository;
 import projet.ais.repository.SuperficieRepository;
 
 @Service
@@ -31,12 +34,27 @@ public class SuperficieService {
     ActeurRepository acteurRepository;
     @Autowired
     CampagneRepository campagneRepository ;
+    @Autowired
+    IntrantRepository intrantRepository;
 
 
     public Superficie createSuperficie(Superficie superficie){
         Acteur acteur = acteurRepository.findByIdActeur(superficie.getActeur().getIdActeur());
 
         Campagne campagne = campagneRepository.findByIdCampagne(superficie.getCampagne().getIdCampagne());
+
+        List<Intrant> intrants = superficie.getIntrants();
+
+        List<String> idIntrants = new ArrayList<>();
+
+        for(Intrant intrant : intrants){
+            idIntrants.add(intrant.getIdIntrant());
+        }
+
+        List<Intrant> intrantList = intrantRepository.findByIdIntrantIn(idIntrants);
+
+        if(intrantList.isEmpty())
+            throw new EntityNotFoundException("Aucune intrant trouvé");
 
         if(campagne == null)
             throw new EntityNotFoundException("Aucune campagne trouvé");
