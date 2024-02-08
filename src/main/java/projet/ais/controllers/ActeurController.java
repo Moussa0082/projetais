@@ -189,6 +189,26 @@ public class ActeurController {
         }
     }
 
+
+    @GetMapping("/send-email-to-all-choose")
+    public ResponseEntity<String> sendEmailToAllUsersChoose(@RequestParam ("emails") List<String> emails, @RequestParam("sujet")String sujet, @RequestParam("message")String message, String libelle) {
+       
+        //  acteurService.sendMailToAllUser(email, sujet, message);
+         if(!emails.isEmpty()){
+            for (String email : emails) {
+                acteurService.sendMailToAllUserChoose(email, sujet, message, libelle);
+                Alerte al = new Alerte(email, message, sujet);
+                emailService.sendSimpleMail(al);
+                
+                System.out.println(email);
+            }
+            return new ResponseEntity<>("Email envoyé à tous les utilisateurs avec succès", HttpStatus.OK);
+        } else {
+            // Log the exception for debugging
+            return new ResponseEntity<>("Failed to send emails", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     
              //Mettre à jour un acteur
       @PutMapping("/update/{id}")
