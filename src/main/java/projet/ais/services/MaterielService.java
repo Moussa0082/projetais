@@ -19,10 +19,8 @@ import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
-import projet.ais.models.CommandeMateriel;
 import projet.ais.models.Materiel;
 import projet.ais.repository.ActeurRepository;
-import projet.ais.repository.CommandeMaterielRepository;
 import projet.ais.repository.MaterielRepository;
 
 @Service
@@ -38,9 +36,7 @@ public class MaterielService {
     CodeGenerator codeGenerator;
     @Autowired
     MessageService messageService;
-    @Autowired
-    CommandeMaterielRepository commandeMaterielRepository;
-
+    
 
     public Materiel createMateriel(Materiel materiel, MultipartFile imageFile) throws Exception{
         Acteur acteur = acteurRepository.findByIdActeur(materiel.getActeur().getIdActeur());
@@ -82,7 +78,7 @@ public class MaterielService {
         mat.setLocalisation(materiel.getLocalisation());
         mat.setNom(materiel.getNom());
         mat.setPrix(materiel.getPrix());
-
+        mat.setPersonneModif(materiel.getPersonneModif());
         mat.setDateModif(LocalDateTime.now());
         
         if (imageFile != null) {
