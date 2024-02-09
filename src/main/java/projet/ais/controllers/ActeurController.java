@@ -228,10 +228,21 @@ public class ActeurController {
         }
     }
 
+    @GetMapping("/sendMessageWathsappToActeurByTypeActeur")
+    public ResponseEntity<String> sendMessageWathsappToActeur(@RequestParam String message, @RequestParam List<String> libelles) {
+        try {
+            acteurService.sendMessageToActeurByTypeActeur(message, libelles);
+            
+            return new ResponseEntity<>("Message envoyé avec succès à tous les acteurs correspondant aux libellés " + libelles.size(), HttpStatus.OK);
+        } catch (Exception e) {
+            // En cas d'erreur, retourner une réponse avec un message d'erreur
+            return new ResponseEntity<>("Échec de l'envoi du message WhatsApp aux acteurs correspondant aux libellés " + libelles + ". Erreur : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     
              //Mettre à jour un acteur
-      @PutMapping("/update/{id}")
-      @Operation(summary = "Mise à jour d'un acteur ")
+    @PutMapping("/update/{id}")
+    @Operation(summary = "Mise à jour d'un acteur ")
       public ResponseEntity<Acteur> updateActeur(
               @PathVariable String id,
               @Valid @RequestParam("acteur") String acteurString,

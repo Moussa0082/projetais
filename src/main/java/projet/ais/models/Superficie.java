@@ -24,6 +24,9 @@ public class Superficie {
     @Column(nullable = false)
     private String localite;
 
+    @Column(nullable=true)
+    private String personneModif;
+    
     @Column(nullable = false)
     private String superficieHa;
 
@@ -42,9 +45,9 @@ public class Superficie {
     @ManyToOne
     private Acteur acteur;
 
-    @OneToMany
-    (mappedBy = "superficie")
+    @OneToMany(mappedBy = "superficie")
     private List<Intrant> intrants;
+
 
     @ManyToOne
     @JoinColumn(name = "idSpeculation")

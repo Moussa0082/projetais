@@ -157,7 +157,7 @@ public class StockService {
         return st;
     }
 
-  
+    
     public ResponseEntity<String> sendMessageToAllActeur(Stock stock) {
         List<Acteur> allActeurs = acteurRepository.findAll();
         Acteur ac = stock.getActeur();
@@ -233,8 +233,7 @@ public class StockService {
         stocks.setDateProduction(stock.getDateProduction());
         stocks.setQuantiteStock(stock.getQuantiteStock());
         stocks.setDescriptionStock(stock.getDescriptionStock());
-        stocks.setDateAjout(stocks.getDateAjout());
-        
+        stocks.setPersonneModif(stock.getPersonneModif());       
 
         stocks.setDateModif(LocalDateTime.now());
 

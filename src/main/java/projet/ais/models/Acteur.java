@@ -105,6 +105,10 @@ public class Acteur {
     @JsonIgnore
     private List<Stock> stockList;
 
+    @OneToMany(mappedBy = "acteur")
+    @JsonIgnore
+    private List<Unite> unite;
+
     @OneToMany
     (mappedBy = "acteur")
     @JsonIgnore
@@ -171,10 +175,6 @@ public class Acteur {
    (mappedBy = "acteur")
    @JsonIgnore
    private List<Commande> commandeList;
-
-   @OneToOne(mappedBy = "acteur")
-   
-    private CommandeMateriel commandeMateriel;
 
 
    @OneToMany

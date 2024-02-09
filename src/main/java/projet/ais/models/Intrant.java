@@ -52,12 +52,6 @@ public class Intrant {
         this.dateModif = dateModif;
         return dateModif;
     }
-    
-    // @Column(columnDefinition = "TIMESTAMP")
-    // private LocalDateTime dateApplication;
-
-
-
 
     @Column(nullable=true)
     private String personneModif;
@@ -69,5 +63,6 @@ public class Intrant {
     @ManyToOne
     @JoinColumn(name = "idSuperficie")
     private Superficie superficie;
+
     
 }

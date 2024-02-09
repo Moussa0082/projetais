@@ -3,13 +3,18 @@ package projet.ais.models;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import lombok.Data;
+import java.util.List;
+
 
 @Entity
 @Data
@@ -35,7 +40,7 @@ public class ParametreFiche {
     private String typeDonneeParametre;
 
     @Column(nullable = false)
-    private String listeDonneeParametre;
+    private List<String> listeDonneeParametre;
 
     @Column(nullable = false)
     private int valeurMax;
@@ -68,4 +73,8 @@ public class ParametreFiche {
 
     @Column(nullable = false)
     private boolean statutParametre = true;
+
+    @OneToOne
+    @JoinColumn(name = "idStock")
+    private Stock stock;
 }

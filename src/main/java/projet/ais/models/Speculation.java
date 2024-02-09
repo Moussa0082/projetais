@@ -35,6 +35,9 @@ public class Speculation {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateAjout;
 
+    @Column(nullable=true)
+    private String personneModif;
+    
     @PrePersist
     public void prePersist() {
         dateAjout = LocalDateTime.now();
@@ -49,8 +52,6 @@ public class Speculation {
         return dateModif;
     }
     
-    @Column(nullable=true)
-    private String personneAjout;
     
     @OneToMany
     (mappedBy = "speculation")

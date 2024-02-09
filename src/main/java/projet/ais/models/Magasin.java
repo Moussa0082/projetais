@@ -42,6 +42,9 @@ public class Magasin {
     @Column(nullable = false)
     private String contactMagasin;
 
+    @Column(nullable=true)
+    private String personneModif;
+    
     @Column(nullable = false)
     private boolean statutMagasin = true;
 

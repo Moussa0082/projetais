@@ -94,7 +94,7 @@ public class IntrantService {
         List<Intrant>  intrantList = intrantRepository.findBySuperficieIdSuperficie(id);
 
         if(intrantList.isEmpty()){
-            throw new EntityNotFoundException("Aucun intrant trouvé");
+            throw new EntityNotFoundException("Aucun intrant trouvé avec id :" +id);
         }
         intrantList = intrantList
                 .stream().sorted((d1, d2) -> d2.getNomIntrant().compareTo(d1.getNomIntrant()))

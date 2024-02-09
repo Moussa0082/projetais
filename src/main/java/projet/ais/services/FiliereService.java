@@ -51,7 +51,7 @@ public class FiliereService {
     filieres.setDescriptionFiliere(filiere.getDescriptionFiliere());
     filieres.setLibelleFiliere(filiere.getLibelleFiliere());
     filieres.setDateAjout(filieres.getDateAjout());
-
+    filieres.setPersonneModif(filiere.getPersonneModif());
 
     filieres.setDateModif(LocalDateTime.now());
     return filiereRepository.save(filieres);

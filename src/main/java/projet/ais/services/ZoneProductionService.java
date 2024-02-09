@@ -70,6 +70,7 @@ public class ZoneProductionService {
         zoneProduction.setLatitude(zoneProduction.getLatitude());
         zoneProductions.setLongitude(zoneProduction.getLongitude());
         zoneProductions.setDateAjout(zoneProductions.getDateAjout());
+        zoneProductions.setPersonneAjout(zoneProduction.getPersonneAjout() );
         if (imageFile != null) {
             String imageLocation = "C:\\xampp\\htdocs\\ais";
             try {

@@ -60,8 +60,7 @@ public class SpeculationService {
        Speculation speculations = speculationRepository.findById(id).orElseThrow(null);
        speculations.setDescriptionSpeculation(speculation.getDescriptionSpeculation());
        speculations.setNomSpeculation(speculation.getNomSpeculation());
-        speculations.setDateAjout(speculations.getDateAjout());
-
+        speculations.setPersonneModif(speculation.getPersonneModif());
        speculations.setDateModif(LocalDateTime.now());
         return speculationRepository.save(speculations);
     }

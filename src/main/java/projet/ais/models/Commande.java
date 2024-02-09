@@ -34,17 +34,22 @@ public class Commande {
     @Column(nullable = false)
     private boolean statutCommande = false;
 
+    @Column
+    private boolean statutCommandeLivrer = false;
 
+    @Column
+    private boolean statutConfirmation = false;
+    
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateCommande;
 
     @Column(nullable = true)
     private String codeProduit;
     
-    @Column(nullable = false)
+    @Column(nullable = true)
     private double quantiteDemande;
     
-    @Column(nullable = false)
+    @Column(nullable = true)
     private double quantiteLivree;
 
     //Ajouter
@@ -88,7 +93,11 @@ public class Commande {
     (mappedBy = "commande")
     private List<Stock> stock; 
 
+
     
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Materiel> materielList;
+
     @OneToMany
     (mappedBy = "commande")
     @JsonIgnore

@@ -66,6 +66,9 @@ public class Stock {
         return dateModif;
     }
     
+    @Column(nullable=true)
+    private String personneModif;
+    
     @Column(nullable = false)
     private boolean statutSotck = true;
 
@@ -93,7 +96,6 @@ public class Stock {
     (mappedBy = "stock")
     @JsonIgnore
     private List<Sortie_Stock> sortie_Stock;
-
 
 
 }

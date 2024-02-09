@@ -85,8 +85,7 @@ public class MagasinService {
         mag.setLongitude(magasin.getLongitude());
         mag.setLocaliteMagasin(magasin.getLocaliteMagasin());
         mag.setNomMagasin(magasin.getNomMagasin()); 
-        mag.setDateAjout(mag.getDateAjout());
-
+        mag.setPersonneModif(magasin.getPersonneModif());
         if (imageFile != null) {
                 String imageLocation = "C:\\xampp\\htdocs\\ais";
                 try {

@@ -329,10 +329,38 @@ public class ActeurService {
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
     
-            
-      
- 
-      
+       //envoi mail aux user par types par exemple producteur et commerçant etc.. le nombre de type  choisit par l'admin
+    public ResponseEntity<Void> sendMessageToActeurByTypeActeur(String message, List<String> libelles) {
+
+        // Set to store unique email addresses to avoid duplicates
+        Set<String> wathsappSend = new HashSet<>();
+    
+        // Retrieve actors for each type label
+        List<Acteur> allActeurs = new ArrayList<>();
+        for (String libelle : libelles) {
+            List<Acteur> acteurs = acteurRepository.findByTypeActeur_Libelle(libelle);
+            allActeurs.addAll(acteurs);
+        }
+    
+        
+        for (Acteur acteur : allActeurs) {
+            String wathsapp = Objects.requireNonNullElse(acteur.getWhatsAppActeur(), "");
+    
+            // Skip if email is null, empty, or already sent
+            if (!wathsappSend.contains(wathsapp) && !wathsapp.isEmpty()) {
+                try {
+                   messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), message, acteur.getNomActeur());
+                    wathsappSend.add(wathsapp);
+                    System.out.println("Message sent to " + wathsapp);
+                } catch (Exception e) {
+                    // Handle email sending error
+                    System.err.println("Error sending message to " + wathsapp + ": " + e.getMessage());
+                }
+            }
+        }
+    
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
     
 
 
@@ -661,6 +689,7 @@ public class ActeurService {
         {
             throw new NoContentException("Connexion échoué, cet email n'existe pas dans notre\n base de données !");
         }
+       
         // if(acteur)
         // {
         //     throw new NoContentException("Connexion échoué votre compte  été desactivé par l'administrateur!");

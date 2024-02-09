@@ -6,10 +6,12 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
@@ -43,6 +45,9 @@ public class Materiel {
     @Column(nullable = false)
     private String localisation;
 
+    @Column(nullable=true)
+    private String personneModif;
+    
     @Column
     private boolean statut = true;
 
@@ -69,8 +74,11 @@ public class Materiel {
     private Acteur acteur;
     
 
-    @ManyToMany
+    @ManyToMany()
+     @JoinTable(name = "materiel_commande",
+        joinColumns = @JoinColumn(name = "id_materiel"),
+        inverseJoinColumns = @JoinColumn(name = "id_commande"))
     @JsonIgnore
-    private List<CommandeMateriel> commandes;
+    private List<Commande> commandes;
 
 }

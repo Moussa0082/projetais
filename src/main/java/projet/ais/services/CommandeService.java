@@ -27,6 +27,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.*;
 import projet.ais.repository.DetailCommandeRepository;
+import projet.ais.repository.MaterielRepository;
 import projet.ais.repository.StockRepository;
 
 @Service
@@ -55,6 +56,8 @@ public class CommandeService {
 
     @Autowired
     private CodeGenerator codeGenerator;
+     @Autowired
+    MaterielRepository materielRepository;
 
     @Autowired
     private DetailCommandeRepository detailCommandeRepository;
@@ -278,7 +281,110 @@ public class CommandeService {
     
     
     
+public String commandeMateriel(String idMateriel, String idActeur) throws Exception{
+        Acteur ac = acteurRepository.findByIdActeur(idActeur);
+        Materiel mat = materielRepository.findByIdMateriel(idMateriel);
 
+        if(ac == null)
+            throw new EntityNotFoundException("Aucun acteur trouvé");
+        
+        if(mat == null)
+            throw new EntityNotFoundException("Aucun materiel trouvé");
 
+            mat.setStatutCommande(true);
+            
+            try {
+            String codes  = codeGenerator.genererCode();
+            String idCode = idGenerator.genererCode();
+            // Création de la commande
+            Commande commande = new Commande();
+            commande.setIdCommande(idCode);
+            commande.setCodeCommande(codes);
+            commande.setActeur(ac);
+            commande.setCodeAcheteur(mat.getCodeMateriel());
+            commande.setCodeCommande(mat.getCodeMateriel());
+            commande.setNomProduit(mat.getNom());
+            commande.setDescriptionCommande("Allocation de materiel");
+            commande.setDateCommande(LocalDateTime.now());
+            // Vous pouvez ajouter le matériel commandé à la liste des matériels de la commande
+            commande.setMaterielList(Arrays.asList(mat));
+            // Enregistrement de la commande
+            commandeRepository.save(commande);
+            // Envoi du message pour la commande
+            String msg = "Bonjour  " + mat.getActeur().getNomActeur().toUpperCase() + " vous avez une nouvelle commande pour le matériel : "
+                    + mat.getNom() + " de la part de M. " + ac.getNomActeur() + " Numéro de téléphone : "
+                    + ac.getWhatsAppActeur() + " Adresse : " + ac.getAdresseActeur();
+            // messageService.sendMessageAndSave(mat.getActeur().getWhatsAppActeur(), msg, ac.getNomActeur());
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de la commande : " + e.getMessage());
+        }
+        return "Commande ajoutée avec succès";
+    }
+
+    public String annulerCommande(String idMateriel, String idActeur) throws Exception{
+        Acteur ac = acteurRepository.findByIdActeur(idActeur);
+        Materiel mat = materielRepository.findByIdMateriel(idMateriel);
+
+        if(ac == null)
+            throw new EntityNotFoundException("Aucun acteur trouvé");
+        
+        if(mat == null)
+            throw new EntityNotFoundException("Aucun materiel trouvé");
+
+            mat.setStatutCommande(false);
+            try { 
+            // Envoi du message pour la commande
+            String msg = "Bonjour  " + ac.getNomActeur().toUpperCase() + " Votre commande de materiel " + mat.getNom().toUpperCase() + " a été annuler ";
+            messageService.sendMessageAndSave(mat.getActeur().getWhatsAppActeur(), msg, ac.getNomActeur());
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de la commande : " + e.getMessage());
+        }
+        return "Commande annuler avec succèss";
+    }
     
+    public Commande confirmerLivraison(String id){
+        Commande commande = commandeRepository.findByIdCommande(id);
+
+        commande.setStatutCommandeLivrer(true);
+
+        return commandeRepository.save(commande);
+        
+    }
+
+    public String confirmerCommande(String idCommande) throws Exception {
+
+        Commande commande = commandeRepository.findByIdCommande(idCommande);
+
+        commande.setStatutConfirmation(true);
+        
+        commandeRepository.save(commande);
+
+        String msg = "Bonjour  " + commande.getActeur().getNomActeur().toUpperCase() + " Votre commande de materiel  a été confirmer ";
+        try {
+                messageService.sendMessageAndSave(commande.getActeur().getWhatsAppActeur(), msg, commande.getActeur().getNomActeur());
+            } catch (Exception e) {
+                throw new Exception(e.getMessage());
+            }
+
+        return "Commande confirmée avec succès";
+    }
+
+    public List<Commande> getAllCommandeByActeur(String idActeur) {
+        // Récupérer tout les commandes de l'utilisateur depuis la base de données
+        List<Commande> commande = commandeRepository.findByActeurIdActeur(idActeur);
+
+        commande.sort(Comparator.comparing(Commande::getDateCommande).reversed());
+
+        return commande;
+    }
+
+    public List<Commande> getCommandeByActeur(String id){
+        List<Commande> commandeList =commandeRepository.findAll();
+
+        if(commandeList.isEmpty())
+            throw new EntityNotFoundException("Aucune commande trouvé");
+
+            commandeList.sort(Comparator.comparing(Commande::getDateCommande).reversed());
+        return commandeList;
+    }
 }
