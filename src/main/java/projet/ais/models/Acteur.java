@@ -46,6 +46,8 @@ public class Acteur {
     @Column(nullable = false)
     private String latitude;
 
+    
+
     @Column(nullable = false)
     private String longitude;
 

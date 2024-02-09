@@ -85,9 +85,9 @@ public class Stock {
     @JoinColumn(name = "idActeur")
     private Acteur acteur;
     
-    @ManyToMany
-    (mappedBy = "stock")
-    private List<Commande> commande;
+    @ManyToOne
+    @JoinColumn(name = "idCommande")
+    private Commande commande;
 
     @OneToMany
     (mappedBy = "stock")

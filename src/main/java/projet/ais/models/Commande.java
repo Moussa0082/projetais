@@ -83,13 +83,9 @@ public class Commande {
     private Acteur acteur;
 
 
-    @ManyToMany
-    @JsonIgnore
-    @JoinTable(
-        name = "commande_stock",
-        joinColumns = @JoinColumn(name = "id_commande"),
-        inverseJoinColumns = @JoinColumn(name = "id_stock")
-    )
+    @OneToMany
+    // @JsonIgnore
+    (mappedBy = "commande")
     private List<Stock> stock; 
 
     

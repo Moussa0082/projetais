@@ -25,6 +25,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import projet.ais.IdGenerator;
+import projet.ais.Exception.NoContentException;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
 import projet.ais.models.Stock;
@@ -188,10 +189,10 @@ public class ActeurService {
                     for (TypeActeur typeActeur : typeActeurs) {
                         if (typeActeur.getLibelle().equals("Admin")) {
                             // Si l'administrateur a le type "Admin", envoyez un e-mail
-                            String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez le contacter à son numero "+ savedActeur.getWhatsAppActeur()+" son compte dans les plus brefs délais !";
-                            // Alerte alerte = new Alerte(admin.getEmailActeur(), msg, "Création d'un nouveau compte");
-                            // emailService.sendSimpleMail(alerte);
-                            // messageService.sendMessagePersonnalAndSave(admin.getWhatsAppActeur(), msg);
+                            String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez le contacter à son numero "+ savedActeur.getWhatsAppActeur()+"pour proceder à l'activation de son compte dans les plus brefs délais !";
+                            Alerte alerte = new Alerte(admin.getEmailActeur(), msg, "Création d'un nouveau compte");
+                            emailService.sendSimpleMail(alerte);
+                            messageService.sendMessagePersonnalAndSave(admin.getWhatsAppActeur(), msg);
                             System.out.println(admin.getEmailActeur());
                             break; // Sortez de la boucle dès qu'un administrateur est trouvé
                         }
@@ -649,6 +650,22 @@ public class ActeurService {
         }
         acteurRepository.delete(acteur);
         return "Acteur supprimé avec succèss";
+    }
+
+
+
+     //Se connecter 
+      public Acteur connexionActeur(String email, String password){
+        Acteur acteur = acteurRepository.findByEmailActeurAndPassword(email, password);
+        if(acteur == null)
+        {
+            throw new NoContentException("Connexion échoué, cet email n'existe pas dans notre\n base de données !");
+        }
+        // if(acteur)
+        // {
+        //     throw new NoContentException("Connexion échoué votre compte  été desactivé par l'administrateur!");
+        // }
+         return acteur;
     }
 
 }

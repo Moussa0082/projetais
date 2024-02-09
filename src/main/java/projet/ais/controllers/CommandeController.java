@@ -33,9 +33,9 @@ public class CommandeController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<String> ajouterCommandeAvecStocks(@RequestBody CommandeAvecStocksDTO commandeAvecStocksDTO) {
+    public ResponseEntity<String> ajouterCommandeAvecStocks(@RequestBody Commande commande) {
         try {
-            commandeService.creerCommandeEtAjouterStocks(commandeAvecStocksDTO.getStock(), commandeAvecStocksDTO.getCommande());
+            commandeService.creerCommandeAvecStocks(commande);
              return ResponseEntity.ok("Commande ajoutée avec succès.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
