@@ -45,6 +45,9 @@ public class Materiel {
     @Column(nullable = false)
     private String localisation;
 
+    @Column(nullable=true)
+    private String personneModif;
+    
     @Column
     private boolean statut = true;
 

@@ -37,6 +37,8 @@ public class Filiere {
         dateAjout = LocalDateTime.now();
     }
 
+    @Column(nullable=true)
+    private String personneModif;
 
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateModif;
@@ -46,8 +48,7 @@ public class Filiere {
         return dateModif;
     }
 
-    @Column(nullable=true)
-    private String personneAjout;
+
 
     @ManyToOne
     @JoinColumn( name = "idActeur")

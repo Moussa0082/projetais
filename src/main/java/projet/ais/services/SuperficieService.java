@@ -48,10 +48,13 @@ public class SuperficieService {
         List<String> idIntrants = new ArrayList<>();
 
         for(Intrant intrant : intrants){
+            System.out.println("recuperation des intrants");
             idIntrants.add(intrant.getIdIntrant());
         }
 
         List<Intrant> intrantList = intrantRepository.findByIdIntrantIn(idIntrants);
+
+        System.out.println("Apres insertion intrants");
 
         if(intrantList.isEmpty())
             throw new EntityNotFoundException("Aucune intrant trouvé");
@@ -78,11 +81,11 @@ public class SuperficieService {
         sup.setLocalite(superficie.getLocalite());
         sup.setDateSemi(superficie.getDateSemi());
         sup.setSuperficieHa(superficie.getSuperficieHa());
-
+        sup.setPersonneModif(superficie.getPersonneModif());
         sup.setDateModif(LocalDateTime.now());
         return superficieRepository.save(sup);
     }
-
+    
     public List<Superficie> getAllSuperficie(){
         List<Superficie> superficieList = superficieRepository.findAll();
 

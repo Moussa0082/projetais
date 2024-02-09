@@ -16,6 +16,10 @@ public class RegroupementParametre {
     @Column(nullable = false)
     private String parametreRegroupe;
 
+    @Column(nullable = false)
+    private String libelle;
+
+
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateAjout;
 

@@ -48,7 +48,7 @@ public class UniteService {
 
         unites.setNomUnite(unite.getNomUnite());
         unites.setDateAjout(unites.getDateAjout());
-
+        unites.setPersonneModif(unite.getPersonneModif());
         unite.setDateModif(LocalDateTime.now());
         return uniteRepository.save(unites);
     }

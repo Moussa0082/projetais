@@ -44,7 +44,11 @@ public class Unite {
     private boolean statutUnite = true;
 
     @Column(nullable=true)
-    private String personneAjout;
+    private String personneModif;
+    
+    @ManyToOne
+    @JoinColumn( name = "idActeur")
+    private Acteur acteur;
     
     @OneToMany
     (mappedBy = "unite")

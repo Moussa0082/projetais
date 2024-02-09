@@ -23,7 +23,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 
 import projet.ais.models.Commande;
-import projet.ais.models.CommandeMateriel;
 import projet.ais.models.DetailCommande;
 import projet.ais.models.Stock;
 import projet.ais.services.CommandeService;

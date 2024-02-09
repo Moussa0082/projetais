@@ -11,7 +11,6 @@ import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Commande;
-import projet.ais.models.CommandeMateriel;
 import projet.ais.models.DetailCommande;
 import projet.ais.models.Materiel;
 import projet.ais.models.Stock;

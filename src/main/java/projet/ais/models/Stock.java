@@ -66,6 +66,9 @@ public class Stock {
         return dateModif;
     }
     
+    @Column(nullable=true)
+    private String personneModif;
+    
     @Column(nullable = false)
     private boolean statutSotck = true;
 
@@ -94,6 +97,8 @@ public class Stock {
     @JsonIgnore
     private List<Sortie_Stock> sortie_Stock;
 
+    @OneToOne(mappedBy = "stock", cascade = CascadeType.ALL)
+    private ParametreFiche parametreFiche;
 }
 
 
