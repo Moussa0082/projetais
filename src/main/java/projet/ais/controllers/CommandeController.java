@@ -38,14 +38,13 @@ public class CommandeController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<String> ajouterStocksACommande(@RequestBody Commande commande) {
+    public ResponseEntity<String> ajouterCommandeAvecStocks(@RequestBody Commande commande) {
         try {
-            commandeService.passerCommande(commande);
-            return ResponseEntity.ok("Stocks ajoutés à la commande avec succès.");
+            commandeService.creerCommandeAvecStocks(commande);
+             return ResponseEntity.ok("Commande ajoutée avec succès.");
         } catch (Exception e) {
-
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Une erreur est survenue lors de l'ajout des stocks à la commande : " + e.getMessage());
+                .body("Une erreur est survenue lors de l'ajout de la commande : " + e.getMessage());
         }
     }
     

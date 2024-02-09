@@ -17,4 +17,5 @@ public interface StockRepository extends JpaRepository<Stock, String>{
     Stock findByCommandeIdCommande(String idCommande);
     List<Stock> findByIdStock(String idStock);
     List<Stock> findByIdStockIn(List<String> idStock);
+    // List<Stock> findByIdStock(List<String> idStock);
 }

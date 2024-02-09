@@ -149,7 +149,7 @@ public class StockService {
 
 
     try {
-        sendMessageToAllActeur(st);
+        // sendMessageToAllActeur(st);
     } catch (Exception e) {
         System.out.println(e.getMessage());
     }

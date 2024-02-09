@@ -306,5 +306,13 @@ public class ActeurController {
         return new ResponseEntity<>(acteurService.deleteByIdActeur(id), HttpStatus.OK);
     }
 
+    //Se connecter 
+    @GetMapping("/login")
+    @Operation(summary = "Connexion d'un Acteur ")
+    public Acteur connexion(@RequestParam("email")  String email,
+                            @RequestParam("password")  String password) {
+        return acteurService.connexionActeur(email, password);
+    }
+
     
 }
