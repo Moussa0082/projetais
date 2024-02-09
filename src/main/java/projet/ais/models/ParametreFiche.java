@@ -74,7 +74,4 @@ public class ParametreFiche {
     @Column(nullable = false)
     private boolean statutParametre = true;
 
-    @OneToOne
-    @JoinColumn(name = "idStock")
-    private Stock stock;
 }

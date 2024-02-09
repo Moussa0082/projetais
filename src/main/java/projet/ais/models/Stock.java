@@ -97,8 +97,6 @@ public class Stock {
     @JsonIgnore
     private List<Sortie_Stock> sortie_Stock;
 
-    @OneToOne(mappedBy = "stock", cascade = CascadeType.ALL)
-    private ParametreFiche parametreFiche;
 }
 
 
