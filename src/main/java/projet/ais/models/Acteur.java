@@ -7,6 +7,12 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.*;
+
+
 import java.util.*;
 
 
@@ -15,7 +21,8 @@ import java.time.LocalDateTime;
 
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Acteur {
 
     @Id
@@ -97,8 +104,8 @@ public class Acteur {
     @Column(nullable = false)
     private String filiereActeur;
 
-    @Column(nullable = true)
-    private boolean statutActeur ;
+   
+    private Boolean statutActeur  ;
 
     @OneToMany
     (mappedBy = "acteur")

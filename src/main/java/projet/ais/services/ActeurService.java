@@ -690,10 +690,10 @@ public class ActeurService {
             throw new NoContentException("Connexion échoué, cet email n'existe pas dans notre\n base de données !");
         }
        
-        // if(acteur)
-        // {
-        //     throw new NoContentException("Connexion échoué votre compte  été desactivé par l'administrateur!");
-        // }
+        if(acteur.getStatutActeur()==false)
+        {
+            throw new NoContentException("Connexion échoué votre compte  est desactivé \n veuillez contacter l'administrateur pour la procedure d'activation de votre compte !");
+        }
          return acteur;
     }
 
