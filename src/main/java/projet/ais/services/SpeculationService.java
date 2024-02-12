@@ -78,6 +78,19 @@ public class SpeculationService {
         return speculations;
     }
 
+    public List<Speculation> getAllSpeculationByActeur(String id){
+        List<Speculation> speculations = speculationRepository.findByActeurIdActeur(id);
+
+        if(speculations.isEmpty())
+            throw new EntityNotFoundException("Speculation non trouvé");
+        
+        speculations = speculations
+        .stream().sorted((s1, s2) -> s2.getNomSpeculation().compareTo(s1.getNomSpeculation()))
+        .collect(Collectors.toList());
+
+        return speculations;
+    }
+
     public List<Speculation> getAllSpeculationByCategorie(String id){
         List<Speculation> speculations = speculationRepository.findByCategorieProduitIdCategorieProduit(id);
 

@@ -68,6 +68,7 @@ public class ParametreGenerauxService {
                 // Retourner un message d'erreur
                 return new ResponseEntity<>("Paramètre déjà existant.", HttpStatus.BAD_REQUEST);
             }
+        
         }
     
 

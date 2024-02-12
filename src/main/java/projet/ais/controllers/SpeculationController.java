@@ -58,6 +58,12 @@ public class SpeculationController {
         return new ResponseEntity<>(speculationService.getAllSpeculation(), HttpStatus.OK);
     }
     
+    @GetMapping("/getAllSpeculationByActeur/{id}")
+    @Operation(summary="Récuperation des spéculations")
+    public ResponseEntity<List<Speculation>> getAllByActeur(@PathVariable String id) {
+        return new ResponseEntity<>(speculationService.getAllSpeculationByActeur(id), HttpStatus.OK);
+    }
+
     @GetMapping("/getAllSpeculationByCategorie/{id}")
     @Operation(summary="Récuperation des spéculations en fonction de l'id de categorie")
     public ResponseEntity<List<Speculation>> getAllSpeculationByCate(@PathVariable String id) {

@@ -282,32 +282,7 @@ public class StockService {
         double ancienQuantity = stocks.getQuantiteStock();
         double  newQuantity = ancienQuantity + stock.getQuantiteStock();
         stocks.setQuantiteStock(newQuantity);
-
-        stocks.setDateAjout(stocks.getDateAjout());
-        
-
-        stocks.setDateModif(LocalDateTime.now());
-
-        if(stock.getUnite() != null){
-            stocks.setUnite(stock.getUnite());
-        }
-         
-        if(stock.getMagasin() != null){
-            stocks.setMagasin(stock.getMagasin());
-        }
-        
-        if(stock.getZoneProduction() != null){
-            stocks.setZoneProduction(stock.getZoneProduction());
-        }
-            
-        if(stock.getSpeculation() != null){
-            stocks.setSpeculation(stock.getSpeculation());
-        }
-        
-
-           
-           
-            return stockRepository.save(stocks);
+         return stockRepository.save(stocks);
     }
 
 
