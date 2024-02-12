@@ -50,8 +50,8 @@ public class ZoneProduction {
         return dateModif;
     }
 
-    @Column(nullable=true)
-    private String personneAjout;
+    @Column(nullable = true)
+    private String personneModif;
     
     @Column(nullable = false)
     private boolean statutZone = true;

@@ -309,9 +309,9 @@ public class ActeurController {
     //Se connecter 
     @GetMapping("/login")
     @Operation(summary = "Connexion d'un Acteur ")
-    public Acteur connexion(@RequestParam("email")  String email,
+    public Acteur connexion(@RequestParam("emailActeur")  String emailActeur,
                             @RequestParam("password")  String password) {
-        return acteurService.connexionActeur(email, password);
+        return acteurService.connexionActeur(emailActeur, password);
     }
 
     

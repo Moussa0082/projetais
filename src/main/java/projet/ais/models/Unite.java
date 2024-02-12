@@ -26,6 +26,8 @@ public class Unite {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateAjout;
 
+   
+
     @PrePersist
     public void prePersist() {
         dateAjout = LocalDateTime.now();

@@ -30,6 +30,9 @@ public class Campagne {
     @Column(nullable = false)
     private boolean statutCampagne = true;
 
+    @Column(nullable = true)
+    private String personneModif;
+
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateAjout;
 

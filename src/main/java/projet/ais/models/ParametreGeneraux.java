@@ -40,6 +40,9 @@ public class ParametreGeneraux {
     @Column(nullable = false)
     private String adresseStructure;
 
+    @Column(nullable = true)
+    private String personneModif;
+
     @Column(nullable = false)
     private String emailStructure;
 

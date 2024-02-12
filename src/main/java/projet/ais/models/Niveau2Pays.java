@@ -23,6 +23,9 @@ public class Niveau2Pays {
     @Column(nullable = false)
     private String nomN2;
 
+    @Column(nullable = true)
+    private String personneModif;
+
     @Column(nullable = false)
     private String descriptionN2;
 

@@ -27,6 +27,9 @@ public class TypeActeur {
     @Column(nullable = false)
     private String descriptionTypeActeur;
 
+    @Column(nullable = true)
+    private String personneModif;
+
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateAjout;
 

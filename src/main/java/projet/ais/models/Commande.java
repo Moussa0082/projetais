@@ -87,10 +87,14 @@ public class Commande {
     // @JsonIgnore
     private Acteur acteur;
 
+    @Column(nullable = true)
+    private String personneModif;
 
-    @OneToMany
+    @ManyToMany
     // @JsonIgnore
-    (mappedBy = "commande")
+    @JoinTable(name = "commande_stock",
+        joinColumns = @JoinColumn(name = "id_commande"),
+        inverseJoinColumns = @JoinColumn(name = "id_stock"))
     private List<Stock> stock; 
 
 

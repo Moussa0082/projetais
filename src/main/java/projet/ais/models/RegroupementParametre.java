@@ -40,6 +40,9 @@ public class RegroupementParametre {
     @Column(nullable = false)
     private boolean statutRegroupement = true;
 
+    @Column(nullable = true)
+    private String personneModif;
+
     @OneToOne
     private ParametreFiche parametreFiche;
 }

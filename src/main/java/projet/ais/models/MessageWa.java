@@ -17,6 +17,10 @@ public class MessageWa {
     @Column(nullable = false)
     private String codeMessage;
     
+    @Column(nullable = true)
+    private String personneModif;
+
+
     @Column(nullable = false)
     private String text;
 

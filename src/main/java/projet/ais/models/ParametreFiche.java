@@ -45,6 +45,9 @@ public class ParametreFiche {
     @Column(nullable = false)
     private int valeurMax;
 
+    @Column(nullable = true)
+    private String personneModif;
+
     @Column(nullable = false)
     private int valeurMin;
 

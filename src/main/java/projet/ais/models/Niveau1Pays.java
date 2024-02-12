@@ -31,6 +31,9 @@ public class Niveau1Pays {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateAjout;
 
+    @Column(nullable = true)
+    private String personneModif;
+
     @PrePersist
     public void prePersist() {
         dateAjout = LocalDateTime.now();

@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Data
 public class Sortie_Stock {
 
+    
     @Id
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idSortieStock;
@@ -34,6 +35,10 @@ public class Sortie_Stock {
 
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateAjout;
+
+    @Column(nullable = true)
+    private String personneModif;
+
 
     @PrePersist
     public void prePersist() {
