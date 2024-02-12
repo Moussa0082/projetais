@@ -27,7 +27,7 @@ public class Campagne {
 
     @Column(nullable = false)
     private String description;
-    
+
     @Column(nullable=true)
     private String personneModif;
 

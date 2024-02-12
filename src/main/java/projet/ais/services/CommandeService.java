@@ -171,7 +171,7 @@ public class CommandeService {
             // Vérifier si le stock est déjà associé à la commande
             if (stock.getCommande() == null) {
                 // Associer la commande au stock
-                stock.setCommande(commande);
+                // stock.setCommande(commande);
             } else {
                 // Le stock est déjà associé à une commande
                 // Vous pouvez choisir de lever une exception, ignorer le stock, ou mettre à jour la quantité existante
@@ -194,7 +194,7 @@ public class CommandeService {
     }
     
     // public Commande creerCommandeAvecStocks(Commande commande) throws Exception {
-    //     // Récupérer les produits du panier
+         // Récupérer les produits du panier
     //     List<String> idStocks = new ArrayList<>();
     //     for (Stock stock : commande.getStock()) {
     //         idStocks.add(stock.getIdStock());
@@ -281,7 +281,7 @@ public class CommandeService {
     
     
     
-public String commandeMateriel(String idMateriel, String idActeur) throws Exception{
+     public String commandeMateriel(String idMateriel, String idActeur) throws Exception{
         Acteur ac = acteurRepository.findByIdActeur(idActeur);
         Materiel mat = materielRepository.findByIdMateriel(idMateriel);
 
@@ -309,6 +309,7 @@ public String commandeMateriel(String idMateriel, String idActeur) throws Except
             // Vous pouvez ajouter le matériel commandé à la liste des matériels de la commande
             commande.setMaterielList(Arrays.asList(mat));
             // Enregistrement de la commande
+            // http://localhost:9000//commande/addCommandeMateriel
             commandeRepository.save(commande);
             // Envoi du message pour la commande
             String msg = "Bonjour  " + mat.getActeur().getNomActeur().toUpperCase() + " vous avez une nouvelle commande pour le matériel : "

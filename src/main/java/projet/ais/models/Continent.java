@@ -47,6 +47,8 @@ public class Continent {
         return dateModif;
     }
 
+    
+
     @OneToMany
     (mappedBy = "continent")
     @JsonIgnore

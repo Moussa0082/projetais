@@ -24,6 +24,10 @@ public class Niveau3Pays {
     @Column(nullable = false)
     private String descriptionN3;
 
+
+    @Column(nullable = true)
+    private String personneModif;
+
     @Column(nullable = false)
     private boolean statutN3 = true;
 

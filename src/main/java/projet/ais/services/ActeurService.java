@@ -192,7 +192,7 @@ public class ActeurService {
                             String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez le contacter à son numero "+ savedActeur.getWhatsAppActeur()+"pour proceder à l'activation de son compte dans les plus brefs délais !";
                             Alerte alerte = new Alerte(admin.getEmailActeur(), msg, "Création d'un nouveau compte");
                             emailService.sendSimpleMail(alerte);
-                            messageService.sendMessagePersonnalAndSave(admin.getWhatsAppActeur(), msg);
+                            // messageService.sendMessagePersonnalAndSave(admin.getWhatsAppActeur(), msg);
                             System.out.println(admin.getEmailActeur());
                             break; // Sortez de la boucle dès qu'un administrateur est trouvé
                         }
@@ -683,18 +683,19 @@ public class ActeurService {
 
 
      //Se connecter 
-      public Acteur connexionActeur(String email, String password){
-        Acteur acteur = acteurRepository.findByEmailActeurAndPassword(email, password);
-        if(acteur == null)
-        {
-            throw new NoContentException("Connexion échoué, cet email n'existe pas dans notre\n base de données !");
+      public Acteur connexionActeur(String emailActeur, String password){
+        Acteur acteur = acteurRepository.findByEmailActeur(emailActeur);
+        if (acteur == null || !passwordEncoder.matches(password, acteur.getPassword())) {
+            throw new EntityNotFoundException("Ce compte n'existe pas");
         }
-       
-        if(acteur.getStatutActeur()==false)
-        {
+        
+        if(acteur.getStatutActeur()==false){
             throw new NoContentException("Connexion échoué votre compte  est desactivé \n veuillez contacter l'administrateur pour la procedure d'activation de votre compte !");
         }
          return acteur;
     }
+   
+       
+
 
 }

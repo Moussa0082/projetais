@@ -21,6 +21,8 @@ public class Superficie {
     @Column(nullable = false)
     private String codeSuperficie;
 
+   
+
     @Column(nullable = false)
     private String localite;
 

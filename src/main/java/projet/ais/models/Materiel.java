@@ -42,6 +42,8 @@ public class Materiel {
     @Column(nullable = false)
     private String EtatMateriel;
 
+
+
     @Column(nullable = false)
     private String localisation;
 

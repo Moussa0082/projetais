@@ -25,6 +25,9 @@ public class Pays {
     private String descriptionPays;
 
     @Column(nullable = true)
+    private String personneModif;
+
+    @Column(nullable = true)
     private boolean statutPays = true;
 
     @Column(columnDefinition = "TIMESTAMP")
