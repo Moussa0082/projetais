@@ -72,6 +72,10 @@ public class Magasin {
     @JoinColumn( name = "idActeur")
     private Acteur acteur;
 
+    @ManyToOne
+    @JoinColumn( name = "idNiveau1Pays")
+    private Niveau1Pays niveau1Pays;
+
     @OneToMany
     (mappedBy = "magasin")
     @JsonIgnore

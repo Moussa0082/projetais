@@ -39,7 +39,7 @@ public class ContinentController {
         // Vérifier si le continent existe déjà
         Continent continentExistant = continentRepository.findByNomContinent(continent.getNomContinent());
         if (continentExistant == null) {
-            continentService.createContinent(continentExistant);
+            continentService.createContinent(continent);
             return new ResponseEntity<>("Continent ajouté avec succès" , HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Le continent " + continentExistant.getNomContinent() + " existe déjà", HttpStatus.BAD_REQUEST);

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+// @AllArgsConstructor
 public class Acteur {
 
     @Id
@@ -66,6 +68,7 @@ public class Acteur {
 
     @Column(nullable = false)
     private String niveau3PaysActeur;
+
     
     @Column(nullable = false)
     private String password;
@@ -150,12 +153,11 @@ public class Acteur {
     @JsonIgnore
     private List<Speculation> speculationsList;
 
-
+  
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "acteur_type_acteur",
         joinColumns = @JoinColumn(name = "id_acteur"),
         inverseJoinColumns = @JoinColumn(name = "id_type_acteur"))
-
     private List<TypeActeur> typeActeur;
     
 

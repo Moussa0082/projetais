@@ -56,5 +56,11 @@ public class Niveau1Pays {
     (mappedBy = "niveau1Pays")
     @JsonIgnore
     private List<Niveau2Pays> niveau2PaysList;
+
+    @OneToMany
+    (mappedBy = "niveau1Pays")
+    @JsonIgnore
+    private List<Magasin> magasin;
+
 }
 
