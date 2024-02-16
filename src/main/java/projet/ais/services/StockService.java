@@ -118,7 +118,6 @@ public class StockService {
             stock.setIdStock(idCode);
               
         stock.setDateProduction(LocalDateTime.now());
-        stock.setDateModif(LocalDateTime.now());
         stock.setDateAjout(LocalDateTime.now());
         Stock st = stockRepository.save(stock);
         
@@ -296,6 +295,7 @@ public class StockService {
             stockList = stockList
              .stream().sorted((s1,s2) -> s2.getDescriptionStock().compareTo(s1.getDescriptionStock()))
         .collect(Collectors.toList());
+        //  System.out.println("service : "+stockList);
 
         return stockList;
     }

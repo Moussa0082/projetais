@@ -17,13 +17,13 @@ public class Unite {
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idUnite;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String codeUnite;
 
     @Column(nullable = false)
     private String nomUnite;
 
-    @Column(columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP",nullable = true)
     private LocalDateTime dateAjout;
 
    
@@ -34,7 +34,7 @@ public class Unite {
     }
 
 
-    @Column(columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP",nullable = true)
     private LocalDateTime dateModif;
 
     public LocalDateTime updateDateModif(LocalDateTime dateModif) {

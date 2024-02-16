@@ -15,8 +15,10 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
+import projet.ais.models.Acteur;
 import projet.ais.models.CategorieProduit;
 import projet.ais.models.Filiere;
+import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.CategorieProduitRepository;
 import projet.ais.repository.FiliereRepository;
 import com.sun.jdi.request.DuplicateRequestException;
@@ -34,11 +36,19 @@ public class CategorieService {
     CodeGenerator codeGenerator;
     @Autowired
     IdGenerator idGenerator ;
+     @Autowired
+    ActeurRepository acteurRepository;
 
     public CategorieProduit createCategorie(CategorieProduit categorieProduit){
         CategorieProduit categorieProduits = categorieProduitRepository.findBylibelleCategorie(categorieProduit.getLibelleCategorie());
         Filiere filiere  = filiereRepository.findByIdFiliere(categorieProduit.getFiliere().getIdFiliere());
 
+        
+         Acteur acteur = acteurRepository.findByIdActeur(filiere.getActeur().getIdActeur());
+
+        if(acteur == null)
+            throw new IllegalStateException("Aucun acteur disponible");
+        
         if(categorieProduits != null)
             throw new DuplicateRequestException("Cette catégorie existe déjà");
         

@@ -35,7 +35,7 @@ public class Acteur {
     @Column(columnDefinition = "TIMESTAMP", nullable = true)
     private LocalDateTime tokenCreationDate;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String codeActeur;
 
     @Column(nullable = false)
@@ -50,10 +50,10 @@ public class Acteur {
     @Column(nullable = true)
     private String whatsAppActeur;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String latitude;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String longitude;
 
     @Column(nullable = true)
@@ -69,7 +69,7 @@ public class Acteur {
     private String password;
 
 
-    @Column(columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP", nullable = true)
     private LocalDateTime dateAjout;
 
     @PrePersist
@@ -78,7 +78,7 @@ public class Acteur {
     }
 
 
-    @Column(columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP", nullable = true)
     private LocalDateTime dateModif;
 
     public LocalDateTime updateDateModif(LocalDateTime dateModif) {

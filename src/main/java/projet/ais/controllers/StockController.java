@@ -47,6 +47,7 @@ public class StockController {
             }
 
             Stock saveStock = stockservice.createStock(stock, imageFile);
+        //  System.out.println("controller : "+saveStock.toString());
             return new ResponseEntity<>(saveStock, HttpStatus.CREATED);
         }
 
@@ -100,6 +101,7 @@ public class StockController {
         @GetMapping("/getAllStocks")
         @Operation(summary = "Liste des stocks")
         public ResponseEntity<List<Stock>> listeStock(){
+           
             return new ResponseEntity<>(stockservice.getAllStock(), HttpStatus.OK);
         }
 

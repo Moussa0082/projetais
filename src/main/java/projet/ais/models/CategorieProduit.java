@@ -19,7 +19,7 @@ public class CategorieProduit {
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idCategorieProduit;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String codeCategorie;
 
     @Column(nullable = false)
@@ -31,7 +31,7 @@ public class CategorieProduit {
     @Column(nullable = false)
     private boolean statutCategorie = true;
     
-    @Column(columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP", nullable = true)
     private LocalDateTime dateAjout;
 
     @Column(nullable=true)
@@ -43,7 +43,7 @@ public class CategorieProduit {
     }
 
 
-    @Column(columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP", nullable = true)
     private LocalDateTime dateModif;
 
     public LocalDateTime updateDateModif(LocalDateTime dateModif) {
@@ -61,7 +61,7 @@ public class CategorieProduit {
     private Filiere filiere;
 
     @ManyToOne
-    @JoinColumn(name = "idActeur")
+    @JoinColumn( name = "idActeur")
     private Acteur acteur;
 }
 

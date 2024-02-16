@@ -16,7 +16,7 @@ public class Speculation {
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idSpeculation;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String codeSpeculation;
 
     @Column(nullable = false)
@@ -32,7 +32,7 @@ public class Speculation {
     @JoinColumn(name = "idCategorieProduit")
     private CategorieProduit categorieProduit;
 
-    @Column(columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP",nullable = true)
     private LocalDateTime dateAjout;
 
     @Column(nullable=true)

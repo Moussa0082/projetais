@@ -16,10 +16,9 @@ import lombok.Data;
 public class Magasin {
 
     @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idMagasin;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String codeMagasin;
 
     @Column(nullable = false)
@@ -30,10 +29,10 @@ public class Magasin {
     @Column(nullable = false)
     private String niveau3PaysMagasin;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String latitude;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String longitude;
 
     @Column(nullable = false)
@@ -48,7 +47,7 @@ public class Magasin {
     @Column(nullable = false)
     private boolean statutMagasin = true;
 
-    @Column(columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP",nullable = true)
     private LocalDateTime dateAjout;
 
     @PrePersist
@@ -57,7 +56,7 @@ public class Magasin {
     }
 
 
-    @Column(columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP",nullable = true)
     private LocalDateTime dateModif;
 
     public LocalDateTime updateDateModif(LocalDateTime dateModif) {

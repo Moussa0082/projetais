@@ -55,7 +55,7 @@ public class ParametreGenerauxService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    parametreGeneraux.setLogoSysteme(imageLocation);
+                    parametreGeneraux.setLogoSysteme("ais/" + imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
@@ -128,7 +128,7 @@ public class ParametreGenerauxService {
                 String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
                 Path imagePath = imageRootLocation.resolve(imageName);
                 Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                parametreGenerauxExistant.setLogoSysteme(imageLocation);
+                parametreGenerauxExistant.setLogoSysteme("ais/" + imageName);
             } catch (IOException e) {
                 throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
             }

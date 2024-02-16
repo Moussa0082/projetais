@@ -33,6 +33,9 @@ public class Stock {
     private double quantiteStock;
 
     @Column(nullable = false)
+    private int prix;
+    
+    @Column(nullable = false)
     private String typeProduit;
 
     // @Column(nullable = false)
