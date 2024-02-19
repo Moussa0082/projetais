@@ -63,6 +63,12 @@ public class CategorieController {
     public ResponseEntity<List<CategorieProduit>> getAllCategorieByIdFilieres(@PathVariable String id) {
         return new ResponseEntity<>(categorieService.getAllCategorieByIdFiliere(id), HttpStatus.OK);
     }
+
+    // @GetMapping("/allCategorieByMagasin/{id}")
+    // @Operation(summary="Récuperation de tout les catégories de categorie de produit en fonction de l'id de du magasin")
+    // public ResponseEntity<List<CategorieProduit>> getAllCategorieByIdMagasin(@PathVariable String id) {
+    //     return new ResponseEntity<>(categorieService.getAllCategorieByIdMagasin(id), HttpStatus.OK);
+    // }
     
     @DeleteMapping("/delete/{id}")
     @Operation(summary="Supprimé de catégories de produit en fonction de l'id ")

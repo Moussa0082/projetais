@@ -14,7 +14,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Stock {
 
     @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idStock;
 
     @Column(nullable = true)
@@ -89,7 +88,6 @@ public class Stock {
     private Acteur acteur;
     
     @ManyToMany
-    
     private List<Commande>  commande;
 
     @OneToMany

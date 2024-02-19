@@ -60,6 +60,12 @@ public class CategorieProduit {
     @JoinColumn(name = "idFiliere")
     private Filiere filiere;
 
+    // @OneToMany
+    // (mappedBy = "categorieProduit")
+    // private List<Magasin> magasin;
+
+
+
     @ManyToOne
     @JoinColumn(name = "idActeur")
     private Acteur acteur;

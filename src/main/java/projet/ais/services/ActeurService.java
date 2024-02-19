@@ -95,6 +95,16 @@ public class ActeurService {
         
             if (acteur.getTypeActeur() == null) {
                 throw new Exception("Veuillez choisir un type d'acteur pour créer un compte");
+            }else{
+                for (TypeActeur typeActeur : acteur.getTypeActeur()) {
+                    if (typeActeur != null && typeActeur.getLibelle() != null && typeActeur.getLibelle().equals("Admin")) {
+                        acteur.setStatutActeur(true);
+                        break; // Sortie de la boucle dès que "Admin" est trouvé
+                    }else{
+
+                        acteur.setStatutActeur(false);
+                    }
+                }
             }
             
             
@@ -148,15 +158,9 @@ public class ActeurService {
 
             // Enregistrement de l'acteur
             // boolean isAdmin = false;
-            if (acteur.getTypeActeur() != null) {
-                for (TypeActeur typeActeur : acteur.getTypeActeur()) {
-                    if (typeActeur != null && typeActeur.getLibelle() != null && typeActeur.getLibelle().equals("Admin")) {
-                        acteur.setStatutActeur(true);
-                        break; // Sortie de la boucle dès que "Admin" est trouvé
-                    }
-                }
-            }
-            acteur.setStatutActeur(false);
+            // if (acteur.getTypeActeur() != null) {
+                
+            // }
             
             Acteur savedActeur = acteurRepository.save(acteur);
             

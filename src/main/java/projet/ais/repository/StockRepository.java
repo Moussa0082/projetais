@@ -3,6 +3,7 @@ package projet.ais.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import projet.ais.models.Magasin;
 import projet.ais.models.Stock;
 import java.util.*;
 
@@ -15,6 +16,7 @@ public interface StockRepository extends JpaRepository<Stock, String>{
 
     Stock findByNomProduitAndActeurIdActeur(String nom, String id);
     Stock findByCommandeIdCommande(String idCommande);
+    // Stock findByMagasinIdMagasinAndCategorieProduitIdCategorieProduit(String idMagasin, String idCategorieProduit);
     List<Stock> findByIdStock(String idStock);
     List<Stock> findByIdStockIn(List<String> idStock);
     // List<Stock> findByIdStock(List<String> idStock);

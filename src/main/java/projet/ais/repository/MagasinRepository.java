@@ -11,6 +11,8 @@ import projet.ais.models.Magasin;
 public interface MagasinRepository  extends JpaRepository<Magasin, String>{
     
     Magasin findByIdMagasin(String idMagasin);
+
+
     
     List<Magasin> findByActeurIdActeur(String idActeur);
 

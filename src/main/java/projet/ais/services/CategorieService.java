@@ -17,8 +17,11 @@ import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.CategorieProduit;
 import projet.ais.models.Filiere;
+import projet.ais.models.Magasin;
 import projet.ais.repository.CategorieProduitRepository;
 import projet.ais.repository.FiliereRepository;
+import projet.ais.repository.MagasinRepository;
+
 import com.sun.jdi.request.DuplicateRequestException;
 
 
@@ -32,6 +35,8 @@ public class CategorieService {
     FiliereRepository filiereRepository;
     @Autowired
     CodeGenerator codeGenerator;
+    @Autowired
+    MagasinRepository magasinRepository;
     @Autowired
     IdGenerator idGenerator ;
 
@@ -93,6 +98,18 @@ public class CategorieService {
                 .collect(Collectors.toList());
         return categorieProduitList;
     }
+
+    // public List<CategorieProduit> getAllCategorieByIdMagasin(String id){
+    //     List<CategorieProduit> categorieProduitList = categorieProduitRepository.findByMagasinIdMagasin(id);
+
+    //     if(categorieProduitList.isEmpty())
+    //         throw new EntityNotFoundException("Aucun categorie  trouvé");
+
+    //         categorieProduitList = categorieProduitList
+    //             .stream().sorted((d1, d2) -> d2.getLibelleCategorie().compareTo(d1.getLibelleCategorie()))
+    //             .collect(Collectors.toList());
+    //     return categorieProduitList;
+    // }
 
     public String deleteCategorie(String id){
         CategorieProduit categorieProduit = categorieProduitRepository.findById(id).orElseThrow(null);
