@@ -118,7 +118,6 @@ public class StockService {
             stock.setIdStock(idCode);
               
         stock.setDateProduction(LocalDateTime.now());
-        stock.setDateModif(LocalDateTime.now());
         stock.setDateAjout(LocalDateTime.now());
         Stock st = stockRepository.save(stock);
         
@@ -282,32 +281,7 @@ public class StockService {
         double ancienQuantity = stocks.getQuantiteStock();
         double  newQuantity = ancienQuantity + stock.getQuantiteStock();
         stocks.setQuantiteStock(newQuantity);
-
-        stocks.setDateAjout(stocks.getDateAjout());
-        
-
-        stocks.setDateModif(LocalDateTime.now());
-
-        if(stock.getUnite() != null){
-            stocks.setUnite(stock.getUnite());
-        }
-         
-        if(stock.getMagasin() != null){
-            stocks.setMagasin(stock.getMagasin());
-        }
-        
-        if(stock.getZoneProduction() != null){
-            stocks.setZoneProduction(stock.getZoneProduction());
-        }
-            
-        if(stock.getSpeculation() != null){
-            stocks.setSpeculation(stock.getSpeculation());
-        }
-        
-
-           
-           
-            return stockRepository.save(stocks);
+         return stockRepository.save(stocks);
     }
 
 
@@ -321,6 +295,7 @@ public class StockService {
             stockList = stockList
              .stream().sorted((s1,s2) -> s2.getDescriptionStock().compareTo(s1.getDescriptionStock()))
         .collect(Collectors.toList());
+        //  System.out.println("service : "+stockList);
 
         return stockList;
     }

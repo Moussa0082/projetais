@@ -22,9 +22,6 @@ public class ZoneProduction {
     private String nomZoneProduction;
 
     @Column(nullable = false)
-    private boolean statutZoneProduction = true;
-
-    @Column(nullable = false)
     private String latitude;
 
     @Column(nullable = false)
@@ -50,7 +47,7 @@ public class ZoneProduction {
         return dateModif;
     }
 
-    @Column(nullable = true)
+    @Column(nullable=true)
     private String personneModif;
     
     @Column(nullable = false)

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 
@@ -27,11 +28,11 @@ public class Campagne {
     @Column(nullable = false)
     private String description;
 
+    @Column(nullable=true)
+    private String personneModif;
+
     @Column(nullable = false)
     private boolean statutCampagne = true;
-
-    @Column(nullable = true)
-    private String personneModif;
 
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateAjout;
@@ -42,4 +43,7 @@ public class Campagne {
     @OneToMany(mappedBy = "campagne")
     @JsonIgnore
     private List<Superficie> superficie;
+
+    @ManyToOne
+    private Acteur acteur;
 }

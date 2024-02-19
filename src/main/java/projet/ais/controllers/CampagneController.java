@@ -46,6 +46,11 @@ public class CampagneController {
         return new ResponseEntity<>(campagneService.getCampagnes(), HttpStatus.OK);
     }
 
+    @GetMapping("/getAllCampagneByActeur/{id}")
+    public ResponseEntity<List<Campagne>> liste(@PathVariable String id) {
+        return new ResponseEntity<>(campagneService.getCampagneByActeur(id), HttpStatus.OK);
+    }
+
     @PutMapping("/activer/{id}")
     @Operation(summary="Activation")
     public ResponseEntity<Campagne> activeCampagne(@PathVariable String id) throws Exception {

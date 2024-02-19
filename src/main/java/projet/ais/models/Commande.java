@@ -25,7 +25,7 @@ public class Commande {
     @Id
     private String idCommande;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String codeCommande;
     
     @Column(nullable = true)
@@ -40,7 +40,7 @@ public class Commande {
     @Column
     private boolean statutConfirmation = false;
     
-    @Column(columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP" ,nullable = true)
     private LocalDateTime dateCommande;
 
     @Column(nullable = true)

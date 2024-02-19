@@ -5,9 +5,11 @@ import org.springframework.stereotype.Service;
 
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
+import projet.ais.models.Acteur;
 import projet.ais.models.CategorieProduit;
 import projet.ais.models.RenvoieParametre;
 import projet.ais.models.Speculation;
+import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.CategorieProduitRepository;
 import projet.ais.repository.SpeculationRepository;
 import com.sun.jdi.request.DuplicateRequestException;
@@ -31,12 +33,19 @@ public class SpeculationService {
     CodeGenerator codeGenerator;
     @Autowired
     IdGenerator idGenerator ;
+       @Autowired
+    ActeurRepository acteurRepository;
 
     public Speculation createSpeculation(Speculation speculation){
 
         CategorieProduit categorieProduit = categorieProduitRepository.findByIdCategorieProduit(speculation.getCategorieProduit().getIdCategorieProduit());
         Speculation speculations = speculationRepository.findBynomSpeculation(speculation.getNomSpeculation());
 
+         Acteur acteur = acteurRepository.findByIdActeur(speculation.getActeur().getIdActeur());
+
+        if(acteur == null)
+            throw new IllegalStateException("Aucun acteur disponible");
+        
         if(categorieProduit == null)
             throw new EntityNotFoundException("Cette categorie n'existe pas");
 
@@ -67,6 +76,19 @@ public class SpeculationService {
 
     public List<Speculation> getAllSpeculation(){
         List<Speculation> speculations = speculationRepository.findAll();
+
+        if(speculations.isEmpty())
+            throw new EntityNotFoundException("Speculation non trouvé");
+        
+        speculations = speculations
+        .stream().sorted((s1, s2) -> s2.getNomSpeculation().compareTo(s1.getNomSpeculation()))
+        .collect(Collectors.toList());
+
+        return speculations;
+    }
+
+    public List<Speculation> getAllSpeculationByActeur(String id){
+        List<Speculation> speculations = speculationRepository.findByActeurIdActeur(id);
 
         if(speculations.isEmpty())
             throw new EntityNotFoundException("Speculation non trouvé");

@@ -29,7 +29,7 @@ public class Filiere {
     @Column(nullable = false)
     private boolean statutFiliere = true;
 
-    @Column(columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP",nullable = true)
     private LocalDateTime dateAjout;
 
     @PrePersist
@@ -40,7 +40,7 @@ public class Filiere {
     @Column(nullable=true)
     private String personneModif;
 
-    @Column(columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP",nullable = true)
     private LocalDateTime dateModif;
 
     public LocalDateTime updateDateModif(LocalDateTime dateModif) {

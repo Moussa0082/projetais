@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
+import projet.ais.models.Acteur;
 import projet.ais.models.CategorieProduit;
 import projet.ais.models.Filiere;
+import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.FiliereRepository;
 
 import java.time.Instant;
@@ -25,12 +27,19 @@ public class FiliereService {
     FiliereRepository filiereRepository;
     @Autowired
     CodeGenerator codeGenerator;
+    @Autowired
+    ActeurRepository acteurRepository;
   @Autowired
     IdGenerator idGenerator ;
 
   public Filiere createFiliere(Filiere filiere){
     Filiere filieres = filiereRepository.findByLibelleFiliere(filiere.getLibelleFiliere());
 
+     Acteur acteur = acteurRepository.findByIdActeur(filiere.getActeur().getIdActeur());
+
+        if(acteur == null)
+            throw new IllegalStateException("Aucun acteur disponible");
+        
     if(filieres != null)
         throw new DataIntegrityViolationException("Ce filiere existe déjà");
     
