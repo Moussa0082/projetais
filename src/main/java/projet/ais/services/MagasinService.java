@@ -132,6 +132,22 @@ public class MagasinService {
 
         return magasinList;
     }
+
+    public List<Magasin> getMagasinByNiveau1Pays(String id) {
+        List<Magasin> magasinList = magasinRepository.findByNiveau1PaysIdNiveau1Pays(id);
+
+        if(magasinList.isEmpty())
+            throw new IllegalStateException("Aucun magasin trouvé");
+        
+        magasinList = magasinList.
+        stream().sorted((m1,m2) -> m2.getNomMagasin().compareTo(m1.getNomMagasin()))
+        .collect(Collectors.toList());
+
+        return magasinList;
+    }
+
+
+
     public String supprimerMagagin(String id){
         Magasin magasin = magasinRepository.findById(id).orElseThrow(null);
 

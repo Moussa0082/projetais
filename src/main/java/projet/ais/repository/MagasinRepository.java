@@ -13,4 +13,6 @@ public interface MagasinRepository  extends JpaRepository<Magasin, String>{
     Magasin findByIdMagasin(String idMagasin);
     
     List<Magasin> findByActeurIdActeur(String idActeur);
+
+    List<Magasin> findByNiveau1PaysIdNiveau1Pays(String idNiveau1Pays);
 }

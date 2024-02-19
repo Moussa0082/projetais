@@ -1,6 +1,8 @@
 package projet.ais.repository;
 
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +14,7 @@ public interface ZoneProductionRepository extends JpaRepository<ZoneProduction, 
     ZoneProduction findByidZoneProduction(String idZoneProduction);
 
     ZoneProduction findByNomZoneProduction(String nomZoneProduction);
+    List<ZoneProduction> findByActeurIdActeur(String idActeur);
     
     
 }

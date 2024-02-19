@@ -81,10 +81,15 @@ public class MagasinController {
         return new ResponseEntity<>(magasinService.getMagasin(), HttpStatus.OK);
     }
 
-    @GetMapping("/getAllMagaginByActeur/{id}")
-    @Operation(summary = "Liste des magasins")
+    @GetMapping("/getAllMagasinByActeur/{id}")
+    @Operation(summary = "Liste des magasins par acteur")
     public ResponseEntity<List<Magasin>> listeMagasinByActeur(@PathVariable String id){
         return new ResponseEntity<>(magasinService.getMagasinByActeur(id), HttpStatus.OK);
+    }
+    @GetMapping("/getAllMagasinByPays/{id}")
+    @Operation(summary = "Liste des magasins par niveau 1 pays")
+    public ResponseEntity<List<Magasin>> listeMagasinByNiveau1Pays(@PathVariable String id){
+        return new ResponseEntity<>(magasinService.getMagasinByNiveau1Pays(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

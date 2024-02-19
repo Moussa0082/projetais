@@ -16,9 +16,10 @@ import lombok.Data;
 public class Magasin {
 
     @Id
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idMagasin;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String codeMagasin;
 
     @Column(nullable = false)
@@ -29,10 +30,10 @@ public class Magasin {
     @Column(nullable = false)
     private String niveau3PaysMagasin;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String latitude;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String longitude;
 
     @Column(nullable = false)
@@ -47,7 +48,7 @@ public class Magasin {
     @Column(nullable = false)
     private boolean statutMagasin = true;
 
-    @Column(columnDefinition = "TIMESTAMP",nullable = true)
+    @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateAjout;
 
     @PrePersist
@@ -56,7 +57,7 @@ public class Magasin {
     }
 
 
-    @Column(columnDefinition = "TIMESTAMP",nullable = true)
+    @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateModif;
 
     public LocalDateTime updateDateModif(LocalDateTime dateModif) {
@@ -70,6 +71,10 @@ public class Magasin {
     @ManyToOne
     @JoinColumn( name = "idActeur")
     private Acteur acteur;
+
+    @ManyToOne
+    @JoinColumn( name = "idNiveau1Pays")
+    private Niveau1Pays niveau1Pays;
 
     @OneToMany
     (mappedBy = "magasin")

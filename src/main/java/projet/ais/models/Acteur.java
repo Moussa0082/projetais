@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+// @AllArgsConstructor
 public class Acteur {
 
     @Id
@@ -64,27 +66,31 @@ public class Acteur {
 
     @Column(nullable = false)
     private String niveau3PaysActeur;
+
     
     @Column(nullable = false)
     private String password;
 
 
-    @Column(columnDefinition = "TIMESTAMP", nullable = true)
-    private LocalDateTime dateAjout;
+    @Column(nullable = true)
+    private String dateAjout;
 
-    @PrePersist
-    public void prePersist() {
-        dateAjout = LocalDateTime.now();
-    }
+    @Column(nullable = true)
+    private String dateModif;
+
+    // @PrePersist
+    // public void prePersist() {
+    //     dateAjout = LocalDateTime.now();
+    // }
 
 
-    @Column(columnDefinition = "TIMESTAMP", nullable = true)
-    private LocalDateTime dateModif;
+    // @Column(columnDefinition = "TIMESTAMP", nullable = true)
+    // private LocalDateTime dateModif;
 
-    public LocalDateTime updateDateModif(LocalDateTime dateModif) {
-        this.dateModif = dateModif;
-        return dateModif;
-    }
+    // public LocalDateTime updateDateModif(LocalDateTime dateModif) {
+    //     this.dateModif = dateModif;
+    //     return dateModif;
+    // }
 
 
     @Column(nullable=true)
@@ -146,12 +152,11 @@ public class Acteur {
     @JsonIgnore
     private List<Speculation> speculationsList;
 
-
+  
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "acteur_type_acteur",
         joinColumns = @JoinColumn(name = "id_acteur"),
         inverseJoinColumns = @JoinColumn(name = "id_type_acteur"))
-
     private List<TypeActeur> typeActeur;
     
 

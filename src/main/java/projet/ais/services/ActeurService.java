@@ -140,7 +140,7 @@ public class ActeurService {
             String codeActeur = genererCode();
             String code = idGenerator.genererCode();
             acteur.setCodeActeur(codeActeur);
-            acteur.setDateAjout(LocalDateTime.now());
+            acteur.setDateAjout(LocalDateTime.now().toString());
             acteur.setIdActeur(code);
  
            
@@ -150,15 +150,18 @@ public class ActeurService {
             // boolean isAdmin = false;
             if (acteur.getTypeActeur() != null) {
                 for (TypeActeur typeActeur : acteur.getTypeActeur()) {
-                    if (typeActeur != null && typeActeur.getLibelle() != null && typeActeur.getLibelle().equals("Admin")) {
+                    if (typeActeur != null && typeActeur.getLibelle() != null && typeActeur.getLibelle() == "Admin") {
                         acteur.setStatutActeur(true);
                         break; // Sortie de la boucle dès que "Admin" est trouvé
+                    }else{
+
+                        acteur.setStatutActeur(false);
                     }
                 }
             }
-            acteur.setStatutActeur(false);
             
             Acteur savedActeur = acteurRepository.save(acteur);
+            
             
             // // Envoyer un e-mail à l'administrateur si un acteur "Admin" a été trouvé
             // if (admins != null) { // Vérifiez si des administrateurs ont été trouvés
@@ -191,7 +194,7 @@ public class ActeurService {
                             // Si l'administrateur a le type "Admin", envoyez un e-mail
                             String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez le contacter à son numero "+ savedActeur.getWhatsAppActeur()+"pour proceder à l'activation de son compte dans les plus brefs délais !";
                             Alerte alerte = new Alerte(admin.getEmailActeur(), msg, "Création d'un nouveau compte");
-                            emailService.sendSimpleMail(alerte);
+                            // emailService.sendSimpleMail(alerte);
                             // messageService.sendMessagePersonnalAndSave(admin.getWhatsAppActeur(), msg);
                             System.out.println(admin.getEmailActeur());
                             break; // Sortez de la boucle dès qu'un administrateur est trouvé
@@ -204,9 +207,8 @@ public class ActeurService {
             
             // sendMessageToAllActeur(savedActeur);
 
-
-            // System.out.println(savedActeur.getTypeActeur());
-
+            System.out.println("Acteur :" + savedActeur.toString());
+                     
             return savedActeur;
                
     }
@@ -444,7 +446,7 @@ public class ActeurService {
                     // Date d = new Date(); 
                     // SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     //  String dt = sdf.format(d);
-        ac.setDateModif(acteur.updateDateModif(LocalDateTime.now()));
+        ac.setDateModif(LocalDateTime.now().toString());
         ac.setAdresseActeur(acteur.getAdresseActeur());
         ac.setNomActeur(acteur.getNomActeur());
         ac.setTelephoneActeur(acteur.getTelephoneActeur());
@@ -639,7 +641,7 @@ public class ActeurService {
             acteur.get().setStatutActeur(true);
             acteurRepository.save(acteur.get());
              Alerte alerte = new Alerte(acteur.get().getEmailActeur(), "Votre compte a été activé par le super admin vous pouvez acceder votre compte");
-            emailService.sendSimpleMail(alerte);
+            // emailService.sendSimpleMail(alerte);
             return new ResponseEntity<>("Le compte de " + acteur.get().getNomActeur() +  " a été activé avec succès", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Acteur non trouvé avec l'ID " + id, HttpStatus.BAD_REQUEST);

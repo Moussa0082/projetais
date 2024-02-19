@@ -1,7 +1,11 @@
 package projet.ais.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -9,6 +13,7 @@ import java.util.*;
 
 @Entity
 @Data
+// @AllArgsConstructor
 public class TypeActeur {
 
     @Id
@@ -30,25 +35,42 @@ public class TypeActeur {
     @Column(nullable = true)
     private String personneModif;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateAjout;
+    @Column(nullable = true)
+    private String dateAjout;
 
-    @PrePersist
-    public void prePersist() {
-        dateAjout = LocalDateTime.now();
-    }
+    @Column(nullable = true)
+    private String dateModif;
+    // @Column(columnDefinition = "TIMESTAMP")
+    // private LocalDateTime dateAjout;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateModif;
+    // @PrePersist
+    // public void prePersist() {
+    //     dateAjout = LocalDateTime.now();
+    // }
 
-    public LocalDateTime updateDateModif(LocalDateTime dateModif) {
-        this.dateModif = dateModif;
-        return dateModif;
-    }
+    // @Column(columnDefinition = "TIMESTAMP")
+    // private LocalDateTime dateModif;
+
 
     @ManyToMany(mappedBy = "typeActeur", fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Acteur> acteur;
 
+
+    public  TypeActeur(){}
+
+    
+       // Constructeur prenant les champs nécessaires
+    public TypeActeur(String  idTypeActeur, String libelle, String codeTypeActeur, boolean statutTypeActeur, String descriptionTypeActeur, String dateAjout, String dateModif) {
+        this.idTypeActeur = idTypeActeur;
+        this.libelle = libelle;
+        this.codeTypeActeur = codeTypeActeur;
+        this.statutTypeActeur = statutTypeActeur;
+        this.descriptionTypeActeur = descriptionTypeActeur;
+        this.dateAjout = dateAjout;
+        this.dateModif = dateModif;
+    }
+
+    
 }
 

@@ -22,6 +22,8 @@ import projet.ais.models.Acteur;
 import projet.ais.models.Materiel;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.MaterielRepository;
+import java.time.format.DateTimeFormatter;
+
 
 @Service
 public class MaterielService {
@@ -65,8 +67,11 @@ public class MaterielService {
 
         materiel.setCodeMateriel(codes);
         materiel.setIdMateriel(idCode);
-        materiel.setDateAjout(LocalDateTime.now());
-        materiel.setDateModif(LocalDateTime.now());
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+        materiel.setDateAjout(formattedDateTime);
         return materielRepository.save(materiel);
     }
 
@@ -79,7 +84,11 @@ public class MaterielService {
         mat.setNom(materiel.getNom());
         mat.setPrix(materiel.getPrix());
         mat.setPersonneModif(materiel.getPersonneModif());
-        mat.setDateModif(LocalDateTime.now());
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+        mat.setDateModif(formattedDateTime);
         
         if (imageFile != null) {
             String imageLocation = "C:\\xampp\\htdocs\\ais";

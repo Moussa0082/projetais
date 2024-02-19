@@ -33,6 +33,7 @@ public class ContinentService {
                 // Attribuer le numéro aléatoire au continent
                     continent.setCodeContinent(codeContinent);
                     continent.setIdContinent(code);
+                    continent.setStatutContinent(false);
                 // Vérifier si la sous region existe déjà
                 continentRepository.save(continent);
                 return new ResponseEntity<>("Continent ajouté avec succès", HttpStatus.OK);

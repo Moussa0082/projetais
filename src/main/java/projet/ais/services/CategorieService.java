@@ -22,6 +22,8 @@ import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.CategorieProduitRepository;
 import projet.ais.repository.FiliereRepository;
 import com.sun.jdi.request.DuplicateRequestException;
+import java.time.format.DateTimeFormatter;
+
 
 
 @Service
@@ -60,7 +62,11 @@ public class CategorieService {
             categorieProduit.setCodeCategorie(codes);
             categorieProduit.setIdCategorieProduit(Idcodes);
 
-            categorieProduit.setDateModif(LocalDateTime.now());
+            String pattern = "yyyy-MM-dd HH:mm";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+            LocalDateTime now = LocalDateTime.now();
+            String formattedDateTime = now.format(formatter);
+            categorieProduit.setDateAjout(formattedDateTime);
 
         return categorieProduitRepository.save(categorieProduit);
     }
@@ -72,11 +78,13 @@ public class CategorieService {
         categorieProduits.setLibelleCategorie(categorieProduit.getLibelleCategorie());
         categorieProduits.setFiliere(categorieProduit.getFiliere());
         categorieProduits.setDateAjout(categorieProduits.getDateAjout());
-        // Date dates = new Date();
-        //     Instant instant = dates.toInstant();
-        //     ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-            
-            categorieProduits.setDateModif(LocalDateTime.now());
+        
+        String pattern = "yyyy-MM-dd HH:mm";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+            LocalDateTime now = LocalDateTime.now();
+            String formattedDateTime = now.format(formatter);
+            categorieProduit.setDateModif(formattedDateTime);
+
         return categorieProduitRepository.save(categorieProduits);
     }
 

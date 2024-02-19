@@ -55,7 +55,7 @@ public class ActeurController {
     @PostMapping("/create")
     @Operation(summary = "création d'un acteur")
      public ResponseEntity<Acteur> createActeur(
-            @Valid @RequestParam("acteur") String adminString,
+            @Valid @RequestParam("acteur") String acteurString,
             @RequestParam(value = "image1", required = false) MultipartFile imageFile1,
             @RequestParam(value = "image2", required = false) MultipartFile imageFile2)
             throws Exception {
@@ -63,14 +63,16 @@ public class ActeurController {
 
                 Acteur acteur = new Acteur();
                 try {
-                    acteur = new JsonMapper().readValue(adminString, Acteur.class);
+                    acteur = new JsonMapper().readValue(acteurString, Acteur.class);
                 } catch (JsonProcessingException e) {
                     throw new Exception(e.getMessage());
                 }
             
                 // je le cree et le sauvegarde.
+
                 Acteur savedActeur = acteurService.createActeur(acteur, imageFile1, imageFile2);
-            
+                System.out.println("Acteur controller :" + savedActeur);
+
                 return new ResponseEntity<>(savedActeur, HttpStatus.CREATED);
             }
 
@@ -103,7 +105,7 @@ public class ActeurController {
             public ResponseEntity<Acteur> addTypesToActeur(@PathVariable String idActeur,
                                                             @RequestBody Map<String, Object> requestBody) throws Exception {
                 // Récupérer la liste des typeActeurs de la requête
-                List<Map<String, String>> typeActeursMapList = (List<Map<String, String>>) requestBody.get("typeActeurs");
+                List<Map<String, String>> typeActeursMapList = (List<Map<String, String>>) requestBody.get("typeActeur");
                 
                 // Convertir la liste des typeActeurs de la requête en une liste de TypeActeur
                 List<TypeActeur> typeActeurs = new ArrayList<>();
