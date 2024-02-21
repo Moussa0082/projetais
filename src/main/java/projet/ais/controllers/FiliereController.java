@@ -22,7 +22,7 @@ import projet.ais.services.FiliereService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/Filiere")
+@RequestMapping("api-koumi/Filiere")
 public class FiliereController {
 
     @Autowired

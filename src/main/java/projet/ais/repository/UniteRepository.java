@@ -1,5 +1,7 @@
 package projet.ais.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,4 +13,5 @@ public interface UniteRepository extends JpaRepository<Unite, String>{
     Unite findByIdUnite(String id);
 
     Unite findByNomUnite(String nom);
+     List<Unite> findByActeurIdActeur(String idActeur);
 }

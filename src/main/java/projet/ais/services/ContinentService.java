@@ -2,6 +2,8 @@ package projet.ais.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+
+import java.time.LocalDateTime;
 import java.util.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -85,11 +87,12 @@ public class ContinentService {
         //Modifier Continent methode
        
     
-         public Continent updateContinent(Continent continent, String id){
+        public Continent updateContinent(Continent continent, String id){
     
          Continent continentExistant = continentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Continent introuvable "));
          continentExistant.setNomContinent(continent.getNomContinent());
          continentExistant.setDescriptionContinent(continent.getDescriptionContinent());
+         continentExistant.setDateModif(LocalDateTime.now());
     
         return continentRepository.save(continentExistant);
       }

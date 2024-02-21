@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/Speculation")
+@RequestMapping("api-koumi/Speculation")
 public class SpeculationController {
     
     @Autowired

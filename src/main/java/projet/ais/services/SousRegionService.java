@@ -94,12 +94,13 @@ private String genererChaineAleatoire(String source, int longueur) {
   
 
     return sousRegionRepository.save(sousRegionExistant);
-  }
+  } 
 
         //Recuperer la liste des sous region
      public List<SousRegion> getAllSousRegion() throws Exception{
 
         List<SousRegion> sousRegionList = sousRegionRepository.findAll();
+        
         if(sousRegionList.isEmpty()){
             throw new EntityNotFoundException("Liste sous region vide");
         }

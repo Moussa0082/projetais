@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import projet.ais.models.Campagne;
-import projet.ais.models.Speculation;
-import projet.ais.repository.CampagneRepository;
 import projet.ais.services.CampagneService;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("/Campagne")
+@CrossOrigin
+@RequestMapping("api-koumi/Campagne")
 public class CampagneController {
     
     @Autowired

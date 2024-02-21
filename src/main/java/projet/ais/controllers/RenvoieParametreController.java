@@ -2,7 +2,6 @@ package projet.ais.controllers;
 
 import java.util.List;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,7 @@ import projet.ais.services.RenvoieParametreService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/RenvoiParametre")
+@RequestMapping("api-koumi/RenvoiParametre")
 public class RenvoieParametreController {
     
     @Autowired

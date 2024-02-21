@@ -18,7 +18,6 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import projet.ais.models.Unite;
 import projet.ais.models.ZoneProduction;
 import projet.ais.services.ZoneProductionService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,8 +27,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
-@RequestMapping("/ZoneProduction")
 @CrossOrigin
+@RequestMapping("api-koumi/ZoneProduction")
 public class ZoneProductionController {
     
     @Autowired
@@ -88,11 +87,10 @@ public class ZoneProductionController {
             return new ResponseEntity<>(zoneProductionService.getZoneProduction(), HttpStatus.OK);
         }
         
-        @GetMapping("/getAllZonesByActeur/{id}")
-        @Operation(summary = "Liste des zones de production")
-        public ResponseEntity<List<ZoneProduction>> getAllZoneByActeur(String idActeur) {
-            return new ResponseEntity<>(zoneProductionService.getZoneProductionByActeur(idActeur), HttpStatus.OK);
-        }
+        @GetMapping("/getAllZonesByActeurs/{id}")
+    public ResponseEntity<List<ZoneProduction>> listeZoneByActeurs(@PathVariable String id) {
+        return new ResponseEntity<>(zoneProductionService.getAllZoneByActeur(id), HttpStatus.OK);
+    }
 
         @DeleteMapping("/deleteZones/{id}")
         @Operation(summary = "Suppresion d'une zone production")

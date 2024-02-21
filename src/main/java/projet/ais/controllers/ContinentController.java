@@ -3,6 +3,7 @@ package projet.ais.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,14 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.*;
 
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.persistence.EntityNotFoundException;
-import projet.ais.models.CategorieProduit;
 import projet.ais.models.Continent;
 import projet.ais.repository.ContinentRepository;
 import projet.ais.services.ContinentService;
 
 @RestController
-@RequestMapping("/continent")
+@CrossOrigin
+@RequestMapping("api-koumi/continent")
 public class ContinentController {
     
     @Autowired
@@ -48,19 +48,23 @@ public class ContinentController {
     
 
     //Modifier un continent
-    @PutMapping("/update/{id}")
-    @Operation(summary = "Modifier un continent")
-   public ResponseEntity<String> updateContinent(@RequestBody Continent continent, @PathVariable String id) {
-    Continent continentExistant = continentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Continent introuvable "));;
+//     @PutMapping("/update/{id}")
+//     @Operation(summary = "Modifier un continent")
+//    public ResponseEntity<String> updateContinents(@RequestBody Continent continent, @PathVariable String id) {
+//     Continent continentExistant = continentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Continent introuvable "));;
 
-    if (continentExistant != null) {
-        continentService.updateContinent(continentExistant, id);
-        return new ResponseEntity<>("Continent mis à jour avec succès", HttpStatus.OK);
-    } else {
-        return new ResponseEntity<>("Continent non existant ", HttpStatus.BAD_REQUEST);
-    }
+//     if (continentExistant != null) {
+//         continentService.updateContinent(continentExistant, id);
+//         return new ResponseEntity<>("Continent mis à jour avec succès", HttpStatus.OK);
+//     } else {
+//         return new ResponseEntity<>("Continent non existant ", HttpStatus.BAD_REQUEST);
+//     }
+// }
+@PutMapping("/update/{id}")
+@Operation(summary = "Modifier un continent")
+public ResponseEntity<Continent> updateContinents(@RequestBody Continent continent, @PathVariable String id) {
+    return new ResponseEntity<>(continentService.updateContinent(continent, id), HttpStatus.OK);
 }
-
 
       //Activer continent
        @PutMapping("/activer/{id}")
