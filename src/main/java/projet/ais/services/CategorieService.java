@@ -46,7 +46,7 @@ public class CategorieService {
         Filiere filiere  = filiereRepository.findByIdFiliere(categorieProduit.getFiliere().getIdFiliere());
 
         
-         Acteur acteur = acteurRepository.findByIdActeur(filiere.getActeur().getIdActeur());
+        Acteur acteur = acteurRepository.findByIdActeur(categorieProduit.getActeur().getIdActeur());
 
         if(acteur == null)
             throw new IllegalStateException("Aucun acteur disponible");
