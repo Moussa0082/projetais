@@ -35,17 +35,10 @@ public class Niveau3PaysController {
 
       @PostMapping("/create")
       @Operation(summary = "créer niveau 3 pays")
-     public ResponseEntity<String> createNiveau3Pays(@RequestBody Niveau3Pays niveau3Pays) {
-
-        // Vérifier si le niveau 3 pays existe déjà
-        Niveau3Pays niveau3PaysExistant = niveau3PaysRepository.findByNomN3(niveau3Pays.getNomN3());
-        if (niveau3PaysExistant == null) {
-            niveau3PaysService.createNiveau3Pays(niveau3Pays);
-            return new ResponseEntity<>("Niveau 3 créer avec succès" , HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Le niveau 3 pays " + niveau3PaysExistant.getNomN3() + " existe déjà", HttpStatus.BAD_REQUEST);
-        }
+     public ResponseEntity<Niveau3Pays> createNiveau3Pays(@RequestBody Niveau3Pays niveau3Pays) {
+        return new ResponseEntity<>(niveau3PaysService.createNiveau3Pays(niveau3Pays), HttpStatus.CREATED);
     }
+   
     
 
 

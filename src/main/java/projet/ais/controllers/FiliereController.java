@@ -31,6 +31,7 @@ public class FiliereController {
     @PostMapping("/AddFiliere")
     @Operation(summary="Création de filiere")
     public ResponseEntity<Filiere> createFilieres(@RequestBody Filiere filiere) {
+        System.out.println(filiere.toString());
         return new ResponseEntity<>(filiereService.createFiliere(filiere) , HttpStatus.CREATED);
     }
     
@@ -52,12 +53,18 @@ public class FiliereController {
         return new ResponseEntity<>(filiereService.desactive(id), HttpStatus.OK);
     }
 
-    @GetMapping("/getAllFiliere")
+    @GetMapping("/getAllFiliere/")
     @Operation(summary="Récuperation de tout les filieres")
     public ResponseEntity<List<Filiere>> getFiliere() {
         return new ResponseEntity<>(filiereService.getAllf(), HttpStatus.OK);
     }
     
+    @GetMapping("/filiereByActeur/{idActeur}")
+    @Operation(summary="Récuperation de tout les filieres")
+    public ResponseEntity<List<Filiere>> getAllFiliereByActeurs(@PathVariable String idActeur) {
+        return new ResponseEntity<>(filiereService.getAllFiliereByActeur(idActeur), HttpStatus.OK);
+    }
+
     @DeleteMapping("/delete/{id}")
     @Operation(summary="Supprimé un filiere en fonction de l'id de filiere")
     public String deleteFilieres(@PathVariable String id) {

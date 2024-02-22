@@ -31,22 +31,11 @@ public class Niveau3Pays {
     @Column(nullable = false)
     private boolean statutN3 = true;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateAjout;
+    @Column(nullable = true)
+    private String dateAjout;
 
-    @PrePersist
-    public void prePersist() {
-        dateAjout = LocalDateTime.now();
-    }
-
-
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateModif;
-
-    public LocalDateTime updateDateModif(LocalDateTime dateModif) {
-        this.dateModif = dateModif;
-        return dateModif;
-    }
+    @Column(nullable = true)
+    private String dateModif;
 
     @ManyToOne
     @JoinColumn( name = "idNiveau2Pays") 

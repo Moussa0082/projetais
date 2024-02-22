@@ -9,10 +9,11 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.IdGenerator;
-import projet.ais.models.Niveau1Pays;
-import projet.ais.models.Niveau2Pays;
 import projet.ais.models.Pays;
 import projet.ais.repository.PaysRepository;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
+
 
 @Service
 public class PaysService {
@@ -33,7 +34,12 @@ public class PaysService {
             // Attribuer le numéro aléatoire au type d'acteur
                 pays.setCodePays(codePays);
                 pays.setIdPays(code);
-            // Vérifier si le pays existe déjà
+            
+                String pattern = "yyyy-MM-dd HH:mm";
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+                LocalDateTime now = LocalDateTime.now();
+                String formattedDateTime = now.format(formatter);
+                pays.setDateAjout(formattedDateTime);
             paysRepository.save(pays);
             return new ResponseEntity<>("Pays ajouté avec succès", HttpStatus.OK);
         } else {
@@ -101,6 +107,11 @@ private String genererChaineAleatoire(String source, int longueur) {
     paysExistant.setDescriptionPays(pays.getDescriptionPays());
     paysExistant.setSousRegion(pays.getSousRegion());
 
+    String pattern = "yyyy-MM-dd HH:mm";
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+    LocalDateTime now = LocalDateTime.now();
+    String formattedDateTime = now.format(formatter);
+    paysExistant.setDateAjout(formattedDateTime);
     return paysRepository.save(paysExistant);
   }
 

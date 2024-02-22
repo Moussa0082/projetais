@@ -1,6 +1,7 @@
 package projet.ais.services;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -37,6 +38,11 @@ public class Niveau1PaysService {
         niveau1Pays.setCodeN1(codeN1);
         niveau1Pays.setIdNiveau1Pays(code);
     
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);  
+        niveau1Pays.setDateAjout(formattedDateTime);
         // Vérifier si le niveau1Pays existe déjà
         Niveau1Pays niveau1PaysExistant = niveau1PaysRepository.findByNomN1(niveau1Pays.getNomN1());
         if (niveau1PaysExistant != null) {
@@ -95,7 +101,12 @@ private String genererChaineAleatoire(String source, int longueur) {
      niveau1PaysExistant.setNomN1(niveau1Pays.getNomN1());
     niveau1PaysExistant.setDescriptionN1(niveau1Pays.getDescriptionN1());
     niveau1PaysExistant.setPays(niveau1Pays.getPays());
-    niveau1PaysExistant.setDateModif(LocalDateTime.now());
+
+    String pattern = "yyyy-MM-dd HH:mm";
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+    LocalDateTime now = LocalDateTime.now();
+    String formattedDateTime = now.format(formatter);       
+    niveau1PaysExistant.setDateModif(formattedDateTime);
 
     return niveau1PaysRepository.save(niveau1PaysExistant);
   }

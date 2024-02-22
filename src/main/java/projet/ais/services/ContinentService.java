@@ -14,6 +14,8 @@ import projet.ais.IdGenerator;
 import projet.ais.models.CategorieProduit;
 import projet.ais.models.Continent;
 import projet.ais.repository.ContinentRepository;
+import java.time.format.DateTimeFormatter;
+
 
 @Service
 public class ContinentService {
@@ -36,7 +38,12 @@ public class ContinentService {
                     continent.setCodeContinent(codeContinent);
                     continent.setIdContinent(code);
                     continent.setStatutContinent(false);
-                // Vérifier si la sous region existe déjà
+                
+                    String pattern = "yyyy-MM-dd HH:mm";
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+                    LocalDateTime now = LocalDateTime.now();
+                    String formattedDateTime = now.format(formatter);       
+                    continent.setDateAjout(formattedDateTime);
                 continentRepository.save(continent);
                 return new ResponseEntity<>("Continent ajouté avec succès", HttpStatus.OK);
             } else {
@@ -92,8 +99,11 @@ public class ContinentService {
          Continent continentExistant = continentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Continent introuvable "));
          continentExistant.setNomContinent(continent.getNomContinent());
          continentExistant.setDescriptionContinent(continent.getDescriptionContinent());
-         continentExistant.setDateModif(LocalDateTime.now());
-    
+         String pattern = "yyyy-MM-dd HH:mm";
+         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+         LocalDateTime now = LocalDateTime.now();
+         String formattedDateTime = now.format(formatter);       
+         continentExistant.setDateModif(formattedDateTime);
         return continentRepository.save(continentExistant);
       }
     

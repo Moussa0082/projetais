@@ -14,6 +14,10 @@ import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Pays;
 import projet.ais.models.SousRegion;
 import projet.ais.repository.SousRegionRepository;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
+
+
 
 @Service
 public class SousRegionService {
@@ -36,8 +40,13 @@ public class SousRegionService {
             // Attribuer le numéro aléatoire au type d'acteur
                 sousRegion.setCodeSousRegion(codeSousRegion);
                 sousRegion.setIdSousRegion(code);
-            // Vérifier si la sous region existe déjà
-            sousRegionRepository.save(sousRegion);
+
+                String pattern = "yyyy-MM-dd HH:mm";
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+                LocalDateTime now = LocalDateTime.now();
+                String formattedDateTime = now.format(formatter);
+                sousRegion.setDateAjout(formattedDateTime);
+                sousRegionRepository.save(sousRegion);
             return new ResponseEntity<>("Sous region ajouté avec succès", HttpStatus.OK);
         } else {
             
@@ -92,7 +101,11 @@ private String genererChaineAleatoire(String source, int longueur) {
      sousRegionExistant.setNomSousRegion(sousRegion.getNomSousRegion());
      sousRegionExistant.setContinent(sousRegion.getContinent());
   
-
+     String pattern = "yyyy-MM-dd HH:mm";
+     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+     LocalDateTime now = LocalDateTime.now();
+     String formattedDateTime = now.format(formatter);
+     sousRegionExistant.setDateModif(formattedDateTime);
     return sousRegionRepository.save(sousRegionExistant);
   } 
 
