@@ -54,6 +54,11 @@ public class TypeActeurService {
         typeActeur.setCodeTypeActeur(codeTypeActeur);
         typeActeur.setStatutTypeActeur(true);
         typeActeur.setIdTypeActeur(idCode);
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+        typeActeur.setDateAjout(formattedDateTime);
     
         // Vérifier si le type d'acteur existe déjà
         TypeActeur typeActeurExistant = typeActeurRepository.findByLibelle(typeActeur.getLibelle());
@@ -112,7 +117,7 @@ private String genererChaineAleatoire(String source, int longueur) {
      TypeActeur typeActeurExistant= typeActeurRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("type d'acteur introuvable avec id :" +id));
     typeActeurExistant.setLibelle(typeActeur.getLibelle());
     typeActeurExistant.setDescriptionTypeActeur(typeActeur.getDescriptionTypeActeur());
-    typeActeurExistant.setDateModif(LocalDateTime.now());
+    typeActeurExistant.setDateModif(LocalDateTime.now().toString());
 
     return typeActeurRepository.save(typeActeurExistant);
   }

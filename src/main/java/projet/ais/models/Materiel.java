@@ -56,20 +56,26 @@ public class Materiel {
     @Column
     private boolean statutCommande = false;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateAjout;
-    @PrePersist
-    public void prePersist() {
-        dateAjout = LocalDateTime.now();
-    }
+    // @Column(columnDefinition = "TIMESTAMP")
+    // private LocalDateTime dateAjout;
+    // @PrePersist
+    // public void prePersist() {
+    //     dateAjout = LocalDateTime.now();
+    // }
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateModif;
+    // @Column(columnDefinition = "TIMESTAMP")
+    // private LocalDateTime dateModif;
 
-    public LocalDateTime updateDateModif(LocalDateTime dateModif) {
-        this.dateModif = dateModif;
-        return dateModif;
-    }
+    // public LocalDateTime updateDateModif(LocalDateTime dateModif) {
+    //     this.dateModif = dateModif;
+    //     return dateModif;
+    // }
+
+    @Column(nullable = true)
+    private String dateAjout;
+
+    @Column(nullable = true)
+    private String dateModif;
 
     @ManyToOne
     @JoinColumn(name = "idActeur")

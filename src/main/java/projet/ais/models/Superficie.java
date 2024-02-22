@@ -38,11 +38,17 @@ public class Superficie {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateSemi;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateAjout;
+    // @Column(columnDefinition = "TIMESTAMP")
+    // private LocalDateTime dateAjout;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateModif;
+    // @Column(columnDefinition = "TIMESTAMP")
+    // private LocalDateTime dateModif;
+
+    @Column(nullable = true)
+    private String dateAjout;
+
+    @Column(nullable = true)
+    private String dateModif;
 
     @ManyToOne
     private Acteur acteur;

@@ -13,6 +13,8 @@ import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.CategorieProduitRepository;
 import projet.ais.repository.SpeculationRepository;
 import com.sun.jdi.request.DuplicateRequestException;
+import java.time.format.DateTimeFormatter;
+
 import jakarta.persistence.EntityNotFoundException;
 
 import java.time.Instant;
@@ -58,8 +60,12 @@ public class SpeculationService {
             speculation.setCodeSpeculation(codes);
             speculation.setIdSpeculation(idcodes);
 
-        speculation.setDateModif(LocalDateTime.now());
-        speculation.setDateAjout(LocalDateTime.now());
+            String pattern = "yyyy-MM-dd HH:mm";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+            LocalDateTime now = LocalDateTime.now();
+            String formattedDateTime = now.format(formatter);
+
+        speculation.setDateAjout(formattedDateTime);
         return speculationRepository.save(speculation);
     }
 
@@ -70,7 +76,12 @@ public class SpeculationService {
        speculations.setDescriptionSpeculation(speculation.getDescriptionSpeculation());
        speculations.setNomSpeculation(speculation.getNomSpeculation());
         speculations.setPersonneModif(speculation.getPersonneModif());
-       speculations.setDateModif(LocalDateTime.now());
+
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+       speculations.setDateModif(formattedDateTime);
         return speculationRepository.save(speculations);
     }
 

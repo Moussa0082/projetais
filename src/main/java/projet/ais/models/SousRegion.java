@@ -25,25 +25,28 @@ public class SousRegion {
     @Column(nullable = false)
     private boolean statutSousRegion = true;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateAjout;
+    @Column(nullable = true)
+    private String dateAjout;
 
+    @Column(nullable = true)
+    private String dateModif;
+    
     @Column(nullable = true)
     private String personneModif;
 
-    @PrePersist
-    public void prePersist() {
-        dateAjout = LocalDateTime.now();
-    }
+    // @PrePersist
+    // public void prePersist() {
+    //     dateAjout = LocalDateTime.now();
+    // }
 
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateModif;
+    // @Column(columnDefinition = "TIMESTAMP")
+    // private LocalDateTime dateModif;
 
-    public LocalDateTime updateDateModif(LocalDateTime dateModif) {
-        this.dateModif = dateModif;
-        return dateModif;
-    }
+    // public LocalDateTime updateDateModif(LocalDateTime dateModif) {
+    //     this.dateModif = dateModif;
+    //     return dateModif;
+    // }
 
     @OneToMany
     (mappedBy = "sousRegion")

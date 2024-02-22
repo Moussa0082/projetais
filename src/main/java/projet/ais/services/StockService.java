@@ -30,6 +30,8 @@ import projet.ais.models.Stock;
 import projet.ais.models.TypeActeur;
 import projet.ais.models.Unite;
 import projet.ais.models.ZoneProduction;
+import java.time.format.DateTimeFormatter;
+
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.AlerteRepository;
 import projet.ais.repository.MagasinRepository;
@@ -116,9 +118,14 @@ public class StockService {
 
             stock.setCodeStock(codes);
             stock.setIdStock(idCode);
-              
-        stock.setDateProduction(LocalDateTime.now());
-        stock.setDateAjout(LocalDateTime.now());
+             
+            
+            String pattern = "yyyy-MM-dd HH:mm";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+            LocalDateTime now = LocalDateTime.now();
+            String formattedDateTime = now.format(formatter);
+
+        stock.setDateAjout(formattedDateTime);
         Stock st = stockRepository.save(stock);
         
         if (st.getActeur().getTypeActeur() != null) {
@@ -234,7 +241,12 @@ public class StockService {
         stocks.setDescriptionStock(stock.getDescriptionStock());
         stocks.setPersonneModif(stock.getPersonneModif());       
 
-        stocks.setDateModif(LocalDateTime.now());
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+
+        stocks.setDateModif(formattedDateTime);
 
         if(stock.getUnite() != null){
             stocks.setUnite(stock.getUnite());

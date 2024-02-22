@@ -28,25 +28,29 @@ public class Filiere {
 
     @Column(nullable = false)
     private boolean statutFiliere = true;
+    @Column(nullable = true)
+    private String dateAjout;
 
-    @Column(columnDefinition = "TIMESTAMP",nullable = true)
-    private LocalDateTime dateAjout;
+    @Column(nullable = true)
+    private String dateModif;
+    // @Column(columnDefinition = "TIMESTAMP",nullable = true)
+    // private LocalDateTime dateAjout;
 
-    @PrePersist
-    public void prePersist() {
-        dateAjout = LocalDateTime.now();
-    }
+    // @PrePersist
+    // public void prePersist() {
+    //     dateAjout = LocalDateTime.now();
+    // }
 
     @Column(nullable=true)
     private String personneModif;
 
-    @Column(columnDefinition = "TIMESTAMP",nullable = true)
-    private LocalDateTime dateModif;
+    // @Column(columnDefinition = "TIMESTAMP",nullable = true)
+    // private LocalDateTime dateModif;
 
-    public LocalDateTime updateDateModif(LocalDateTime dateModif) {
-        this.dateModif = dateModif;
-        return dateModif;
-    }
+    // public LocalDateTime updateDateModif(LocalDateTime dateModif) {
+    //     this.dateModif = dateModif;
+    //     return dateModif;
+    // }
 
 
 

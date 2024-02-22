@@ -88,6 +88,12 @@ public class ZoneProductionController {
             return new ResponseEntity<>(zoneProductionService.getZoneProduction(), HttpStatus.OK);
         }
         
+        @GetMapping("/getAllZonesByActeur/{id}")
+        @Operation(summary = "Liste des zones de production")
+        public ResponseEntity<List<ZoneProduction>> getAllZoneByActeur(String idActeur) {
+            return new ResponseEntity<>(zoneProductionService.getZoneProductionByActeur(idActeur), HttpStatus.OK);
+        }
+
         @DeleteMapping("/deleteZones/{id}")
         @Operation(summary = "Suppresion d'une zone production")
         public String supprimerZone(@PathVariable String id){

@@ -46,5 +46,7 @@ public interface ActeurRepository extends JpaRepository<Acteur, String>{
     Acteur findByEmailActeurAndTypeActeurIn(String emailActeur, List<TypeActeur> typeActeur);
 
     List<Acteur> findAllByTypeActeurLibelle(String libelle);
+
+    Acteur findByEmailActeurAndResetToken(String emailActeur, String resetToken);
     
 }

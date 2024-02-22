@@ -20,6 +20,8 @@ import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.CampagneRepository;
 import projet.ais.repository.IntrantRepository;
 import projet.ais.repository.SuperficieRepository;
+import java.time.format.DateTimeFormatter;
+
 
 @Service
 public class SuperficieService {
@@ -70,8 +72,11 @@ public class SuperficieService {
 
         superficie.setCodeSuperficie(codes);
         superficie.setIdSuperficie(idCode);
-        superficie.setDateAjout(LocalDateTime.now());
-        superficie.setDateModif(LocalDateTime.now());
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);       
+        superficie.setDateAjout(formattedDateTime);
 
         return superficieRepository.save(superficie);
     }
@@ -82,7 +87,11 @@ public class SuperficieService {
         sup.setDateSemi(superficie.getDateSemi());
         sup.setSuperficieHa(superficie.getSuperficieHa());
         sup.setPersonneModif(superficie.getPersonneModif());
-        sup.setDateModif(LocalDateTime.now());
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);     
+        sup.setDateModif(formattedDateTime);
         return superficieRepository.save(sup);
     }
     

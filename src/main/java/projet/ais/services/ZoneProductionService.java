@@ -5,9 +5,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.DateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.text.SimpleDateFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
-
+import projet.ais.models.Acteur;
 import projet.ais.models.ZoneProduction;
+import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.ZoneProductionRepository;
 import com.sun.jdi.request.DuplicateRequestException;
 
@@ -32,9 +36,15 @@ public class ZoneProductionService {
     CodeGenerator codeGenerator;
     @Autowired
     IdGenerator idGenerator ;
+    @Autowired
+    ActeurRepository acteurRepository;
 
     public ZoneProduction createZoneProduction(ZoneProduction zoneProduction, MultipartFile imageFile) throws Exception{
         ZoneProduction zoneProductions = zoneProductionRepository.findByNomZoneProduction(zoneProduction.getNomZoneProduction());
+        //  Acteur acteur = acteurRepository.findByIdActeur(zoneProduction.getActeur().getIdActeur());
+
+        // if(acteur == null)
+        //     throw new IllegalStateException("Aucun acteur trouvé");
 
         if(zoneProductions != null)
             throw new DuplicateRequestException("Cette zone de production existe déjà");
@@ -60,6 +70,11 @@ public class ZoneProductionService {
 
         zoneProduction.setCodeZone(codes);
         zoneProduction.setIdZoneProduction(idCodes);
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);  
+        zoneProduction.setDateAjout(formattedDateTime);
         return zoneProductionRepository.save(zoneProduction);
     }
 
@@ -87,13 +102,28 @@ public class ZoneProductionService {
                 throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
             }
         }
-
-        zoneProductions.setDateModif(LocalDateTime.now());
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);       
+        zoneProduction.setDateModif(formattedDateTime);
         return zoneProductionRepository.save(zoneProductions);
     }
 
     public List<ZoneProduction> getZoneProduction(){
         List<ZoneProduction> zoneProductionList = zoneProductionRepository.findAll();
+
+        if(zoneProductionList.isEmpty())
+            throw new EntityNotFoundException("Speculation non trouvé");
+        zoneProductionList = zoneProductionList
+        .stream().sorted((z1,z2) -> z2.getNomZoneProduction().compareTo(z1.getNomZoneProduction()))
+        .collect(Collectors.toList());
+
+        return zoneProductionList;
+    }
+
+    public List<ZoneProduction> getZoneProductionByActeur(String idActeur){
+        List<ZoneProduction> zoneProductionList = zoneProductionRepository.findByActeurIdActeur(idActeur);
 
         if(zoneProductionList.isEmpty())
             throw new EntityNotFoundException("Speculation non trouvé");

@@ -50,23 +50,29 @@ public class Stock {
     @JoinColumn(name = "idZoneProduction")
     private ZoneProduction zoneProduction;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateAjout;
+    @Column(nullable = true)
+    private String dateAjout;
 
-    @PrePersist
-    public void prePersist() {
-        dateAjout = LocalDateTime.now();
-        dateProduction = LocalDateTime.now();
-    }
+    @Column(nullable = true)
+    private String dateModif;
+    
+    // @Column(columnDefinition = "TIMESTAMP")
+    // private LocalDateTime dateAjout;
+
+    // @PrePersist
+    // public void prePersist() {
+    //     dateAjout = LocalDateTime.now();
+    //     dateProduction = LocalDateTime.now();
+    // }
 
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateModif;
+    // @Column(columnDefinition = "TIMESTAMP")
+    // private LocalDateTime dateModif;
 
-    public LocalDateTime updateDateModif(LocalDateTime dateModif) {
-        this.dateModif = dateModif;
-        return dateModif;
-    }
+    // public LocalDateTime updateDateModif(LocalDateTime dateModif) {
+    //     this.dateModif = dateModif;
+    //     return dateModif;
+    // }
     
     @Column(nullable=true)
     private String personneModif;

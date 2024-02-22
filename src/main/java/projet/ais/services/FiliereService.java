@@ -11,6 +11,8 @@ import projet.ais.models.CategorieProduit;
 import projet.ais.models.Filiere;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.FiliereRepository;
+import java.time.format.DateTimeFormatter;
+
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -47,8 +49,11 @@ public class FiliereService {
     String Idcodes = idGenerator.genererCode();
     filiere.setCodeFiliere(codes);
     filiere.setIdFiliere(Idcodes);
-
-            filiere.setDateModif(LocalDateTime.now());
+    String pattern = "yyyy-MM-dd HH:mm";
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+    LocalDateTime now = LocalDateTime.now();
+    String formattedDateTime = now.format(formatter);
+    filiere.setDateAjout(formattedDateTime);
     return filiereRepository.save(filiere);
   }
 
@@ -61,8 +66,11 @@ public class FiliereService {
     filieres.setLibelleFiliere(filiere.getLibelleFiliere());
     filieres.setDateAjout(filieres.getDateAjout());
     filieres.setPersonneModif(filiere.getPersonneModif());
-
-    filieres.setDateModif(LocalDateTime.now());
+    String pattern = "yyyy-MM-dd HH:mm";
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+    LocalDateTime now = LocalDateTime.now();
+    String formattedDateTime = now.format(formatter);
+    filieres.setDateModif(formattedDateTime);
     return filiereRepository.save(filieres);
   }
 

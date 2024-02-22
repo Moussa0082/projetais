@@ -35,16 +35,21 @@ public class TypeActeur {
     @Column(nullable = true)
     private String personneModif;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateAjout;
+    @Column(nullable = true)
+    private String dateAjout;
 
-    @PrePersist
-    public void prePersist() {
-        dateAjout = LocalDateTime.now();
-    }
+    @Column(nullable = true)
+    private String dateModif;
+    // @Column(columnDefinition = "TIMESTAMP")
+    // private LocalDateTime dateAjout;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateModif;
+    // @PrePersist
+    // public void prePersist() {
+    //     dateAjout = LocalDateTime.now();
+    // }
+
+    // @Column(columnDefinition = "TIMESTAMP")
+    // private LocalDateTime dateModif;
 
 
     @ManyToMany(mappedBy = "typeActeur", fetch = FetchType.EAGER)
@@ -56,7 +61,7 @@ public class TypeActeur {
 
     
        // Constructeur prenant les champs nécessaires
-    public TypeActeur(String  idTypeActeur, String libelle, String codeTypeActeur, boolean statutTypeActeur, String descriptionTypeActeur, LocalDateTime dateAjout, LocalDateTime dateModif) {
+    public TypeActeur(String  idTypeActeur, String libelle, String codeTypeActeur, boolean statutTypeActeur, String descriptionTypeActeur, String dateAjout, String dateModif) {
         this.idTypeActeur = idTypeActeur;
         this.libelle = libelle;
         this.codeTypeActeur = codeTypeActeur;

@@ -72,22 +72,25 @@ public class Acteur {
     private String password;
 
 
-    @Column(columnDefinition = "TIMESTAMP", nullable = true)
-    private LocalDateTime dateAjout;
+    @Column(nullable = true)
+    private String dateAjout;
 
-    @PrePersist
-    public void prePersist() {
-        dateAjout = LocalDateTime.now();
-    }
+    @Column(nullable = true)
+    private String dateModif;
+
+    // @PrePersist
+    // public void prePersist() {
+    //     dateAjout = LocalDateTime.now();
+    // }
 
 
-    @Column(columnDefinition = "TIMESTAMP", nullable = true)
-    private LocalDateTime dateModif;
+    // @Column(columnDefinition = "TIMESTAMP", nullable = true)
+    // private LocalDateTime dateModif;
 
-    public LocalDateTime updateDateModif(LocalDateTime dateModif) {
-        this.dateModif = dateModif;
-        return dateModif;
-    }
+    // public LocalDateTime updateDateModif(LocalDateTime dateModif) {
+    //     this.dateModif = dateModif;
+    //     return dateModif;
+    // }
 
 
     @Column(nullable=true)
