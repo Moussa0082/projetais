@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,12 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import projet.ais.models.Sortie_Stock;
-import projet.ais.models.SousRegion;
-import projet.ais.models.Stock;
 import projet.ais.services.Sortie_StockService;
 
 @RestController
-@RequestMapping("/sortieStock")
+@CrossOrigin
+@RequestMapping("api-koumi/sortieStock")
 public class Sortie_StockController {
     
 

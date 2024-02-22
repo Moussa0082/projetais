@@ -3,6 +3,7 @@ package projet.ais.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Stock;
@@ -56,6 +57,22 @@ public class UniteService {
     public List<Unite> getAllUnites(){
         List<Unite> uniteList = uniteRepository.findAll();
 
+        if(uniteList.isEmpty())
+             throw new EntityNotFoundException("Liste sous region vide");
+
+        uniteList = uniteList
+        .stream().sorted((u1,u2) -> u2.getNomUnite().compareTo(u1.getNomUnite()))
+        .collect(Collectors.toList());
+
+        return uniteList;
+    }
+
+    public List<Unite> getAllUnitesByActeur(String id){
+        List<Unite> uniteList = uniteRepository.findByActeurIdActeur(id);
+
+        if(uniteList.isEmpty())
+             throw new EntityNotFoundException("Liste sous region vide");
+             
         uniteList = uniteList
         .stream().sorted((u1,u2) -> u2.getNomUnite().compareTo(u1.getNomUnite()))
         .collect(Collectors.toList());

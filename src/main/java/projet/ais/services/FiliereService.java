@@ -14,11 +14,8 @@ import projet.ais.repository.FiliereRepository;
 import java.time.format.DateTimeFormatter;
 
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Date;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,6 +46,7 @@ public class FiliereService {
     String Idcodes = idGenerator.genererCode();
     filiere.setCodeFiliere(codes);
     filiere.setIdFiliere(Idcodes);
+
     String pattern = "yyyy-MM-dd HH:mm";
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
     LocalDateTime now = LocalDateTime.now();
@@ -79,6 +77,18 @@ public class FiliereService {
 
     if(filiereList.isEmpty())
         throw new EntityNotFoundException("Aucun filiere trouvé");
+    
+        filiereList = filiereList
+                .stream().sorted((d1, d2) -> d2.getLibelleFiliere().compareTo(d1.getLibelleFiliere()))
+                .collect(Collectors.toList());
+    return filiereList;
+  }
+
+  public List<Filiere> getAllFiliereByActeur(String idActeur){
+    List<Filiere> filiereList = filiereRepository.findByActeurIdActeur(idActeur);
+
+    if(filiereList.isEmpty())
+        throw new IllegalStateException("Aucun filiere trouvé");
     
         filiereList = filiereList
                 .stream().sorted((d1, d2) -> d2.getLibelleFiliere().compareTo(d1.getLibelleFiliere()))

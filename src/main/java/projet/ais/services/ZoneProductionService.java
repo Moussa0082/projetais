@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
+import projet.ais.models.Unite;
 import projet.ais.models.ZoneProduction;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.ZoneProductionRepository;
@@ -122,16 +123,29 @@ public class ZoneProductionService {
         return zoneProductionList;
     }
 
-    public List<ZoneProduction> getZoneProductionByActeur(String idActeur){
-        List<ZoneProduction> zoneProductionList = zoneProductionRepository.findByActeurIdActeur(idActeur);
+    // public List<ZoneProduction> getZoneProductionByActeur(String idActeur){
+    //     List<ZoneProduction> zoneProductionList = zoneProductionRepository.findByActeurIdActeur(idActeur);
 
-        if(zoneProductionList.isEmpty())
-            throw new EntityNotFoundException("Speculation non trouvé");
-        zoneProductionList = zoneProductionList
-        .stream().sorted((z1,z2) -> z2.getNomZoneProduction().compareTo(z1.getNomZoneProduction()))
+    //     if(zoneProductionList.isEmpty())
+    //         throw new EntityNotFoundException("Speculation non trouvé");
+    //     zoneProductionList = zoneProductionList
+    //     .stream().sorted((z1,z2) -> z2.getNomZoneProduction().compareTo(z1.getNomZoneProduction()))
+    //     .collect(Collectors.toList());
+
+    //     return zoneProductionList;
+    // }
+
+     public List<ZoneProduction> getAllZoneByActeur(String id){
+        List<ZoneProduction> zoneList = zoneProductionRepository.findByActeurIdActeur(id);
+
+        if(zoneList.isEmpty())
+             throw new EntityNotFoundException("Liste sous region vide");
+             
+             zoneList = zoneList
+        .stream().sorted((u1,u2) -> u2.getNomZoneProduction().compareTo(u1.getNomZoneProduction()))
         .collect(Collectors.toList());
 
-        return zoneProductionList;
+        return zoneList;
     }
 
     public String deleteZoneProduction(String id){

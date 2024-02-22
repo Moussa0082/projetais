@@ -4,6 +4,7 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,13 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
-import projet.ais.models.Niveau1Pays;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.TypeActeurRepository;
 import projet.ais.services.TypeActeurService;
 
 @RestController
-@RequestMapping("/typeActeur")
+@CrossOrigin
+@RequestMapping("api-koumi/typeActeur")
 public class TypeActeurController {
 
     @Autowired

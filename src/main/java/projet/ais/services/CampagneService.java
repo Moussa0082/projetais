@@ -15,6 +15,8 @@ import projet.ais.models.Campagne;
 import projet.ais.models.Speculation;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.CampagneRepository;
+import java.time.format.DateTimeFormatter;
+
 
 @Service
 public class CampagneService {
@@ -42,8 +44,11 @@ public class CampagneService {
         String codes= codeGenerator.genererCode();
         String idCode = idGenerator.genererCode();
 
-        campagne.setDateModif(LocalDateTime.now());
-        campagne.setDateAjout(LocalDateTime.now());
+        String pattern = "yyyy-MM-dd HH:mm";
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+    LocalDateTime now = LocalDateTime.now();
+    String formattedDateTime = now.format(formatter);
+    campagne.setDateAjout(formattedDateTime);
         campagne.setIdCampagne(idCode);
         campagne.setCodeCampagne(codes);
         return campagneRepository.save(campagne);
@@ -55,7 +60,11 @@ public class CampagneService {
         camp.setNomCampagne(campagne.getNomCampagne());
         camp.setDescription(campagne.getDescription());
         camp.setPersonneModif(campagne.getPersonneModif());
-        camp.setDateModif(LocalDateTime.now());
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+        camp.setDateModif(formattedDateTime);
 
         return campagneRepository.save(camp);
     }

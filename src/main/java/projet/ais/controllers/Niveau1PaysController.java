@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import java.util.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,16 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.persistence.EntityNotFoundException;
-import projet.ais.models.Acteur;
-import projet.ais.models.Continent;
 import projet.ais.models.Niveau1Pays;
-import projet.ais.models.TypeActeur;
 import projet.ais.repository.Niveau1PaysRepository;
 import projet.ais.services.Niveau1PaysService;
 
 @RestController
-@RequestMapping("/niveau1Pays")
+@CrossOrigin
+@RequestMapping("api-koumi/niveau1Pays")
 public class Niveau1PaysController {
 
     @Autowired
@@ -51,15 +49,9 @@ public class Niveau1PaysController {
 
     @PutMapping("/update/{id}")
     @Operation(summary = "Modifier niveau 1 pays")
-public ResponseEntity<String> updateNiveau1Pays(@RequestBody Niveau1Pays niveau1Pays, @PathVariable String id) {
-    Niveau1Pays niveau1PaysExistant = niveau1PaysRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("type d'acteur introuvable avec id :" +id));;
+public ResponseEntity<Niveau1Pays> updatesNiveau1Pays(@RequestBody Niveau1Pays niveau1Pays, @PathVariable String id) {
+    return new ResponseEntity<>(niveau1PaysService.updateNiveau1Pays(niveau1Pays, id), HttpStatus.OK);
 
-    if (niveau1PaysExistant != null) {
-        niveau1PaysService.updateNiveau1Pays(niveau1PaysExistant, id);
-        return new ResponseEntity<>("Niveau 1 Pays mis à jour avec succès", HttpStatus.OK);
-    } else {
-        return new ResponseEntity<>("Niveau 1 Pays non existant  " , HttpStatus.BAD_REQUEST);
-    }
 }
 
     //liste 
