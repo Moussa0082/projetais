@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import projet.ais.repository.DetailCommandeRepository;
 import projet.ais.repository.MaterielRepository;
@@ -170,8 +171,8 @@ public class CommandeService {
         for (Stock stock : stocks) {
             // Vérifier si le stock est déjà associé à la commande
             if (stock.getCommande() == null) {
-                // Associer la commande au stock
-                // stock.setCommande(commande);
+             // Associer la commande au stock
+    stock.getCommande().add(commande);
             } else {
                 // Le stock est déjà associé à une commande
                 // Vous pouvez choisir de lever une exception, ignorer le stock, ou mettre à jour la quantité existante
@@ -192,6 +193,35 @@ public class CommandeService {
         // Retourner la commande créée avec les stocks associés
         return commande;
     }
+
+    // Méthode pour ajouter plusieurs stocks à la commande
+    public void ajouterCommande(Commande commande) {
+        // Pour chaque stock associé à la commande
+        List<Stock> stocks = commande.getStock();
+        for (Stock stock : stocks) {
+            // Mettre à jour la quantité de stock avec la quantité de la commande
+            double quantiteExistante = stock.getQuantiteStock();
+            double nouvelleQuantite = quantiteExistante - commande.getQuantiteDemande();
+            stock.setQuantiteStock(nouvelleQuantite);
+        }
+             String pattern = "yyyy-MM-dd HH:mm";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+            LocalDateTime now = LocalDateTime.now();
+            String formattedDateTime = now.format(formatter);
+            commande.setDateAjout(formattedDateTime);
+        // Ajouter la commande à la liste des commandes dans chaque stock
+        for (Stock stock : stocks) {
+        // Ajouter l'entrée dans la liste des commandes associées au stock
+        // stock.getCommande().add(commande);
+        commande.getStock().add(stock);      
+    
+        // Enregistrer la commande et les stocks associés dans la base de données
+        stockRepository.save(stock);
+        commandeRepository.save(commande);
+    }
+        
+    }
+
     
     // public Commande creerCommandeAvecStocks(Commande commande) throws Exception {
          // Récupérer les produits du panier
@@ -296,6 +326,12 @@ public class CommandeService {
             try {
             String codes  = codeGenerator.genererCode();
             String idCode = idGenerator.genererCode();
+  
+            String pattern = "yyyy-MM-dd HH:mm";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+            LocalDateTime now = LocalDateTime.now();
+            String formattedDateTime = now.format(formatter);
+
             // Création de la commande
             Commande commande = new Commande();
             commande.setIdCommande(idCode);
@@ -305,7 +341,7 @@ public class CommandeService {
             commande.setCodeCommande(mat.getCodeMateriel());
             commande.setNomProduit(mat.getNom());
             commande.setDescriptionCommande("Allocation de materiel");
-            commande.setDateCommande(LocalDateTime.now());
+            commande.setDateCommande(formattedDateTime);
             // Vous pouvez ajouter le matériel commandé à la liste des matériels de la commande
             commande.setMaterielList(Arrays.asList(mat));
             // Enregistrement de la commande

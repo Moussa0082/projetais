@@ -36,25 +36,12 @@ public class ZoneProduction {
     @Column(nullable = true)
     private String dateModif;
 
-    // @PrePersist
-    // public void prePersist() {
-    //     dateAjout = LocalDateTime.now();
-    // }
-
-
-    // @Column(columnDefinition = "TIMESTAMP")
-    // private LocalDateTime dateModif;
-
-    // public LocalDateTime updateDateModif(LocalDateTime dateModif) {
-    //     this.dateModif = dateModif;
-    //     return dateModif;
-    // }
 
     @Column(nullable=true)
     private String personneModif;
     
-    @Column(nullable = false)
-    private boolean statutZone = true;
+    // @Column(nullable = false)
+    private boolean statutZone ;
     
     @OneToMany
     (mappedBy = "zoneProduction")

@@ -24,6 +24,7 @@ import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
+import projet.ais.models.CategorieProduit;
 import projet.ais.models.Magasin;
 import projet.ais.models.Speculation;
 import projet.ais.models.Stock;
@@ -126,10 +127,11 @@ public class StockService {
             String formattedDateTime = now.format(formatter);
 
         stock.setDateAjout(formattedDateTime);
+        stock.setDateProduction(formattedDateTime);
         Stock st = stockRepository.save(stock);
         
         if (st.getActeur().getTypeActeur() != null) {
-    for (TypeActeur typeActeur : st.getActeur().getTypeActeur()) {
+        for (TypeActeur typeActeur : st.getActeur().getTypeActeur()) {
         if (typeActeur.getLibelle().equals("Producteur")) {
             System.out.println("Producteur mail: " + st.getActeur().getEmailActeur());
             
@@ -323,6 +325,18 @@ public class StockService {
         .collect(Collectors.toList());
 
         return stockList;
+    }
+
+
+     
+    public List<Stock> getStocksByCategorieAndMagasin(String idCategorieProduit, String idMagasin) {
+        return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasin(idCategorieProduit, idMagasin);
+    }
+
+    //recuperer les stock par categorie produit
+      // Récupérer les stocks par catégorie
+    public List<Stock> getStocksByCategorie(CategorieProduit categorie) {
+        return stockRepository.findBySpeculation_CategorieProduit(categorie);
     }
 
     public List<Stock> getAllStockByMagasin(String id){

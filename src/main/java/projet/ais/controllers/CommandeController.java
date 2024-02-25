@@ -40,7 +40,7 @@ public class CommandeController {
     @PostMapping("/add")
     public ResponseEntity<String> ajouterCommandeAvecStocks(@RequestBody Commande commande) {
         try {
-            commandeService.creerCommandeAvecStocks(commande);
+            commandeService.ajouterCommande(commande);
              return ResponseEntity.ok("Commande ajoutée avec succès.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
