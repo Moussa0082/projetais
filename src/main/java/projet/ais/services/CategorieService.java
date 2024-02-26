@@ -141,4 +141,3 @@ public class CategorieService {
         return categorieProduitRepository.save(cat);
     }
 }
-

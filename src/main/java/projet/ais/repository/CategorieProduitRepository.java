@@ -15,4 +15,6 @@ public interface CategorieProduitRepository  extends JpaRepository<CategorieProd
     CategorieProduit findBylibelleCategorie(String libelle);
     
     List<CategorieProduit> findByFiliereIdFiliere(String idFiliere);
+
+    // List<CategorieProduit> findByMagasinIdMagasin(String idMagasin);
 }

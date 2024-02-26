@@ -19,7 +19,7 @@ public class CategorieProduit {
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idCategorieProduit;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String codeCategorie;
 
     @Column(nullable = false)
@@ -31,29 +31,17 @@ public class CategorieProduit {
     @Column(nullable = false)
     private boolean statutCategorie = true;
     
+   
+
+    @Column(nullable=true)
+    private String personneModif;
+
     @Column(nullable = true)
     private String dateAjout;
 
     @Column(nullable = true)
     private String dateModif;
 
-    @Column(nullable=true)
-    private String personneModif;
-
-    // @PrePersist
-    // public void prePersist() {
-    //     dateAjout = LocalDateTime.now();
-    // }
-
-
-    // @Column(columnDefinition = "TIMESTAMP", nullable = true)
-    // private LocalDateTime dateModif;
-
-    // public LocalDateTime updateDateModif(LocalDateTime dateModif) {
-    //     this.dateModif = dateModif;
-    //     return dateModif;
-    // }
-    
     @OneToMany
     (mappedBy = "categorieProduit")
     @JsonIgnore
@@ -63,8 +51,14 @@ public class CategorieProduit {
     @JoinColumn(name = "idFiliere")
     private Filiere filiere;
 
+    // @OneToMany
+    // (mappedBy = "categorieProduit")
+    // private List<Magasin> magasin;
+
+
+
     @ManyToOne
-    @JoinColumn( name = "idActeur")
+    @JoinColumn(name = "idActeur")
     private Acteur acteur;
 }
 

@@ -137,16 +137,28 @@ public class ActeurController {
             
 
 
-                @GetMapping("/verifmail")
-    @Operation(summary = "Verifier l'email de l'utilisateur en lui envoyant un code de verification à son adresse email")
+                @GetMapping("/sendOtpCodeEmail")
+    @Operation(summary = "Verifier l'email de l'utilisateur en lui envoyant un code de verification à son adresse email pour la procedure de changement de son mot de pass")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "L'email exist et le code a été envoyer avec succès", content = {
                     @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class))
             }),
             @ApiResponse(responseCode = "500",description = "Erreur serveur", content = @Content),
     })
-    public ResponseEntity<Object> verifierEmail(@RequestParam("email") String email) throws Exception {
-        return ResponseHandler.generateResponse(acteurService.verifyUserEmail(email), HttpStatus.OK,null);
+    public ResponseEntity<Object> sendOtpCodeEmail(@RequestParam("emailActeur") String emailActeur) throws Exception {
+        return ResponseHandler.generateResponse(acteurService.sendOtpCodeEmail(emailActeur), HttpStatus.OK,null);
+    }
+
+                @GetMapping("/sendOtpCodeWhatsApp")
+    @Operation(summary = "Verifier le numéro de l'utilisateur en lui envoyant un code de verification à numéro whatsApp pour la procedure de changement de son mot de pass")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "Le numéro exist et le code a été envoyer avec succès", content = {
+                    @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class))
+            }),
+            @ApiResponse(responseCode = "500",description = "Erreur serveur", content = @Content),
+    })
+    public ResponseEntity<Object> sendOtpCodeWhatsApp(@RequestParam("whatsAppActeur") String whatsAppActeur) throws Exception {
+        return ResponseHandler.generateResponse(acteurService.sendOtpCodeWhatsApp(whatsAppActeur), HttpStatus.OK,null);
     }
 
     //Envoyer un email à un utilisateur spécifique
@@ -158,16 +170,78 @@ public class ActeurController {
     }
 
 
-    @PutMapping("/resetpassword")
-    @Operation(summary = "Réinitialise le mot de passe de l'utilisateur")
+    @PutMapping("/resetPasswordEmail")
+    @Operation(summary = "Réinitialise le mot de passe de l'utilisateur via email et nouveau mot de passe")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "Mot de passe réinitialisé avec succès", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = Acteur.class))
-            }),
-            @ApiResponse(responseCode = "500",description = "Erreur serveur", content = @Content),
+            @ApiResponse(responseCode = "200", description = "Mot de passe réinitialisé avec succès"),
+            @ApiResponse(responseCode = "500", description = "Erreur serveur")
     })
-    public ResponseEntity<Object> resetPassword(@RequestParam("email") String email, @RequestParam("password") String password) throws Exception {
-        return ResponseHandler.generateResponse("succes", HttpStatus.OK,acteurService.resetPassword(email,password));
+    public ResponseEntity<String> resetPasswordEmail(@RequestParam("emailActeur") String emailActeur, @RequestParam("password") String password) {
+        try {
+            acteurService.resetPasswordEmail(emailActeur, password);
+            return ResponseEntity.ok("Mot de passe réinitialisé avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur est survenue : " + e.getMessage());
+        }
+    }
+    @PutMapping("/resetPasswordWhatsApp")
+    @Operation(summary = "Réinitialise le mot de passe de l'utilisateur via whats app numéro et nouveau mot de passe")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Mot de passe réinitialisé avec succès"),
+            @ApiResponse(responseCode = "500", description = "Erreur serveur")
+    })
+    public ResponseEntity<String> resetPasswordWhatsApp(@RequestParam("whatsAppActeur") String whatsAppActeur, @RequestParam("password") String password) {
+        try {
+            acteurService.resetPasswordWhatsApp(whatsAppActeur, password);
+            return ResponseEntity.ok("Mot de passe réinitialisé avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur est survenue : " + e.getMessage());
+        }
+    }
+  
+    
+
+
+    @GetMapping("/verifierOtpCodeWhatsApp")
+    public ResponseEntity<String> verifyOtpCodeWhatsAppActeur(@RequestParam("whatsAppActeur") String whatsAppActeur, @RequestParam("resetToken") String resetToken) {
+        try {
+            boolean isVerified = acteurService.verifyOtpCodeWhatsApp(whatsAppActeur, resetToken);
+            if (isVerified) {
+                return ResponseEntity.ok("Code vérifié avec succès");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Code incorrect");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur est survenue : " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/verifierOtpCodeEmail")
+    public ResponseEntity<String> verifyOtpCodeEmail(@RequestParam("emailActeur") String emailActeur, @RequestParam("resetToken") String resetToken) {
+        try {
+            boolean isVerified = acteurService.verifyOtpCodeEmail(emailActeur,resetToken);
+            if (isVerified) {
+                return ResponseEntity.ok("Code vérifié avec succès");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Code incorrect ou expiré");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur est survenue : " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/verifierOtpCodeWhatsAppActeur")
+    public ResponseEntity<String> verifyOtpCodeWhatsApp(@RequestParam("whatsAppActeur") String whatsAppActeur, @RequestParam("resetToken") String resetToken) {
+        try {
+            boolean isVerified = acteurService.verifyOtpCodeWhatsApp(whatsAppActeur,resetToken);
+            if (isVerified) {
+                return ResponseEntity.ok("Code vérifié avec succès");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Code incorrect ou expiré");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur est survenue : " + e.getMessage());
+        }
     }
             // fin logique  mot de passe oublier
 

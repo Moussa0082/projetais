@@ -80,5 +80,13 @@ public class Magasin {
     (mappedBy = "magasin")
     @JsonIgnore
     private List<Stock> stockList;
+
+    // @ManyToOne
+    // @JoinColumn(name = "idCategorieProduit")
+    // @JsonIgnore
+    // private CategorieProduit categorieProduit;
+
+
 }
+
 
