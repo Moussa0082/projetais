@@ -329,15 +329,30 @@ public class StockService {
 
 
      
+    //recuperer les stock par categorie produit et magasin
     public List<Stock> getStocksByCategorieAndMagasin(String idCategorieProduit, String idMagasin) {
         return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasin(idCategorieProduit, idMagasin);
     }
 
-    //recuperer les stock par categorie produit
       // Récupérer les stocks par catégorie
     public List<Stock> getStocksByCategorie(CategorieProduit categorie) {
         return stockRepository.findBySpeculation_CategorieProduit(categorie);
     }
+
+    public List<Stock> listeStockByCategorieProduitAndMagasinAndActeur( String idCategorie, String idMagasin ,String idActeur) throws Exception {
+
+        List<Stock> stockList = stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasinAndActeurIdActeur(idCategorie,idMagasin,idActeur);
+
+        if(stockList.isEmpty())
+            throw new IllegalStateException("Aucun stock trouvé");
+        
+            stockList = stockList
+            .stream().sorted((s1,s2) -> s2.getDescriptionStock().compareTo(s1.getDescriptionStock()))
+        .collect(Collectors.toList());
+
+        return stockList;
+    }
+
 
     public List<Stock> getAllStockByMagasin(String id){
         List<Stock> stockList = stockRepository.findByMagasinIdMagasin(id);

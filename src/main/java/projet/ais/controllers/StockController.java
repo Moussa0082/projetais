@@ -136,6 +136,11 @@ public class StockController {
             return stockService.getStocksByCategorieAndMagasin(idCategorie, idMagasin);
         }
 
+        @GetMapping("/categorieAndActeur/{idCategorie}/{idMagasin}/{idActeur}")
+        public List<Stock> getStocksByCategorieAndMagasinAndActeur(@PathVariable String idCategorie, @PathVariable String idMagasin , @PathVariable String idActeur) throws Exception {
+            return stockService.listeStockByCategorieProduitAndMagasinAndActeur(idCategorie, idMagasin,idActeur);
+        }
+
         @DeleteMapping("/deleteStocks/{id}")
         @Operation(summary = "Suppression des stocks")
         public String supprimer(@PathVariable String id){
