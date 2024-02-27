@@ -112,6 +112,12 @@ public class StockController {
             return new ResponseEntity<>(stockservice.getAllStockByActeur(id), HttpStatus.OK);
         }
 
+        @GetMapping("/getAllStocksBySpeculation/{id}")
+        @Operation(summary = "Liste des stocks par d'un acteur ")
+        public ResponseEntity<List<Stock>> listeStockParSpeculation(@PathVariable String id){
+            return new ResponseEntity<>(stockservice.getAllStockBySpeculation(id), HttpStatus.OK);
+        }
+
         @GetMapping("/getAllStocksByIdMagasin/{id}")
         @Operation(summary = "Liste des stocks par d'un magasin ")
         public ResponseEntity<List<Stock>> listeStockParMagasin(@PathVariable String id){

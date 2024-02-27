@@ -325,6 +325,19 @@ public class StockService {
         return stockList;
     }
 
+    public List<Stock> getAllStockBySpeculation(String id){
+        List<Stock> stockList = stockRepository.findBySpeculationIdSpeculation(id);
+
+        if(stockList.isEmpty())
+            throw new IllegalStateException("Aucun stock trouvé");
+        
+            stockList = stockList
+             .stream().sorted((s1,s2) -> s2.getDescriptionStock().compareTo(s1.getDescriptionStock()))
+        .collect(Collectors.toList());
+
+        return stockList;
+    }
+
     public List<Stock> getAllStockByMagasin(String id){
         List<Stock> stockList = stockRepository.findByMagasinIdMagasin(id);
 

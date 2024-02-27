@@ -128,6 +128,7 @@ public class ActeurService {
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                     acteur.setPhotoSiegeActeur("ais/" + imageName);
+
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
