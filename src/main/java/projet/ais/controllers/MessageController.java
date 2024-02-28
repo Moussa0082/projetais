@@ -57,7 +57,7 @@ public class MessageController {
         return messageService.deleteMessage(id);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/deleteAllMessage")
     @Operation(summary="Suppression de tout les message")
     public ResponseEntity<Void> deleteAllMessages() {
         try {
