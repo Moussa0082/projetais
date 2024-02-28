@@ -24,8 +24,8 @@ public class MessageWa {
     @Column(nullable = false)
     private String text;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateAjout;
+    @Column(nullable = true)
+    private String dateAjout;
 
     // @Column(nullable = false)
     // private String produitConcerner;

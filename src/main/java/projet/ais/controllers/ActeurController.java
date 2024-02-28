@@ -266,6 +266,7 @@ public class ActeurController {
         }
     }
 
+  
 
     @GetMapping("/send-email-to-all-choose")
     public ResponseEntity<String> sendEmailToAllUsersChoose(@RequestParam ("emails") List<String> emails, @RequestParam("sujet")String sujet, @RequestParam("message")String message, @RequestParam("libelle")String libelle) {
@@ -283,6 +284,16 @@ public class ActeurController {
         } else {
             // Log the exception for debugging
             return new ResponseEntity<>("Echec de l'envoi d'emails car aucun email n'a été trouvé", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/send-message-to-admin")
+    public ResponseEntity<String> sendMessageToAdmin(@RequestParam String message, @RequestParam String acteur ) {
+        try {
+            acteurService.sendMessageWaToAdmin(message, acteur);
+            return new ResponseEntity<>("Message sent to admin successfully", HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to send message to admin: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
