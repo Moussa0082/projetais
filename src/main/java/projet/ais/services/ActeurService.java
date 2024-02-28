@@ -240,7 +240,7 @@ public class ActeurService {
                 // Si un administrateur est trouvé, envoyez un e-mail
            String msg = acteur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez activer son compte dans les plus brefs délais !";
            try {
-            messageService.sendMessageAndSave(admins.getWhatsAppActeur(), msg,acteur.getNomActeur());
+            messageService.sendMessageAndSave(admins.getWhatsAppActeur(), msg,admins);
            } catch (Exception e) {
              throw new Exception("Erreur lors de l'envoie de message wathsapp : " +e.getMessage());
            }
@@ -254,24 +254,24 @@ public class ActeurService {
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
-    public ResponseEntity<String> sendMessageWaToAdmin(String message, String acteur) throws Exception {
+    // public ResponseEntity<String> sendMessageWaToAdmin(String message, String acteur) throws Exception {
 
-        Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
+    //     Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
     
-        if (admins != null) { // Vérifiez si des administrateurs ont été trouvés
-                    // Si un administrateur est trouvé, envoyez un e-mail
-               try {
-                messageService.sendMessageAndSave(admins.getWhatsAppActeur(), message, acteur);
-               } catch (Exception e) {
-                 throw new Exception("Erreur lors de l'envoie de message wathsapp : " +e.getMessage());
-               }
+    //     if (admins != null) { // Vérifiez si des administrateurs ont été trouvés
+    //                 // Si un administrateur est trouvé, envoyez un e-mail
+    //            try {
+    //             messageService.sendMessageAndSave(admins.getWhatsAppActeur(), message, acteur);
+    //            } catch (Exception e) {
+    //              throw new Exception("Erreur lors de l'envoie de message wathsapp : " +e.getMessage());
+    //            }
             
-        } else {
-            System.out.println("Aucun administrateur trouvé"); // Gérez le cas où aucun administrateur n'est trouvé
-        }
+    //     } else {
+    //         System.out.println("Aucun administrateur trouvé"); // Gérez le cas où aucun administrateur n'est trouvé
+    //     }
             
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
-        }
+    //         return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    //     }
    
     public Acteur addTypesToActeur(String idActeur, List<TypeActeur> typeActeurs) throws Exception{
         Acteur acteur = acteurRepository.findByIdActeur(idActeur);
@@ -365,6 +365,38 @@ public class ActeurService {
     }
     
        //envoi message watsApp aux user par types par exemple producteur et commerçant etc.. le nombre de type  choisit par l'admin
+    // public ResponseEntity<Void> sendMessageToActeurByTypeActeur(String message, List<String> libelles) {
+
+    //     // Set to store unique email addresses to avoid duplicates
+    //     Set<String> wathsappSend = new HashSet<>();
+    
+    //     // Retrieve actors for each type label
+    //     List<Acteur> allActeurs = new ArrayList<>();
+    //     for (String libelle : libelles) {
+    //         List<Acteur> acteurs = acteurRepository.findByTypeActeur_Libelle(libelle);
+    //         allActeurs.addAll(acteurs);
+    //     }
+    
+        
+    //     for (Acteur acteur : allActeurs) {
+    //         String wathsapp = Objects.requireNonNullElse(acteur.getWhatsAppActeur(), "");
+    
+    //         // Skip if email is null, empty, or already sent
+    //         if (!wathsappSend.contains(wathsapp) && !wathsapp.isEmpty()) {
+    //             try {
+    //                messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), message, acteur.getNomActeur());
+    //                 wathsappSend.add(wathsapp);
+    //                 System.out.println("Message sent to " + wathsapp);
+    //             } catch (Exception e) {
+    //                 // Handle email sending error
+    //                 System.err.println("Error sending message to " + wathsapp + ": " + e.getMessage());
+    //             }
+    //         }
+    //     }
+    
+    //     return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    // }
+       //envoi message watsApp aux user par types par exemple producteur et commerçant etc.. le nombre de type  choisit par l'admin
     public ResponseEntity<Void> sendMessageToActeurByTypeActeur(String message, List<String> libelles) {
 
         // Set to store unique email addresses to avoid duplicates
@@ -384,7 +416,7 @@ public class ActeurService {
             // Skip if email is null, empty, or already sent
             if (!wathsappSend.contains(wathsapp) && !wathsapp.isEmpty()) {
                 try {
-                   messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), message, acteur.getNomActeur());
+                   messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), message, acteur);
                     wathsappSend.add(wathsapp);
                     System.out.println("Message sent to " + wathsapp);
                 } catch (Exception e) {
@@ -614,7 +646,7 @@ public String sendOtpCodeEmail(String email) throws Exception {
         userVerif.setTokenCreationDate(LocalDateTime.now().plusMinutes(2)); // Code expirera après 2 minutes
         acteurRepository.save(userVerif);
           String msg = "Votre code de verification temporaire est " + code + " veuillez garder ce code pour vous uniquement si vous n'avez pas demander à changer de mot de passe veuiilez ignorer ce message";
-            messageService.sendMessageAndSave(whatsAppActeur, msg, userVerif.getIdActeur().toString());
+            messageService.sendMessageAndSave(whatsAppActeur, msg, userVerif);
         return code;
     }
 

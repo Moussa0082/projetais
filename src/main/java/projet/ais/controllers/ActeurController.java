@@ -287,15 +287,15 @@ public class ActeurController {
         }
     }
 
-    @PostMapping("/send-message-to-admin")
-    public ResponseEntity<String> sendMessageToAdmin(@RequestParam String message, @RequestParam String acteur ) {
-        try {
-            acteurService.sendMessageWaToAdmin(message, acteur);
-            return new ResponseEntity<>("Message sent to admin successfully", HttpStatus.ACCEPTED);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Failed to send message to admin: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+    // @PostMapping("/send-message-to-admin")
+    // public ResponseEntity<String> sendMessageToAdmin(@RequestParam String message, @RequestParam String acteur ) {
+    //     try {
+    //         acteurService.sendMessageWaToAdmin(message, acteur);
+    //         return new ResponseEntity<>("Message sent to admin successfully", HttpStatus.ACCEPTED);
+    //     } catch (Exception e) {
+    //         return new ResponseEntity<>("Failed to send message to admin: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    //     }
+    // }
 
     @GetMapping("/send-email-to-all-checked-choose")
     public ResponseEntity<String> sendMailToAllUserCheckedChoose(@RequestParam ("emails") List<String> emails, @RequestParam("sujet")String sujet, @RequestParam("message")String message, @RequestParam("libelle")List<String> libelle) {
@@ -316,7 +316,19 @@ public class ActeurController {
         }
     }
 
-    @GetMapping("/sendMessageWathsappToActeurByTypeActeur")
+    // @GetMapping("/sendMessageWathsappToActeurByTypeActeur")
+    // public ResponseEntity<String> sendMessageWathsappToActeur(@RequestParam String message, @RequestParam List<String> libelles) {
+    //     try {
+    //         acteurService.sendMessageToActeurByTypeActeur(message, libelles);
+            
+    //         return new ResponseEntity<>("Message envoyé avec succès à tous les acteurs correspondant aux libellés " + libelles.size(), HttpStatus.OK);
+    //     } catch (Exception e) {
+    //         // En cas d'erreur, retourner une réponse avec un message d'erreur
+    //         return new ResponseEntity<>("Échec de l'envoi du message WhatsApp aux acteurs correspondant aux libellés " + libelles + ". Erreur : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    //     }
+    // }
+    
+    @GetMapping("/sendMessageWathsappToActeurByTypeActeurs")
     public ResponseEntity<String> sendMessageWathsappToActeur(@RequestParam String message, @RequestParam List<String> libelles) {
         try {
             acteurService.sendMessageToActeurByTypeActeur(message, libelles);
@@ -327,7 +339,6 @@ public class ActeurController {
             return new ResponseEntity<>("Échec de l'envoi du message WhatsApp aux acteurs correspondant aux libellés " + libelles + ". Erreur : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
              //Mettre à jour un acteur
     @PutMapping("/update/{id}")
     @Operation(summary = "Mise à jour d'un acteur ")

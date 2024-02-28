@@ -43,15 +43,41 @@ public class MessageService {
   
 
 
-    public MessageWa sendMessageAndSave(String whatsAppActeur, String msg, String acteur) throws Exception {
+    // public MessageWa sendMessageAndSave(String whatsAppActeur, String msg, String acteur) throws Exception {
+    //     // Créer une instance de MessageWa et définir les valeurs
+    //     MessageWa message = new MessageWa();
+    //     // message.setActeurConcerner(acteur);
+    //     message.setText(msg);
+    //     String pattern = "yyyy-MM-dd HH:mm";
+    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+    //     LocalDateTime now = LocalDateTime.now();
+    //     String formattedDateTime = now.format(formatter);  
+    //     message.setDateAjout(formattedDateTime);
+        
+    //     // Générer le code et l'ID
+    //     String codes = codeGenerator.genererCode();
+    //     String idCode = idGenerator.genererCode();
+    //     message.setCodeMessage(codes);
+    //     message.setIdMessage(idCode);
+        
+    //     // Enregistrer le message dans la base de données
+    //     messageRepository.save(message);
+        
+    //     // Envoyer le message
+    //     sendMessage.sendMessages(whatsAppActeur, msg);
+        
+    //     return message;
+    // }
+
+    public MessageWa sendMessageAndSave(String whatsAppActeur, String msg, Acteur acteur) throws Exception {
         // Créer une instance de MessageWa et définir les valeurs
         MessageWa message = new MessageWa();
-        message.setActeurConcerner(acteur);
+        message.setActeur(acteur);
         message.setText(msg);
         String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         LocalDateTime now = LocalDateTime.now();
-        String formattedDateTime = now.format(formatter);  
+        String formattedDateTime = now.format(formatter);
         message.setDateAjout(formattedDateTime);
         
         // Générer le code et l'ID
@@ -68,11 +94,10 @@ public class MessageService {
         
         return message;
     }
-
     public MessageWa sendMessagePersonnalAndSave(String whatsAppActeur, String msg) throws Exception {
         // Créer une instance de MessageWa et définir les valeurs
         MessageWa message = new MessageWa();
-        message.setActeurConcerner("Admin");
+        // message.setActeurConcerner("Admin");
         message.setText(msg);
          String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
@@ -105,14 +130,35 @@ public class MessageService {
         return messageList;
     }
 
-    @Transactional
-    public void deleteAllMessages() {
-        messageRepository.deleteAll();
+    public List<MessageWa> getAllMessageByActeur(String id){
+        List<MessageWa> messageList  = messageRepository.findByActeurIdActeur(id);
+
+        if(messageList.isEmpty())
+            throw new EntityNotFoundException("Aucun message trouvé");
+
+            messageList.sort(Comparator.comparing(MessageWa::getText));
+        return messageList;
     }
 
-    public String deleteMessage(String id){
-        MessageWa messageWa = messageRepository.findById(id).orElseThrow(null);
+    @Transactional
+    public String deleteAllMessages() {
+        messageRepository.deleteAll();
+        return "Tous les messages supprimé avec succèss";
+    }
+
+    public String deleteMessage(String id, String idActeur) {
+        // Trouver le message par son ID
+        MessageWa messageWa = messageRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Message non trouvé"));
+
+        // Vérifier si l'acteur concerné correspond
+        if (!messageWa.getActeur().getIdActeur().equals(idActeur)) {
+            throw new IllegalArgumentException("Vous n'êtes autorisé à supprimer ce message");
+        }
+
+        // Supprimer le message
         messageRepository.delete(messageWa);
-        return "Message supprimé avec succèss";
+
+        return "Message supprimé avec succès";
     }
 }

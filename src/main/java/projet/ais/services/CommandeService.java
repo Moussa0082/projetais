@@ -336,7 +336,7 @@ public class CommandeService {
             try { 
             // Envoi du message pour la commande
             String msg = "Bonjour  " + ac.getNomActeur().toUpperCase() + " Votre commande de materiel " + mat.getNom().toUpperCase() + " a été annuler ";
-            messageService.sendMessageAndSave(mat.getActeur().getWhatsAppActeur(), msg, ac.getNomActeur());
+            messageService.sendMessageAndSave(mat.getActeur().getWhatsAppActeur(), msg, ac);
         } catch (Exception e) {
             throw new Exception("Erreur lors de la commande : " + e.getMessage());
         }
@@ -362,7 +362,7 @@ public class CommandeService {
 
         String msg = "Bonjour  " + commande.getActeur().getNomActeur().toUpperCase() + " Votre commande de materiel  a été confirmer ";
         try {
-                messageService.sendMessageAndSave(commande.getActeur().getWhatsAppActeur(), msg, commande.getActeur().getNomActeur());
+                messageService.sendMessageAndSave(commande.getActeur().getWhatsAppActeur(), msg, commande.getActeur());
             } catch (Exception e) {
                 throw new Exception(e.getMessage());
             }

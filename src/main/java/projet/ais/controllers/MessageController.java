@@ -51,20 +51,20 @@ public class MessageController {
         return new ResponseEntity<>(messageService.getAllMessage(), HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{idMessage}/{idActeur}")
     @Operation(summary="Suppression des messages")
-    public String deleteMessage(@PathVariable String id) {
-        return messageService.deleteMessage(id);
+    public String deleteMessage(@PathVariable String id, @PathVariable String idActeur) {
+        return messageService.deleteMessage(id, idActeur);
     }
 
     @DeleteMapping("/deleteAllMessage")
     @Operation(summary="Suppression de tout les message")
-    public ResponseEntity<Void> deleteAllMessages() {
+    public ResponseEntity<String> deleteAllMessages() {
         try {
             messageService.deleteAllMessages();
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>("Tous les messages supprimé avec succèss",HttpStatus.NO_CONTENT);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Tous les messages supprimé avec succèss",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
