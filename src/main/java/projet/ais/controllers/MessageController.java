@@ -51,6 +51,13 @@ public class MessageController {
         return new ResponseEntity<>(messageService.getAllMessage(), HttpStatus.OK);
     }
 
+    @GetMapping("/readByActeur/{id}")
+    @Operation(summary="Récuperation de tout les messages en fonction de l'idActeur")
+    public ResponseEntity<List<MessageWa>> getAllMessagesByActeur(String idActeur) {
+        return new ResponseEntity<>(messageService.getAllMessageByActeur(idActeur), HttpStatus.OK);
+    }
+
+
     @DeleteMapping("/delete/{idMessage}/{idActeur}")
     @Operation(summary="Suppression des messages")
     public String deleteMessage(@PathVariable String id, @PathVariable String idActeur) {
