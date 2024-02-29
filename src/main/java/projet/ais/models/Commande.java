@@ -40,8 +40,7 @@ public class Commande {
     @Column
     private boolean statutConfirmation = false;
     
-    @Column(columnDefinition = "TIMESTAMP" ,nullable = true)
-    private LocalDateTime dateCommande;
+    private String dateCommande;
 
     @Column(nullable = true)
     private String codeProduit;
@@ -63,24 +62,10 @@ public class Commande {
     @Column(nullable = true)
     private String codeAcheteur;
 
-     @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateAjout;
-
-    @PrePersist
-    public void prePersist() {
-        dateAjout = LocalDateTime.now();
-        dateCommande = LocalDateTime.now();
-    }
+    private String dateAjout;
 
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateModif;
-
-    public LocalDateTime updateDateModif(LocalDateTime dateModif) {
-        this.dateModif = dateModif;
-        return dateModif;
-    }
-    
+    private String dateModif;
     
     @ManyToOne
     @JoinColumn(name = "idActeur")
@@ -106,5 +91,9 @@ public class Commande {
     (mappedBy = "commande")
     @JsonIgnore
     private List<DetailCommande> detailCommandeList;
+
+    // public void setStocks(List<Stock> stocks) {
+    //     this.stock = stocks;
+    // }
 
 }

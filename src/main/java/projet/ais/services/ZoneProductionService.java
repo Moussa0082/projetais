@@ -70,6 +70,7 @@ public class ZoneProductionService {
             String idCodes = idGenerator.genererCode();
 
         zoneProduction.setCodeZone(codes);
+        zoneProduction.setStatutZone(true);
         zoneProduction.setIdZoneProduction(idCodes);
         String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
