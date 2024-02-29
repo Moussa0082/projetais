@@ -34,11 +34,11 @@ public class Campagne {
     @Column(nullable = false)
     private boolean statutCampagne = true;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateAjout;
+    @Column(nullable = true)
+    private String dateAjout;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateModif;
+    @Column(nullable = true)
+    private String dateModif;
     
     @OneToMany(mappedBy = "campagne")
     @JsonIgnore

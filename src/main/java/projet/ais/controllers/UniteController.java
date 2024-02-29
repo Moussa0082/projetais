@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import projet.ais.models.Unite;
 import projet.ais.services.UniteService;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("/Unite")
+@CrossOrigin
+@RequestMapping("api-koumi/Unite")
 public class UniteController {
     
     @Autowired
@@ -54,6 +56,12 @@ public class UniteController {
     public ResponseEntity<List<Unite>> listeUnite() {
         return new ResponseEntity<>(uniteService.getAllUnites(), HttpStatus.CREATED);
     }
+
+    @GetMapping("/getAllUniteByActeurs/{id}")
+    public ResponseEntity<List<Unite>> listeUniteByActeur(@PathVariable String id) {
+        return new ResponseEntity<>(uniteService.getAllUnitesByActeur(id), HttpStatus.OK);
+    }
+
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression des unites")

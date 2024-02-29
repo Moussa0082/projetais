@@ -1,13 +1,15 @@
 package projet.ais.services;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.sun.jdi.request.DuplicateRequestException;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.IdGenerator;
@@ -21,10 +23,15 @@ public class Niveau3PaysService {
     private Niveau3PaysRepository niveau3PaysRepository;
     @Autowired
     IdGenerator idGenerator ;
+    
 
     //  Ajouter niveau 3 pays 
-    public ResponseEntity<String> createNiveau3Pays(Niveau3Pays niveau3Pays) {
+    public Niveau3Pays createNiveau3Pays(Niveau3Pays niveau3Pays) {
 
+        Niveau3Pays niveau3PaysExistant = niveau3PaysRepository.findByNomN3(niveau3Pays.getNomN3());
+       
+        if (niveau3PaysExistant != null) 
+            throw new DuplicateRequestException("Cette niveau existe déjà");
         // Générer un numéro aléatoire
         String codeN3 = genererCode();
         String code = idGenerator.genererCode();
@@ -32,17 +39,13 @@ public class Niveau3PaysService {
         // Attribuer le numéro aléatoire au niveau1
         niveau3Pays.setCodeN3(codeN3);
         niveau3Pays.setIdNiveau3Pays(code);
-    
-        // Vérifier si le niveau3Pays existe déjà
-        Niveau3Pays niveau3PaysExistant = niveau3PaysRepository.findByNomN3(niveau3Pays.getNomN3());
-        if (niveau3PaysExistant != null) {
-    
-            // Retourner un message d'erreur
-            return new ResponseEntity<>("Niveau 3 Pays déjà existant.", HttpStatus.BAD_REQUEST);
-        } else {
-            niveau3PaysRepository.save(niveau3Pays);
-            return new ResponseEntity<>("Niveau 3 Pays ajouté avec succès", HttpStatus.CREATED);
-        }
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);       
+        niveau3Pays.setDateAjout(formattedDateTime);
+    return niveau3PaysRepository.save(niveau3Pays);
+        
     }
 
 public String genererCode() {
@@ -91,6 +94,12 @@ private String genererChaineAleatoire(String source, int longueur) {
      niveau3PaysExistant.setNomN3(niveau3Pays.getNomN3());
     niveau3PaysExistant.setDescriptionN3(niveau3Pays.getDescriptionN3());
     niveau3PaysExistant.setNiveau2Pays(niveau3Pays.getNiveau2Pays());
+
+    String pattern = "yyyy-MM-dd HH:mm";
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+    LocalDateTime now = LocalDateTime.now();
+    String formattedDateTime = now.format(formatter);
+    niveau3PaysExistant.setDateModif(formattedDateTime);
 
     return niveau3PaysRepository.save(niveau3PaysExistant);
   }

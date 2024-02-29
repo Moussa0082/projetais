@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/Magasin")
+@RequestMapping("api-koumi/Magasin")
 public class MagasinController {
     
     @Autowired

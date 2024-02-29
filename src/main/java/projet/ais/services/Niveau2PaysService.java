@@ -9,24 +9,35 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.IdGenerator;
 import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Niveau2Pays;
+import projet.ais.repository.Niveau1PaysRepository;
 import projet.ais.repository.Niveau2PaysRepository;
+import com.sun.jdi.request.DuplicateRequestException;
+
 
 @Service
 public class Niveau2PaysService {
 
     @Autowired
     private Niveau2PaysRepository niveau2PaysRepository;
-        @Autowired
+    @Autowired
     IdGenerator idGenerator ;
+    @Autowired 
+    Niveau1PaysRepository niveau1PaysRepository;
 
     
      //  Ajouter niveau 2 pays 
-    public ResponseEntity<String> createNiveau2Pays(Niveau2Pays niveau2Pays) {
+     public ResponseEntity<String> createNiveau2Pays(Niveau2Pays niveau2Pays) throws Exception {
+        // Niveau1Pays niveau1Pays = niveau1PaysRepository.findByIdNiveau1Pays(niveau2Pays.getNiveau1Pays().getIdNiveau1Pays());
 
+        // if(niveau1Pays == null)
+        //     throw new Exception("Selectioner un niveau1");
         // Générer un numéro aléatoire
         String codeN2 = genererCode();
         String code = idGenerator.genererCode();
@@ -35,15 +46,20 @@ public class Niveau2PaysService {
         niveau2Pays.setCodeN2(codeN2);
         niveau2Pays.setIdNiveau2Pays(code);
     
-        // Vérifier si le niveau2Pays existe déjà
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);  
+        niveau2Pays.setDateAjout(formattedDateTime);
+        // Vérifier si le niveau1Pays existe déjà
         Niveau2Pays niveau2PaysExistant = niveau2PaysRepository.findByNomN2(niveau2Pays.getNomN2());
         if (niveau2PaysExistant != null) {
     
             // Retourner un message d'erreur
-            return new ResponseEntity<>("Niveau2Pays déjà existant.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Niveau 2 Pays déjà existant.", HttpStatus.BAD_REQUEST);
         } else {
             niveau2PaysRepository.save(niveau2Pays);
-            return new ResponseEntity<>("Niveau2Pays ajouté avec succès", HttpStatus.CREATED);
+            return new ResponseEntity<>("Niveau 2 Pays ajouté avec succès", HttpStatus.CREATED);
         }
     }
 
@@ -94,6 +110,11 @@ private String genererChaineAleatoire(String source, int longueur) {
     niveau2PaysExistant.setDescriptionN2(niveau2Pays.getDescriptionN2());
     niveau2PaysExistant.setNiveau1Pays(niveau2Pays.getNiveau1Pays());
 
+    String pattern = "yyyy-MM-dd HH:mm";
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+    LocalDateTime now = LocalDateTime.now();
+    String formattedDateTime = now.format(formatter);       
+    niveau2PaysExistant.setDateModif(formattedDateTime);
     return niveau2PaysRepository.save(niveau2PaysExistant);
   }
 

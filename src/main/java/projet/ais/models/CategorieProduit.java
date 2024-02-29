@@ -31,26 +31,17 @@ public class CategorieProduit {
     @Column(nullable = false)
     private boolean statutCategorie = true;
     
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateAjout;
+   
 
     @Column(nullable=true)
     private String personneModif;
 
-    @PrePersist
-    public void prePersist() {
-        dateAjout = LocalDateTime.now();
-    }
+    @Column(nullable = true)
+    private String dateAjout;
 
+    @Column(nullable = true)
+    private String dateModif;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateModif;
-
-    public LocalDateTime updateDateModif(LocalDateTime dateModif) {
-        this.dateModif = dateModif;
-        return dateModif;
-    }
-    
     @OneToMany
     (mappedBy = "categorieProduit")
     @JsonIgnore

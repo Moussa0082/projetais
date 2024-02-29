@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/Categorie")
+@RequestMapping("api-koumi/Categorie")
 public class CategorieController {
     
     @Autowired

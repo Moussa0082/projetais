@@ -3,6 +3,7 @@ package projet.ais.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,16 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.*;
 
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.persistence.EntityNotFoundException;
-import projet.ais.models.Acteur;
-import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Pays;
-import projet.ais.models.TypeActeur;
 import projet.ais.repository.PaysRepository;
 import projet.ais.services.PaysService;
 
 @RestController
-@RequestMapping("/pays")
+@CrossOrigin
+@RequestMapping("api-koumi/pays")
 public class PaysController {
 
     @Autowired
@@ -55,15 +53,8 @@ public class PaysController {
     
     @PutMapping("/update/{id}")
     @Operation(summary = "Modifier un pays")
-   public ResponseEntity<String> updatePays(@RequestBody Pays pays, @PathVariable String id) {
-    Pays paysExistant = paysRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pays introuvable avec id :" +id));;
-
-    if (paysExistant != null) {
-        paysService.updatePays(paysExistant, id);
-        return new ResponseEntity<>("Pays mis à jour avec succès", HttpStatus.OK);
-    } else {
-        return new ResponseEntity<>("Pays non existant avec l'id " + id, HttpStatus.BAD_REQUEST);
-    }
+   public ResponseEntity<Pays> updatesPays(@RequestBody Pays pays, @PathVariable String id) {
+    return new ResponseEntity<>(paysService.updatePays(pays, id), HttpStatus.OK);
 }
 
 

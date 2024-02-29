@@ -27,13 +27,13 @@ public class Magasin {
     // @Column(nullable = false)
     // private String codeActeur;
 
-    @Column(nullable = false)
-    private String niveau3PaysMagasin;
+    // @Column(nullable = false)
+    // private String niveau3PaysMagasin;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String latitude;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String longitude;
 
     @Column(nullable = false)

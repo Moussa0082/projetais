@@ -23,12 +23,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import projet.ais.models.Materiel;
 import projet.ais.services.MaterielService;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
 @CrossOrigin
-@RequestMapping("/Materiel")
+@RequestMapping("api-koumi/Materiel")
 public class MaterielController {
     
     @Autowired

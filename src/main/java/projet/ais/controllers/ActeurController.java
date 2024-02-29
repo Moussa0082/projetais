@@ -1,9 +1,9 @@
 package projet.ais.controllers;
 
-import org.apache.el.stream.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +36,8 @@ import projet.ais.services.ActeurService;
 import projet.ais.services.EmailService;
 
 @RestController
-@RequestMapping("/acteur")
+@CrossOrigin
+@RequestMapping("api-koumi/acteur")
 public class ActeurController {
 
 

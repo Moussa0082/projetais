@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import java.util.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,15 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.persistence.EntityNotFoundException;
-import projet.ais.models.Niveau1Pays;
-import projet.ais.models.Pays;
 import projet.ais.models.SousRegion;
 import projet.ais.repository.SousRegionRepository;
 import projet.ais.services.SousRegionService;
 
 @RestController
-@RequestMapping("/sousRegion")
+@CrossOrigin
+@RequestMapping("api-koumi/sousRegion")
 public class SousRegionController {
 
 
@@ -49,15 +48,8 @@ public class SousRegionController {
     
     @PutMapping("/update/{id}")
     @Operation(summary = "Modifier une sous region")
-   public ResponseEntity<String> updateSousRegion(@RequestBody SousRegion sousRegion, @PathVariable String id) {
-    SousRegion sousRegionExistant = sousRegionRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Sous region introuvable "));;
-
-    if (sousRegionExistant != null) {
-        sousRegionService.updateSousRegion(sousRegionExistant, id);
-        return new ResponseEntity<>("Sous region mis à jour avec succès", HttpStatus.OK);
-    } else {
-        return new ResponseEntity<>("Sous region non existant ", HttpStatus.BAD_REQUEST);
-    }
+   public ResponseEntity<SousRegion> updateSousRegion(@RequestBody SousRegion sousRegion, @PathVariable String id) {
+   return new ResponseEntity<>(sousRegionService.updateSousRegion(sousRegion, id), HttpStatus.OK);
 }
 
      //liste sous region par continent

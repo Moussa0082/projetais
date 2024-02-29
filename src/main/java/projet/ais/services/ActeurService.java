@@ -128,6 +128,7 @@ public class ActeurService {
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                     acteur.setPhotoSiegeActeur("ais/" + imageName);
+
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
@@ -159,7 +160,7 @@ public class ActeurService {
             String formattedDateTime = now.format(formatter);
             acteur.setDateAjout(formattedDateTime);
             acteur.setIdActeur(code);
- 
+            acteur.setWhatsAppActeur("223"+acteur.getWhatsAppActeur());
            
             Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
 
@@ -211,8 +212,8 @@ public class ActeurService {
                             String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez le contacter à son numero "+ savedActeur.getWhatsAppActeur()+"pour proceder à l'activation de son compte dans les plus brefs délais !";
                             Alerte alerte = new Alerte(admin.getEmailActeur(), msg, "Création d'un nouveau compte");
                             // emailService.sendSimpleMail(alerte);
-                            // messageService.sendMessagePersonnalAndSave(admin.getWhatsAppActeur(), msg);
-                            System.out.println(admin.getEmailActeur());
+                            messageService.sendMessagePersonnalAndSave(admin.getWhatsAppActeur(), msg);
+                            System.out.println(admin.getWhatsAppActeur());
                             break; // Sortez de la boucle dès qu'un administrateur est trouvé
                         }
                     }

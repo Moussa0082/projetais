@@ -14,7 +14,7 @@ public interface ZoneProductionRepository extends JpaRepository<ZoneProduction, 
     ZoneProduction findByidZoneProduction(String idZoneProduction);
 
     ZoneProduction findByNomZoneProduction(String nomZoneProduction);
-    List<ZoneProduction> findByActeurIdActeur(String idActeur);
+    List<ZoneProduction>  findByActeurIdActeur(String idActeur);
     
     
 }

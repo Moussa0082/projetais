@@ -21,7 +21,7 @@ import projet.ais.services.RegroupementSevice;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/RegroupemenParametre")
+@RequestMapping("api-koumi/RegroupemenParametre")
 public class RegroupementController {
     
     @Autowired

@@ -7,11 +7,12 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @SpringBootApplication
 public class AisApplication {
 	
+	
 
 	public static void main(String[] args) {
 		SpringApplication.run(AisApplication.class, args);
 	}
-     
+    
 	
 }
 

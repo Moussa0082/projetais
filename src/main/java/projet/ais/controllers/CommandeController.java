@@ -7,6 +7,8 @@ import java.util.*;
 
 
 import java.util.logging.Logger;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -19,18 +21,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.fasterxml.jackson.core.type.TypeReference;
-
 
 import projet.ais.models.Commande;
-import projet.ais.models.DetailCommande;
-import projet.ais.models.Stock;
 import projet.ais.services.CommandeService;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
-@RequestMapping("/commande")
+@CrossOrigin
+@RequestMapping("api-koumi/commande")
 public class CommandeController {
 
     @Autowired

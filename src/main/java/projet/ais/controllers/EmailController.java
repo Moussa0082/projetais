@@ -14,8 +14,8 @@ import projet.ais.models.Alerte;
 import projet.ais.services.EmailService;
 
 @RestController
-@RequestMapping("/mail")
-@CrossOrigin(origins = "*")
+@RequestMapping("api-koumi/mail")
+@CrossOrigin
 public class EmailController {
 
     
