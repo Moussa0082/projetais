@@ -179,7 +179,7 @@ public class StockService {
             String mes = "Bonjour M. " + acteur.getNomActeur() + " M. " +  ac.getNomActeur() + " habitant à " + ac.getAdresseActeur() + " vient d'ajouter un produit au stock: " 
                 + stock.getNomProduit() + "\n\n Lien vers le produit est : " + stock.getPhoto();
                 try {
-                    messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  ac.getNomActeur());
+                    messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  ac);
                 } catch (Exception e) {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur : " + e.getMessage());
                 }

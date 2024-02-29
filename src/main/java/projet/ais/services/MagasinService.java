@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -67,6 +68,11 @@ public class MagasinService {
             }
             String codes = codeGenerator.genererCode();
             String idcodes = idGenerator.genererCode();
+             String pattern = "yyyy-MM-dd HH:mm";
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+    LocalDateTime now = LocalDateTime.now();
+    String formattedDateTime = now.format(formatter);
+    magasin.setDateAjout(formattedDateTime);
             magasin.setCodeMagasin(codes);
             magasin.setIdMagasin(idcodes);
 
@@ -103,7 +109,11 @@ public class MagasinService {
                 }
             }
 
-            mag.setDateModif(LocalDateTime.now());
+            String pattern = "yyyy-MM-dd HH:mm";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+            LocalDateTime now = LocalDateTime.now();
+            String formattedDateTime = now.format(formatter);
+            mag.setDateModif(formattedDateTime);
         return magasinRepository.save(mag);
     }
 

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 @Data
@@ -24,13 +25,16 @@ public class MessageWa {
     @Column(nullable = false)
     private String text;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateAjout;
+    @Column(nullable = true)
+    private String dateAjout;
 
     // @Column(nullable = false)
     // private String produitConcerner;
  
-    @Column(nullable = false)
-    private String ActeurConcerner;
+    // @Column(nullable = true)
+    // private String ActeurConcerner;
+
+    @ManyToOne
+    private Acteur acteur;
     
 }

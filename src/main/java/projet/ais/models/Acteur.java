@@ -131,6 +131,11 @@ public class Acteur {
     @JsonIgnore
     private List<Materiel> materiels;
 
+    @OneToMany(mappedBy = "acteur")
+    @JsonManagedReference
+    // @JoinColumn(name = "id_acteur")
+    @JsonIgnore
+    private List<MessageWa> messageList;
 
     @OneToMany
     (mappedBy = "acteur")
