@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import projet.ais.models.Commande;
+import projet.ais.models.CommandeAvecStocks;
+import projet.ais.models.Stock;
 import projet.ais.services.CommandeService;
 
 
@@ -36,15 +38,18 @@ public class CommandeController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<String> ajouterCommandeAvecStocks(@RequestBody Commande commande) {
-        try {
-            commandeService.ajouterCommande(commande);
-             return ResponseEntity.ok("Commande ajoutée avec succès.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Une erreur est survenue lors de l'ajout de la commande : " + e.getMessage());
-        }
+public ResponseEntity<String> ajouterCommandeAvecStocks(@RequestBody CommandeAvecStocks commandeAvecStocks) throws Exception {
+    try {
+        Commande commande = commandeAvecStocks.getCommande();
+        List<Stock> stocks = commandeAvecStocks.getStocks();
+        commandeService.ajouterStocksACommande(commande, stocks);
+        return ResponseEntity.ok("Commande ajoutée avec succès.");
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body("Une erreur est survenue lors de l'ajout de la commande : " + e.getMessage());
     }
+}
+
     
 
     @PostMapping("/addCommandeMateriel")

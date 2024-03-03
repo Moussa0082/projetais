@@ -42,8 +42,8 @@ public class Commande {
     
     private String dateCommande;
 
-    @Column(nullable = true)
-    private String codeProduit;
+    // @Column(nullable = true)
+    // private String codeProduit;
     
     @Column(nullable = true)
     private double quantiteDemande;
@@ -62,9 +62,6 @@ public class Commande {
     @Column(nullable = true)
     private String codeAcheteur;
 
-    private String dateAjout;
-
-
     private String dateModif;
     
     @ManyToOne
@@ -76,7 +73,7 @@ public class Commande {
     private String personneModif;
 
     @ManyToMany
-    // @JsonIgnore
+    @JsonIgnore
     @JoinTable(name = "commande_stock",
         joinColumns = @JoinColumn(name = "id_commande"),
         inverseJoinColumns = @JoinColumn(name = "id_stock"))

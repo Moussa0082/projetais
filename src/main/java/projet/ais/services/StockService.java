@@ -367,6 +367,9 @@ public List<Stock> getAllStockBySpeculation(String id){
 
     return stockList;
 }
+
+
+
     public List<Stock> getAllStockByMagasin(String id){
         List<Stock> stockList = stockRepository.findByMagasinIdMagasin(id);
 

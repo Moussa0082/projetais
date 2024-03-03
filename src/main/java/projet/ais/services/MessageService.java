@@ -94,6 +94,7 @@ public class MessageService {
         
         return message;
     }
+
     public MessageWa sendMessagePersonnalAndSave(String whatsAppActeur, String msg) throws Exception {
         // Créer une instance de MessageWa et définir les valeurs
         MessageWa message = new MessageWa();

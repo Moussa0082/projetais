@@ -17,9 +17,11 @@ public interface StockRepository extends JpaRepository<Stock, String>{
     List<Stock> findByMagasinIdMagasin(String id);
 
     Stock findByNomProduitAndActeurIdActeur(String nom, String id);
+    
     Stock findByCommandeIdCommande(String idCommande);
     // Stock findByMagasinIdMagasinAndCategorieProduitIdCategorieProduit(String idMagasin, String idCategorieProduit);
     List<Stock> findByIdStock(String idStock);
+
     List<Stock> findByIdStockIn(List<String> idStock);
     // List<Stock> findByIdStock(List<String> idStock);
     //Recuperer les stocks par categorie produit    

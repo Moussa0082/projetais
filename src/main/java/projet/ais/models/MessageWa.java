@@ -31,10 +31,11 @@ public class MessageWa {
     // @Column(nullable = false)
     // private String produitConcerner;
  
-    // @Column(nullable = true)
-    // private String ActeurConcerner;
+    @Column(nullable = true)
+    private String ActeurConcerner;
 
     @ManyToOne
     private Acteur acteur;
+    
     
 }
