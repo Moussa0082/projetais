@@ -14,6 +14,8 @@ import projet.ais.IdGenerator;
 import projet.ais.models.Magasin;
 import projet.ais.models.ParametreFiche;
 import projet.ais.repository.ParametreFicheRepository;
+import java.time.format.DateTimeFormatter;
+
 
 @Service
 public class ParametreFicheService {
@@ -33,8 +35,11 @@ public class ParametreFicheService {
         parametreFiche.setCodeParametre(codes);
         parametreFiche.setIdParametreFiche(codes);
      
-            parametreFiche.setDateAjout(LocalDateTime.now());
-            parametreFiche.setDateModif(LocalDateTime.now());
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+        parametreFiche.setDateAjout(formattedDateTime);
 
         return parametreFicheRepository.save(parametreFiche);
     }
@@ -54,10 +59,11 @@ public class ParametreFicheService {
         param.setCritereChampParametre(parametreFiche.getCritereChampParametre());
         param.setDateAjout(parametreFiche.getDateAjout());
 
-        Date dates = new Date();
-            Instant instant = dates.toInstant();
-            ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-            param.setDateModif(LocalDateTime.now());
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+        param.setDateModif(formattedDateTime);
 
         return parametreFicheRepository.save(param);
     }

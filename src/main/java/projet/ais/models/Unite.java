@@ -23,24 +23,17 @@ public class Unite {
     @Column(nullable = false)
     private String nomUnite;
 
-    @Column(columnDefinition = "TIMESTAMP",nullable = true)
-    private LocalDateTime dateAjout;
+    @Column(nullable = false)
+    private String sigleUnite;
 
-   
+    @Column(nullable = false)
+    private String description;
 
-    @PrePersist
-    public void prePersist() {
-        dateAjout = LocalDateTime.now();
-    }
+    @Column(nullable = true)
+    private String dateAjout;
 
-
-    @Column(columnDefinition = "TIMESTAMP",nullable = true)
-    private LocalDateTime dateModif;
-
-    public LocalDateTime updateDateModif(LocalDateTime dateModif) {
-        this.dateModif = dateModif;
-        return dateModif;
-    }
+    @Column(nullable = true)
+    private String dateModif;
     
     @Column(nullable = false)
     private boolean statutUnite = true;

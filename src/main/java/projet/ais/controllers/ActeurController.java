@@ -339,6 +339,18 @@ public class ActeurController {
             return new ResponseEntity<>("Échec de l'envoi du message WhatsApp aux acteurs correspondant aux libellés " + libelles + ". Erreur : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/sendEmailToActeurByTypeActeur")
+    public ResponseEntity<String> sendEmailToActeurByTypeActeurs(@RequestParam String message, @RequestParam List<String> libelles, @RequestParam String sujet) {
+        try {
+            acteurService.sendEmailToActeurByTypeActeur(message, libelles, sujet);
+            
+            return new ResponseEntity<>("Message envoyé avec succès à tous les acteurs correspondant aux libellés " + libelles.size(), HttpStatus.OK);
+        } catch (Exception e) {
+            // En cas d'erreur, retourner une réponse avec un message d'erreur
+            return new ResponseEntity<>("Échec de l'envoi du message email aux acteurs correspondant aux libellés " + libelles + ". Erreur : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
              //Mettre à jour un acteur
     @PutMapping("/update/{id}")
     @Operation(summary = "Mise à jour d'un acteur ")
