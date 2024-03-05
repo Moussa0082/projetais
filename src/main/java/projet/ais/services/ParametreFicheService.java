@@ -31,9 +31,9 @@ public class ParametreFicheService {
     public ParametreFiche createParametreFiche(ParametreFiche parametreFiche){
 
         String codes = codeGenerator.genererCode();
-        String Idcodes = idGenerator.genererCode();
+        String idCodes = idGenerator.genererCode();
         parametreFiche.setCodeParametre(codes);
-        parametreFiche.setIdParametreFiche(codes);
+        parametreFiche.setIdParametreFiche(idCodes);
      
         String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
