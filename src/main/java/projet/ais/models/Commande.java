@@ -32,7 +32,7 @@ public class Commande {
     private String descriptionCommande;
     
     @Column(nullable = false)
-    private boolean statutCommande = false;
+    private Boolean statutCommande = false;
 
     @Column
     private boolean statutCommandeLivrer = false;
@@ -48,12 +48,12 @@ public class Commande {
     @Column(nullable = true)
     private double quantiteDemande;
     
-    @Column(nullable = true)
-    private double quantiteLivree;
+    // @Column(nullable = true)
+    // private double quantiteLivree;
 
     //Ajouter
-    @Column(nullable = true)
-    private double quantiteNonLivree;
+    // @Column(nullable = true)
+    // private double quantiteNonLivree;
 
     @Column(nullable = true)
     private String nomProduit;
