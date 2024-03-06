@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.EntityNotFoundException;
+import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Unite;
@@ -28,8 +30,10 @@ public class VehiculeService {
     private VehiculeRepository vehiculeRepository;
   
 
-    @Autowired
-    private IdGenerator idGenerator;
+     @Autowired
+    CodeGenerator codeGenerator;
+  @Autowired
+    IdGenerator idGenerator ;
 
 
      //créer un vehicule
@@ -59,8 +63,15 @@ public class VehiculeService {
                 }
             }
 
-            vehicule.setIdVehicule(idGenerator.genererCode());
-            vehicule.setDateAjout(LocalDateTime.now());
+            String codes = codeGenerator.genererCode();
+            String idcodes = idGenerator.genererCode();
+            vehicule.setCodeVehicule(codes);
+            vehicule.setIdVehicule(idcodes);
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+        vehicule.setDateAjout(formattedDateTime);
            Vehicule savedVehicule = vehiculeRepository.save(vehicule);        
    
          return savedVehicule;
@@ -91,12 +102,7 @@ public class VehiculeService {
             throw new IllegalArgumentException("Le vehicule avec l'id " + vh + " n'existe pas");
         }
         
-    // Vérifier si le meme vehicule existe avec le même acteur
-    // Vehicule existantVehicule = vehiculeRepository.findByNomVehiculeAndCapaciteVehiculeAndActeur(vehicule.getNomVehicule(), vehicule.getCapaciteVehicule(), vehicule.getActeur());
-    // if (existantVehicule != null) {
-    //     // si le meme vehicule existe avec le même acteur
-    //     throw new IllegalArgumentException("Ce vehicule existe déjà avec le même acteur");
-    // }
+    
 
             // Traitement du fichier image siege acteur
             if (imageFile != null) {
@@ -117,8 +123,15 @@ public class VehiculeService {
             }
             vh.setNomVehicule(vehicule.getNomVehicule());
             vh.setCapaciteVehicule(vehicule.getCapaciteVehicule());
-            vehicule.setDateModif(LocalDateTime.now());
-            vh.setActeur(vehicule.getActeur());
+            vh.setDescription(vehicule.getDescription());
+            vh.setEtatVehicule(vehicule.getEtatVehicule());
+            vh.setPrix(vehicule.getPrix());
+            vh.setLocalisation(vehicule.getLocalisation());
+            String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+        vh.setDateAjout(formattedDateTime);
             Vehicule savedVehicule = vehiculeRepository.save(vh);        
    
            return savedVehicule;

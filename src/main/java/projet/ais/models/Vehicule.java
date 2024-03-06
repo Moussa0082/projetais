@@ -23,28 +23,32 @@ public class Vehicule {
    @Column(nullable = false)
    private String capaciteVehicule;
 
+   @Column(nullable = true)
+   private String codeVehicule;
+
+   @Column(nullable = false)
+   private int prix;
+
    @Column
    private boolean statutVehicule;
    
-   @Column(nullable = false)
+   @Column(nullable = true)
    private String photoVehicule;
    
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateAjout;
+   @Column(nullable = false)
+    private String localisation;
+   
+   @Column(nullable = true)
+   private String description;
 
-    @PrePersist
-    public void prePersist() {
-        dateAjout = LocalDateTime.now();
-    }
+   @Column(nullable = true)
+   private String dateAjout;
 
-
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateModif;
-
-    public LocalDateTime updateDateModif(LocalDateTime dateModif) {
-        this.dateModif = dateModif;
-        return dateModif;
-    }
+   @Column(nullable = true)
+   private String dateModif;
+   
+   @Column(nullable = false)
+    private String etatVehicule;
 
    @Column(nullable=true)
    private String personneModif;
