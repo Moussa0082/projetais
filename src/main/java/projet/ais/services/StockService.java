@@ -340,7 +340,6 @@ public class StockService {
         return stockList;
     }
 
-
      
     //recuperer les stock par categorie produit et magasin
     public List<Stock> getStocksByCategorieAndMagasin(String idCategorieProduit, String idMagasin) {
@@ -361,10 +360,28 @@ public class StockService {
         
             stockList = stockList
             .stream().sorted((s1,s2) -> s2.getDescriptionStock().compareTo(s1.getDescriptionStock()))
+
         .collect(Collectors.toList());
 
         return stockList;
+
     }
+
+
+// public List<Stock> getAllStockBySpeculation(String id){
+//     List<Stock> stockList = stockRepository.findBySpeculationIdSpeculation(id);
+
+//     if(stockList.isEmpty())
+//         throw new IllegalStateException("Aucun stock trouvé");
+    
+//         stockList = stockList
+//         .stream().sorted((s1,s2) -> s2.getDescriptionStock().compareTo(s1.getDescriptionStock()))
+
+//     .collect(Collectors.toList());
+
+//     return stockList;
+// }
+
 
 
     public List<Stock> getAllStockByMagasin(String id){

@@ -32,7 +32,7 @@ public class Commande {
     private String descriptionCommande;
     
     @Column(nullable = false)
-    private boolean statutCommande = false;
+    private Boolean statutCommande = false;
 
     @Column
     private boolean statutCommandeLivrer = false;
@@ -42,18 +42,18 @@ public class Commande {
     
     private String dateCommande;
 
-    @Column(nullable = true)
-    private String codeProduit;
+    // @Column(nullable = true)
+    // private String codeProduit;
     
     @Column(nullable = true)
     private double quantiteDemande;
     
-    @Column(nullable = true)
-    private double quantiteLivree;
+    // @Column(nullable = true)
+    // private double quantiteLivree;
 
     //Ajouter
-    @Column(nullable = true)
-    private double quantiteNonLivree;
+    // @Column(nullable = true)
+    // private double quantiteNonLivree;
 
     @Column(nullable = true)
     private String nomProduit;
@@ -61,9 +61,6 @@ public class Commande {
 
     @Column(nullable = true)
     private String codeAcheteur;
-
-    private String dateAjout;
-
 
     private String dateModif;
     
@@ -76,7 +73,7 @@ public class Commande {
     private String personneModif;
 
     @ManyToMany
-    // @JsonIgnore
+    @JsonIgnore
     @JoinTable(name = "commande_stock",
         joinColumns = @JoinColumn(name = "id_commande"),
         inverseJoinColumns = @JoinColumn(name = "id_stock"))

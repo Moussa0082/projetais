@@ -24,8 +24,7 @@ public class Alerte {
     @Column(length = 2000, nullable = false)
     private String message;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateAjout;
+    private String dateAjout;
 
     @ManyToOne
     private Acteur acteur;

@@ -149,7 +149,6 @@ public class MagasinService {
         if(magasinList.isEmpty())
             throw new Exception("Aucun magasin trouvé");
 
-        
         magasinList = magasinList.
         stream().sorted((m1,m2) -> m2.getNomMagasin().compareTo(m1.getNomMagasin()))
         .collect(Collectors.toList());

@@ -1,13 +1,14 @@
 package projet.ais.models;
 
-import java.time.LocalDateTime;
+import java.util.*;
+
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
 import lombok.Data;
 
 @Entity
@@ -26,8 +27,9 @@ public class Vehicule {
    @Column(nullable = true)
    private String codeVehicule;
 
-   @Column(nullable = false)
-   private int prix;
+   @Convert(converter = MapToJsonConverter.class)
+   @Column(columnDefinition = "json")
+   private Map<String, Integer> prixParDestination;
 
    @Column
    private boolean statutVehicule;
@@ -36,10 +38,7 @@ public class Vehicule {
    private String photoVehicule;
    
    @Column(nullable = false)
-    private String localisation;
-   
-   @Column(nullable = true)
-   private String description;
+   private String localisation;
 
    @Column(nullable = true)
    private String dateAjout;
@@ -48,7 +47,7 @@ public class Vehicule {
    private String dateModif;
    
    @Column(nullable = false)
-    private String etatVehicule;
+   private String etatVehicule;
 
    @Column(nullable=true)
    private String personneModif;
@@ -56,5 +55,9 @@ public class Vehicule {
    @ManyToOne
    @JoinColumn(name = "idActeur")
    private Acteur acteur;
+
+   @ManyToOne
+   @JoinColumn(name = "idTypeVoiture")
+   private TypeVoiture typeVoiture;
 
 }

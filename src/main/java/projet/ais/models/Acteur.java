@@ -78,20 +78,6 @@ public class Acteur {
     @Column(nullable = true)
     private String dateModif;
 
-    // @PrePersist
-    // public void prePersist() {
-    //     dateAjout = LocalDateTime.now();
-    // }
-
-
-    // @Column(columnDefinition = "TIMESTAMP", nullable = true)
-    // private LocalDateTime dateModif;
-
-    // public LocalDateTime updateDateModif(LocalDateTime dateModif) {
-    //     this.dateModif = dateModif;
-    //     return dateModif;
-    // }
-
 
     @Column(nullable=true)
     private String personneModif;
@@ -125,6 +111,10 @@ public class Acteur {
     @JsonIgnore
     private List<Magasin> magasinList;
 
+    @OneToMany
+    (mappedBy = "acteur")
+    @JsonIgnore
+    private List<TypeVoiture> typeVoitures;
 
     @OneToMany(mappedBy = "acteur")
     @JsonManagedReference

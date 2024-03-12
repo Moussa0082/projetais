@@ -12,6 +12,8 @@ public interface VehiculeRepository extends JpaRepository<Vehicule , String> {
 
 
     List<Vehicule> findAllByActeurIdActeur(String idActeur);
+    
+    List<Vehicule> findAllByTypeVoitureIdTypeVoiture(String idTypeVoiture);
 
 
     Vehicule findByNomVehiculeAndActeur(String nomVehicule, Acteur acteur);

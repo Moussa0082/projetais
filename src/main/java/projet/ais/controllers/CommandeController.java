@@ -17,12 +17,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import projet.ais.models.Commande;
+import projet.ais.models.CommandeAvecStocks;
+import projet.ais.models.Stock;
 import projet.ais.services.CommandeService;
 
 
@@ -36,15 +39,42 @@ public class CommandeController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<String> ajouterCommandeAvecStocks(@RequestBody Commande commande) {
+    public ResponseEntity<String> ajouterCommandeAvecStocks(@RequestBody CommandeAvecStocks commandeAvecStocks) {
         try {
-            commandeService.creerCommandeAvecStocks(commande);
-             return ResponseEntity.ok("Commande ajoutée avec succès.");
+            Commande commande = commandeAvecStocks.getCommande();
+            List<Stock> stocks = commandeAvecStocks.getStocks();
+            List<Double> quantitesDemandees = commandeAvecStocks.getQuantitesDemandees();
+            commandeService.ajouterStocksACommande(commande, stocks, quantitesDemandees);
+            return ResponseEntity.ok("Commande ajoutée avec succès.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Une erreur est survenue lors de l'ajout de la commande : " + e.getMessage());
         }
     }
+    
+    
+          //Valider commande
+            @PutMapping("/{id}/enable")
+            public ResponseEntity<String> enableCommande(@PathVariable("id") String id) {
+                try {
+                    return commandeService.enableCommande(id);
+                } catch (Exception e) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Une erreur est survenue lors de la validation de la commande : " + e.getMessage());
+                }
+            }
+
+        //Annuler commande
+        @PutMapping("/{id}/disable")
+        public ResponseEntity<String> disableCommande(@PathVariable("id") String id) {
+            try {
+                return commandeService.disableCommande(id);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Une erreur est survenue lors de la validation de la commande : " + e.getMessage());
+            }
+        }
+
     
 
     @PostMapping("/addCommandeMateriel")

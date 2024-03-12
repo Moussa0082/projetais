@@ -3,6 +3,7 @@ package projet.ais.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import projet.ais.models.Acteur;
 import projet.ais.models.CategorieProduit;
 import projet.ais.models.Magasin;
 import projet.ais.models.Stock;
@@ -17,9 +18,11 @@ public interface StockRepository extends JpaRepository<Stock, String>{
     List<Stock> findByMagasinIdMagasin(String id);
 
     Stock findByNomProduitAndActeurIdActeur(String nom, String id);
+    
     Stock findByCommandeIdCommande(String idCommande);
     // Stock findByMagasinIdMagasinAndCategorieProduitIdCategorieProduit(String idMagasin, String idCategorieProduit);
     List<Stock> findByIdStock(String idStock);
+
     List<Stock> findByIdStockIn(List<String> idStock);
     // List<Stock> findByIdStock(List<String> idStock);
     //Recuperer les stocks par categorie produit    
@@ -29,6 +32,7 @@ public interface StockRepository extends JpaRepository<Stock, String>{
     // List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduitAndActeur_IdActeur(String idCategorie, String idActeur);
     List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasinAndActeurIdActeur(
             String idCategorieProduit, String idMagasin,String idActeur);
+    Collection<Stock> findByNomProduit(String nomProduit);
  
 
 }

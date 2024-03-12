@@ -91,6 +91,18 @@ public class VehiculeService {
                 .collect(Collectors.toList());
         return vehiculeList;
     } 
+   
+    public List<Vehicule> getVehiculesByTypeVoiture(String idTypeVoiture){
+        List<Vehicule>  vehiculeList =vehiculeRepository.findAllByTypeVoitureIdTypeVoiture(idTypeVoiture);
+
+        if(vehiculeList.isEmpty()){
+            throw new EntityNotFoundException("Aucun vehicule trouvé");
+        }
+        vehiculeList = vehiculeList
+                .stream().sorted((d1, d2) -> d2.getNomVehicule().compareTo(d1.getNomVehicule()))
+                .collect(Collectors.toList());
+        return vehiculeList;
+    }
 
 
       //Modifier vehicule
@@ -123,9 +135,8 @@ public class VehiculeService {
             }
             vh.setNomVehicule(vehicule.getNomVehicule());
             vh.setCapaciteVehicule(vehicule.getCapaciteVehicule());
-            vh.setDescription(vehicule.getDescription());
             vh.setEtatVehicule(vehicule.getEtatVehicule());
-            vh.setPrix(vehicule.getPrix());
+            vh.setPrixParDestination(vehicule.getPrixParDestination());
             vh.setLocalisation(vehicule.getLocalisation());
             String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
