@@ -52,7 +52,7 @@ public class MagasinController {
     @PutMapping("/update/{id}")
     public ResponseEntity<Magasin> updatedMagasin(
         @Valid @RequestParam("magasin") String magasins,
-        @Valid @RequestParam(value = "image",required = false) MultipartFile imageFile, @PathVariable String id) throws Exception{
+        @Valid @RequestParam(value = "image",required = false) MultipartFile imageFile, @PathVariable String idMagasin) throws Exception{
 
             Magasin magasin1 = new Magasin();
             try {
@@ -60,7 +60,7 @@ public class MagasinController {
             }  catch (JsonProcessingException e) {
                 throw new Exception(e.getMessage());
             }
-        Magasin updateMag = magasinService.updateMagasin(magasin1, imageFile,id);
+        Magasin updateMag = magasinService.updateMagasin(magasin1, imageFile,idMagasin);
         return new ResponseEntity<>(updateMag, HttpStatus.CREATED);
     }
 

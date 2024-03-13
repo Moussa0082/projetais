@@ -64,7 +64,7 @@ public class Acteur {
     @Column(nullable = true)
     private String logoActeur;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String niveau3PaysActeur;
 
     
@@ -105,7 +105,7 @@ public class Acteur {
     @Column(nullable = false)
     private String MaillonActeur;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String filiereActeur;
 
    
@@ -115,6 +115,12 @@ public class Acteur {
     (mappedBy = "acteur")
     @JsonIgnore
     private List<Stock> stockList;
+
+    @OneToMany
+    (mappedBy = "acteur")
+    private List<Speculation> speculations;
+
+
 
     @OneToMany(mappedBy = "acteur")
     @JsonIgnore

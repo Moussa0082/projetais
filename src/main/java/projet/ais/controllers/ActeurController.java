@@ -375,7 +375,7 @@ public class ActeurController {
     @PutMapping("/disable/{id}")
     //Desactiver un admin methode
     @Operation(summary = "Désactiver acteur ")
-    public ResponseEntity <String> disableActeur(@PathVariable String id){
+    public ResponseEntity <String> disableActeur(@PathVariable String id) throws Exception{
     
         acteurService.disableActeur(id);
         return new ResponseEntity<>("Acteur desactiver avec succes", HttpStatus.ACCEPTED);
@@ -384,7 +384,7 @@ public class ActeurController {
     //Aciver admin
       @PutMapping("/enable/{id}")
     @Operation(summary = "Activer acteur ")
-    public ResponseEntity <String> enableAdmin(@PathVariable String id){
+    public ResponseEntity <String> enableAdmin(@PathVariable String id) throws Exception{
     
         acteurService.enableActeur(id);
         return new ResponseEntity<>("Acteur activer avec succes", HttpStatus.ACCEPTED);

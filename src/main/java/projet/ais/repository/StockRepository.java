@@ -33,6 +33,7 @@ public interface StockRepository extends JpaRepository<Stock, String>{
     List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasinAndActeurIdActeur(
             String idCategorieProduit, String idMagasin,String idActeur);
     Collection<Stock> findByNomProduit(String nomProduit);
+    List<Stock> findByCommande_IdCommande(String id);
  
 
 }

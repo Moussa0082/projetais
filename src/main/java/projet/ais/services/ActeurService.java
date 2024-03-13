@@ -86,12 +86,12 @@ public class ActeurService {
             throw new IllegalArgumentException("Un acteur avec l'id " + id + " existe déjà");
         }
         
-    // Vérifier si l'acteur a le même mail et le même type
-    Acteur existingActeurAvecMemeType = acteurRepository.findByEmailActeurAndTypeActeurIn(acteur.getEmailActeur(), acteur.getTypeActeur());
-    if (existingActeurAvecMemeType != null) {
-        // Si un acteur avec le même email et type existe déjà
-        throw new IllegalArgumentException("Un acteur avec le même email et type existe déjà");
-    }
+        // Vérifier si l'acteur a le même mail et le même type
+        Acteur existingActeurAvecMemeType = acteurRepository.findByEmailActeurAndTypeActeurIn(acteur.getEmailActeur(), acteur.getTypeActeur());
+        if (existingActeurAvecMemeType != null) {
+            // Si un acteur avec le même email et type existe déjà
+            throw new IllegalArgumentException("Un acteur avec le même email et type existe déjà");
+        }
          
     // if (acteurRepository.findByEmailActeur(acteur.getEmailActeur()) == null) {
         
@@ -99,7 +99,7 @@ public class ActeurService {
                 throw new Exception("Veuillez choisir un type d'acteur pour créer un compte");
             }else{
                 for (TypeActeur typeActeur : acteur.getTypeActeur()) {
-                    if (typeActeur != null && typeActeur.getLibelle() != null && typeActeur.getLibelle().equals("Admin")) {
+                    if (typeActeur != null && typeActeur.getLibelle() != null && (typeActeur.getLibelle() == "Admin"  || typeActeur.getLibelle() == "admin")) {
                         acteur.setStatutActeur(true);
                         break; // Sortie de la boucle dès que "Admin" est trouvé
                     }else{
@@ -160,9 +160,9 @@ public class ActeurService {
             String formattedDateTime = now.format(formatter);
             acteur.setDateAjout(formattedDateTime);
             acteur.setIdActeur(code);
-            acteur.setWhatsAppActeur("223"+acteur.getWhatsAppActeur());
+            acteur.setWhatsAppActeur(acteur.getWhatsAppActeur());
            
-            Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
+            // Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
 
             // Enregistrement de l'acteur
             // boolean isAdmin = false;
@@ -181,21 +181,23 @@ public class ActeurService {
             
             
             // // Envoyer un e-mail à l'administrateur si un acteur "Admin" a été trouvé
-            if (admins != null) { // Vérifiez si des administrateurs ont été trouvés
-                System.out.println(admins.getEmailActeur());
-                for (TypeActeur adminType : admins.getTypeActeur()) {
-                    if (adminType.getLibelle().equals("Admin")) {
-                        // Si un administrateur est trouvé, envoyez un e-mail
-                        String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez activer son compte dans les plus brefs délais !";
-                        Alerte alerte = new Alerte(admins.getEmailActeur(), msg, "Création d'un nouveau compte");
-                        // emailService.sendSimpleMail(alerte);
-                        System.out.println(admins.getEmailActeur());
-                        break; // Sortez de la boucle dès qu'un administrateur est trouvé
-                    }
-                }
-            } else {
-                System.out.println("Aucun administrateur trouvé"); // Gérez le cas où aucun administrateur n'est trouvé
-            }
+            // if (admins != null) { // Vérifiez si des administrateurs ont été trouvés
+            //     System.out.println(admins.getEmailActeur());
+            //     for (TypeActeur adminType : admins.getTypeActeur()) {
+            //         if (adminType.getLibelle().equals("Admin")) {
+            //             // Si un administrateur est trouvé, envoyez un e-mail
+            //             String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez activer son compte dans les plus brefs délais !";
+            //             Alerte alerte = new Alerte(admins.getEmailActeur(), msg, "Création d'un nouveau compte");
+            //             alerteRepository.save(alerte);
+            //             emailService.sendSimpleMail(alerte);
+            //             messageService.sendMessageAndSave(admins.getEmailActeur(), msg, savedActeur);
+            //             System.out.println(admins.getEmailActeur());
+            //             break; // Sortez de la boucle dès qu'un administrateur est trouvé
+            //         }
+            //     }
+            // } else {
+            //     System.out.println("Aucun administrateur trouvé"); // Gérez le cas où aucun administrateur n'est trouvé
+            // }
 
           // Récupérez l'administrateur
             Acteur admin = acteurRepository.findByTypeActeurLibelle("Admin");
@@ -211,7 +213,8 @@ public class ActeurService {
                             // Si l'administrateur a le type "Admin", envoyez un e-mail
                             String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez le contacter à son numero "+ savedActeur.getWhatsAppActeur()+"pour proceder à l'activation de son compte dans les plus brefs délais !";
                             Alerte alerte = new Alerte(admin.getEmailActeur(), msg, "Création d'un nouveau compte");
-                            // emailService.sendSimpleMail(alerte);
+                            alerteRepository.save(alerte);
+                            emailService.sendSimpleMail(alerte);
                             messageService.sendMessagePersonnalAndSave(admin.getWhatsAppActeur(), msg);
                             System.out.println(admin.getWhatsAppActeur());
                             break; // Sortez de la boucle dès qu'un administrateur est trouvé
@@ -322,6 +325,7 @@ public class ActeurService {
             // Envoyer un e-mail à chaque acteur
             for (Acteur ac : allActeurs) {
                 Alerte alerte = new Alerte(ac.getEmailActeur(), message, sujet);
+                alerteRepository.save(alerte);
                 emailService.sendSimpleMail(alerte);
                 System.out.println("Email envoyé à " + ac.getEmailActeur());
             }
@@ -546,13 +550,15 @@ public class ActeurService {
 
     //Desactiver un acteur
 
-    public ResponseEntity<String> disableActeur(String id) {
+    public ResponseEntity<String> disableActeur(String id) throws Exception {
         Optional<Acteur> acteur = acteurRepository.findById(id);
         if (acteur.isPresent()) {
             acteur.get().setStatutActeur(false);
             acteurRepository.save(acteur.get());
-            Alerte alerte = new Alerte(acteur.get().getEmailActeur(), "Votre compte a été desactivé par l'administrateur vous ne pouvez plus acceder à votre compte " + "\n veuillez contacter l'administrateur ");
+            Alerte alerte = new Alerte(acteur.get().getEmailActeur(), "Votre compte a été desactivé par l'administrateur vous ne pouvez plus acceder à votre compte veuillez contacter l'administrateur " , "Desactivation de compte par l'administrateur de koumi");
+            alerteRepository.save(alerte);
             emailService.sendSimpleMail(alerte);
+            messageService.sendMessagePersonnalAndSave(acteur.get().getWhatsAppActeur(), "Votre compte a été desactivé par l'administrateur vous ne pouvez plus acceder à votre compte veuillez contacter l'administrateur ");
             return new ResponseEntity<>("L'acteur " + acteur.get().getNomActeur() + " a été désactivé avec succès", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Admin non trouvé avec l'ID " + id, HttpStatus.BAD_REQUEST);
@@ -602,7 +608,7 @@ public class ActeurService {
             throw new Exception("Cet email n'existe pas");
         }else{
 
-    sendMailAuUser(mail, sujet, message);
+          sendMailAuUser(mail, sujet, message);
             return "Email correcte";
         }
          
@@ -626,7 +632,7 @@ public String sendOtpCodeEmail(String email) throws Exception {
     
     // Enregistrez le code et son horodatage dans la base de données
     userVerif.setResetToken(code);
-    userVerif.setTokenCreationDate(LocalDateTime.now().plusMinutes(1)); // Code expirera après 1 minute (à adapter selon vos besoins)
+    userVerif.setTokenCreationDate(LocalDateTime.now().plusMinutes(2)); // Code expirera après 2 minute (à adapter selon vos besoins)
     acteurRepository.save(userVerif);
     
     // Envoyez le code par e-mail
@@ -640,7 +646,7 @@ public String sendOtpCodeEmail(String email) throws Exception {
     public String sendOtpCodeWhatsApp(String whatsAppActeur) throws Exception {
         Acteur userVerif = acteurRepository.findByWhatsAppActeur(whatsAppActeur);
         if (userVerif == null)
-        throw new Exception("Cet numero n'existe pas, verifier  le numéro saisi");
+        throw new Exception("Ce numero n'existe pas, verifier  le numéro saisi");
          // Stockez temporairement le code dans le champ resetToken de l'utilisateur
         userVerif.setResetToken(code);
         userVerif.setTokenCreationDate(LocalDateTime.now().plusMinutes(2)); // Code expirera après 2 minutes
@@ -680,7 +686,7 @@ public String sendOtpCodeEmail(String email) throws Exception {
     
     // Vérifiez si le code est expiré
     LocalDateTime tokenCreationDate = userVerif.getTokenCreationDate();
-    if (tokenCreationDate == null || tokenCreationDate.isBefore(LocalDateTime.now().minusMinutes(1))) {
+    if (tokenCreationDate == null || tokenCreationDate.isBefore(LocalDateTime.now().minusMinutes(2))) {
         // Code expiré
         throw new RuntimeException("Code expiré");
     }
@@ -701,7 +707,7 @@ public String sendOtpCodeEmail(String email) throws Exception {
         
         Acteur userVerif = acteurRepository.findByWhatsAppActeur(whatsAppActeur);
         if (userVerif == null) {
-            throw new RuntimeException("Cet numéro n'existe pas, veuillez vérifier le numéro saisi");
+            throw new RuntimeException("Ce numéro n'existe pas, veuillez vérifier le numéro saisi");
         }
     
         // Stockez temporairement le code dans le champ resetToken de l'utilisateur
@@ -723,7 +729,7 @@ public String sendOtpCodeEmail(String email) throws Exception {
         // Comparer avec le timestamp actuel
         LocalDateTime now = LocalDateTime.now();
         Duration duration = Duration.between(timestamp, now);
-        return duration.getSeconds() > 60; // Code expiré après 60 secondes
+        return duration.getSeconds() > 120; // Code expiré après 60 secondes
     }
 
     //Fonction pour reinitialiser le mot de passe par email
@@ -786,8 +792,8 @@ public String sendOtpCodeEmail(String email) throws Exception {
             mailMessage.setTo(email);
             mailMessage.setText(message);
             mailMessage.setSubject(sujet);
-
             javaMailSender.send(mailMessage);
+
         }catch (Exception e){
             throw new Exception(e.getMessage());
         }
@@ -802,14 +808,15 @@ public String sendOtpCodeEmail(String email) throws Exception {
     // fin logique service mot de passe oublier 
    
     //activer un acteur
-    public ResponseEntity<String> enableActeur(String id) {
+    public ResponseEntity<String> enableActeur(String id) throws Exception {
         Optional<Acteur> acteur = acteurRepository.findById(id);
         if (acteur.isPresent()) {
             acteur.get().setStatutActeur(true);
             acteurRepository.save(acteur.get());
-             Alerte alerte = new Alerte(acteur.get().getEmailActeur(), "Votre compte a été activé par le super admin vous pouvez acceder votre compte");
-            emailService.sendSimpleMail(alerte);
-            
+             Alerte alerte = new Alerte(acteur.get().getEmailActeur(), "Votre compte a été activé par le super admin vous pouvez acceder votre compte" , "Activation de compte par l'administrateur de koumi");
+            alerteRepository.save(alerte);
+             emailService.sendSimpleMail(alerte);
+             messageService.sendMessagePersonnalAndSave(acteur.get().getWhatsAppActeur(), "Votre compte a été activé par le super admin vous pouvez acceder votre compte");
             return new ResponseEntity<>("Le compte de " + acteur.get().getNomActeur() +  " a été activé avec succès", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Acteur non trouvé avec l'ID " + id, HttpStatus.BAD_REQUEST);
@@ -849,7 +856,6 @@ public String sendOtpCodeEmail(String email) throws Exception {
         acteurRepository.delete(acteur);
         return "Acteur supprimé avec succèss";
     }
-
 
 
      //Se connecter 

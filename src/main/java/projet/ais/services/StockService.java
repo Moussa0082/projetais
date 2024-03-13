@@ -354,7 +354,7 @@ public class StockService {
 
     }
 
-public List<Stock> getAllStockBySpeculation(String id){
+    public List<Stock> getAllStockBySpeculation(String id){
     List<Stock> stockList = stockRepository.findBySpeculationIdSpeculation(id);
 
     if(stockList.isEmpty())
@@ -378,6 +378,19 @@ public List<Stock> getAllStockBySpeculation(String id){
         
             stockList = stockList
             .stream().sorted((s1,s2) -> s2.getDescriptionStock().compareTo(s1.getDescriptionStock()))
+        .collect(Collectors.toList());
+
+        return stockList;
+    }
+
+    public List<Stock> getAllStockByCommande(String id){
+        List<Stock> stockList = stockRepository.findByCommande_IdCommande(id);
+
+        if(stockList.isEmpty())
+            throw new IllegalStateException("Aucun stock trouvé");
+        
+            stockList = stockList
+            .stream().sorted((s1,s2) -> s2.getNomProduit().compareTo(s1.getNomProduit()))
         .collect(Collectors.toList());
 
         return stockList;
