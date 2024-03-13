@@ -284,7 +284,7 @@ public class CommandeService {
     
     
 
-public ResponseEntity<String> confirmerCommande(String id, Map<String, Double> quantitesLivre) throws Exception {
+   public ResponseEntity<String> confirmerLivraisonVendeur(String id, Map<String, Double> quantitesLivre) throws Exception {
     Commande commande = commandeRepository.findByIdCommande(id);
 
     if (commande != null) {
@@ -315,10 +315,16 @@ public ResponseEntity<String> confirmerCommande(String id, Map<String, Double> q
     
         if (toutesQuantitesAjoutees) {
             // Informer le commanditaire par e-mail et WhatsApp
-            informerCommanditaire(commande.getActeur());
+            // informerCommanditaire(commande.getActeur());
+            // Envoyer une notification par e-mail et WhatsApp à l'utilisateur
+    String message = "Votre commande numéro "+ commande.getCodeCommande() +" a été validée par le vendeur avec succès un livreur ira vous livrer votre commande bientôt .";
+    Alerte al = new Alerte(commande.getActeur().getEmailActeur(), message,  "Commande Validée");
+    alerteRepository.save(al);
+    emailService.sendSimpleMail(al);
+    messageService.sendMessageAndSave(commande.getActeur().getWhatsAppActeur(), message, commande.getActeur());
         }
 
-        return new ResponseEntity<>("La commande a été validée avec succès.", HttpStatus.OK);
+        return new ResponseEntity<>("La livraison de la commande a été validée avec succès.", HttpStatus.OK);
     } else {
         return new ResponseEntity<>("Commande non trouvée avec l'ID " + id + " ou aucun stock associé.", HttpStatus.BAD_REQUEST);
     }

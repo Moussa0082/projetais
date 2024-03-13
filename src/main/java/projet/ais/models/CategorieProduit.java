@@ -57,8 +57,8 @@ public class CategorieProduit {
 
 
 
-    @ManyToOne
-    @JoinColumn(name = "idActeur")
-    private Acteur acteur;
+    // @ManyToOne
+    // @JoinColumn(name = "idActeur")
+    // private Acteur acteur;
 }
 

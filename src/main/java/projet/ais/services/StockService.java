@@ -397,6 +397,19 @@ public class StockService {
         return stockList;
     }
 
+    public List<Stock> getAllStockByCommande(String id){
+        List<Stock> stockList = stockRepository.findByCommande_IdCommande(id);
+
+        if(stockList.isEmpty())
+            throw new IllegalStateException("Aucun stock trouvé");
+        
+            stockList = stockList
+            .stream().sorted((s1,s2) -> s2.getNomProduit().compareTo(s1.getNomProduit()))
+        .collect(Collectors.toList());
+
+        return stockList;
+    }
+
     public String deleteStock(String id){
         Stock stock = stockRepository.findById(id).orElseThrow(null);
 

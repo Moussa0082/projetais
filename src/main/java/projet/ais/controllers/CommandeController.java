@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import projet.ais.models.Commande;
 import projet.ais.models.CommandeAvecStocks;
+import projet.ais.models.DetailCommande;
 import projet.ais.models.Stock;
 import projet.ais.services.CommandeService;
 
@@ -98,6 +99,17 @@ public class CommandeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'ajout au panier : " + e.getMessage());
         }
     }
+
+     @PutMapping("/confirmerLivraisonVendeur")
+    public ResponseEntity<String> confirmerLivraisonVendeur(@RequestParam String id, @RequestParam Map<String, Double> quantitesLivre) throws Exception {
+        try {
+            commandeService.confirmerLivraisonVendeur(id,quantitesLivre);
+            return ResponseEntity.ok("Livraison Confirmer avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la confirmation de la livraison des produits : " + e.getMessage());
+        }
+    }
+     
 
     @PostMapping("/confirmerCommande/{idCommande}")
     @Operation(summary="Confirmer commande materiel")

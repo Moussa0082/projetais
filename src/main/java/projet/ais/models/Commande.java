@@ -73,7 +73,7 @@ public class Commande {
     private String personneModif;
 
     @ManyToMany
-    @JsonIgnore
+    // @JsonIgnore
     @JoinTable(name = "commande_stock",
         joinColumns = @JoinColumn(name = "id_commande"),
         inverseJoinColumns = @JoinColumn(name = "id_stock"))

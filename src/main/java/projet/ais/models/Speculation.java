@@ -52,6 +52,7 @@ public class Speculation {
     @ManyToOne
     @JoinColumn( name = "idActeur")
     private Acteur acteur;
+
     
     @OneToMany
     (mappedBy = "speculation")

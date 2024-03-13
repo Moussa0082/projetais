@@ -64,7 +64,7 @@ public class Acteur {
     @Column(nullable = true)
     private String logoActeur;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String niveau3PaysActeur;
 
     
@@ -88,12 +88,6 @@ public class Acteur {
     @Column(nullable = false)
     private String emailActeur;
 
-    @Column(nullable = false)
-    private String MaillonActeur;
-
-    @Column(nullable = false)
-    private String filiereActeur;
-
    
     private Boolean statutActeur  ;
 
@@ -101,6 +95,12 @@ public class Acteur {
     (mappedBy = "acteur")
     @JsonIgnore
     private List<Stock> stockList;
+
+    @OneToMany
+    (mappedBy = "acteur")
+    private List<Speculation> speculations;
+
+
 
     @OneToMany(mappedBy = "acteur")
     @JsonIgnore
@@ -125,15 +125,15 @@ public class Acteur {
     @JsonIgnore
     private List<MessageWa> messageList;
 
-    @OneToMany
-    (mappedBy = "acteur")
-    @JsonIgnore
-    private List<CategorieProduit> categorieProduits;
+    // @OneToMany
+    // (mappedBy = "acteur")
+    // @JsonIgnore
+    // private List<CategorieProduit> categorieProduits;
 
-    @OneToMany
-    (mappedBy = "acteur")
-    @JsonIgnore
-    private List<Filiere> filieresList;
+    // @OneToMany
+    // (mappedBy = "acteur")
+    // @JsonIgnore
+    // private List<Filiere> filieresList;
 
     @OneToMany
     (mappedBy = "acteur")
