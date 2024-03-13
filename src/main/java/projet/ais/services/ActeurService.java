@@ -213,6 +213,7 @@ public class ActeurService {
                             // Si l'administrateur a le type "Admin", envoyez un e-mail
                             String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez le contacter à son numero "+ savedActeur.getWhatsAppActeur()+"pour proceder à l'activation de son compte dans les plus brefs délais !";
                             Alerte alerte = new Alerte(admin.getEmailActeur(), msg, "Création d'un nouveau compte");
+                           alerte.setId(idGenerator.genererCode());
                             alerteRepository.save(alerte);
                             emailService.sendSimpleMail(alerte);
                             messageService.sendMessagePersonnalAndSave(admin.getWhatsAppActeur(), msg);
@@ -355,6 +356,8 @@ public class ActeurService {
             if (!emailsSent.contains(emailActeur) && !emailActeur.isEmpty()) {
                 try {
                     Alerte alerte = new Alerte(emailActeur, message, sujet);
+                    // alerte.setId(idGenerator.genereCode());
+                    // alerteRepository.save(alerte);
                     emailService.sendSimpleMail(alerte);
                     emailsSent.add(emailActeur);
                     System.out.println("Email sent to " + emailActeur);
@@ -595,6 +598,8 @@ public class ActeurService {
             acteur.get().setStatutActeur(false);
             acteurRepository.save(acteur.get());
             Alerte alerte = new Alerte(acteur.get().getEmailActeur(), "Votre compte a été desactivé par l'administrateur vous ne pouvez plus acceder à votre compte veuillez contacter l'administrateur " , "Desactivation de compte par l'administrateur de koumi");
+            alerte.setId(idGenerator.genererCode());
+
             alerteRepository.save(alerte);
             emailService.sendSimpleMail(alerte);
             messageService.sendMessagePersonnalAndSave(acteur.get().getWhatsAppActeur(), "Votre compte a été desactivé par l'administrateur vous ne pouvez plus acceder à votre compte veuillez contacter l'administrateur ");
@@ -853,7 +858,8 @@ public String sendOtpCodeEmail(String email) throws Exception {
             acteur.get().setStatutActeur(true);
             acteurRepository.save(acteur.get());
              Alerte alerte = new Alerte(acteur.get().getEmailActeur(), "Votre compte a été activé par le super admin vous pouvez acceder votre compte" , "Activation de compte par l'administrateur de koumi");
-            alerteRepository.save(alerte);
+            alerte.setId(idGenerator.genererCode());
+             alerteRepository.save(alerte);
              emailService.sendSimpleMail(alerte);
              messageService.sendMessagePersonnalAndSave(acteur.get().getWhatsAppActeur(), "Votre compte a été activé par le super admin vous pouvez acceder votre compte");
             return new ResponseEntity<>("Le compte de " + acteur.get().getNomActeur() +  " a été activé avec succès", HttpStatus.OK);
