@@ -434,7 +434,38 @@ public class ActeurService {
     }
     
 
+    public ResponseEntity<Void> sendEmailToActeurByTypeActeur(String message, List<String> libelles, String sujet) {
 
+        // Set to store unique email addresses to avoid duplicates
+        Set<String> emailSend = new HashSet<>();
+    
+        // Retrieve actors for each type label
+        List<Acteur> allActeurs = new ArrayList<>();
+        for (String libelle : libelles) {
+            List<Acteur> acteurs = acteurRepository.findByTypeActeur_Libelle(libelle);
+            allActeurs.addAll(acteurs);
+        }
+    
+        
+        for (Acteur acteur : allActeurs) {
+            String emails = Objects.requireNonNullElse(acteur.getWhatsAppActeur(), "");
+    
+            // Skip if email is null, empty, or already sent
+            if (!emailSend.contains(emails) && !emails.isEmpty()) {
+                try {
+                    Alerte alerte = new Alerte(acteur.getEmailActeur(), message,sujet );
+                  emailService.sendSimpleMail(alerte);
+                  emailSend.add(emails);
+                    System.out.println("Message sent to " + emails);
+                } catch (Exception e) {
+                    // Handle email sending error
+                    System.err.println("Error sending message to " + emails + ": " + e.getMessage());
+                }
+            }
+        }
+    
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
 
     
     public String genererCode() {
@@ -522,8 +553,8 @@ public class ActeurService {
         ac.setWhatsAppActeur(acteur.getWhatsAppActeur());
         ac.setLocaliteActeur(acteur.getLocaliteActeur());
         ac.setEmailActeur(acteur.getEmailActeur());
-        ac.setMaillonActeur(acteur.getMaillonActeur());
-        ac.setFiliereActeur(acteur.getFiliereActeur());
+        // ac.setMaillonActeur(acteur.getMaillonActeur());
+        // ac.setFiliereActeur(acteur.getFiliereActeur());
         ac.setTypeActeur(acteur.getTypeActeur());
 
                        
@@ -548,6 +579,15 @@ public class ActeurService {
         return acteurList;
     }
 
+    // public List<Acteur> getAllActeurByTypeActeur(String id){
+
+    //     List<Acteur> acteurList = acteurRepository.findAllByTypeActeurIdTypeActeur(id);
+
+    //     acteurList = acteurList
+    //             .stream().sorted((d1, d2) -> d2.getEmailActeur().compareTo(d1.getEmailActeur()))
+    //             .collect(Collectors.toList());
+    //     return acteurList;
+    // }
     //Desactiver un acteur
 
     public ResponseEntity<String> disableActeur(String id) throws Exception {

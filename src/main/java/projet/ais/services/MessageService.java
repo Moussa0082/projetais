@@ -24,6 +24,7 @@ import projet.ais.models.Acteur;
 import projet.ais.models.CategorieProduit;
 import projet.ais.models.MessageWa;
 import projet.ais.models.Niveau1Pays;
+import projet.ais.models.Speculation;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.MessageWaRepository;
 
@@ -141,6 +142,7 @@ public class MessageService {
         return messageList;
     }
 
+    
     @Transactional
     public String deleteAllMessages() {
         messageRepository.deleteAll();

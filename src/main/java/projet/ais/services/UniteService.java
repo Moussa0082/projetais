@@ -1,21 +1,18 @@
 package projet.ais.services;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
-import projet.ais.models.Stock;
 import projet.ais.models.Unite;
 import projet.ais.repository.UniteRepository;
-
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class UniteService {
@@ -39,8 +36,11 @@ public class UniteService {
         unite.setCodeUnite(codes);
         unite.setIdUnite(Idcodes);
 
-        unite.setDateModif(LocalDateTime.now());
-        unite.setDateAjout(LocalDateTime.now());
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);  
+        unite.setDateAjout(formattedDateTime);
         return uniteRepository.save(unite);
     }
 
@@ -48,9 +48,15 @@ public class UniteService {
         Unite unites = uniteRepository.findById(id).orElseThrow(null);
 
         unites.setNomUnite(unite.getNomUnite());
-        unites.setDateAjout(unites.getDateAjout());
         unites.setPersonneModif(unite.getPersonneModif());
-        unite.setDateModif(LocalDateTime.now());
+        unites.setSigleUnite(unite.getSigleUnite());
+        unites.setDescription(unite.getDescription());
+
+         String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);  
+        unites.setDateModif(formattedDateTime);
         return uniteRepository.save(unites);
     }
 

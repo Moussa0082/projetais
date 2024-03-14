@@ -78,7 +78,7 @@ public class ZoneProductionService {
         String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         LocalDateTime now = LocalDateTime.now();
-        String formattedDateTime = now.format(formatter);  
+        String formattedDateTime = now.format(formatter);
         zoneProduction.setDateAjout(formattedDateTime);
         return zoneProductionRepository.save(zoneProduction);
     }

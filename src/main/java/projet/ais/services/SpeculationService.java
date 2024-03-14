@@ -152,4 +152,10 @@ public class SpeculationService {
         }
         return speculationRepository.save(speculation);
     }
+
+
+    public List<Speculation> getSpeculationsByCategories(List<String> idsCategorieProduit) {
+        return speculationRepository.findByCategorieProduitIdCategorieProduitIn(idsCategorieProduit);
+    }
+
 }

@@ -157,7 +157,7 @@ public class StockService {
 
 
     try {
-        // sendMessageToAllActeur(st);
+         sendMessageToAllActeur(st);
     } catch (Exception e) {
         System.out.println(e.getMessage());
     }
@@ -170,20 +170,20 @@ public class StockService {
         List<Acteur> allActeurs = acteurRepository.findAll();
         Acteur ac = stock.getActeur();
 
-        TypeActeur transporteur = typeActeurRepository.findByLibelle("Transporteur");
-        TypeActeur fournisseur = typeActeurRepository.findByLibelle("Fournisseur");
+        // TypeActeur transporteur = typeActeurRepository.findByLibelle("Transporteur");
+        // TypeActeur fournisseur = typeActeurRepository.findByLibelle("Fournisseur");
         for (Acteur acteur : allActeurs) {
-            if (!acteur.getIdActeur().equals(ac.getIdActeur())  && !acteur.getTypeActeur().contains(transporteur) && !acteur.getTypeActeur().contains(fournisseur)) {
+            // if (!acteur.getIdActeur().equals(ac.getIdActeur())  && !acteur.getTypeActeur().contains(transporteur) && !acteur.getTypeActeur().contains(fournisseur)) {
             
             // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
             String mes = "Bonjour M. " + acteur.getNomActeur() + " M. " +  ac.getNomActeur() + " habitant à " + ac.getAdresseActeur() + " vient d'ajouter un produit au stock: " 
                 + stock.getNomProduit() + "\n\n Lien vers le produit est : " + stock.getPhoto();
                 try {
-                    messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  ac);
+                    messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  acteur);
                 } catch (Exception e) {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur : " + e.getMessage());
                 }
-            }
+            
         
         }
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
@@ -314,6 +314,19 @@ public class StockService {
         return stockList;
     }
 
+    public List<Stock> getAllStockBySpeculation(String id){
+        List<Stock> stockList = stockRepository.findBySpeculationIdSpeculation(id);
+
+        if(stockList.isEmpty())
+            throw new IllegalStateException("Aucun stock trouvé");
+        
+            stockList = stockList
+             .stream().sorted((s1,s2) -> s2.getDescriptionStock().compareTo(s1.getDescriptionStock()))
+        .collect(Collectors.toList());
+
+        return stockList;
+    }
+
     public List<Stock> getAllStockByActeur(String id){
         List<Stock> stockList = stockRepository.findByActeurIdActeur(id);
 
@@ -341,7 +354,7 @@ public class StockService {
     public List<Stock> listeStockByCategorieProduitAndMagasinAndActeur( String idCategorie, String idMagasin ,String idActeur) throws Exception {
 
         List<Stock> stockList = stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasinAndActeurIdActeur(idCategorie,idMagasin,idActeur);
-   
+
         if(stockList.isEmpty())
             throw new IllegalStateException("Aucun stock trouvé");
         
@@ -354,19 +367,20 @@ public class StockService {
 
     }
 
-    public List<Stock> getAllStockBySpeculation(String id){
-    List<Stock> stockList = stockRepository.findBySpeculationIdSpeculation(id);
 
-    if(stockList.isEmpty())
-        throw new IllegalStateException("Aucun stock trouvé");
+// public List<Stock> getAllStockBySpeculation(String id){
+//     List<Stock> stockList = stockRepository.findBySpeculationIdSpeculation(id);
+
+//     if(stockList.isEmpty())
+//         throw new IllegalStateException("Aucun stock trouvé");
     
-        stockList = stockList
-        .stream().sorted((s1,s2) -> s2.getDescriptionStock().compareTo(s1.getDescriptionStock()))
+//         stockList = stockList
+//         .stream().sorted((s1,s2) -> s2.getDescriptionStock().compareTo(s1.getDescriptionStock()))
 
-    .collect(Collectors.toList());
+//     .collect(Collectors.toList());
 
-    return stockList;
-}
+//     return stockList;
+// }
 
 
 

@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -37,8 +38,11 @@ public class RenvoieParametreService {
         String code = idGenerator.genererCode();
         renvoieParametre.setIdRenvoiParametre(code);
 
-        renvoieParametre.setDateModif(LocalDateTime.now());
-        renvoieParametre.setDateAjout(LocalDateTime.now());
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+        renvoieParametre.setDateAjout(formattedDateTime);
         return renvoieParametreRepository.save(renvoieParametre);
     }
 
@@ -50,7 +54,11 @@ public class RenvoieParametreService {
     ren.setDescriptionRenvoie(renvoieParametre.getDescriptionRenvoie());
     ren.setDateAjout(ren.getDateAjout());
 
-    ren.setDateModif(LocalDateTime.now());
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+        ren.setDateModif(formattedDateTime);
         return renvoieParametreRepository.save(ren);
     }
 

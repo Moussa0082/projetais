@@ -57,7 +57,8 @@ public class ParametreFicheController {
     
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression du parametre")
-    public String supprimerParam(@PathVariable Integer id){
+    public String supprimerParam(@PathVariable String id){
+        parametreFicheService.deleteParametreFiche(id);
         return "Supprimé avec succèss";
     }
 }

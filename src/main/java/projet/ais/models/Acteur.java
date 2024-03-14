@@ -78,20 +78,6 @@ public class Acteur {
     @Column(nullable = true)
     private String dateModif;
 
-    // @PrePersist
-    // public void prePersist() {
-    //     dateAjout = LocalDateTime.now();
-    // }
-
-
-    // @Column(columnDefinition = "TIMESTAMP", nullable = true)
-    // private LocalDateTime dateModif;
-
-    // public LocalDateTime updateDateModif(LocalDateTime dateModif) {
-    //     this.dateModif = dateModif;
-    //     return dateModif;
-    // }
-
 
     @Column(nullable=true)
     private String personneModif;
@@ -102,11 +88,11 @@ public class Acteur {
     @Column(nullable = false)
     private String emailActeur;
 
-    @Column(nullable = false)
-    private String MaillonActeur;
+    // @Column(nullable = false)
+    // private String MaillonActeur;
 
-    @Column(nullable = true)
-    private String filiereActeur;
+    // @Column(nullable = true)
+    // private String filiereActeur;
 
    
     private Boolean statutActeur  ;
@@ -131,6 +117,10 @@ public class Acteur {
     @JsonIgnore
     private List<Magasin> magasinList;
 
+    @OneToMany
+    (mappedBy = "acteur")
+    @JsonIgnore
+    private List<TypeVoiture> typeVoitures;
 
     @OneToMany(mappedBy = "acteur")
     @JsonManagedReference
@@ -138,8 +128,6 @@ public class Acteur {
     private List<Materiel> materiels;
 
     @OneToMany(mappedBy = "acteur")
-    @JsonManagedReference
-    // @JoinColumn(name = "id_acteur")
     @JsonIgnore
     private List<MessageWa> messageList;
 

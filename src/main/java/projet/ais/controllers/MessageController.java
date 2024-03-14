@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import projet.ais.models.Acteur;
 import projet.ais.models.CategorieProduit;
+import projet.ais.models.Filiere;
 import projet.ais.models.MessageWa;
 import projet.ais.services.MessageService;
 
@@ -51,17 +52,16 @@ public class MessageController {
         return new ResponseEntity<>(messageService.getAllMessage(), HttpStatus.OK);
     }
 
-    @GetMapping("/readByActeur/{id}")
-    @Operation(summary="Récuperation de tout les messages en fonction de l'idActeur")
-    public ResponseEntity<List<MessageWa>> getAllMessagesByActeur(String idActeur) {
+    @GetMapping("/messageByActeur/{idActeur}")
+    @Operation(summary="Récuperation de tout les message d'un acteur")
+    public ResponseEntity<List<MessageWa>> getAllMessagesByActeur(@PathVariable String idActeur) {
         return new ResponseEntity<>(messageService.getAllMessageByActeur(idActeur), HttpStatus.OK);
     }
 
-
-    @DeleteMapping("/delete/{idMessage}/{idActeur}")
+    @DeleteMapping("/deleteMessage/{idMessage}/{idActeur}")
     @Operation(summary="Suppression des messages")
-    public String deleteMessage(@PathVariable String id, @PathVariable String idActeur) {
-        return messageService.deleteMessage(id, idActeur);
+    public String deleteMessage(@PathVariable String idMessage, @PathVariable String idActeur) {
+        return messageService.deleteMessage(idMessage, idActeur);
     }
 
     @DeleteMapping("/deleteAllMessage")

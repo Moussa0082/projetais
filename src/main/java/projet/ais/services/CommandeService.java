@@ -282,9 +282,7 @@ public class CommandeService {
 
 
     
-    
-
-   public ResponseEntity<String> confirmerLivraisonVendeur(String id, Map<String, Double> quantitesLivre) throws Exception {
+public ResponseEntity<String> confirmerLivraisonVendeur(String id, Map<String, Double> quantitesLivre) throws Exception {
     Commande commande = commandeRepository.findByIdCommande(id);
 
     if (commande != null) {
@@ -305,6 +303,7 @@ public class CommandeService {
 
             // Mettre à jour la quantité livrée dans le détail de la commande
             detail.setQuantiteLivree(quantiteLivre);
+            detail.setQuantiteNonLivree(quantiteDemandee - quantiteLivre);
             detailCommandeRepository.save(detail);
         }
 
@@ -312,16 +311,13 @@ public class CommandeService {
         boolean toutesQuantitesAjoutees = commande.getDetailCommandeList().stream()
                 .allMatch(detail -> detail.getQuantiteLivree().equals(detail.getQuantiteDemande()));
 
-    
         if (toutesQuantitesAjoutees) {
             // Informer le commanditaire par e-mail et WhatsApp
-            // informerCommanditaire(commande.getActeur());
-            // Envoyer une notification par e-mail et WhatsApp à l'utilisateur
-    String message = "Votre commande numéro "+ commande.getCodeCommande() +" a été validée par le vendeur avec succès un livreur ira vous livrer votre commande bientôt .";
-    Alerte al = new Alerte(commande.getActeur().getEmailActeur(), message,  "Commande Validée");
-    alerteRepository.save(al);
-    emailService.sendSimpleMail(al);
-    messageService.sendMessageAndSave(commande.getActeur().getWhatsAppActeur(), message, commande.getActeur());
+            String message = "Votre commande numéro " + commande.getCodeCommande() + " a été validée par le vendeur avec succès. Un livreur ira vous livrer votre commande bientôt.";
+            Alerte al = new Alerte(commande.getActeur().getEmailActeur(), message, "Commande Validée");
+            alerteRepository.save(al);
+            emailService.sendSimpleMail(al);
+            messageService.sendMessageAndSave(commande.getActeur().getWhatsAppActeur(), message, commande.getActeur());
         }
 
         return new ResponseEntity<>("La livraison de la commande a été validée avec succès.", HttpStatus.OK);
@@ -330,13 +326,69 @@ public class CommandeService {
     }
 }
 
-private void informerCommanditaire(Acteur acteur) throws Exception {
-    // Envoyer une notification par e-mail et WhatsApp à l'utilisateur
-    String message = "Votre commande a été validée avec succès.";
-    Alerte al = new Alerte(acteur.getEmailActeur(), message,  "Commande Validée");
-    emailService.sendSimpleMail(al);
-    messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), message, acteur);
-}
+
+//    public ResponseEntity<String> confirmerLivraisonVendeur(String id, Map<String, Double> quantitesLivre) throws Exception {
+//     Commande commande = commandeRepository.findByIdCommande(id);
+
+//     if (commande != null) {
+//         // Mettre à jour le statut de la commande
+//         commande.setStatutCommandeLivrer(true);
+//         commandeRepository.save(commande);
+
+//         // Ajouter la quantité livrée pour chaque produit
+//         for (DetailCommande detail : commande.getDetailCommandeList()) {
+//             String nomProduit = detail.getNomProduit();
+//             Double quantiteDemandee = detail.getQuantiteDemande();
+//             Double quantiteLivre = quantitesLivre.getOrDefault(nomProduit, 0.0);
+
+//             if (quantiteLivre > quantiteDemandee) {
+//                 // Gérer le cas où la quantité livrée dépasse la quantité demandée
+//                 return new ResponseEntity<>("La quantité livrée de " + nomProduit + " dépasse la quantité demandée.", HttpStatus.BAD_REQUEST);
+//             }
+
+//             // Mettre à jour la quantité livrée dans le détail de la commande
+//             // detail.setQuantiteLivree(quantiteLivre);
+//             if (quantitesLivre.containsKey(nomProduit)) {
+//                 quantitesLivre.get(nomProduit);
+//                 // ...
+//               } else {
+//                 // Gérer le cas où le produit n'est pas présent dans le map
+//                 // ...
+//               }
+//             detail.setQuantiteNonLivree(detail.getQuantiteDemande() - quantiteLivre );
+//             detailCommandeRepository.save(detail);
+//         }
+
+//         // Vérifier si toutes les quantités ont été ajoutées
+//         // boolean toutesQuantitesAjoutees = commande.getDetailCommandeList().stream()
+//         //         .allMatch(detail -> detail.getQuantiteLivree().equals(detail.getQuantiteDemande()));
+
+    
+//         // if (toutesQuantitesAjoutees) {
+//             // Informer le commanditaire par e-mail et WhatsApp
+//             // informerCommanditaire(commande.getActeur());
+//             // Envoyer une notification par e-mail et WhatsApp à l'utilisateur
+//     // String message = "Votre commande numéro "+ commande.getCodeCommande() +" a été validée par le vendeur avec succès un livreur ira vous livrer votre commande bientôt .";
+//     // Alerte al = new Alerte(commande.getActeur().getEmailActeur(), message,  "Commande Validée");
+//     //  al.setId(idGenerator.genererCode());
+//     // alerteRepository.save(al);
+//     // emailService.sendSimpleMail(al);
+//     // messageService.sendMessageAndSave(commande.getActeur().getWhatsAppActeur(), message, commande.getActeur());
+//         // }
+
+//         return new ResponseEntity<>("La livraison de la commande a été validée avec succès.", HttpStatus.OK);
+//     } else {
+//         return new ResponseEntity<>("Commande non trouvée avec l'ID " + id + " ou aucun stock associé.", HttpStatus.BAD_REQUEST);
+//     }
+// }
+
+// private void informerCommanditaire(Acteur acteur) throws Exception {
+//     // Envoyer une notification par e-mail et WhatsApp à l'utilisateur
+//     String message = "Votre commande a été validée avec succès.";
+//     Alerte al = new Alerte(acteur.getEmailActeur(), message,  "Commande Validée");
+//     emailService.sendSimpleMail(al);
+//     messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), message, acteur);
+// }
 
     
      public String commandeMateriel(String idMateriel, String idActeur) throws Exception{

@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +26,7 @@ public class RegroupementSevice {
 
     @Autowired
     ParametreFicheRepository parametreFicheRepository;
-  @Autowired
+    @Autowired
     IdGenerator idGenerator ;
 
     public RegroupementParametre createParametreRegroupement(RegroupementParametre regroupementParametre){
@@ -37,10 +38,13 @@ public class RegroupementSevice {
         String code = idGenerator.genererCode();
         regroupementParametre.setIdRegroupement(code);
         Date dates = new Date();
-        Instant instant = dates.toInstant();
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        regroupementParametre.setDateModif(LocalDateTime.now());
-        regroupementParametre.setDateAjout(LocalDateTime.now());
+    
+
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+        regroupementParametre.setDateAjout(formattedDateTime);
         return regroupementParametreRepository.save(regroupementParametre);
     }
 
@@ -49,10 +53,11 @@ public class RegroupementSevice {
         regroupementParametres.setParametreRegroupe(regroupementParametre.getParametreRegroupe());
         regroupementParametres.setDateAjout(regroupementParametres.getDateAjout());
         
-        Date dates = new Date();
-        Instant instant = dates.toInstant();
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-        regroupementParametres.setDateModif(LocalDateTime.now());
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+        regroupementParametres.setDateModif(formattedDateTime);
         return regroupementParametreRepository.save(regroupementParametres);
     }
 

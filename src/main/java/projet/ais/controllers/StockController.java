@@ -24,7 +24,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import projet.ais.models.CategorieProduit;
 import projet.ais.models.Speculation;
-
 import projet.ais.models.Stock;
 import projet.ais.services.StockService;
 
@@ -115,7 +114,12 @@ public class StockController {
             return new ResponseEntity<>(stockService.getAllStockByActeur(id), HttpStatus.OK);
         }
 
-        // Recuperer les stocks par categorie produit 
+        @GetMapping("/getAllStocksBySpeculation/{id}")
+        @Operation(summary = "Liste des stocks par d'un acteur ")
+        public ResponseEntity<List<Stock>> listeStockParSpeculation(@PathVariable String id){
+            return new ResponseEntity<>(stockService.getAllStockBySpeculation(id), HttpStatus.OK);
+        }
+        // Recuperer les stocks par categorie produit
           // Endpoint pour récupérer les stocks par catégorie
     @GetMapping("/categorieProduit/{idCategorie}")
     public List<Stock> getStocksByCategorie(@PathVariable String idCategorie) {
@@ -127,11 +131,6 @@ public class StockController {
         // Utiliser le service pour récupérer les stocks par catégorie
         return stockService.getStocksByCategorie(categorie);
     }
-        @GetMapping("/getAllStocksBySpeculation/{id}")
-        @Operation(summary = "Liste des stocks par d'un acteur ")
-        public ResponseEntity<List<Stock>> listeStockParSpeculation(@PathVariable String id){
-            return new ResponseEntity<>(stockService.getAllStockBySpeculation(id), HttpStatus.OK);
-        }
 
         @GetMapping("/getAllStocksByIdMagasin/{id}")
         @Operation(summary = "Liste des stocks par d'un magasin ")
