@@ -7,6 +7,9 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -46,7 +49,7 @@ public class CategorieService {
         Filiere filiere  = filiereRepository.findByIdFiliere(categorieProduit.getFiliere().getIdFiliere());
 
         
-         Acteur acteur = acteurRepository.findByIdActeur(filiere.getActeur().getIdActeur());
+        Acteur acteur = acteurRepository.findByIdActeur(categorieProduit.getActeur().getIdActeur());
 
         if(acteur == null)
             throw new IllegalStateException("Aucun acteur disponible");
@@ -88,17 +91,30 @@ public class CategorieService {
         return categorieProduitRepository.save(categorieProduits);
     }
 
-    public List<CategorieProduit> getAllCategorie(){
+    public List<CategorieProduit> getAllCategorie() {
         List<CategorieProduit> categorieProduitList = categorieProduitRepository.findAll();
-
-        if(categorieProduitList.isEmpty())
-            throw new EntityNotFoundException("Aucun categorie trouvé");
-
-        categorieProduitList = categorieProduitList
-            .stream().sorted((d1, d2) -> d2.getLibelleCategorie().compareTo(d1.getLibelleCategorie()))
-            .collect(Collectors.toList());
+    
+        if (categorieProduitList.isEmpty())
+            throw new EntityNotFoundException("Aucune catégorie trouvée");
+    
+        categorieProduitList.sort(Comparator.comparing(CategorieProduit::getLibelleCategorie));
+        
         return categorieProduitList;
     }
+
+
+// public List<CategorieProduit> getAllCategorie() {
+//     List<CategorieProduit> categorieProduitList = categorieProduitRepository.findAll();
+
+//     if (categorieProduitList.isEmpty())
+//         throw new EntityNotFoundException("Aucune catégorie trouvée");
+
+//         Array
+//         Collections.sort(categorieProduitList, String.CASE_INSENSITIVE_ORDER);
+//     // Collections.sort(categorieProduitList, Comparator.comparing(CategorieProduit::getLibelleCategorie));
+    
+//     return categorieProduitList;
+// }
 
     public List<CategorieProduit> getAllCategorieByIdFiliere(String id){
         List<CategorieProduit> categorieProduitList = categorieProduitRepository.findByFiliereIdFiliere(id);

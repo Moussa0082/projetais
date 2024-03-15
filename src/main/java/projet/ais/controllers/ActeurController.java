@@ -137,16 +137,28 @@ public class ActeurController {
             
 
 
-                @GetMapping("/verifmail")
-    @Operation(summary = "Verifier l'email de l'utilisateur en lui envoyant un code de verification à son adresse email")
+                @GetMapping("/sendOtpCodeEmail")
+    @Operation(summary = "Verifier l'email de l'utilisateur en lui envoyant un code de verification à son adresse email pour la procedure de changement de son mot de pass")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "L'email exist et le code a été envoyer avec succès", content = {
                     @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class))
             }),
             @ApiResponse(responseCode = "500",description = "Erreur serveur", content = @Content),
     })
-    public ResponseEntity<Object> verifierEmail(@RequestParam("email") String email) throws Exception {
-        return ResponseHandler.generateResponse(acteurService.verifyUserEmail(email), HttpStatus.OK,null);
+    public ResponseEntity<Object> sendOtpCodeEmail(@RequestParam("emailActeur") String emailActeur) throws Exception {
+        return ResponseHandler.generateResponse(acteurService.sendOtpCodeEmail(emailActeur), HttpStatus.OK,null);
+    }
+
+                @GetMapping("/sendOtpCodeWhatsApp")
+    @Operation(summary = "Verifier le numéro de l'utilisateur en lui envoyant un code de verification à numéro whatsApp pour la procedure de changement de son mot de pass")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "Le numéro exist et le code a été envoyer avec succès", content = {
+                    @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class))
+            }),
+            @ApiResponse(responseCode = "500",description = "Erreur serveur", content = @Content),
+    })
+    public ResponseEntity<Object> sendOtpCodeWhatsApp(@RequestParam("whatsAppActeur") String whatsAppActeur) throws Exception {
+        return ResponseHandler.generateResponse(acteurService.sendOtpCodeWhatsApp(whatsAppActeur), HttpStatus.OK,null);
     }
 
     //Envoyer un email à un utilisateur spécifique
@@ -158,16 +170,78 @@ public class ActeurController {
     }
 
 
-    @PutMapping("/resetpassword")
-    @Operation(summary = "Réinitialise le mot de passe de l'utilisateur")
+    @PutMapping("/resetPasswordEmail")
+    @Operation(summary = "Réinitialise le mot de passe de l'utilisateur via email et nouveau mot de passe")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "Mot de passe réinitialisé avec succès", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = Acteur.class))
-            }),
-            @ApiResponse(responseCode = "500",description = "Erreur serveur", content = @Content),
+            @ApiResponse(responseCode = "200", description = "Mot de passe réinitialisé avec succès"),
+            @ApiResponse(responseCode = "500", description = "Erreur serveur")
     })
-    public ResponseEntity<Object> resetPassword(@RequestParam("email") String email, @RequestParam("password") String password) throws Exception {
-        return ResponseHandler.generateResponse("succes", HttpStatus.OK,acteurService.resetPassword(email,password));
+    public ResponseEntity<String> resetPasswordEmail(@RequestParam("emailActeur") String emailActeur, @RequestParam("password") String password) {
+        try {
+            acteurService.resetPasswordEmail(emailActeur, password);
+            return ResponseEntity.ok("Mot de passe réinitialisé avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur est survenue : " + e.getMessage());
+        }
+    }
+    @PutMapping("/resetPasswordWhatsApp")
+    @Operation(summary = "Réinitialise le mot de passe de l'utilisateur via whats app numéro et nouveau mot de passe")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Mot de passe réinitialisé avec succès"),
+            @ApiResponse(responseCode = "500", description = "Erreur serveur")
+    })
+    public ResponseEntity<String> resetPasswordWhatsApp(@RequestParam("whatsAppActeur") String whatsAppActeur, @RequestParam("password") String password) {
+        try {
+            acteurService.resetPasswordWhatsApp(whatsAppActeur, password);
+            return ResponseEntity.ok("Mot de passe réinitialisé avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur est survenue : " + e.getMessage());
+        }
+    }
+  
+    
+
+
+    @GetMapping("/verifierOtpCodeWhatsApp")
+    public ResponseEntity<String> verifyOtpCodeWhatsAppActeur(@RequestParam("whatsAppActeur") String whatsAppActeur, @RequestParam("resetToken") String resetToken) {
+        try {
+            boolean isVerified = acteurService.verifyOtpCodeWhatsApp(whatsAppActeur, resetToken);
+            if (isVerified) {
+                return ResponseEntity.ok("Code vérifié avec succès");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Code incorrect");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur est survenue : " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/verifierOtpCodeEmail")
+    public ResponseEntity<String> verifyOtpCodeEmail(@RequestParam("emailActeur") String emailActeur, @RequestParam("resetToken") String resetToken) {
+        try {
+            boolean isVerified = acteurService.verifyOtpCodeEmail(emailActeur,resetToken);
+            if (isVerified) {
+                return ResponseEntity.ok("Code vérifié avec succès");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Code incorrect ou expiré");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur est survenue : " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/verifierOtpCodeWhatsAppActeur")
+    public ResponseEntity<String> verifyOtpCodeWhatsApp(@RequestParam("whatsAppActeur") String whatsAppActeur, @RequestParam("resetToken") String resetToken) {
+        try {
+            boolean isVerified = acteurService.verifyOtpCodeWhatsApp(whatsAppActeur,resetToken);
+            if (isVerified) {
+                return ResponseEntity.ok("Code vérifié avec succès");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Code incorrect ou expiré");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur est survenue : " + e.getMessage());
+        }
     }
             // fin logique  mot de passe oublier
 
@@ -192,6 +266,7 @@ public class ActeurController {
         }
     }
 
+  
 
     @GetMapping("/send-email-to-all-choose")
     public ResponseEntity<String> sendEmailToAllUsersChoose(@RequestParam ("emails") List<String> emails, @RequestParam("sujet")String sujet, @RequestParam("message")String message, @RequestParam("libelle")String libelle) {
@@ -212,6 +287,16 @@ public class ActeurController {
         }
     }
 
+    // @PostMapping("/send-message-to-admin")
+    // public ResponseEntity<String> sendMessageToAdmin(@RequestParam String message, @RequestParam String acteur ) {
+    //     try {
+    //         acteurService.sendMessageWaToAdmin(message, acteur);
+    //         return new ResponseEntity<>("Message sent to admin successfully", HttpStatus.ACCEPTED);
+    //     } catch (Exception e) {
+    //         return new ResponseEntity<>("Failed to send message to admin: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    //     }
+    // }
+
     @GetMapping("/send-email-to-all-checked-choose")
     public ResponseEntity<String> sendMailToAllUserCheckedChoose(@RequestParam ("emails") List<String> emails, @RequestParam("sujet")String sujet, @RequestParam("message")String message, @RequestParam("libelle")List<String> libelle) {
        
@@ -231,7 +316,19 @@ public class ActeurController {
         }
     }
 
-    @GetMapping("/sendMessageWathsappToActeurByTypeActeur")
+    // @GetMapping("/sendMessageWathsappToActeurByTypeActeur")
+    // public ResponseEntity<String> sendMessageWathsappToActeur(@RequestParam String message, @RequestParam List<String> libelles) {
+    //     try {
+    //         acteurService.sendMessageToActeurByTypeActeur(message, libelles);
+            
+    //         return new ResponseEntity<>("Message envoyé avec succès à tous les acteurs correspondant aux libellés " + libelles.size(), HttpStatus.OK);
+    //     } catch (Exception e) {
+    //         // En cas d'erreur, retourner une réponse avec un message d'erreur
+    //         return new ResponseEntity<>("Échec de l'envoi du message WhatsApp aux acteurs correspondant aux libellés " + libelles + ". Erreur : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    //     }
+    // }
+    
+    @GetMapping("/sendMessageWathsappToActeurByTypeActeurs")
     public ResponseEntity<String> sendMessageWathsappToActeur(@RequestParam String message, @RequestParam List<String> libelles) {
         try {
             acteurService.sendMessageToActeurByTypeActeur(message, libelles);
@@ -242,7 +339,18 @@ public class ActeurController {
             return new ResponseEntity<>("Échec de l'envoi du message WhatsApp aux acteurs correspondant aux libellés " + libelles + ". Erreur : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
+
+    @GetMapping("/sendEmailToActeurByTypeActeur")
+    public ResponseEntity<String> sendEmailToActeurByTypeActeurs(@RequestParam String message, @RequestParam List<String> libelles, @RequestParam String sujet) {
+        try {
+            acteurService.sendEmailToActeurByTypeActeur(message, libelles, sujet);
+            
+            return new ResponseEntity<>("Message envoyé avec succès à tous les acteurs correspondant aux libellés " + libelles.size(), HttpStatus.OK);
+        } catch (Exception e) {
+            // En cas d'erreur, retourner une réponse avec un message d'erreur
+            return new ResponseEntity<>("Échec de l'envoi du message email aux acteurs correspondant aux libellés " + libelles + ". Erreur : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
              //Mettre à jour un acteur
     @PutMapping("/update/{id}")
     @Operation(summary = "Mise à jour d'un acteur ")

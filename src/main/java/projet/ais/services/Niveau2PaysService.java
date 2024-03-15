@@ -33,13 +33,11 @@ public class Niveau2PaysService {
 
     
      //  Ajouter niveau 2 pays 
-    public Niveau2Pays createNiveau2Pays(Niveau2Pays niveau2Pays) {
-        Niveau2Pays niveau2Pays2 = niveau2PaysRepository.findByNomN2(niveau2Pays.getNomN2());
-        Niveau1Pays niveau1 = niveau1PaysRepository.findByIdNiveau1Pays(niveau2Pays.getNiveau1Pays().getIdNiveau1Pays());
-        if(niveau1 == null)
-            throw new IllegalStateException("Aucune niveau 1 trouvé");
-        if(niveau2Pays2 != null)
-            throw new DuplicateRequestException("Cette niveau existe déjà");
+     public ResponseEntity<String> createNiveau2Pays(Niveau2Pays niveau2Pays) throws Exception {
+        // Niveau1Pays niveau1Pays = niveau1PaysRepository.findByIdNiveau1Pays(niveau2Pays.getNiveau1Pays().getIdNiveau1Pays());
+
+        // if(niveau1Pays == null)
+        //     throw new Exception("Selectioner un niveau1");
         // Générer un numéro aléatoire
         String codeN2 = genererCode();
         String code = idGenerator.genererCode();
@@ -47,12 +45,22 @@ public class Niveau2PaysService {
         // Attribuer le numéro aléatoire au niveau1
         niveau2Pays.setCodeN2(codeN2);
         niveau2Pays.setIdNiveau2Pays(code);
+    
         String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         LocalDateTime now = LocalDateTime.now();
-        String formattedDateTime = now.format(formatter);       
-    niveau2Pays.setDateAjout(formattedDateTime);
-        return niveau2PaysRepository.save(niveau2Pays);
+        String formattedDateTime = now.format(formatter);  
+        niveau2Pays.setDateAjout(formattedDateTime);
+        // Vérifier si le niveau1Pays existe déjà
+        Niveau2Pays niveau2PaysExistant = niveau2PaysRepository.findByNomN2(niveau2Pays.getNomN2());
+        if (niveau2PaysExistant != null) {
+    
+            // Retourner un message d'erreur
+            return new ResponseEntity<>("Niveau 2 Pays déjà existant.", HttpStatus.BAD_REQUEST);
+        } else {
+            niveau2PaysRepository.save(niveau2Pays);
+            return new ResponseEntity<>("Niveau 2 Pays ajouté avec succès", HttpStatus.CREATED);
+        }
     }
 
 public String genererCode() {

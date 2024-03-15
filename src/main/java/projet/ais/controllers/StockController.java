@@ -22,6 +22,8 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import projet.ais.models.CategorieProduit;
+import projet.ais.models.Speculation;
 import projet.ais.models.Stock;
 import projet.ais.services.StockService;
 
@@ -31,7 +33,7 @@ import projet.ais.services.StockService;
 public class StockController {
     
     @Autowired
-    StockService stockservice;
+    StockService stockService;
 
     @PostMapping("/addStock")
     @Operation(summary = "Création de stock")
@@ -47,7 +49,7 @@ public class StockController {
                 throw new Exception(e.getMessage());
             }
 
-            Stock saveStock = stockservice.createStock(stock, imageFile);
+            Stock saveStock = stockService.createStock(stock, imageFile);
         //  System.out.println("controller : "+saveStock.toString());
             return new ResponseEntity<>(saveStock, HttpStatus.CREATED);
         }
@@ -67,18 +69,18 @@ public class StockController {
                 throw new Exception(e.getMessage());
             }
 
-            Stock saveStock = stockservice.updateStock(stock, imageFile, id);
+            Stock saveStock = stockService.updateStock(stock, imageFile, id);
             return new ResponseEntity<>(saveStock, HttpStatus.OK);
         }
 
         @PutMapping("/activer/{id}")
     public ResponseEntity<Stock> activeStock(@PathVariable String id) throws Exception {
-        return new ResponseEntity<>(stockservice.active(id), HttpStatus.OK);
+        return new ResponseEntity<>(stockService.active(id), HttpStatus.OK);
     }
 
         @PutMapping("/desactiver/{id}")
     public ResponseEntity<Stock> desactiveStock(@PathVariable String id) throws Exception {
-        return new ResponseEntity<>(stockservice.desactive(id), HttpStatus.OK);
+        return new ResponseEntity<>(stockService.desactive(id), HttpStatus.OK);
     }
 
         @PutMapping("/updateQuantiteStock/{id}")
@@ -95,7 +97,7 @@ public class StockController {
                 throw new Exception(e.getMessage());
             }
 
-            Stock saveStock = stockservice.updateQuantiteStock(stock,id);
+            Stock saveStock = stockService.updateQuantiteStock(stock,id);
             return new ResponseEntity<>(saveStock, HttpStatus.OK);
         }
 
@@ -103,24 +105,52 @@ public class StockController {
         @Operation(summary = "Liste des stocks")
         public ResponseEntity<List<Stock>> listeStock(){
            
-            return new ResponseEntity<>(stockservice.getAllStock(), HttpStatus.OK);
+            return new ResponseEntity<>(stockService.getAllStock(), HttpStatus.OK);
         }
 
         @GetMapping("/getAllStocksByActeurs/{id}")
         @Operation(summary = "Liste des stocks par d'un acteur ")
         public ResponseEntity<List<Stock>> listeStockParActeur(@PathVariable String id){
-            return new ResponseEntity<>(stockservice.getAllStockByActeur(id), HttpStatus.OK);
+            return new ResponseEntity<>(stockService.getAllStockByActeur(id), HttpStatus.OK);
         }
+
+        @GetMapping("/getAllStocksBySpeculation/{id}")
+        @Operation(summary = "Liste des stocks par d'un acteur ")
+        public ResponseEntity<List<Stock>> listeStockParSpeculation(@PathVariable String id){
+            return new ResponseEntity<>(stockService.getAllStockBySpeculation(id), HttpStatus.OK);
+        }
+        // Recuperer les stocks par categorie produit
+          // Endpoint pour récupérer les stocks par catégorie
+    @GetMapping("/categorieProduit/{idCategorie}")
+    public List<Stock> getStocksByCategorie(@PathVariable String idCategorie) {
+        // Ici, vous pouvez utiliser l'ID de la catégorie pour récupérer l'objet CategorieProduit
+        // Si vous n'avez pas l'ID de la catégorie mais que vous avez l'objet CategorieProduit, vous pouvez passer l'objet directement à la méthode du service
+        CategorieProduit categorie = new CategorieProduit();
+        categorie.setIdCategorieProduit(idCategorie); // Définissez l'ID de la catégorie
+
+        // Utiliser le service pour récupérer les stocks par catégorie
+        return stockService.getStocksByCategorie(categorie);
+    }
 
         @GetMapping("/getAllStocksByIdMagasin/{id}")
         @Operation(summary = "Liste des stocks par d'un magasin ")
         public ResponseEntity<List<Stock>> listeStockParMagasin(@PathVariable String id){
-            return new ResponseEntity<>(stockservice.getAllStockByMagasin(id), HttpStatus.OK);
+            return new ResponseEntity<>(stockService.getAllStockByMagasin(id), HttpStatus.OK);
+        }
+
+        @GetMapping("/categorieAndMagasin/{idCategorie}/{idMagasin}")
+        public List<Stock> getStocksByCategorieAndMagasin(@PathVariable String idCategorie, @PathVariable String idMagasin) {
+            return stockService.getStocksByCategorieAndMagasin(idCategorie, idMagasin);
+        }
+
+        @GetMapping("/categorieAndActeur/{idCategorie}/{idMagasin}/{idActeur}")
+        public List<Stock> getStocksByCategorieAndMagasinAndActeur(@PathVariable String idCategorie, @PathVariable String idMagasin , @PathVariable String idActeur) throws Exception {
+            return stockService.listeStockByCategorieProduitAndMagasinAndActeur(idCategorie, idMagasin,idActeur);
         }
 
         @DeleteMapping("/deleteStocks/{id}")
         @Operation(summary = "Suppression des stocks")
         public String supprimer(@PathVariable String id){
-            return stockservice.deleteStock(id);
+            return stockService.deleteStock(id);
         }
 }

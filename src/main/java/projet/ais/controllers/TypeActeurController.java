@@ -23,7 +23,7 @@ import projet.ais.services.TypeActeurService;
 @RestController
 @CrossOrigin
 @RequestMapping("api-koumi/typeActeur")
-public class TypeActeurController {
+public class  TypeActeurController {
 
     @Autowired
     private TypeActeurService typeActeurService;

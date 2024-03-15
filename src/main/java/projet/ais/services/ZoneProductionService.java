@@ -70,11 +70,12 @@ public class ZoneProductionService {
             String idCodes = idGenerator.genererCode();
 
         zoneProduction.setCodeZone(codes);
+        zoneProduction.setStatutZone(true);
         zoneProduction.setIdZoneProduction(idCodes);
         String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         LocalDateTime now = LocalDateTime.now();
-        String formattedDateTime = now.format(formatter);  
+        String formattedDateTime = now.format(formatter);
         zoneProduction.setDateAjout(formattedDateTime);
         return zoneProductionRepository.save(zoneProduction);
     }

@@ -14,34 +14,32 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Stock {
 
     @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idStock;
 
     @Column(nullable = true)
     private String codeStock;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String nomProduit;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String formeProduit;
 
-    @Column(nullable = false)
-    private LocalDateTime dateProduction;
+    private String dateProduction;
 
     @Column(nullable = false)
     private double quantiteStock;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private int prix;
     
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String typeProduit;
 
     // @Column(nullable = false)
     // private String siteProduction;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String descriptionStock;
 
     @Column(nullable = true)
@@ -56,24 +54,6 @@ public class Stock {
 
     @Column(nullable = true)
     private String dateModif;
-    
-    // @Column(columnDefinition = "TIMESTAMP")
-    // private LocalDateTime dateAjout;
-
-    // @PrePersist
-    // public void prePersist() {
-    //     dateAjout = LocalDateTime.now();
-    //     dateProduction = LocalDateTime.now();
-    // }
-
-
-    // @Column(columnDefinition = "TIMESTAMP")
-    // private LocalDateTime dateModif;
-
-    // public LocalDateTime updateDateModif(LocalDateTime dateModif) {
-    //     this.dateModif = dateModif;
-    //     return dateModif;
-    // }
     
     @Column(nullable=true)
     private String personneModif;
@@ -97,14 +77,18 @@ public class Stock {
     @JoinColumn(name = "idActeur")
     private Acteur acteur;
     
-    @ManyToMany
-    
+    @ManyToMany(mappedBy = "stock", fetch = FetchType.EAGER)
     private List<Commande>  commande;
 
     @OneToMany
     (mappedBy = "stock")
     @JsonIgnore
     private List<Sortie_Stock> sortie_Stock;
+
+     // Méthode pour associer plusieurs commandes à un stock
+    //  public void setCommandes(List<Commande> commandes) {
+    //     this.commande = commandes;
+    // }
 
 }
 

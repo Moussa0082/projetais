@@ -54,7 +54,11 @@ public class TypeActeurService {
         typeActeur.setCodeTypeActeur(codeTypeActeur);
         typeActeur.setStatutTypeActeur(true);
         typeActeur.setIdTypeActeur(idCode);
-        typeActeur.setDateAjout(LocalDateTime.now().toString());
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+        typeActeur.setDateAjout(formattedDateTime);
     
         // Vérifier si le type d'acteur existe déjà
         TypeActeur typeActeurExistant = typeActeurRepository.findByLibelle(typeActeur.getLibelle());

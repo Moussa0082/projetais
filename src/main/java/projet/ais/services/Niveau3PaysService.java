@@ -1,21 +1,20 @@
 package projet.ais.services;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.sun.jdi.request.DuplicateRequestException;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.IdGenerator;
 import projet.ais.models.Niveau3Pays;
 import projet.ais.repository.Niveau3PaysRepository;
-import com.sun.jdi.request.DuplicateRequestException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Service
 public class Niveau3PaysService {
@@ -44,7 +43,7 @@ public class Niveau3PaysService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         LocalDateTime now = LocalDateTime.now();
         String formattedDateTime = now.format(formatter);       
-        niveau3Pays.setDateModif(formattedDateTime);
+        niveau3Pays.setDateAjout(formattedDateTime);
     return niveau3PaysRepository.save(niveau3Pays);
         
     }

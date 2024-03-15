@@ -28,6 +28,8 @@ import projet.ais.IdGenerator;
 import projet.ais.Exception.NoContentException;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
+import java.time.format.DateTimeFormatter;
+
 import projet.ais.models.Stock;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.ActeurRepository;
@@ -41,7 +43,7 @@ public class ActeurService {
 
 
     @Autowired
-    private ActeurRepository acteurRepository;
+     ActeurRepository acteurRepository;
 
     @Autowired
     BCryptPasswordEncoder passwordEncoder;
@@ -50,7 +52,7 @@ public class ActeurService {
     private AlerteRepository alerteRepository;
 
     @Autowired
-    private MessageService messageService;
+     MessageService messageService;
 
     @Autowired
     private TypeActeurRepository typeActeurRepository;
@@ -95,6 +97,17 @@ public class ActeurService {
         
             if (acteur.getTypeActeur() == null) {
                 throw new Exception("Veuillez choisir un type d'acteur pour créer un compte");
+            }else{
+                for (TypeActeur typeActeur : acteur.getTypeActeur()) {
+                    if (typeActeur != null && typeActeur.getLibelle() != null && typeActeur.getLibelle().equals("Admin")) {
+                        acteur.setStatutActeur(true);
+                        break; // Sortie de la boucle dès que "Admin" est trouvé
+                    }else{
+                        
+                        acteur.setStatutActeur(false);
+                        break; 
+                    }
+                }
             }
             
             
@@ -115,6 +128,7 @@ public class ActeurService {
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                     acteur.setPhotoSiegeActeur("ais/" + imageName);
+
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
@@ -140,11 +154,15 @@ public class ActeurService {
             String codeActeur = genererCode();
             String code = idGenerator.genererCode();
             acteur.setCodeActeur(codeActeur);
-            acteur.setDateAjout(LocalDateTime.now().toString());
+            String pattern = "yyyy-MM-dd HH:mm";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+            LocalDateTime now = LocalDateTime.now();
+            String formattedDateTime = now.format(formatter);
+            acteur.setDateAjout(formattedDateTime);
             acteur.setIdActeur(code);
             acteur.setWhatsAppActeur("223"+acteur.getWhatsAppActeur());
            
-             Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
+            Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
 
             // Enregistrement de l'acteur
             // boolean isAdmin = false;
@@ -154,7 +172,6 @@ public class ActeurService {
                         acteur.setStatutActeur(true);
                         break; // Sortie de la boucle dès que "Admin" est trouvé
                     }else{
-
                         acteur.setStatutActeur(false);
                     }
                 }
@@ -171,7 +188,7 @@ public class ActeurService {
                         // Si un administrateur est trouvé, envoyez un e-mail
                         String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez activer son compte dans les plus brefs délais !";
                         Alerte alerte = new Alerte(admins.getEmailActeur(), msg, "Création d'un nouveau compte");
-                        emailService.sendSimpleMail(alerte);
+                        // emailService.sendSimpleMail(alerte);
                         System.out.println(admins.getEmailActeur());
                         break; // Sortez de la boucle dès qu'un administrateur est trouvé
                     }
@@ -205,7 +222,7 @@ public class ActeurService {
                 System.out.println("Aucun administrateur trouvé");
             }
             
-            // sendMessageToAllActeur(savedActeur);
+            sendMessageToAdmin(savedActeur);
 
             System.out.println("Acteur :" + savedActeur.toString());
                      
@@ -213,7 +230,7 @@ public class ActeurService {
                
     }
 
- public ResponseEntity<String> sendMessageToAllActeur(Acteur acteur) throws Exception {
+ public ResponseEntity<String> sendMessageToAdmin(Acteur acteur) throws Exception {
 
     Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
 
@@ -223,7 +240,7 @@ public class ActeurService {
                 // Si un administrateur est trouvé, envoyez un e-mail
            String msg = acteur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez activer son compte dans les plus brefs délais !";
            try {
-            messageService.sendMessageAndSave(admins.getWhatsAppActeur(), msg,acteur.getNomActeur());
+            messageService.sendMessageAndSave(admins.getWhatsAppActeur(), msg,admins);
            } catch (Exception e) {
              throw new Exception("Erreur lors de l'envoie de message wathsapp : " +e.getMessage());
            }
@@ -237,9 +254,25 @@ public class ActeurService {
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
+    // public ResponseEntity<String> sendMessageWaToAdmin(String message, String acteur) throws Exception {
 
-     
-
+    //     Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
+    
+    //     if (admins != null) { // Vérifiez si des administrateurs ont été trouvés
+    //                 // Si un administrateur est trouvé, envoyez un e-mail
+    //            try {
+    //             messageService.sendMessageAndSave(admins.getWhatsAppActeur(), message, acteur);
+    //            } catch (Exception e) {
+    //              throw new Exception("Erreur lors de l'envoie de message wathsapp : " +e.getMessage());
+    //            }
+            
+    //     } else {
+    //         System.out.println("Aucun administrateur trouvé"); // Gérez le cas où aucun administrateur n'est trouvé
+    //     }
+            
+    //         return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    //     }
+   
     public Acteur addTypesToActeur(String idActeur, List<TypeActeur> typeActeurs) throws Exception{
         Acteur acteur = acteurRepository.findByIdActeur(idActeur);
         if (acteur == null) {
@@ -331,7 +364,39 @@ public class ActeurService {
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
     
-       //envoi mail aux user par types par exemple producteur et commerçant etc.. le nombre de type  choisit par l'admin
+       //envoi message watsApp aux user par types par exemple producteur et commerçant etc.. le nombre de type  choisit par l'admin
+    // public ResponseEntity<Void> sendMessageToActeurByTypeActeur(String message, List<String> libelles) {
+
+    //     // Set to store unique email addresses to avoid duplicates
+    //     Set<String> wathsappSend = new HashSet<>();
+    
+    //     // Retrieve actors for each type label
+    //     List<Acteur> allActeurs = new ArrayList<>();
+    //     for (String libelle : libelles) {
+    //         List<Acteur> acteurs = acteurRepository.findByTypeActeur_Libelle(libelle);
+    //         allActeurs.addAll(acteurs);
+    //     }
+    
+        
+    //     for (Acteur acteur : allActeurs) {
+    //         String wathsapp = Objects.requireNonNullElse(acteur.getWhatsAppActeur(), "");
+    
+    //         // Skip if email is null, empty, or already sent
+    //         if (!wathsappSend.contains(wathsapp) && !wathsapp.isEmpty()) {
+    //             try {
+    //                messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), message, acteur.getNomActeur());
+    //                 wathsappSend.add(wathsapp);
+    //                 System.out.println("Message sent to " + wathsapp);
+    //             } catch (Exception e) {
+    //                 // Handle email sending error
+    //                 System.err.println("Error sending message to " + wathsapp + ": " + e.getMessage());
+    //             }
+    //         }
+    //     }
+    
+    //     return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    // }
+       //envoi message watsApp aux user par types par exemple producteur et commerçant etc.. le nombre de type  choisit par l'admin
     public ResponseEntity<Void> sendMessageToActeurByTypeActeur(String message, List<String> libelles) {
 
         // Set to store unique email addresses to avoid duplicates
@@ -351,7 +416,7 @@ public class ActeurService {
             // Skip if email is null, empty, or already sent
             if (!wathsappSend.contains(wathsapp) && !wathsapp.isEmpty()) {
                 try {
-                   messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), message, acteur.getNomActeur());
+                   messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), message, acteur);
                     wathsappSend.add(wathsapp);
                     System.out.println("Message sent to " + wathsapp);
                 } catch (Exception e) {
@@ -365,7 +430,38 @@ public class ActeurService {
     }
     
 
+    public ResponseEntity<Void> sendEmailToActeurByTypeActeur(String message, List<String> libelles, String sujet) {
 
+        // Set to store unique email addresses to avoid duplicates
+        Set<String> emailSend = new HashSet<>();
+    
+        // Retrieve actors for each type label
+        List<Acteur> allActeurs = new ArrayList<>();
+        for (String libelle : libelles) {
+            List<Acteur> acteurs = acteurRepository.findByTypeActeur_Libelle(libelle);
+            allActeurs.addAll(acteurs);
+        }
+    
+        
+        for (Acteur acteur : allActeurs) {
+            String emails = Objects.requireNonNullElse(acteur.getWhatsAppActeur(), "");
+    
+            // Skip if email is null, empty, or already sent
+            if (!emailSend.contains(emails) && !emails.isEmpty()) {
+                try {
+                    Alerte alerte = new Alerte(acteur.getEmailActeur(), message,sujet );
+                  emailService.sendSimpleMail(alerte);
+                  emailSend.add(emails);
+                    System.out.println("Message sent to " + emails);
+                } catch (Exception e) {
+                    // Handle email sending error
+                    System.err.println("Error sending message to " + emails + ": " + e.getMessage());
+                }
+            }
+        }
+    
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
 
     
     public String genererCode() {
@@ -479,6 +575,15 @@ public class ActeurService {
         return acteurList;
     }
 
+    // public List<Acteur> getAllActeurByTypeActeur(String id){
+
+    //     List<Acteur> acteurList = acteurRepository.findAllByTypeActeurIdTypeActeur(id);
+
+    //     acteurList = acteurList
+    //             .stream().sorted((d1, d2) -> d2.getEmailActeur().compareTo(d1.getEmailActeur()))
+    //             .collect(Collectors.toList());
+    //     return acteurList;
+    // }
     //Desactiver un acteur
 
     public ResponseEntity<String> disableActeur(String id) {
@@ -497,17 +602,17 @@ public class ActeurService {
 
 
       //Fonction pour un email à un utilisateur
-      public String verifyNewUserMail(String email, String sujet, String message) throws Exception {
-        Acteur userVerif =  acteurRepository.findByEmailActeur(email);
-        if (userVerif == null)
-            throw new Exception("Cet email n'existe pas dans notre système");
+    //   public String verifyNewUserMail(String email, String sujet, String message) throws Exception {
+    //     Acteur userVerif =  acteurRepository.findByEmailActeur(email);
+    //     if (userVerif == null)
+    //         throw new Exception("Cet email n'existe pas dans notre système");
 
-        userVerif = new Acteur();
-        userVerif.setEmailActeur(email);
-        String code = getRandomNumberString();
-        sendMail(userVerif,code);
-        return code;
-    }
+    //     userVerif = new Acteur();
+    //     userVerif.setEmailActeur(email);
+    //     String code = getRandomNumberString();
+    //     sendMail(userVerif,code);
+    //     return code;
+    // }
 
 
 
@@ -549,14 +654,104 @@ public class ActeurService {
     //Fonction pour envoyer un code de verification à l'email de l'utilisateur
     String code = getRandomNumberString();
 
-    public String verifyUserEmail(String email) throws Exception {
-        Acteur userVerif = acteurRepository.findByEmailActeur(email);
-        if (userVerif == null)
-            throw new Exception("invalid");
+    // Mot de passe oublié : envoyer un code à l'utilisateur par e-mail
+public String sendOtpCodeEmail(String email) throws Exception {
+    Acteur userVerif = acteurRepository.findByEmailActeur(email);
+    if (userVerif == null) {
+        throw new Exception("Cet email n'existe pas, veuillez vérifier l'email saisi");
+    }
+    
+    // Générez le code
+    String code = getRandomNumberString();
+    
+    // Enregistrez le code et son horodatage dans la base de données
+    userVerif.setResetToken(code);
+    userVerif.setTokenCreationDate(LocalDateTime.now().plusMinutes(1)); // Code expirera après 1 minute (à adapter selon vos besoins)
+    acteurRepository.save(userVerif);
+    
+    // Envoyez le code par e-mail
+    sendMail(userVerif, code);
+    
+    return code;
+}
 
-        sendMail(userVerif,code);
+
+    //Mot de pass oublier envoyer un code au user par whatts app
+    public String sendOtpCodeWhatsApp(String whatsAppActeur) throws Exception {
+        Acteur userVerif = acteurRepository.findByWhatsAppActeur(whatsAppActeur);
+        if (userVerif == null)
+        throw new Exception("Cet numero n'existe pas, verifier  le numéro saisi");
+         // Stockez temporairement le code dans le champ resetToken de l'utilisateur
+        userVerif.setResetToken(code);
+        userVerif.setTokenCreationDate(LocalDateTime.now().plusMinutes(2)); // Code expirera après 2 minutes
+        acteurRepository.save(userVerif);
+          String msg = "Votre code de verification temporaire est " + code + " veuillez garder ce code pour vous uniquement si vous n'avez pas demander à changer de mot de passe veuiilez ignorer ce message";
+            messageService.sendMessageAndSave(whatsAppActeur, msg, userVerif);
         return code;
     }
+
+    // Vérifier le code envoyé par e-mail
+    public boolean verifyOtpCodeEmail(String emailActeur, String resetToken) {
+    Acteur userVerif = acteurRepository.findByEmailActeurAndResetToken(emailActeur, resetToken);
+    if (userVerif == null) {
+        throw new RuntimeException("Code incorrect ou expiré");
+    }
+    
+    // Vérifiez si le code est expiré
+    LocalDateTime tokenCreationDate = userVerif.getTokenCreationDate();
+    if (tokenCreationDate == null || tokenCreationDate.isBefore(LocalDateTime.now().minusMinutes(1))) {
+        // Code expiré
+        throw new RuntimeException("Code expiré");
+    }
+    
+    // Réinitialisez le token et la date de création
+    userVerif.setResetToken(null);
+    userVerif.setTokenCreationDate(null);
+    acteurRepository.save(userVerif);
+    
+    return true; // Code vérifié avec succès
+}
+    // Vérifier le code envoyé par whats app
+    public boolean verifyOtpCodeWhtasApp(String whatsAppActeur, String resetToken) {
+    Acteur userVerif = acteurRepository.findByEmailActeurAndResetToken(whatsAppActeur, resetToken);
+    if (userVerif == null) {
+        throw new RuntimeException("Code incorrect ou expiré");
+    }
+    
+    // Vérifiez si le code est expiré
+    LocalDateTime tokenCreationDate = userVerif.getTokenCreationDate();
+    if (tokenCreationDate == null || tokenCreationDate.isBefore(LocalDateTime.now().minusMinutes(1))) {
+        // Code expiré
+        throw new RuntimeException("Code expiré");
+    }
+    
+    // Réinitialisez le token et la date de création
+    userVerif.setResetToken(null);
+    userVerif.setTokenCreationDate(null);
+    acteurRepository.save(userVerif);
+    
+    return true; // Code vérifié avec succès
+}
+
+
+    public boolean verifyOtpCodeWhatsApp(String whatsAppActeur,String code ) {
+        if (isCodeExpired(code)) {
+            throw new RuntimeException("Code expiré");
+        }
+        
+        Acteur userVerif = acteurRepository.findByWhatsAppActeur(whatsAppActeur);
+        if (userVerif == null) {
+            throw new RuntimeException("Cet numéro n'existe pas, veuillez vérifier le numéro saisi");
+        }
+    
+        // Stockez temporairement le code dans le champ resetToken de l'utilisateur
+        userVerif.setResetToken(code);
+        userVerif.setTokenCreationDate(LocalDateTime.now().plusMinutes(2)); // Code expirera après 2 minutes
+        acteurRepository.save(userVerif);
+    
+        return true; // Code vérifié avec succès
+    }
+
 
      // Fonction pour vérifier si le code est expiré
      private boolean isCodeExpired(String code) {
@@ -568,16 +763,28 @@ public class ActeurService {
         // Comparer avec le timestamp actuel
         LocalDateTime now = LocalDateTime.now();
         Duration duration = Duration.between(timestamp, now);
-        return duration.getSeconds() > 30; // Code expiré après 30 secondes
+        return duration.getSeconds() > 60; // Code expiré après 60 secondes
     }
 
-    //Fonction pour reinitialiser le mot de passe
-    public Acteur resetPassword(String email, String password) throws Exception{
+    //Fonction pour reinitialiser le mot de passe par email
+    public Acteur resetPasswordEmail(String email, String password) throws Exception{
         Acteur userVerif = acteurRepository.findByEmailActeur(email);
         // Vérifier si le code est expiré
-        if (isCodeExpired(code)) {
-            throw new Exception("Code expiré");
-        }
+        // if (isCodeExpired(code)) {
+        //     throw new Exception("Code expiré");
+        // }
+        
+        userVerif.setPassword(passwordEncoder.encode(password));
+
+        return acteurRepository.save(userVerif);
+    }
+   //Function pour reinitialiser le mot de pass par whatsApp numéro
+    public Acteur resetPasswordWhatsApp(String whatsAppActeur, String password) throws Exception{
+        Acteur userVerif = acteurRepository.findByWhatsAppActeur(whatsAppActeur);
+        // Vérifier si le code est expiré
+        // if (isCodeExpired(code)) {
+        //     throw new Exception("Code expiré");
+        // }
         
         userVerif.setPassword(passwordEncoder.encode(password));
 
@@ -589,10 +796,10 @@ public class ActeurService {
         // It will generate 6 digit random Number.
         // from 0 to 999999
         Random rnd = new Random();
-        int number = rnd.nextInt(999999);
+        int number = rnd.nextInt(9999);
 
-        // this will convert any number sequence into 6 character.
-        return String.format("%06d", number);
+        // this will convert any number sequence into 4 character.
+        return String.format("%04d", number);
     }
 
     private void sendMail(Acteur acteur, String code) throws Exception {
@@ -641,7 +848,8 @@ public class ActeurService {
             acteur.get().setStatutActeur(true);
             acteurRepository.save(acteur.get());
              Alerte alerte = new Alerte(acteur.get().getEmailActeur(), "Votre compte a été activé par le super admin vous pouvez acceder votre compte");
-            // emailService.sendSimpleMail(alerte);
+            emailService.sendSimpleMail(alerte);
+            
             return new ResponseEntity<>("Le compte de " + acteur.get().getNomActeur() +  " a été activé avec succès", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Acteur non trouvé avec l'ID " + id, HttpStatus.BAD_REQUEST);
@@ -688,7 +896,7 @@ public class ActeurService {
       public Acteur connexionActeur(String emailActeur, String password){
         Acteur acteur = acteurRepository.findByEmailActeur(emailActeur);
         if (acteur == null || !passwordEncoder.matches(password, acteur.getPassword())) {
-            throw new EntityNotFoundException("Ce compte n'existe pas");
+            throw new EntityNotFoundException("Email ou mot de passe incorrect");
         }
         
         if(acteur.getStatutActeur()==false){

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Niveau2Pays;
 import projet.ais.repository.Niveau2PaysRepository;
 import projet.ais.services.Niveau2PaysService;
@@ -32,14 +33,20 @@ public class Niveau2PaysController {
   private Niveau2PaysRepository niveau2PaysRepository;
 
 
-    @PostMapping("/create")
-      @Operation(summary = "créer niveau 2 pays")
-     public ResponseEntity<Niveau2Pays> createNiveau2Pays(@RequestBody Niveau2Pays niveau2Pays) {
-
-     return new ResponseEntity<>(niveau2PaysService.createNiveau2Pays(niveau2Pays), HttpStatus.OK);
-        
-    }
     
+      @PostMapping("/create")
+      @Operation(summary = "créer niveau 2 pays")
+     public ResponseEntity<String> createNiveaux2Pays(@RequestBody Niveau2Pays niveau2Pays) throws Exception {
+
+        // Vérifier si le niveau 1 pays existe déjà
+        Niveau2Pays niveau2PaysExistant = niveau2PaysRepository.findByNomN2(niveau2Pays.getNomN2());
+        if (niveau2PaysExistant == null) {
+            niveau2PaysService.createNiveau2Pays(niveau2Pays);
+            return new ResponseEntity<>("Niveau 2 Pays créer avec succès" , HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Le niveau 2 pays " + niveau2PaysExistant.getNomN2() + " existe déjà", HttpStatus.BAD_REQUEST);
+        }
+    }
 
 
     @PutMapping("/update/{id}")
