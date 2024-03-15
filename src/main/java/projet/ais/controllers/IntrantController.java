@@ -85,11 +85,11 @@ public class IntrantController {
         return  new ResponseEntity<>(intrantService.getAllIntrantByActeur(id), HttpStatus.OK);
     }
 
-    @GetMapping("/listeIntrantBySuperficie/{id}")
-    @Operation(summary = "affichage de la liste des intrants par superficie")
-    public ResponseEntity<List<Intrant>> listeIntrantBySuperficie(@PathVariable String id){
-        return  new ResponseEntity<>(intrantService.getAllIntrantBySuperficie(id), HttpStatus.OK);
-    }
+    // @GetMapping("/listeIntrantBySuperficie/{id}")
+    // @Operation(summary = "affichage de la liste des intrants par superficie")
+    // public ResponseEntity<List<Intrant>> listeIntrantBySuperficie(@PathVariable String id){
+    //     return  new ResponseEntity<>(intrantService.getAllIntrantBySuperficie(id), HttpStatus.OK);
+    // }
 
                  // Get Liste des  intrants
       @GetMapping("/read")

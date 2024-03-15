@@ -15,5 +15,5 @@ public interface IntrantRepository extends JpaRepository<Intrant , String> {
 
     List<Intrant> findAllByActeurIdActeur(String idIntrant);
     
-    List<Intrant> findBySuperficieIdSuperficie(String id);
+    // List<Intrant> findBySuperficieIdSuperficie(String id);
 }

@@ -558,7 +558,9 @@ public class ActeurService {
         ac.setWhatsAppActeur(acteur.getWhatsAppActeur());
         ac.setLocaliteActeur(acteur.getLocaliteActeur());
         ac.setEmailActeur(acteur.getEmailActeur());
-      
+
+        // ac.setMaillonActeur(acteur.getMaillonActeur());
+        // ac.setFiliereActeur(acteur.getFiliereActeur());
         ac.setTypeActeur(acteur.getTypeActeur());
 
                        

@@ -88,6 +88,13 @@ public class Acteur {
     @Column(nullable = false)
     private String emailActeur;
 
+
+    // @Column(nullable = false)
+    // private String MaillonActeur;
+
+    // @Column(nullable = true)
+    // private String filiereActeur;
+
    
     private Boolean statutActeur  ;
 
