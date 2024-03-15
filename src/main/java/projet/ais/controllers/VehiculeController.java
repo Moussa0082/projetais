@@ -85,6 +85,11 @@ public class VehiculeController {
         return  new ResponseEntity<>(vehiculeService.getAllVehiculeByActeur(id), HttpStatus.OK);
     }
 
+    @GetMapping("/listeVehiculeByType/{id}")
+    @Operation(summary = "affichage de la liste des vehicules par type")
+    public ResponseEntity<List<Vehicule>> listeVehiculeByTypes(@PathVariable String id){
+        return  new ResponseEntity<>(vehiculeService.getVehiculesByTypeVoiture(id), HttpStatus.OK);
+    }
                  // Get Liste des  vehicules
       @GetMapping("/read")
       @Operation(summary = "Liste globale des vehicules")

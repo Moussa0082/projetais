@@ -18,29 +18,26 @@ public class DetailCommande {
     @Id
     private String idDetailCommande;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String codeProduit;
     
     @Column(nullable = false)
-    private double quantiteDemande;
+    private Double quantiteDemande;
     
-    @Column(nullable = false)
-    private double quantiteLivree;
+    @Column(nullable = true)
+    private Double quantiteLivree;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
+    private Double quantiteNonLivree; // Utiliser la classe d'enveloppe Double au lieu du type primitif double
+
+    @Column(nullable = true)
     private String nomProduit;
 
-     @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateAjout;
-
-    @PrePersist
-    public void prePersist() {
-        dateAjout = LocalDateTime.now();
-    }
+    private String dateAjout;
     
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateDetailCommande;
+    // @Column(columnDefinition = "TIMESTAMP")
+    // private LocalDateTime dateDetailCommande;
 
     @ManyToOne
     @JoinColumn(name = "idCommande")

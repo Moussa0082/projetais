@@ -143,6 +143,11 @@ public class StockController {
             return stockService.getStocksByCategorieAndMagasin(idCategorie, idMagasin);
         }
 
+        @GetMapping("/commande/{id}")
+        public List<Stock> getStocksByCommande(@PathVariable String id) {
+            return stockService.getAllStockByCommande(id);
+        }
+
         @GetMapping("/categorieAndActeur/{idCategorie}/{idMagasin}/{idActeur}")
         public List<Stock> getStocksByCategorieAndMagasinAndActeur(@PathVariable String idCategorie, @PathVariable String idMagasin , @PathVariable String idActeur) throws Exception {
             return stockService.listeStockByCategorieProduitAndMagasinAndActeur(idCategorie, idMagasin,idActeur);

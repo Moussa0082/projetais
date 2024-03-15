@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
+import projet.ais.models.Alerte;
 import projet.ais.models.Commande;
 import projet.ais.models.DetailCommande;
 import projet.ais.models.Materiel;
@@ -27,6 +28,8 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import projet.ais.repository.DetailCommandeRepository;
 import projet.ais.repository.MaterielRepository;
 import projet.ais.repository.StockRepository;
@@ -61,255 +64,280 @@ public class CommandeService {
     MaterielRepository materielRepository;
 
     @Autowired
-    private DetailCommandeRepository detailCommandeRepository;
+    DetailCommandeRepository detailCommandeRepository;
 
-     //Passer une commande methode
-    public ResponseEntity<String> passerCommande(Commande commande, Stock stock){
-        //Recuperer la commande par son id
-        Commande cmdExistant = commandeRepository.findByIdCommande(commande.getIdCommande());
-        if(cmdExistant != null){
-             throw new IllegalArgumentException("Une commande avec l'id "+ cmdExistant + "existe déjà");
-        }
-        Stock stockExistantAuPanier = stockRepository.findByCommandeIdCommande(commande.getIdCommande());
-        if(stockExistantAuPanier != null){
-            throw new IllegalArgumentException("Ce produit existe déjà au panier");
-        }
-        
-         commandeRepository.save(commande);
-        return new ResponseEntity<>("Commande passer avec succès votre numéro de commande est "+ commande.getCodeCommande(), HttpStatus.OK);
-    }
+  
 
-    // public void ajouterStocksACommande(Commande commande) throws Exception {
-    //     // Vérifier si la commande existe déjà
-    //     Commande existingCommande = commandeRepository.findByIdCommande(commande.getIdCommande());
-        
-    //     // Si la commande n'existe pas encore, la sauvegarder avec un nouvel ID et un nouveau code
-    //     if (existingCommande == null) {
-    //         commande.setIdCommande(idGenerator.genererCode());
-    //         commande.setCodeCommande(codeGenerator.genererCode());
-    //         commande.setStatutCommande(false); // Set initial status
-    //     }
-        
-    //     // Enregistrer la commande (ou la mise à jour de la commande existante)
-    //     // Commande savedCommande = commandeRepository.save(commande);
-        
-    //     // Récupérer la liste de stocks de la commande
-    //     List<Stock> stocks = commande.getStocks();
+  
+        public Commande ajouterStocksACommande(Commande commande, List<Stock> stocks, List<Double> quantitesDemandees) throws Exception {
+        // Récupération des stocks correspondant aux identifiants fournis
+        List<Stock> stocksFound = stockRepository.findByIdStockIn(
+            stocks.stream().map(Stock::getIdStock).collect(Collectors.toList())
+        );
     
-    //     for (Stock stock : stocks) {
-    //         double quantiteStock = stock.getQuantiteStock();
-        
-    //         if (quantiteStock == 0) {
-    //             throw new Exception("Le produit " + stock.getNomProduit() + " est en rupture de stock et ne peut être ajouté à la commande.");
-    //         }
-            
-    //         // Mettre à jour la quantité de stock
-    //         stock.setQuantiteStock(quantiteStock - commande.getQuantiteDemande());
-    //         commande.setNomProduit(stock.getNomProduit());
-    //         commande.setCodeProduit(stock.getCodeStock());
-    //         commande.setQuantiteDemande(quantiteStock);
-    //         commande.setQuantiteNonLivree(quantiteStock);
-    //         // Associer le stock à la commande
-    //         commandeRepository.save(commande);
-    //          stock.setCommande(commande);
-    //          stockRepository.save(stock);
-    //     }
-    // }
+        // Date et heure actuelles formatées
+        String formattedDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     
-    // public Commande creerCommandeEtAjouterStocks(List<Stock> stocks, Commande commande) {
-    //     // Créer la commande avec les détails nécessaires
-    //     commande.setIdCommande(idGenerator.genererCode());
-    //     commande.setCodeCommande(codeGenerator.genererCode());
-    //     commande.setDateCommande(LocalDateTime.now());
-    //     double quantiteDemandee = commande.getQuantiteDemande();
-    //     double quantiteLivree = commande.getQuantiteLivree();
-    //     double quantiteNonLivree = quantiteDemandee - quantiteLivree; // Calcul de la quantité non livrée
-    //     commande.setQuantiteNonLivree(quantiteNonLivree);
+        // Mise à jour des informations de la commande
+        commande.setIdCommande(idGenerator.genererCode());
+        commande.setCodeCommande(codeGenerator.genererCode());
+        commande.setDateCommande(formattedDateTime);
+        commande.setStatutCommande(true);
+        Commande savedCommande = commandeRepository.save(commande);
     
-    //     // Initialiser la liste de stocks dans la commande si elle est nulle
-    //     // if (commande.getStock() == null) {
-    //     //     commande.setStock(new ArrayList<>());
-    //     // } 
-        
-    //     // Enregistrer la commande dans la base de données
-    //     Commande savedCommande = commandeRepository.save(commande);
-        
-    //     // Pour chaque stock, associez-le à la commande
-    //     for (Stock stock : stocks) {
-    //         System.out.println("Liste de produit : "+ stock);
-    //         // Associer le stock à la commande
-    //         savedCommande.setNomProduit(stock.getNomProduit());
-    //         savedCommande.setCodeProduit(stock.getCodeStock());
-    //         stock.setQuantiteStock(stock.getQuantiteStock() - quantiteDemandee);
+        // Enregistrement des détails de la commande pour chaque produit
+        for (int i = 0; i < stocksFound.size(); i++) {
+            Stock stock = stocksFound.get(i);
+            double quantiteDemandee = quantitesDemandees.get(i);
+            DetailCommande detailCommande = new DetailCommande();
     
-    //         stock.getCommande().add(savedCommande); // Assurez-vous que stock.getCommande() est initialisée
-           
-    //         stockRepository.save(stock);
-    //     }
-    //     // Enregistrer les stocks associés à la commande dans la base de données
-    //     // System.out.println("Commande : "+ savedCommande);
+            // Création d'une nouvelle instance de DetailCommande
+            detailCommande.setIdDetailCommande(idGenerator.genererCode());
+            detailCommande.setCodeProduit(stock.getCodeStock());
+            detailCommande.setQuantiteDemande(quantiteDemandee);
+            detailCommande.setQuantiteLivree(0.0); // Initialement aucun n'a été livré
+            detailCommande.setQuantiteNonLivree(0.0); // Initialement aucun n'a été livré
+            detailCommande.setNomProduit(stock.getNomProduit());
+            detailCommande.setDateAjout(formattedDateTime);
+            detailCommande.setCommande(savedCommande);
     
-    //     // Retourner la commande créée avec les stocks associés
-    //     return savedCommande;
-    // }
-    public Commande creerCommandeAvecStocks(Commande commande) {
-        // Générer un nouvel identifiant de commande et de code de commande
-        String idCommande = idGenerator.genererCode();
-        String codeCommande = codeGenerator.genererCode();
+            // Enregistrement du détail de la commande
+            detailCommandeRepository.save(detailCommande);
     
-        // Associer l'identifiant et le code de commande à la nouvelle commande
-        commande.setIdCommande(idCommande);
-        commande.setCodeCommande(codeCommande);
+            // Mise à jour de la quantité en stock
+            double quantiteRestante = stock.getQuantiteStock() - quantiteDemandee;
+            stock.setQuantiteStock(quantiteRestante);
+            stockRepository.save(stock);
     
-        // Enregistrer la nouvelle commande dans la base de données
-        commandeRepository.save(commande);
+            // Mise à jour de la quantité demandée totale dans la commande
+            savedCommande.setQuantiteDemande(savedCommande.getQuantiteDemande() + quantiteDemandee);
+        }
     
-        // Récupérer la liste des stocks à partir de la commande
-        List<Stock> stocks = commande.getStock();
+        // Envoi de notifications aux propriétaires des stocks
+        Map<Acteur, List<DetailCommande>> proprietairesStocksDetails = new HashMap<>();
     
-        // Pour chaque stock, vérifier s'il est déjà associé à la commande
-        for (Stock stock : stocks) {
-            // Vérifier si le stock est déjà associé à la commande
-            if (stock.getCommande() == null) {
-             // Associer la commande au stock
-    stock.getCommande().add(commande);
-            } else {
-                // Le stock est déjà associé à une commande
-                // Vous pouvez choisir de lever une exception, ignorer le stock, ou mettre à jour la quantité existante
-                // Pour l'exemple, nous mettons simplement à jour la quantité existante
-                double quantiteExistante = stock.getQuantiteStock();
-                double nouvelleQuantite = quantiteExistante + commande.getQuantiteDemande();
-                stock.setQuantiteStock(nouvelleQuantite);
+        // Parcourir les stocks trouvés
+        for (Stock stock : stocksFound) {
+            Acteur proprietaire = stock.getActeur(); // Récupérer le propriétaire du stock
+    
+            // Vérifier si le propriétaire est déjà présent dans la Map, sinon ajouter une nouvelle entrée
+            if (!proprietairesStocksDetails.containsKey(proprietaire)) {
+                proprietairesStocksDetails.put(proprietaire, new ArrayList<>());
             }
     
-            // Mettre à jour la quantité disponible du stock
-            double nouvelleQuantite = stock.getQuantiteStock() - commande.getQuantiteDemande();
-            stock.setQuantiteStock(nouvelleQuantite);
-    
-            // Enregistrer le stock dans la base de données
-            stockRepository.save(stock);
+            // Ajouter le détail de commande à la liste des détails de commande du propriétaire
+            List<DetailCommande> details = detailCommandeRepository.findByNomProduit(stock.getNomProduit());
+            proprietairesStocksDetails.get(proprietaire).addAll(details);
         }
     
-        // Retourner la commande créée avec les stocks associés
-        return commande;
+        // Parcourir les entrées de la Map pour envoyer les messages à chaque propriétaire avec les détails de ses stocks commandés
+        for (Map.Entry<Acteur, List<DetailCommande>> entry : proprietairesStocksDetails.entrySet()) {
+            Acteur proprietaire = entry.getKey();
+            List<DetailCommande> detailsCommande = entry.getValue();
+    
+            // Construire le message pour ce propriétaire avec les détails des stocks commandés
+            String message = "Les produits suivants ont été commandés par " + savedCommande.getActeur().getNomActeur() + " :\n";
+            Set<String> produitsDemandes = new HashSet<>();
+            for (DetailCommande detail : detailsCommande) {
+                String nomProduit = detail.getNomProduit();
+                double quantiteDemandee = detail.getQuantiteDemande();
+    
+                // Vérifier si le produit a déjà été ajouté au message
+                if (!produitsDemandes.contains(nomProduit)) {
+                    produitsDemandes.add(nomProduit);
+                    message += "- " + nomProduit + " : quantité demandée " + quantiteDemandee + "\n";
+                }
+            }
+    
+            // Envoyer un message par WhatsApp et e-mail uniquement si le propriétaire a un WhatsAppActeur ou un EmailActeur
+            if (proprietaire != null && proprietaire.getWhatsAppActeur() != null && proprietaire.getEmailActeur() != null) {
+                messageService.sendMessageAndSave(proprietaire.getWhatsAppActeur(), message, proprietaire);
+                Alerte al = new Alerte(proprietaire.getEmailActeur(), message, "Nouvelle commande de produits");
+                al.setId(idGenerator.genererCode());
+                al.setDateAjout(formattedDateTime);
+                al.setActeur(proprietaire);
+                alerteRepository.save(al);
+                emailService.sendSimpleMail(al);
+            } else {
+                System.out.println("Non trouvé");
+            }
+         }
+    
+        return savedCommande;
     }
+    
+    
+    
+    
+   
+   // validé une commande en tant qu'acheteur
+    public ResponseEntity<String> enableCommande(String id) throws Exception {
+    Commande commande = commandeRepository.findByIdCommande(id);
 
-    // Méthode pour ajouter plusieurs stocks à la commande
-    public void ajouterCommande(Commande commande) {
-        // Pour chaque stock associé à la commande
-        List<Stock> stocks = commande.getStock();
-        for (Stock stock : stocks) {
-            // Mettre à jour la quantité de stock avec la quantité de la commande
-            double quantiteExistante = stock.getQuantiteStock();
-            double nouvelleQuantite = quantiteExistante - commande.getQuantiteDemande();
-            stock.setQuantiteStock(nouvelleQuantite);
-        }
-             String pattern = "yyyy-MM-dd HH:mm";
+    if (commande != null) {
+        // Mettre à jour le statut de la commande
+        commande.setStatutCommande(true);
+        commandeRepository.save(commande);
+
+        // Récupérer les détails de commande de la commande
+        List<DetailCommande> detailsCommande = commande.getDetailCommandeList();
+         
+        // Récupérer la liste des acteurs propriétaires des produits commandés
+        List<Acteur> acteursProprietaires = detailsCommande.stream()
+        .map(detail -> detail.getNomProduit()) // Récupérer le nom du produit de chaque détail
+        .flatMap(nomProduit -> stockRepository.findByNomProduit(nomProduit).stream()) // Convertir la collection de Stock en un flux
+        .map(stock -> stock.getActeur()) // Récupérer l'acteur associé à chaque stock
+        .distinct()
+        .collect(Collectors.toList());
+
+
+        // Informer chaque acteur propriétaire
+        for (Acteur acteurProprietaire : acteursProprietaires) {
+            // Construire le message pour l'acteur propriétaire
+            String message = "Commande validé , vos produits ont été commandés par " + commande.getActeur().getNomActeur() +
+                    " (Commande n° " + commande.getCodeCommande() + ").Rendez - vous sur l'appli Koumi pour voir vos produits commandés ";
+
+            // Envoyer le message ou l'alerte à l'acteur propriétaire
+            // messageService.sendMessageAndSave(acteurProprietaire.getWhatsAppActeur(), message, acteurProprietaire);
+
+            // Créer et sauvegarder une alerte
+            String pattern = "yyyy-MM-dd HH:mm";
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
             LocalDateTime now = LocalDateTime.now();
             String formattedDateTime = now.format(formatter);
-            commande.setDateAjout(formattedDateTime);
-        // Ajouter la commande à la liste des commandes dans chaque stock
-        for (Stock stock : stocks) {
-        // Ajouter l'entrée dans la liste des commandes associées au stock
-        // stock.getCommande().add(commande);
-        commande.getStock().add(stock);      
+            Alerte alerte = new Alerte(acteurProprietaire.getEmailActeur(), message, "Commande de vos produits validés");
+            alerte.setId(idGenerator.genererCode());
+            alerte.setDateAjout(formattedDateTime);
+            alerte.setActeur(acteurProprietaire);
+            alerteRepository.save(alerte);
+
+            // Envoyer un e-mail à l'acteur propriétaire
+            // emailService.sendSimpleMail(alerte);
+        }
+
+        return new ResponseEntity<>("La commande a été validée avec succès, les acteurs propriétaires ont été informés.", HttpStatus.OK);
+    } else {
+        return new ResponseEntity<>("Commande non trouvée avec l'ID " + id, HttpStatus.BAD_REQUEST);
+    }
+}
+
+      
+
     
-        // Enregistrer la commande et les stocks associés dans la base de données
-        stockRepository.save(stock);
+
+
+   //Annuler commande en tant qu'acheteur
+   public ResponseEntity<String> disableCommande(String id) throws Exception {
+    Commande commande = commandeRepository.findByIdCommande(id);
+
+    if (commande != null) {
+        // Mettre à jour le statut de la commande
+        if(commande.getStatutCommande()==false){
+            throw new IllegalArgumentException("La commande est déjà annulé par default vous pouvez le valider.");
+        }
+        commande.setStatutCommande(false);
         commandeRepository.save(commande);
+
+        // Récupérer les détails de commande de la commande
+        List<DetailCommande> detailsCommande = commande.getDetailCommandeList();
+
+        // Récupérer la liste des acteurs propriétaires des produits commandés
+        List<Acteur> acteursProprietaires = detailsCommande.stream()
+        .map(detail -> detail.getNomProduit()) // Récupérer le nom du produit de chaque détail
+        .flatMap(nomProduit -> stockRepository.findByNomProduit(nomProduit).stream()) // Convertir la collection de Stock en un flux
+        .map(stock -> stock.getActeur()) // Récupérer l'acteur associé à chaque stock
+        .distinct()
+        .collect(Collectors.toList());
+
+
+        // Informer chaque acteur propriétaire
+        for (Acteur acteurProprietaire : acteursProprietaires) {
+            // Construire le message pour l'acteur propriétaire
+            String message = "Commande annulé " + commande.getActeur().getNomActeur().toUpperCase() + " a annulé la " +
+                    " (Commande n° " + commande.getCodeCommande() + ")  .  ";
+
+            // Envoyer le message ou l'alerte à l'acteur propriétaire
+            // messageService.sendMessageAndSave(acteurProprietaire.getWhatsAppActeur(), message, acteurProprietaire);
+
+            // Créer et sauvegarder une alerte
+            String pattern = "yyyy-MM-dd HH:mm";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+            LocalDateTime now = LocalDateTime.now();
+            String formattedDateTime = now.format(formatter);
+            Alerte alerte = new Alerte(acteurProprietaire.getEmailActeur(), message, "Commande de vos produits annulé");
+            alerte.setId(idGenerator.genererCode());
+            alerte.setDateAjout(formattedDateTime);
+            alerte.setActeur(acteurProprietaire);
+            alerteRepository.save(alerte);
+
+            // Envoyer un e-mail à l'acteur propriétaire
+            // emailService.sendSimpleMail(alerte);
+        }
+
+        return new ResponseEntity<>("La commande a été annulé avec succès, les acteurs propriétaires ont été informés.", HttpStatus.OK);
+    } else {
+        return new ResponseEntity<>("Commande non trouvée avec l'ID " + id, HttpStatus.BAD_REQUEST);
     }
-        
-    }
+}
+
 
     
-    // public Commande creerCommandeAvecStocks(Commande commande) throws Exception {
-         // Récupérer les produits du panier
-    //     List<String> idStocks = new ArrayList<>();
-    //     for (Stock stock : commande.getStock()) {
-    //         idStocks.add(stock.getIdStock());
-    //     }
-    //     List<Stock> stockss = stockRepository.findByIdStockIn(idStocks);
     
-    //     // Créer une liste pour stocker les identifiants des produits déjà présents dans le panier
-    
-    //     // Parcourir les produits du panier
-    //     for (Stock produit : stockss) {
-    //         // Rechercher l'identifiant du produit dans la table Commande
-    //         Commande commandeExistante = commandeRepository.findByIdCommande(produit.getCommande().getIdCommande());
-    
-    //         // Si le produit n'existe pas dans la table Commande
-    //         if (commandeExistante == null) {
-    //             // Créer une nouvelle commande
-    //             Commande nouvelleCommande = new Commande();
-    //             nouvelleCommande.setIdCommande(idGenerator.genererCode());
-    //              nouvelleCommande.setCodeCommande(codeGenerator.genererCode());
-    //             // Enregistrer la nouvelle commande
-    //             nouvelleCommande.setQuantiteNonLivree(nouvelleCommande.getQuantiteDemande() - nouvelleCommande.getQuantiteLivree());
-    //             commandeRepository.save(nouvelleCommande);
-    
-    //             // Ajouter l'identifiant du produit à la liste des produits existants
-    //             idStocks.add(produit.getCommande().getIdCommande());
-    //         } else {
-    //             // Augmenter la quantité commandée dans la commande existante
-    //             commandeExistante.setQuantiteNonLivree(commandeExistante.getQuantiteDemande() - commandeExistante.getQuantiteDemande());
-    
-    //             // Mettre à jour la commande
-    //             commandeRepository.save(commandeExistante);
-    
-    //             // Ajouter l'identifiant du produit à la liste des produits existants
-    //             idStocks.add(produit.getCommande().getIdCommande());
-    //         }
-    //     }
-    
-    //     // Récupérer les stocks des produits du panier
-    //     List<Stock> stocks = stockRepository.findByIdStockIn(idStocks);
-    
-    //     // Initialiser la liste de stocks dans la commande
-    //     commande.setStock(stocks);
+
+   public ResponseEntity<String> confirmerLivraisonVendeur(String id, Map<String, Double> quantitesLivre) throws Exception {
+    Commande commande = commandeRepository.findByIdCommande(id);
+
+    if (commande != null) {
+        // Mettre à jour le statut de la commande
+        commande.setStatutCommandeLivrer(true);
+        commandeRepository.save(commande);
+
+        // Ajouter la quantité livrée pour chaque produit
+        for (DetailCommande detail : commande.getDetailCommandeList()) {
+            String nomProduit = detail.getNomProduit();
+            Double quantiteDemandee = detail.getQuantiteDemande();
+            Double quantiteLivre = quantitesLivre.getOrDefault(nomProduit, 0.0);
+
+            if (quantiteLivre > quantiteDemandee) {
+                // Gérer le cas où la quantité livrée dépasse la quantité demandée
+                return new ResponseEntity<>("La quantité livrée de " + nomProduit + " dépasse la quantité demandée.", HttpStatus.BAD_REQUEST);
+            }
+
+            // Mettre à jour la quantité livrée dans le détail de la commande
+            detail.setQuantiteLivree(quantiteLivre);
+            detailCommandeRepository.save(detail);
+        }
+
+        // Vérifier si toutes les quantités ont été ajoutées
+        boolean toutesQuantitesAjoutees = commande.getDetailCommandeList().stream()
+                .allMatch(detail -> detail.getQuantiteLivree().equals(detail.getQuantiteDemande()));
 
     
-    //     // Associer chaque stock à la commande et mettre à jour les quantités
-    //     for (Stock stock : stocks) {
-    //         stock.setCommande(commande);
-    //         stock.setQuantiteStock(stock.getQuantiteStock() - commande.getQuantiteDemande());
-    //     }
-        
-    //     // Enregistrer la commande et les stocks
-    //     commandeRepository.save(commande);
-    //     stockRepository.saveAll(stocks);
-        
-    //     return commande;
-    // }
-    
-    
-    
-    
-    // public void ajouterStocksACommande(List<Stock> stocks, Commande commande) {
-    //     double quantiteDemandee = commande.getQuantiteDemande();
-    //     double quantiteLivree = commande.getQuantiteLivree();
-    //     double quantiteNonLivree = quantiteDemandee - quantiteLivree; // Calcul de la quantité non livrée
-        
-    //     // Mettre à jour la quantité non livrée de la commande
-    //     commande.setQuantiteNonLivree(quantiteNonLivree);
-        
-    //     // Pour chaque stock, associez-le à la commande et mettez à jour les informations de la commande
-    //     for (Stock stock : stocks) {
-    //         stock.setQuantiteStock(stock.getQuantiteStock() - quantiteDemandee);
-    //         // Récupérer les informations du stock et mettre à jour les champs de la commande
-    //         commande.getStock().add(stock);
-    //         commande.setNomProduit(stock.getNomProduit()); // Exemple : mettre à jour le nom du produit de la commande
-            
-    //         // Récupérer d'autres informations du stock et les mettre à jour dans la commande si nécessaire
-            
-    //         // Enregistrer la commande dans la base de données
-    //         commandeRepository.save(commande);
-    //     }
-    // }
-    
-    
-    
-    
+        if (toutesQuantitesAjoutees) {
+            // Informer le commanditaire par e-mail et WhatsApp
+            // informerCommanditaire(commande.getActeur());
+            // Envoyer une notification par e-mail et WhatsApp à l'utilisateur
+    String message = "Votre commande numéro "+ commande.getCodeCommande() +" a été validée par le vendeur avec succès un livreur ira vous livrer votre commande bientôt .";
+    Alerte al = new Alerte(commande.getActeur().getEmailActeur(), message,  "Commande Validée");
+    alerteRepository.save(al);
+    emailService.sendSimpleMail(al);
+    messageService.sendMessageAndSave(commande.getActeur().getWhatsAppActeur(), message, commande.getActeur());
+        }
+
+        return new ResponseEntity<>("La livraison de la commande a été validée avec succès.", HttpStatus.OK);
+    } else {
+        return new ResponseEntity<>("Commande non trouvée avec l'ID " + id + " ou aucun stock associé.", HttpStatus.BAD_REQUEST);
+    }
+}
+
+private void informerCommanditaire(Acteur acteur) throws Exception {
+    // Envoyer une notification par e-mail et WhatsApp à l'utilisateur
+    String message = "Votre commande a été validée avec succès.";
+    Alerte al = new Alerte(acteur.getEmailActeur(), message,  "Commande Validée");
+    emailService.sendSimpleMail(al);
+    messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), message, acteur);
+}
+
     
      public String commandeMateriel(String idMateriel, String idActeur) throws Exception{
         Acteur ac = acteurRepository.findByIdActeur(idActeur);
@@ -378,6 +406,7 @@ public class CommandeService {
         }
         return "Commande annuler avec succèss";
     }
+
     
     public Commande confirmerLivraison(String id){
         Commande commande = commandeRepository.findByIdCommande(id);
@@ -387,6 +416,8 @@ public class CommandeService {
         return commandeRepository.save(commande);
         
     }
+
+
 
     public String confirmerCommande(String idCommande) throws Exception {
 

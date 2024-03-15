@@ -8,11 +8,15 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import projet.ais.models.Alerte;
+import projet.ais.repository.AlerteRepository;
 
 
 
 @Service
 public class EmailService {
+
+     @Autowired
+     AlerteRepository alerteRepository;
 
      @Autowired private JavaMailSender javaMailSender;
  

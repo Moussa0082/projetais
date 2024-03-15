@@ -387,20 +387,34 @@ public class ActeurController {
     @PutMapping("/disable/{id}")
     //Desactiver un admin methode
     @Operation(summary = "Désactiver acteur ")
-    public ResponseEntity <String> disableActeur(@PathVariable String id){
-    
-        acteurService.disableActeur(id);
-        return new ResponseEntity<>("Acteur desactiver avec succes", HttpStatus.ACCEPTED);
+    public ResponseEntity<Acteur> desactiver(@PathVariable String id) throws Exception{
+        return new ResponseEntity<>(acteurService.disableActeur(id), HttpStatus.OK);
     }
 
     //Aciver admin
       @PutMapping("/enable/{id}")
     @Operation(summary = "Activer acteur ")
-    public ResponseEntity <String> enableAdmin(@PathVariable String id){
-    
-        acteurService.enableActeur(id);
-        return new ResponseEntity<>("Acteur activer avec succes", HttpStatus.ACCEPTED);
+    public ResponseEntity<Acteur> activer(@PathVariable String id) throws Exception{
+        return new ResponseEntity<>(acteurService.enableActeur(id), HttpStatus.OK);
     }
+
+    // @PutMapping("/disable/{id}")
+    // //Desactiver un admin methode
+    // @Operation(summary = "Désactiver acteur ")
+    // public ResponseEntity <String> disableActeur(@PathVariable String id) throws Exception{
+    
+    //     acteurService.disableActeur(id);
+    //     return new ResponseEntity<>("Acteur desactiver avec succes", HttpStatus.ACCEPTED);
+    // }
+
+    // //Aciver admin
+    //   @PutMapping("/enable/{id}")
+    // @Operation(summary = "Activer acteur ")
+    // public ResponseEntity <String> enableAdmin(@PathVariable String id) throws Exception{
+    
+    //     acteurService.enableActeur(id);
+    //     return new ResponseEntity<>("Acteur activer avec succes", HttpStatus.ACCEPTED);
+    // }
 
 
     //liste acteur par type acteur
