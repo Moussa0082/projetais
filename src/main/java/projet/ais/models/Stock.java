@@ -78,6 +78,7 @@ public class Stock {
     private Acteur acteur;
     
     @ManyToMany(mappedBy = "stock", fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Commande>  commande;
 
     @OneToMany
@@ -85,10 +86,7 @@ public class Stock {
     @JsonIgnore
     private List<Sortie_Stock> sortie_Stock;
 
-     // Méthode pour associer plusieurs commandes à un stock
-    //  public void setCommandes(List<Commande> commandes) {
-    //     this.commande = commandes;
-    // }
+  
 
 }
 

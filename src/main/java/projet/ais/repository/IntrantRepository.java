@@ -1,5 +1,6 @@
 package projet.ais.repository;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +17,6 @@ public interface IntrantRepository extends JpaRepository<Intrant , String> {
     List<Intrant> findAllByActeurIdActeur(String idIntrant);
     
     List<Intrant> findBySuperficieIdSuperficie(String id);
+
+    Collection<Intrant> findByNomIntrant(String nomIntrant);
 }

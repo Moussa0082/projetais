@@ -49,14 +49,14 @@ public class MagasinController {
         return new ResponseEntity<>(saveMag, HttpStatus.CREATED);
     }
     
-    @PutMapping("/update/{id}")
+    @PutMapping("/update/{idMagasin}")
     public ResponseEntity<Magasin> updatedMagasin(
-        @Valid @RequestParam("magasin") String magasins,
+        @Valid @RequestParam("magasin") String magasin,
         @Valid @RequestParam(value = "image",required = false) MultipartFile imageFile, @PathVariable String idMagasin) throws Exception{
 
             Magasin magasin1 = new Magasin();
             try {
-                magasin1 = new JsonMapper().readValue(magasins,Magasin.class);
+                magasin1 = new JsonMapper().readValue(magasin,Magasin.class);
             }  catch (JsonProcessingException e) {
                 throw new Exception(e.getMessage());
             }
@@ -87,7 +87,7 @@ public class MagasinController {
         return new ResponseEntity<>(magasinService.getMagasinByActeur(id), HttpStatus.OK);
     }
    
-    @GetMapping("/getAllMagasinByActeurAndNieau1Pays/{idActeur}/{idNiveau1Pays}")
+    @GetMapping("/getAllMagasinByActeurAndNiveau1Pays/{idActeur}/{idNiveau1Pays}")
     @Operation(summary = "Liste des magasins par region et par acteur")
     public ResponseEntity<List<Magasin>> listeMagasinByNiveau1PaysAndActeur(@PathVariable String idActeur, @PathVariable String idNiveau1Pays) throws Exception{
         return new ResponseEntity<>(magasinService.listeMagasinByNiveau1PaysAndActeur(idActeur, idNiveau1Pays), HttpStatus.OK);

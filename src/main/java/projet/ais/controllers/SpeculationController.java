@@ -78,9 +78,9 @@ public class SpeculationController {
     }
 
     
-    @GetMapping("/by-categories/{idsCategorieProduit}")
-    public List<Speculation> getSpeculationsByCategories(@PathVariable List<String> idsCategorieProduit) {
-        return speculationService.getSpeculationsByCategories(idsCategorieProduit);
+    @GetMapping("/by-categories/{idsJson}")
+    public List<Speculation> getSpeculationsByCategories(@PathVariable List<String> idsJson) {
+        return speculationService.getSpeculationsByCategories(idsJson);
     }
 
 }
