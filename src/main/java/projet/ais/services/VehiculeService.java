@@ -1,16 +1,19 @@
 package projet.ais.services;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.FileEntity;
+import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,10 +21,19 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
-import projet.ais.models.Acteur;
-import projet.ais.models.Unite;
 import projet.ais.models.Vehicule;
 import projet.ais.repository.VehiculeRepository;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.FileEntity;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+import java.io.File;
 
 @Service
 public class VehiculeService {
@@ -30,14 +42,18 @@ public class VehiculeService {
     private VehiculeRepository vehiculeRepository;
   
 
-     @Autowired
+    @Autowired
     CodeGenerator codeGenerator;
-  @Autowired
+    @Autowired
     IdGenerator idGenerator ;
-
+    // Connexion FTP
+    private String server = "ftp://ftp.koumi.ml";
+    private int port = 22;
+    private String user = "default_koumi";
+    private String password = "H8hd#e3KejJR";
 
      //créer un vehicule
-      public Vehicule createVehicule(Vehicule vehicule, MultipartFile imageFile) throws Exception {
+        public Vehicule createVehicule(Vehicule vehicule, MultipartFile imageFile) throws Exception  {
         
         Vehicule vh = vehiculeRepository.findByIdVehicule(vehicule.getIdVehicule());
         if(vh != null){
@@ -45,19 +61,23 @@ public class VehiculeService {
             throw new IllegalArgumentException("Un vehicule avec l'id " + vh + " existe déjà");
         }
 
+        
             // Traitement du fichier image siege acteur
             if (imageFile != null) {
-                String imageLocation = "C:\\xampp\\htdocs\\ais";
+                String baseUrl = "https://koumi.ml/";
+                String imageLocation = "ais";
                 try {
                     Path imageRootLocation = Paths.get(imageLocation);
                     if (!Files.exists(imageRootLocation)) {
                         Files.createDirectories(imageRootLocation);
                     }
-    
+            
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    vehicule.setPhotoVehicule("ais/" + imageName);
+                    
+                    String imageUrl = baseUrl + imageLocation + "/" + imageName;
+                    vehicule.setPhotoVehicule(imageUrl);// vehicule.setPhotoVehicule("ais/" + imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
@@ -77,6 +97,65 @@ public class VehiculeService {
          return savedVehicule;
    
     }
+    // public Vehicule createVehicule(Vehicule vehicule, MultipartFile imageFile) throws Exception {
+    //     Vehicule vh = vehiculeRepository.findByIdVehicule(vehicule.getIdVehicule());
+    //     if(vh != null){
+    //         throw new IllegalArgumentException("Un véhicule avec l'ID " + vh.getIdVehicule() + " existe déjà");
+    //     }
+
+    //     // Traitement du fichier image
+    //     if (imageFile != null && !imageFile.isEmpty()) {
+    //         // Chemin où les images seront stockées sur le serveur distant
+    //         String imagePath = "/images";
+
+    //         // Connexion au serveur FTP
+    //         FTPClient ftpClient = new FTPClient();
+    //         try {
+    //             // ftpClient.connect(server, port);
+    //             ftpClient.connect(server, port);
+    //             ftpClient.login(user, password);
+    //             ftpClient.enterLocalPassiveMode();
+    //             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+
+                
+    //             String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
+    //             String remoteFilePath = imagePath + "/" + imageName;
+
+    //             // Téléversement de l'image vers le serveur FTP distant
+    //             boolean uploaded = ftpClient.storeFile(remoteFilePath, imageFile.getInputStream());
+    //             if (!uploaded) {
+    //                 throw new Exception("Échec du téléversement de l'image sur le serveur FTP.");
+    //             }
+
+    //             // Stockage du chemin  complet dans l'objet vehicule
+    //             vehicule.setPhotoVehicule(remoteFilePath);
+    //         } catch (IOException ex) {
+    //             throw new Exception("Erreur lors du téléversement de l'image sur le serveur FTP : " + ex.getMessage());
+    //         } finally {
+    //             // Déconnexion du serveur FTP
+    //             if (ftpClient.isConnected()) {
+    //                 ftpClient.logout();
+    //                 ftpClient.disconnect();
+    //             }
+    //         }
+    //     }
+
+    //     // Génération de codes et de la date
+    //     String codes = codeGenerator.genererCode();
+    //     String idcodes = idGenerator.genererCode();
+    //     vehicule.setCodeVehicule(codes);
+    //     vehicule.setIdVehicule(idcodes);
+    //     String pattern = "yyyy-MM-dd HH:mm";
+    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+    //     LocalDateTime now = LocalDateTime.now();
+    //     String formattedDateTime = now.format(formatter);
+    //     vehicule.setDateAjout(formattedDateTime);
+
+    //     // Sauvegarde du véhicule dans la base de données
+    //     Vehicule savedVehicule = vehiculeRepository.save(vehicule);
+
+    //     return savedVehicule;
+    // }
 
 
        //Liste des vehicules par acteur
@@ -138,7 +217,10 @@ public class VehiculeService {
             vh.setEtatVehicule(vehicule.getEtatVehicule());
             vh.setPrixParDestination(vehicule.getPrixParDestination());
             vh.setLocalisation(vehicule.getLocalisation());
-            String pattern = "yyyy-MM-dd HH:mm";
+            vh.setDescription(vehicule.getDescription());
+            vh.setNbKilometrage(vehicule.getNbKilometrage());
+            
+        String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         LocalDateTime now = LocalDateTime.now();
         String formattedDateTime = now.format(formatter);

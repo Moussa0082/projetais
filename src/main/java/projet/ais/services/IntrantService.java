@@ -6,7 +6,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,6 @@ import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Intrant;
-import projet.ais.models.Vehicule;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.IntrantRepository;
 
@@ -68,7 +69,12 @@ public class IntrantService {
             }
 
             intrant.setIdIntrant(idGenerator.genererCode());
-            intrant.setCondeIntrant(codeGenerator.genererCode());
+            intrant.setCodeIntrant(codeGenerator.genererCode());
+             String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+        intrant.setDateAjout(formattedDateTime);
            Intrant savedIntrant = intrantRepository.save(intrant);        
    
          return savedIntrant;
@@ -131,7 +137,12 @@ public class IntrantService {
             it.setNomIntrant(intrant.getNomIntrant());
             it.setQuantiteIntrant(intrant.getQuantiteIntrant());
             it.setDescriptionIntrant(intrant.getDescriptionIntrant());
-            it.setDateModif(LocalDateTime.now());
+            it.setPrixIntrant(intrant.getPrixIntrant());
+            String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+        it.setDateModif(formattedDateTime);
             Intrant savedIntrant = intrantRepository.save(it);        
    
            return savedIntrant;

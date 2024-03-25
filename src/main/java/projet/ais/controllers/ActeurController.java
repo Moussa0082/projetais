@@ -102,6 +102,7 @@ public class ActeurController {
             //     }
             //     return new ResponseEntity<>(acteur, HttpStatus.OK);
             // }
+            
             @PostMapping("/{idActeur}/types")
             public ResponseEntity<Acteur> addTypesToActeur(@PathVariable String idActeur,
                                                             @RequestBody Map<String, Object> requestBody) throws Exception {

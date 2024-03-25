@@ -25,8 +25,10 @@ public class Intrant {
     private double quantiteIntrant;
     
     @Column(nullable = false)
-    private String condeIntrant;
+    private String codeIntrant;
 
+    @Column(nullable = false)
+    private int prixIntrant;
     
     @Column(nullable = true)
     private String descriptionIntrant;
@@ -37,21 +39,11 @@ public class Intrant {
     @Column
     private boolean statutIntrant;
 
-  @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateAjout;
+    @Column(nullable = true)
+    private String dateAjout;
 
-    @PrePersist
-    public void prePersist() {
-        dateAjout = LocalDateTime.now();
-    }
-
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateModif;
-
-    public LocalDateTime updateDateModif(LocalDateTime dateModif) {
-        this.dateModif = dateModif;
-        return dateModif;
-    }
+    @Column(nullable = true)
+    private String dateModif;
 
     @Column(nullable=true)
     private String personneModif;

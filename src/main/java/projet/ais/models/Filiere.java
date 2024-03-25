@@ -28,6 +28,7 @@ public class Filiere {
 
     @Column(nullable = false)
     private boolean statutFiliere = true;
+    
     @Column(nullable = true)
     private String dateAjout;
 

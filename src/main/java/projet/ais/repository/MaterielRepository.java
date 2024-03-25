@@ -3,6 +3,8 @@ package projet.ais.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import projet.ais.models.Materiel;
+import projet.ais.models.Vehicule;
+
 import java.util.*;
 
 public interface MaterielRepository  extends JpaRepository<Materiel , String>{
@@ -12,4 +14,6 @@ public interface MaterielRepository  extends JpaRepository<Materiel , String>{
     List<Materiel> findByActeurIdActeur(String id);
 
     List<Materiel> findByIdMaterielAndActeurIdActeur(String idMaterien, String idActeur);
+
+    List<Materiel> findAllByTypeMaterielIdTypeMateriel(String idTypeMateriel);
 }

@@ -2,18 +2,21 @@ package projet.ais.models;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import lombok.Data;
 
@@ -27,8 +30,12 @@ public class Materiel {
     @Column(nullable = false)
     private String codeMateriel;
 
+//     @Convert(converter = MapToJsonConverter.class)
+//    @Column(columnDefinition = "json")
+//    private Map<Integer, Integer> prixParHeure;
+
     @Column(nullable = false)
-    private int prix;
+    private int prixParHeure;
 
     @Column(nullable = false)
     private String nom;
@@ -40,9 +47,7 @@ public class Materiel {
     private String photoMateriel;
     
     @Column(nullable = false)
-    private String EtatMateriel;
-
-
+    private String etatMateriel;
 
     @Column(nullable = false)
     private String localisation;
@@ -56,20 +61,6 @@ public class Materiel {
     @Column
     private boolean statutCommande = false;
 
-    // @Column(columnDefinition = "TIMESTAMP")
-    // private LocalDateTime dateAjout;
-    // @PrePersist
-    // public void prePersist() {
-    //     dateAjout = LocalDateTime.now();
-    // }
-
-    // @Column(columnDefinition = "TIMESTAMP")
-    // private LocalDateTime dateModif;
-
-    // public LocalDateTime updateDateModif(LocalDateTime dateModif) {
-    //     this.dateModif = dateModif;
-    //     return dateModif;
-    // }
 
     @Column(nullable = true)
     private String dateAjout;
@@ -81,9 +72,12 @@ public class Materiel {
     @JoinColumn(name = "idActeur")
     private Acteur acteur;
     
+    @ManyToOne
+    @JoinColumn(name = "idTypeMateriel")
+    private TypeMateriel typeMateriel;
 
     @ManyToMany()
-     @JoinTable(name = "materiel_commande",
+    @JoinTable(name = "materiel_commande",
         joinColumns = @JoinColumn(name = "id_materiel"),
         inverseJoinColumns = @JoinColumn(name = "id_commande"))
     @JsonIgnore

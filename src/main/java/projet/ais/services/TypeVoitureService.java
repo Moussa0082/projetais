@@ -57,7 +57,7 @@ public class TypeVoitureService {
         LocalDateTime now = LocalDateTime.now();
         String formattedDateTime = now.format(formatter);
         type.setDateModif(formattedDateTime);
-
+ 
         return typeVoitureRepository.save(type);
     }
 
