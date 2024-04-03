@@ -40,6 +40,9 @@ public class Intrant {
     private boolean statutIntrant;
 
     @Column(nullable = true)
+    private String dateExpiration;
+
+    @Column(nullable = true)
     private String dateAjout;
 
     @Column(nullable = true)
@@ -48,6 +51,10 @@ public class Intrant {
     @Column(nullable=true)
     private String personneModif;
 
+    @ManyToOne
+    @JoinColumn(name = "idSpeculation")
+    private Speculation speculation;
+    
     @ManyToOne
     @JoinColumn(name = "idActeur")
     private Acteur acteur;

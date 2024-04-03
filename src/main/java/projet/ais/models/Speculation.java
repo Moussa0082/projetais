@@ -49,6 +49,11 @@ public class Speculation {
     @JsonIgnore
     private List<Stock> stockList;
 
+    @OneToMany
+    (mappedBy = "speculation")
+    @JsonIgnore
+    private List<Intrant> intrants;
+
     @ManyToOne
     @JsonIgnore
     @JoinColumn( name = "idActeur")

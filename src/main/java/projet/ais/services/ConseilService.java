@@ -39,11 +39,11 @@ public class ConseilService {
      //Ajouter un conseil
       public Conseil createConseil(Conseil conseil, MultipartFile imageFile, MultipartFile audio, MultipartFile video) throws Exception {
         
-        Conseil c = conseilRepository.findByIdConseil(conseil.getIdConseil());
-        if(c != null){
+        // Conseil c = conseilRepository.findByIdConseil(conseil.getIdConseil());
+        // if(c != null){
 
-            throw new IllegalArgumentException("Un conseil avec l'id " + c + " existe déjà");
-        }
+        //     throw new IllegalArgumentException("Un conseil avec l'id " + c + " existe déjà");
+        // }
 
             // Traitement du fichier image 
             if (imageFile != null) {
@@ -102,6 +102,7 @@ public class ConseilService {
             conseil.setIdConseil(idGenerator.genererCode());
             String codes = codeGenerator.genererCode();
             conseil.setCodeConseil(codes);
+        
             String pattern = "yyyy-MM-dd HH:mm";
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
             LocalDateTime now = LocalDateTime.now();
@@ -112,6 +113,7 @@ public class ConseilService {
          return savedConseil;
    
     }
+
 
 
        //Liste des conseil par acteur

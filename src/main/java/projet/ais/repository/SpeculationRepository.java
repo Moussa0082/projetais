@@ -19,6 +19,6 @@ public interface SpeculationRepository extends JpaRepository<Speculation, String
 
     List<Speculation> findByCategorieProduitIdCategorieProduit(String idCategorieProduit);
 
-    List<Speculation> findByCategorieProduitIdCategorieProduitIn(List<String> idsCategorieProduit);
+    List<Speculation> findByCategorieProduitIdCategorieProduitIn(List<String> idsJson);
 
 }

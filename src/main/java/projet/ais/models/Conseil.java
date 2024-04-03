@@ -46,7 +46,8 @@ public class Conseil {
     
     
     @Column
-    private boolean statutConseil;
+    private boolean statutConseil = false;
+
 
      @ManyToOne
      @JoinColumn(name = "idActeur")

@@ -31,6 +31,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import projet.ais.repository.DetailCommandeRepository;
+import projet.ais.repository.IntrantRepository;
 import projet.ais.repository.MaterielRepository;
 import projet.ais.repository.StockRepository;
 
@@ -39,6 +40,9 @@ public class CommandeService {
 
     @Autowired
     private CommandeRepository commandeRepository;
+
+    @Autowired
+    private IntrantRepository intrantRepository;
 
     @Autowired
     private StockRepository stockRepository;

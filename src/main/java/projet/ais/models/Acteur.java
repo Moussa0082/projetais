@@ -85,7 +85,7 @@ public class Acteur {
     @Column(nullable = false)
     private String localiteActeur;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String emailActeur;
 
 
