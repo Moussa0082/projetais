@@ -425,5 +425,15 @@ public class ActeurController {
         return acteurService.connexionActeur(emailActeur, password);
     }
 
+    //Se connecter 
+    @GetMapping("/pinLogin")
+    @Operation(summary = "Connexion d'un Acteur")
+    public Acteur connexionActeurWithPin(
+        @RequestParam("codeActeur")  String codeActeur,
+        @RequestParam("password")  String password
+    ) {
+    return acteurService.connexionActeurWithPin(codeActeur,password);
+    }
+
     
 }

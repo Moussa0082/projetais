@@ -63,7 +63,7 @@ public class Stock {
 
     @ManyToOne
     @JoinColumn(name = "idSpeculation")
-    private Speculation speculation;
+    private Speculation speculation;    
 
     @ManyToOne
     @JoinColumn(name = "idUnite")
