@@ -154,8 +154,8 @@ public class SpeculationService {
     }
 
 
-    public List<Speculation> getSpeculationsByCategories(List<String> idsJson) {
-        return speculationRepository.findByCategorieProduitIdCategorieProduitIn(idsJson);
+    public List<Speculation> getSpeculationsByCategories(String idsJson) {
+        return speculationRepository.findByCategorieProduitIdCategorieProduit(idsJson);
     }
 
 }

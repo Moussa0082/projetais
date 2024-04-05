@@ -29,6 +29,7 @@ public class Speculation {
     private boolean statutSpeculation = true;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "idCategorieProduit")
     private CategorieProduit categorieProduit;
 

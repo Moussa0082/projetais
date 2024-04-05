@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.*;
@@ -147,10 +148,7 @@ public class Acteur {
     @JsonIgnore
     private List<ZoneProduction> zoneProductions;
 
-    @OneToMany
-    (mappedBy = "acteur")
-    @JsonIgnore
-    private List<Speculation> speculationsList;
+
 
   
     @ManyToMany(fetch = FetchType.EAGER)
@@ -196,5 +194,7 @@ public class Acteur {
    (mappedBy = "acteur")
    @JsonIgnore
    private List<Campagne> campagnes;
+
+
 }
 

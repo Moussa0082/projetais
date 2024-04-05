@@ -30,8 +30,12 @@ public class Superficie {
     private String personneModif;
     
     @Column(nullable = false)
-    private String superficieHa;
+    private String superficieHa; 
+    
+    @Column(nullable = true)
+    private String description;
 
+    
     @Column(nullable = false)
     private boolean statutSuperficie = true;
 
