@@ -28,8 +28,6 @@ import projet.ais.IdGenerator;
 import projet.ais.Exception.NoContentException;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
-import projet.ais.models.Campagne;
-
 import java.time.format.DateTimeFormatter;
 
 import projet.ais.models.Stock;
@@ -215,9 +213,7 @@ public class ActeurService {
                             // Si l'administrateur a le type "Admin", envoyez un e-mail
                             String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez le contacter à son numero "+ savedActeur.getWhatsAppActeur()+"pour proceder à l'activation de son compte dans les plus brefs délais !";
                             Alerte alerte = new Alerte(admin.getEmailActeur(), msg, "Création d'un nouveau compte");
-
-                           alerte.setId(idGenerator.genererCode());
-
+                            alerte.setId(idGenerator.genererCode());
                             alerteRepository.save(alerte);
                             emailService.sendSimpleMail(alerte);
                             messageService.sendMessagePersonnalAndSave(admin.getWhatsAppActeur(), msg);
@@ -361,8 +357,6 @@ public class ActeurService {
             if (!emailsSent.contains(emailActeur) && !emailActeur.isEmpty()) {
                 try {
                     Alerte alerte = new Alerte(emailActeur, message, sujet);
-                    // alerte.setId(idGenerator.genereCode());
-                    // alerteRepository.save(alerte);
                     emailService.sendSimpleMail(alerte);
                     emailsSent.add(emailActeur);
                     System.out.println("Email sent to " + emailActeur);
@@ -561,7 +555,6 @@ public class ActeurService {
         ac.setWhatsAppActeur(acteur.getWhatsAppActeur());
         ac.setLocaliteActeur(acteur.getLocaliteActeur());
         ac.setEmailActeur(acteur.getEmailActeur());
-
         // ac.setMaillonActeur(acteur.getMaillonActeur());
         // ac.setFiliereActeur(acteur.getFiliereActeur());
         ac.setTypeActeur(acteur.getTypeActeur());
@@ -599,75 +592,22 @@ public class ActeurService {
     // }
     //Desactiver un acteur
 
-
-    // public ResponseEntity<String> disableActeur(String id) throws Exception {
-    //     Optional<Acteur> acteur = acteurRepository.findById(id);
-    //     if (acteur.isPresent()) {
-    //         acteur.get().setStatutActeur(false);
-    //         acteurRepository.save(acteur.get());
-    //         Alerte alerte = new Alerte(acteur.get().getEmailActeur(), "Votre compte a été desactivé par l'administrateur vous ne pouvez plus acceder à votre compte veuillez contacter l'administrateur " , "Desactivation de compte par l'administrateur de koumi");
-    //         alerte.setId(idGenerator.genererCode());
-
-    //         alerteRepository.save(alerte);
-    //         emailService.sendSimpleMail(alerte);
-    //         messageService.sendMessagePersonnalAndSave(acteur.get().getWhatsAppActeur(), "Votre compte a été desactivé par l'administrateur vous ne pouvez plus acceder à votre compte veuillez contacter l'administrateur ");
-    //         return new ResponseEntity<>("L'acteur " + acteur.get().getNomActeur() + " a été désactivé avec succès", HttpStatus.OK);
-    //     } else {
-    //         return new ResponseEntity<>("Admin non trouvé avec l'ID " + id, HttpStatus.BAD_REQUEST);
-    //     }
-    // }
-
-    // public Acteur enableActeur(String id) throws Exception{
-    //     Acteur acteur = acteurRepository.findById(id).orElseThrow(null);
-    //     Acteur savedActeur = new Acteur();
-    //     try {
-    //        acteur.setStatutActeur(true);
-
-    //         savedActeur = acteurRepository.save(acteur);
-    //         Alerte alerte = new Alerte(acteur.getEmailActeur(), "Votre compte a été activé par l'administrateur de koumi. vous pouvez acceder votre compte" , "Activation de compte par l'administrateur de koumi");
-    //         alerte.setId(idGenerator.genererCode());
-    //          alerteRepository.save(alerte);
-    //          emailService.sendSimpleMail(alerte);
-    //          messageService.sendMessagePersonnalAndSave(acteur.getWhatsAppActeur(), "Votre compte a été activé par l'administrateur de koumi vous pouvez acceder votre compte");
-    //     } catch (Exception e) {
-    //         throw new Exception("Erreur lors de l'activation : " + e.getMessage());
-    // public ResponseEntity<String> disableActeur(String id) throws Exception {
-    //     Optional<Acteur> acteur = acteurRepository.findById(id);
-    //     if (acteur.isPresent()) {
-    //         acteur.get().setStatutActeur(false);
-    //         acteurRepository.save(acteur.get());
-    //         Alerte alerte = new Alerte(acteur.get().getEmailActeur(), "Votre compte a été desactivé par l'administrateur vous ne pouvez plus acceder à votre compte veuillez contacter l'administrateur " , "Desactivation de compte par l'administrateur de koumi");
-    //         alerte.setId(idGenerator.genererCode());
-    //         alerteRepository.save(alerte);
-    //         emailService.sendSimpleMail(alerte);
-    //         messageService.sendMessagePersonnalAndSave(acteur.get().getWhatsAppActeur(), "Votre compte a été desactivé par l'administrateur vous ne pouvez plus acceder à votre compte veuillez contacter l'administrateur ");
-    //         return new ResponseEntity<>("L'acteur " + acteur.get().getNomActeur() + " a été désactivé avec succès", HttpStatus.OK);
-    //     } else {
-    //         return new ResponseEntity<>("Admin non trouvé avec l'ID " + id, HttpStatus.BAD_REQUEST);
-    //     }
-        
-    //     return savedActeur;
-    // }
-
-    public Acteur disableActeur(String id) throws Exception{
-        Acteur acteur = acteurRepository.findById(id).orElseThrow(null);
-        Acteur savedActeur = new Acteur();
-        try {
-           acteur.setStatutActeur(false);
-
-            savedActeur = acteurRepository.save(acteur);
-            Alerte alerte = new Alerte(acteur.getEmailActeur(), "Votre compte a été desactivé par l'administrateur vous ne pouvez plus acceder à votre compte veuillez contacter l'administrateur " , "Desactivation de compte par l'administrateur de koumi");
+    public ResponseEntity<String> disableActeur(String id) throws Exception {
+        Optional<Acteur> acteur = acteurRepository.findById(id);
+        if (acteur.isPresent()) {
+            acteur.get().setStatutActeur(false);
+            acteurRepository.save(acteur.get());
+            Alerte alerte = new Alerte(acteur.get().getEmailActeur(), "Votre compte a été desactivé par l'administrateur vous ne pouvez plus acceder à votre compte veuillez contacter l'administrateur " , "Desactivation de compte par l'administrateur de koumi");
             alerte.setId(idGenerator.genererCode());
-
             alerteRepository.save(alerte);
             emailService.sendSimpleMail(alerte);
-            messageService.sendMessagePersonnalAndSave(acteur.getWhatsAppActeur(), "Votre compte a été desactivé par l'administrateur vous ne pouvez plus acceder à votre compte veuillez contacter l'administrateur ");
-        } catch (Exception e) {
-            throw new Exception("Erreur lors de l'activation : " + e.getMessage());
+            messageService.sendMessagePersonnalAndSave(acteur.get().getWhatsAppActeur(), "Votre compte a été desactivé par l'administrateur vous ne pouvez plus acceder à votre compte veuillez contacter l'administrateur ");
+            return new ResponseEntity<>("L'acteur " + acteur.get().getNomActeur() + " a été désactivé avec succès", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Admin non trouvé avec l'ID " + id, HttpStatus.BAD_REQUEST);
         }
-
-        return savedActeur;
     }
+
 
 
       //Fonction pour un email à un utilisateur
@@ -911,22 +851,6 @@ public String sendOtpCodeEmail(String email) throws Exception {
     // fin logique service mot de passe oublier 
    
     //activer un acteur
-
-    // public ResponseEntity<String> enableActeur(String id) throws Exception {
-    //     Optional<Acteur> acteur = acteurRepository.findById(id);
-    //     if (acteur.isPresent()) {
-    //         acteur.get().setStatutActeur(true);
-    //         acteurRepository.save(acteur.get());
-    //          Alerte alerte = new Alerte(acteur.get().getEmailActeur(), "Votre compte a été activé par l'administrateur de koumi. vous pouvez acceder votre compte" , "Activation de compte par l'administrateur de koumi");
-    //         alerte.setId(idGenerator.genererCode());
-    //          alerteRepository.save(alerte);
-    //          emailService.sendSimpleMail(alerte);
-    //          messageService.sendMessagePersonnalAndSave(acteur.get().getWhatsAppActeur(), "Votre compte a été activé par l'administrateur de koumi vous pouvez acceder votre compte");
-    //         return new ResponseEntity<>("Le compte de " + acteur.get().getNomActeur() +  " a été activé avec succès", HttpStatus.OK);
-    //     } else {
-    //         return new ResponseEntity<>("Acteur non trouvé avec l'ID " + id, HttpStatus.BAD_REQUEST);
-    //     }
-    // }
     public ResponseEntity<String> enableActeur(String id) throws Exception {
         Optional<Acteur> acteur = acteurRepository.findById(id);
         if (acteur.isPresent()) {
