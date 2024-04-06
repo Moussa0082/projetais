@@ -44,7 +44,7 @@ public class Niveau1Pays {
     private List<Niveau2Pays> niveau2PaysList;
 
     @OneToMany
-    (mappedBy = "niveau1Pays")
+    (mappedBy = "niveau1Pays", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Magasin> magasin;
 

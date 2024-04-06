@@ -69,6 +69,11 @@ public class Commande {
     // @JsonIgnore
     private Acteur acteur;
 
+    @ManyToOne
+    @JoinColumn(name = "idMagasin")
+    // @JsonIgnore
+    private Magasin magasin;
+
     @Column(nullable = true)
     private String personneModif;
 

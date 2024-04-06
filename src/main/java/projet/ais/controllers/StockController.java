@@ -1,9 +1,11 @@
 package projet.ais.controllers;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,6 +23,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import projet.ais.models.CategorieProduit;
 import projet.ais.models.Speculation;
@@ -72,6 +75,12 @@ public class StockController {
             Stock saveStock = stockService.updateStock(stock, imageFile, id);
             return new ResponseEntity<>(saveStock, HttpStatus.OK);
         }
+
+    //     @PostMapping(value = "/zxing/qrcode", produces = MediaType.IMAGE_PNG_VALUE)
+    // public ResponseEntity<BufferedImage> zxingQRCode(@RequestBody String barcode) throws Exception {
+    //     return  ResponseEntity.ok(stockService.generateQRCodeImage(barcode));
+    // }
+
 
         @PutMapping("/activer/{id}")
     public ResponseEntity<Stock> activeStock(@PathVariable String id) throws Exception {
