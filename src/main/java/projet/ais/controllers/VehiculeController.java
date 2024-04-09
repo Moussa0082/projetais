@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -54,7 +55,16 @@ public class VehiculeController {
                 return new ResponseEntity<>(savedVehicule, HttpStatus.CREATED);
             }
 
-
+ // Endpoint pour récupérer une image à partir de son nom
+ @GetMapping("/image/{imageName}")
+ public ResponseEntity<byte[]> getImageByNames(@PathVariable String imageName) {
+     try {
+         byte[] imageData = vehiculeService.getImageByName(imageName);
+         return ResponseEntity.ok().body(imageData);
+     } catch (IOException e) {
+         return ResponseEntity.notFound().build();
+     }
+ }
              @PutMapping("/update/{id}")
       @Operation(summary = "Mise à jour d'un vehicule ")
       public ResponseEntity<Vehicule> updateVehicule(

@@ -47,56 +47,149 @@ public class VehiculeService {
     @Autowired
     IdGenerator idGenerator ;
     // Connexion FTP
-    private String server = "ftp://ftp.koumi.ml";
-    private int port = 22;
-    private String user = "default_koumi";
-    private String password = "H8hd#e3KejJR";
+    private static final String FTP_SERVER = "ftp.koumi.ml";
+    private static final int FTP_PORT = 21; // Mise à jour si nécessaire
+    private static final String FTP_USER = "default_koumi";
+    private static final String FTP_PASSWORD = "H8hd#e3KejJR";
+    private static final String FTP_IMAGES_DIRECTORY = "/images";
 
-     //créer un vehicule
-        public Vehicule createVehicule(Vehicule vehicule, MultipartFile imageFile) throws Exception  {
-        
+    public Vehicule createVehicule(Vehicule vehicule, MultipartFile imageFile) throws Exception {
         Vehicule vh = vehiculeRepository.findByIdVehicule(vehicule.getIdVehicule());
-        if(vh != null){
-
+        if (vh != null) {
             throw new IllegalArgumentException("Un vehicule avec l'id " + vh + " existe déjà");
         }
 
-        
-            // Traitement du fichier image siege acteur
-            if (imageFile != null) {
-                String baseUrl = "https://koumi.ml/";
-                String imageLocation = "ais";
-                try {
-                    Path imageRootLocation = Paths.get(imageLocation);
-                    if (!Files.exists(imageRootLocation)) {
-                        Files.createDirectories(imageRootLocation);
-                    }
-            
-                    String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
-                    Path imagePath = imageRootLocation.resolve(imageName);
-                    Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    
-                    String imageUrl = baseUrl + imageLocation + "/" + imageName;
-                    vehicule.setPhotoVehicule(imageUrl);// vehicule.setPhotoVehicule("ais/" + imageName);
-                } catch (IOException e) {
-                    throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
+        // Traitement du fichier image 
+        if (imageFile != null) {
+            try {
+                String imageLocation = "/ais";
+                Path imageRootLocation = Paths.get(imageLocation);
+                if (!Files.exists(imageRootLocation)) {
+                    Files.createDirectories(imageRootLocation);
                 }
-            }
 
-            String codes = codeGenerator.genererCode();
-            String idcodes = idGenerator.genererCode();
-            vehicule.setCodeVehicule(codes);
-            vehicule.setIdVehicule(idcodes);
+                String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
+                Path imagePath = imageRootLocation.resolve(imageName);
+                Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                
+                // // Enregistrement du chemin local de l'image dans l'objet Vehicule
+                // vehicule.setPhotoVehicule("ais/" + imageName);
+                
+                // Téléchargement de l'image vers le serveur FTP et récupération du chemin en ligne
+               // Téléchargement de l'image vers le serveur FTP et récupération du chemin en ligne
+                String onlineImagePath = uploadImageToFTP(imagePath, imageName);
+                vehicule.setPhotoVehicule(imageName); // Enregistrement du chemin en ligne dans l'objet Vehicule
+
+                
+            } catch (IOException e) {
+                throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
+            }
+        }
+
+        String codes = codeGenerator.genererCode();
+        String idcodes = idGenerator.genererCode();
+        vehicule.setCodeVehicule(codes);
+        vehicule.setIdVehicule(idcodes);
         String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         LocalDateTime now = LocalDateTime.now();
         String formattedDateTime = now.format(formatter);
         vehicule.setDateAjout(formattedDateTime);
-           Vehicule savedVehicule = vehiculeRepository.save(vehicule);        
-   
-         return savedVehicule;
-   
+        
+        // Enregistrement de l'objet Vehicule dans la base de données
+        Vehicule savedVehicule = vehiculeRepository.save(vehicule);
+
+        return savedVehicule; 
     }
+    
+
+    public String uploadImageToFTP(Path imagePath, String imageName) throws Exception {
+        FTPClient ftpClient = new FTPClient();
+        try {
+            ftpClient.connect(FTP_SERVER, FTP_PORT);
+            ftpClient.login(FTP_USER, FTP_PASSWORD);
+            ftpClient.enterLocalPassiveMode();
+    
+            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+    
+            try (InputStream inputStream = Files.newInputStream(imagePath)) {
+                String remoteFilePath = "/web/koumi-server/images/" + imageName; // Chemin d'acc                                                         ès complet sur le serveur FTP
+                boolean uploadResult = ftpClient.storeFile(remoteFilePath, inputStream);
+                if (uploadResult) {
+                    return "ftp://" + FTP_USER + "@" + FTP_SERVER + remoteFilePath; // Retourne le lien complet de l'image en ligne
+                } else {
+                    throw new Exception("Erreur lors du chargement de l'image sur le serveur FTP.");
+                }
+            }
+        } catch (IOException e) {
+            throw new Exception("Erreur lors de la connexion au serveur FTP : " + e.getMessage());
+        } finally {
+            try {
+                if (ftpClient.isConnected()) {
+                    ftpClient.logout();
+                    ftpClient.disconnect();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+      // Méthode pour récupérer une image à partir de son nom
+      public byte[] getImageByName(String imageName) throws IOException {
+        // Chemin où les images sont stockées sur le serveur FTP
+        String imagePath = "/ais";
+        // String imagePath = "/web/koumi-server/images/";
+
+        // Télécharger l'image à partir du serveur FTP en utilisant son nom
+        // Remplacez ce code avec votre implémentation pour récupérer l'image à partir du serveur FTP
+        Path path = Paths.get(imagePath + imageName);
+        return Files.readAllBytes(path);
+    }
+     //créer un vehicule
+    //     public Vehicule createVehicule(Vehicule vehicule, MultipartFile imageFile) throws Exception  {
+        
+    //     Vehicule vh = vehiculeRepository.findByIdVehicule(vehicule.getIdVehicule());
+    //     if(vh != null){
+
+    //         throw new IllegalArgumentException("Un vehicule avec l'id " + vh + " existe déjà");
+    //     }
+
+        
+    //         // Traitement du fichier image siege acteur
+    //         if (imageFile != null) {
+    //             String baseUrl = "https://koumi.ml/";
+    //             String imageLocation = "ais";
+    //             try {
+    //                 Path imageRootLocation = Paths.get(imageLocation);
+    //                 if (!Files.exists(imageRootLocation)) {
+    //                     Files.createDirectories(imageRootLocation);
+    //                 }
+            
+    //                 String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
+    //                 Path imagePath = imageRootLocation.resolve(imageName);
+    //                 Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                    
+    //                 String imageUrl = baseUrl + imageLocation + "/" + imageName;
+    //                 vehicule.setPhotoVehicule(imageUrl);// vehicule.setPhotoVehicule("ais/" + imageName);
+    //             } catch (IOException e) {
+    //                 throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
+    //             }
+    //         }
+
+    //         String codes = codeGenerator.genererCode();
+    //         String idcodes = idGenerator.genererCode();
+    //         vehicule.setCodeVehicule(codes);
+    //         vehicule.setIdVehicule(idcodes);
+    //     String pattern = "yyyy-MM-dd HH:mm";
+    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+    //     LocalDateTime now = LocalDateTime.now();
+    //     String formattedDateTime = now.format(formatter);
+    //     vehicule.setDateAjout(formattedDateTime);
+    //        Vehicule savedVehicule = vehiculeRepository.save(vehicule);        
+   
+    //      return savedVehicule;
+   
+    // }
     // public Vehicule createVehicule(Vehicule vehicule, MultipartFile imageFile) throws Exception {
     //     Vehicule vh = vehiculeRepository.findByIdVehicule(vehicule.getIdVehicule());
     //     if(vh != null){
