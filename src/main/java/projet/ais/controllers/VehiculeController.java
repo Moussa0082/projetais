@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
 import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,6 +23,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import projet.ais.models.Vehicule;
+import projet.ais.repository.VehiculeRepository;
 import projet.ais.services.VehiculeService;
 
 @RestController
@@ -32,6 +34,8 @@ public class VehiculeController {
 
     @Autowired
     private VehiculeService vehiculeService;
+    @Autowired
+    VehiculeRepository vehiculeRepository;
 
 
     @PostMapping("/create")
@@ -56,15 +60,54 @@ public class VehiculeController {
             }
 
  // Endpoint pour récupérer une image à partir de son nom
- @GetMapping("/image/{imageName}")
- public ResponseEntity<byte[]> getImageByNames(@PathVariable String imageName) {
-     try {
-         byte[] imageData = vehiculeService.getImageByName(imageName);
-         return ResponseEntity.ok().body(imageData);
-     } catch (IOException e) {
-         return ResponseEntity.notFound().build();
-     }
- }
+ @GetMapping("/{vehiculeId}/image")
+    public ResponseEntity<byte[]> getImage(@PathVariable String vehiculeId) {
+        try {
+            // Récupérer le nom de l'image associée au véhicule
+            // Vehicule vehicule = vehiculeService.findByIdVehicule(vehiculeId);
+            Vehicule vehicule = vehiculeRepository.findByIdVehicule(vehiculeId);
+            if (vehicule == null || vehicule.getPhotoVehicule() == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            String imageName = vehicule.getPhotoVehicule();
+
+            // Récupérer l'image à partir du serveur FTP
+            byte[] imageBytes = vehiculeService.getImageByName(imageName);
+
+            // Détecter le type de contenu de l'image en fonction de son extension
+        MediaType contentType = detectContentType(imageName);
+
+        // Retourner l'image avec le type de contenu approprié
+        return ResponseEntity.ok()
+                .contentType(contentType)
+                .body(imageBytes);
+    } catch (IOException e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+}
+
+private MediaType detectContentType(String imageName) {
+    String[] parts = imageName.split("\\.");
+    if (parts.length > 1) {
+        String extension = parts[parts.length - 1].toLowerCase();
+        switch (extension) {
+            case "jpg":
+            case "jpeg":
+                return MediaType.IMAGE_JPEG;
+            case "png":
+                return MediaType.IMAGE_PNG;
+            case "gif":
+                return MediaType.IMAGE_GIF;
+            // Ajoutez d'autres cas pour les types de contenu supplémentaires si nécessaire
+            default:
+                break;
+        }
+    }
+    // Par défaut, retourner MediaType.APPLICATION_OCTET_STREAM
+    return MediaType.APPLICATION_OCTET_STREAM;
+}
              @PutMapping("/update/{id}")
       @Operation(summary = "Mise à jour d'un vehicule ")
       public ResponseEntity<Vehicule> updateVehicule(

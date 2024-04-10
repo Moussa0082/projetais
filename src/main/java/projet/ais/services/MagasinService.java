@@ -43,6 +43,8 @@ public class MagasinService {
     CodeGenerator codeGenerator;
       @Autowired
     IdGenerator idGenerator ;
+    @Autowired
+    FileUploade fileUploade;
 
     public Magasin createMagasin(Magasin magasin, MultipartFile imageFile) throws Exception{
         Acteur acteur = acteurRepository.findByIdActeur(magasin.getActeur().getIdActeur());
@@ -51,7 +53,7 @@ public class MagasinService {
             throw new IllegalStateException("Aucun acteur disponible");
         
         if (imageFile != null) {
-                String imageLocation = "C:\\xampp\\htdocs\\ais";
+            String imageLocation = "/ais";
                 try {
                     Path imageRootLocation = Paths.get(imageLocation);
                     if (!Files.exists(imageRootLocation)) {
@@ -61,6 +63,8 @@ public class MagasinService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+
                     magasin.setPhoto("ais/" + imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
@@ -92,8 +96,9 @@ public class MagasinService {
         mag.setLocaliteMagasin(magasin.getLocaliteMagasin());
         mag.setNomMagasin(magasin.getNomMagasin()); 
         mag.setPersonneModif(magasin.getPersonneModif());
+        
         if (imageFile != null) {
-                String imageLocation = "C:\\xampp\\htdocs\\ais";
+            String imageLocation = "/ais";
                 try {
                     Path imageRootLocation = Paths.get(imageLocation);
                     if (!Files.exists(imageRootLocation)) {
@@ -103,7 +108,9 @@ public class MagasinService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    mag.setPhoto("ais/" + imageName);
+                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+
+                    magasin.setPhoto("ais/" + imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }

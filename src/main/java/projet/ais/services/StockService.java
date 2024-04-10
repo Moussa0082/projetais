@@ -79,6 +79,8 @@ public class StockService {
     IdGenerator idGenerator ;
     @Autowired
     MessageService messageService;
+    @Autowired
+    FileUploade fileUploade;
     
     public Stock createStock(Stock stock, MultipartFile imageFile) throws Exception {
         Unite unite = uniteRepository.findByIdUnite(stock.getUnite().getIdUnite());
@@ -99,7 +101,7 @@ public class StockService {
             throw new IllegalStateException("Aucun acteur trouvé");
 
             if (imageFile != null) {
-                String imageLocation = "C:\\xampp\\htdocs\\ais";
+                String imageLocation = "/ais";
                 try {
                     Path imageRootLocation = Paths.get(imageLocation);
                     if (!Files.exists(imageRootLocation)) {
@@ -109,6 +111,8 @@ public class StockService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+
                     stock.setPhoto("ais/" + imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
@@ -267,23 +271,24 @@ public class StockService {
         }
         
 
-            if (imageFile != null) {
-                String imageLocation = "C:\\xampp\\htdocs\\ais";
-                try {
-                    Path imageRootLocation = Paths.get(imageLocation);
-                    if (!Files.exists(imageRootLocation)) {
-                        Files.createDirectories(imageRootLocation);
-                    }
-    
-                    String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
-                    Path imagePath = imageRootLocation.resolve(imageName);
-                    Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    stocks.setPhoto("ais/" + imageName);
-                } catch (IOException e) {
-                    throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
+        if (imageFile != null) {
+            String imageLocation = "/ais";
+            try {
+                Path imageRootLocation = Paths.get(imageLocation);
+                if (!Files.exists(imageRootLocation)) {
+                    Files.createDirectories(imageRootLocation);
                 }
+
+                String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
+                Path imagePath = imageRootLocation.resolve(imageName);
+                Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+
+                stock.setPhoto("ais/" + imageName);
+            } catch (IOException e) {
+                throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
             }
-           
+        }
             return stockRepository.save(stocks);
     }
 

@@ -65,7 +65,8 @@ public class IntrantService {
      @Autowired
      DetailCommandeRepository detailCommandeRepository;
 
-
+     @Autowired
+     FileUploade fileUploade;
 
      //créer un intrant
       public Intrant createIntrant(Intrant intrant, MultipartFile imageFile) throws Exception {
@@ -82,7 +83,7 @@ public class IntrantService {
             
             // Traitement du fichier image siege acteur
             if (imageFile != null) {
-                String imageLocation = "C:\\xampp\\htdocs\\ais";
+                String imageLocation = "/ais";
                 try {
                     Path imageRootLocation = Paths.get(imageLocation);
                     if (!Files.exists(imageRootLocation)) {
@@ -92,6 +93,8 @@ public class IntrantService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+
                     intrant.setPhotoIntrant("ais/" + imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
@@ -175,7 +178,7 @@ public class IntrantService {
 
             // Traitement du fichier image siege acteur
             if (imageFile != null) {
-                String imageLocation = "C:\\xampp\\htdocs\\ais";
+                String imageLocation = "/ais";
                 try {
                     Path imageRootLocation = Paths.get(imageLocation);
                     if (!Files.exists(imageRootLocation)) {
@@ -185,11 +188,14 @@ public class IntrantService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    it.setPhotoIntrant("ais/" + imageName);
+                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+
+                    intrant.setPhotoIntrant("ais/" + imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
             }
+            
             it.setNomIntrant(intrant.getNomIntrant());
             it.setQuantiteIntrant(intrant.getQuantiteIntrant());
             it.setDescriptionIntrant(intrant.getDescriptionIntrant());

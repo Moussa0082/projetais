@@ -10,10 +10,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.io.ByteArrayOutputStream;
 
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.FileEntity;
-import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,16 +22,8 @@ import projet.ais.IdGenerator;
 import projet.ais.models.Vehicule;
 import projet.ais.repository.VehiculeRepository;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.FileEntity;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
-import java.io.File;
 
 @Service
 public class VehiculeService {
@@ -51,7 +41,7 @@ public class VehiculeService {
     private static final int FTP_PORT = 21; // Mise à jour si nécessaire
     private static final String FTP_USER = "default_koumi";
     private static final String FTP_PASSWORD = "H8hd#e3KejJR";
-    private static final String FTP_IMAGES_DIRECTORY = "/images";
+    // private static final String FTP_IMAGES_DIRECTORY = "/images";
 
     public Vehicule createVehicule(Vehicule vehicule, MultipartFile imageFile) throws Exception {
         Vehicule vh = vehiculeRepository.findByIdVehicule(vehicule.getIdVehicule());
@@ -137,13 +127,37 @@ public class VehiculeService {
       // Méthode pour récupérer une image à partir de son nom
       public byte[] getImageByName(String imageName) throws IOException {
         // Chemin où les images sont stockées sur le serveur FTP
-        String imagePath = "/ais";
-        // String imagePath = "/web/koumi-server/images/";
-
+        String imagePath = "/web/koumi-server/images/";
+    
         // Télécharger l'image à partir du serveur FTP en utilisant son nom
-        // Remplacez ce code avec votre implémentation pour récupérer l'image à partir du serveur FTP
-        Path path = Paths.get(imagePath + imageName);
-        return Files.readAllBytes(path);
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            FTPClient ftpClient = new FTPClient();
+            try {
+                ftpClient.connect(FTP_SERVER, FTP_PORT);
+                ftpClient.login(FTP_USER, FTP_PASSWORD);
+                ftpClient.enterLocalPassiveMode();
+                ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+    
+                // Chemin d'accès complet de l'image sur le serveur FTP
+                String remoteFilePath = imagePath + imageName;
+    
+                // Télécharger l'image depuis le serveur FTP
+                if (ftpClient.retrieveFile(remoteFilePath, outputStream)) {
+                    return outputStream.toByteArray(); // Retourner le tableau d'octets de l'image
+                } else {
+                    throw new IOException("Erreur lors du téléchargement de l'image depuis le serveur FTP.");
+                }
+            } finally {
+                try {
+                    if (ftpClient.isConnected()) {
+                        ftpClient.logout();
+                        ftpClient.disconnect();
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
     }
      //créer un vehicule
     //     public Vehicule createVehicule(Vehicule vehicule, MultipartFile imageFile) throws Exception  {
@@ -290,8 +304,8 @@ public class VehiculeService {
 
             // Traitement du fichier image siege acteur
             if (imageFile != null) {
-                String imageLocation = "C:\\xampp\\htdocs\\ais";
                 try {
+                    String imageLocation = "/ais";
                     Path imageRootLocation = Paths.get(imageLocation);
                     if (!Files.exists(imageRootLocation)) {
                         Files.createDirectories(imageRootLocation);
@@ -300,11 +314,21 @@ public class VehiculeService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    vh.setPhotoVehicule("ais/" + imageName);
+                    
+                    // // Enregistrement du chemin local de l'image dans l'objet Vehicule
+                    // vehicule.setPhotoVehicule("ais/" + imageName);
+                    
+                    // Téléchargement de l'image vers le serveur FTP et récupération du chemin en ligne
+                   // Téléchargement de l'image vers le serveur FTP et récupération du chemin en ligne
+                    String onlineImagePath = uploadImageToFTP(imagePath, imageName);
+                    vehicule.setPhotoVehicule(imageName); // Enregistrement du chemin en ligne dans l'objet Vehicule
+    
+                    
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
             }
+            
             vh.setNomVehicule(vehicule.getNomVehicule());
             vh.setCapaciteVehicule(vehicule.getCapaciteVehicule());
             vh.setEtatVehicule(vehicule.getEtatVehicule());
