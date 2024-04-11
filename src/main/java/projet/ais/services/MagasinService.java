@@ -65,7 +65,7 @@ public class MagasinService {
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                     String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
 
-                    magasin.setPhoto("ais/" + imageName);
+                    magasin.setPhoto(imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
@@ -110,7 +110,7 @@ public class MagasinService {
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                     String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
 
-                    magasin.setPhoto("ais/" + imageName);
+                    magasin.setPhoto(imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }

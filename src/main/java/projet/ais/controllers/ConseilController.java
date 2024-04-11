@@ -21,7 +21,12 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import projet.ais.models.Conseil;
+import projet.ais.repository.ConseilRepository;
 import projet.ais.services.ConseilService;
+import projet.ais.services.FileUploade;
+
+import org.springframework.http.MediaType;
+import java.io.IOException;
 
 @RestController
 @CrossOrigin
@@ -31,6 +36,10 @@ public class ConseilController {
 
    @Autowired
    private ConseilService conseilService;
+   @Autowired
+    FileUploade fileUploade;
+    @Autowired
+    ConseilRepository conseilRepository;
 
 
 
@@ -58,6 +67,106 @@ public class ConseilController {
                 return new ResponseEntity<>(savedConseil, HttpStatus.CREATED);
             }
 
+            @GetMapping("/{conseilId}/video")
+            public ResponseEntity<byte[]> getVideo(@PathVariable String conseilId) {
+                try {
+                    
+                    Conseil conseil = conseilRepository.findByIdConseil(conseilId);
+                    if (conseil == null || conseil.getVideoConseil() == null) {
+                        return ResponseEntity.notFound().build();
+                    }
+                    String videoName = conseil.getVideoConseil(); // Example video name
+        
+                    // Retrieve the video from the FTP server
+                    byte[] videoBytes = fileUploade.getVideoByName(videoName);
+        
+                    // Detect the content type of the video based on its extension
+                    MediaType contentType = MediaType.valueOf("video/mp4");
+        
+                    // Return the video with appropriate content type
+                    return ResponseEntity.ok()
+                            .contentType(contentType)
+                            .body(videoBytes);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+                }
+            }
+        
+            @GetMapping("/{conseilId}/audio")
+            public ResponseEntity<byte[]> getAudio(@PathVariable String conseilId) {
+                try {
+                    
+                    
+                    Conseil conseil = conseilRepository.findByIdConseil(conseilId);
+                    if (conseil == null || conseil.getAudioConseil() == null) {
+                        return ResponseEntity.notFound().build();
+                    }
+
+                    String audioName =  conseil.getAudioConseil(); // Example video name
+        
+                    // Retrieve the video from the FTP server
+                    byte[] audioBytes = fileUploade.getAudioByName(audioName);
+        
+                    // Detect the content type of the video based on its extension
+                    MediaType contentType = MediaType.valueOf("audio/mpeg");
+        
+                    // Return the video with appropriate content type
+                    return ResponseEntity.ok()
+                            .contentType(contentType)
+                            .body(audioBytes);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+                }
+            }
+        
+                    @GetMapping("/{conseilId}/image")
+                    public ResponseEntity<byte[]> getImage(@PathVariable String conseilId) {
+                        try {
+                            // Récupérer le nom de l'image associée au véhicule
+                            Conseil conseil = conseilRepository.findByIdConseil(conseilId);
+                            if (conseil == null || conseil.getPhotoConseil() == null) {
+                                return ResponseEntity.notFound().build();
+                            }
+                            String imageName = conseil.getPhotoConseil() ;
+                    
+                            // Récupérer l'image à partir du serveur FTP
+                            byte[] imageBytes = fileUploade.getImageByName(imageName);
+                    
+                            // Détecter le type de contenu de l'image en fonction de son extension
+                        MediaType contentType = detectContentType(imageName);
+                    
+                        // Retourner l'image avec le type de contenu approprié
+                        return ResponseEntity.ok()
+                                .contentType(contentType)
+                                .body(imageBytes);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+                    }
+                    }
+                    
+                    private MediaType detectContentType(String imageName) {
+                        String[] parts = imageName.split("\\.");
+                        if (parts.length > 1) {
+                            String extension = parts[parts.length - 1].toLowerCase();
+                            switch (extension) {
+                                case "jpg":
+                                case "jpeg":
+                                    return MediaType.IMAGE_JPEG;
+                                case "png":
+                                    return MediaType.IMAGE_PNG;
+                                case "gif":
+                                    return MediaType.IMAGE_GIF;
+                                // Ajoutez d'autres cas pour les types de contenu supplémentaires si nécessaire
+                                default:
+                                    break;
+                            }
+                        }
+                        // Par défaut, retourner MediaType.APPLICATION_OCTET_STREAM
+                        return MediaType.APPLICATION_OCTET_STREAM;
+                    }
 
              @PutMapping("/update/{id}")
       @Operation(summary = "Mise à jour d'un conseil ")

@@ -19,10 +19,15 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import projet.ais.models.ZoneProduction;
+import projet.ais.repository.ZoneProductionRepository;
+import projet.ais.services.FileUploade;
 import projet.ais.services.ZoneProductionService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import org.springframework.http.MediaType;
+import java.io.IOException;
 
 
 
@@ -33,6 +38,10 @@ public class ZoneProductionController {
     
     @Autowired
     ZoneProductionService  zoneProductionService;
+    @Autowired
+    ZoneProductionRepository zoneProductionRepository;
+    @Autowired
+    FileUploade fileUploade;
 
     @PostMapping("/addZoneProduction")
     @Operation(summary = "Création de zone de production")
@@ -68,7 +77,54 @@ public class ZoneProductionController {
             ZoneProduction updatedZone = zoneProductionService.updateZoneProduction(zoneProductions,id, imageFile);
             return new ResponseEntity<>(updatedZone, HttpStatus.OK);
         }
+// Endpoint pour récupérer une image à partir de son nom
+@GetMapping("/{zoneId}/image")
+public ResponseEntity<byte[]> getImage(@PathVariable String zoneId) {
+    try {
+        // Récupérer le nom de l'image associée au véhicule
+        ZoneProduction zoneProduction = zoneProductionRepository.findByidZoneProduction(zoneId);
+        if (zoneProduction == null || zoneProduction.getPhotoZone() == null) {
+            return ResponseEntity.notFound().build();
+        }
 
+        String imageName = zoneProduction.getPhotoZone();
+
+        // Récupérer l'image à partir du serveur FTP
+        byte[] imageBytes = fileUploade.getImageByName(imageName);
+
+        // Détecter le type de contenu de l'image en fonction de son extension
+    MediaType contentType = detectContentType(imageName);
+
+    // Retourner l'image avec le type de contenu approprié
+    return ResponseEntity.ok()
+            .contentType(contentType)
+            .body(imageBytes);
+} catch (IOException e) {
+    e.printStackTrace();
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+}
+}
+
+private MediaType detectContentType(String imageName) {
+    String[] parts = imageName.split("\\.");
+    if (parts.length > 1) {
+        String extension = parts[parts.length - 1].toLowerCase();
+        switch (extension) {
+            case "jpg":
+            case "jpeg":
+                return MediaType.IMAGE_JPEG;
+            case "png":
+                return MediaType.IMAGE_PNG;
+            case "gif":
+                return MediaType.IMAGE_GIF;
+            // Ajoutez d'autres cas pour les types de contenu supplémentaires si nécessaire
+            default:
+                break;
+        }
+    }
+    // Par défaut, retourner MediaType.APPLICATION_OCTET_STREAM
+    return MediaType.APPLICATION_OCTET_STREAM;
+}
     @PutMapping("/activer/{id}")
     @Operation(summary = "activation de la zone de production")
     public ResponseEntity<ZoneProduction> activeZone(@PathVariable String id) throws Exception {

@@ -68,7 +68,7 @@ public class ZoneProductionService {
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                     String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
 
-                    zoneProduction.setPhotoZone("ais/" + imageName);
+                    zoneProduction.setPhotoZone(imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
@@ -109,7 +109,7 @@ public class ZoneProductionService {
                 Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                 String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
 
-                zoneProduction.setPhotoZone("ais/" + imageName);
+                zoneProduction.setPhotoZone(imageName);
             } catch (IOException e) {
                 throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
             }

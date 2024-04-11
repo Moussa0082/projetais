@@ -113,7 +113,7 @@ public class StockService {
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                     String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
 
-                    stock.setPhoto("ais/" + imageName);
+                    stock.setPhoto(imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
@@ -284,7 +284,7 @@ public class StockService {
                 Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                 String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
 
-                stock.setPhoto("ais/" + imageName);
+                stock.setPhoto(imageName);
             } catch (IOException e) {
                 throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
             }
