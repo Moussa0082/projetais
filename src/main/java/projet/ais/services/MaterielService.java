@@ -62,6 +62,7 @@ public class MaterielService {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
             }
+            
         String codes  = codeGenerator.genererCode();
         String idCode = idGenerator.genererCode();
 
@@ -82,7 +83,7 @@ public class MaterielService {
         mat.setEtatMateriel(materiel.getEtatMateriel());
         mat.setLocalisation(materiel.getLocalisation());
         mat.setNom(materiel.getNom());
-        mat.setPrix(materiel.getPrix());
+        mat.setPrixParHeure(materiel.getPrixParHeure());
         mat.setPersonneModif(materiel.getPersonneModif());
         String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
@@ -122,7 +123,7 @@ public class MaterielService {
     }
 
     public List<Materiel> getMaterielByActeur(String id){
-        List<Materiel> materielList = materielRepository.findAll();
+        List<Materiel> materielList = materielRepository.findByActeurIdActeur(id);
 
         if(materielList.isEmpty())
             throw new EntityNotFoundException("Aucune matériel trouvé");
@@ -133,7 +134,17 @@ public class MaterielService {
         return materielList;
     }
 
-    
+    public List<Materiel> getMaterielByTypeMateriel(String id){
+        List<Materiel> materielList = materielRepository.findAllByTypeMaterielIdTypeMateriel(id);
+
+        if(materielList.isEmpty())
+            throw new EntityNotFoundException("Aucune matériel trouvé");
+
+        materielList = materielList
+        .stream().sorted((m1,m2) -> m2.getNom().compareTo(m1.getNom()))
+        .collect(Collectors.toList());
+        return materielList;
+    }
 
     public String deleteMateriel(String id){
         Materiel materiel = materielRepository.findById(id).orElseThrow(null);

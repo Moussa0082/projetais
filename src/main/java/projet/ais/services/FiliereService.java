@@ -34,10 +34,10 @@ public class FiliereService {
   public Filiere createFiliere(Filiere filiere){
     Filiere filieres = filiereRepository.findByLibelleFiliere(filiere.getLibelleFiliere());
 
-     Acteur acteur = acteurRepository.findByIdActeur(filiere.getActeur().getIdActeur());
+    //  Acteur acteur = acteurRepository.findByIdActeur(filiere.getActeur().getIdActeur());
 
-        if(acteur == null)
-            throw new IllegalStateException("Aucun acteur disponible");
+    //     if(acteur == null)
+    //         throw new IllegalStateException("Aucun acteur disponible");
         
     if(filieres != null)
         throw new DataIntegrityViolationException("Ce filiere existe déjà");
@@ -84,17 +84,17 @@ public class FiliereService {
     return filiereList;
   }
 
-  public List<Filiere> getAllFiliereByActeur(String idActeur){
-    List<Filiere> filiereList = filiereRepository.findByActeurIdActeur(idActeur);
+  // public List<Filiere> getAllFiliereByActeur(String idActeur){
+  //   List<Filiere> filiereList = filiereRepository.findByActeurIdActeur(idActeur);
 
-    if(filiereList.isEmpty())
-        throw new IllegalStateException("Aucun filiere trouvé");
+  //   if(filiereList.isEmpty())
+  //       throw new IllegalStateException("Aucun filiere trouvé");
     
-        filiereList = filiereList
-                .stream().sorted((d1, d2) -> d2.getLibelleFiliere().compareTo(d1.getLibelleFiliere()))
-                .collect(Collectors.toList());
-    return filiereList;
-  }
+  //       filiereList = filiereList
+  //               .stream().sorted((d1, d2) -> d2.getLibelleFiliere().compareTo(d1.getLibelleFiliere()))
+  //               .collect(Collectors.toList());
+  //   return filiereList;
+  // }
 
   public String DeleteFiliere(String id){
     Filiere filiere = filiereRepository.findById(id).orElseThrow(null);

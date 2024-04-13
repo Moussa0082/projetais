@@ -86,8 +86,9 @@ public class Acteur {
     @Column(nullable = false)
     private String localiteActeur;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String emailActeur;
+
 
     // @Column(nullable = false)
     // private String MaillonActeur;
@@ -132,15 +133,15 @@ public class Acteur {
     @JsonIgnore
     private List<MessageWa> messageList;
 
-    @OneToMany
-    (mappedBy = "acteur")
-    @JsonIgnore
-    private List<CategorieProduit> categorieProduits;
+    // @OneToMany
+    // (mappedBy = "acteur")
+    // @JsonIgnore
+    // private List<CategorieProduit> categorieProduits;
 
-    @OneToMany
-    (mappedBy = "acteur")
-    @JsonIgnore
-    private List<Filiere> filieresList;
+    // @OneToMany
+    // (mappedBy = "acteur")
+    // @JsonIgnore
+    // private List<Filiere> filieresList;
 
     @OneToMany
     (mappedBy = "acteur")

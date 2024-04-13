@@ -15,5 +15,5 @@ public interface FiliereRepository  extends JpaRepository<Filiere , String>{
     Filiere findByIdFiliere(String idFiliere);
 
     Filiere findByLibelleFiliere(String libelle);
-    List<Filiere> findByActeurIdActeur(String id);
+    // List<Filiere> findByActeurIdActeur(String id);
 }

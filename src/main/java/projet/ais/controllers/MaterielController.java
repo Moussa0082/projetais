@@ -90,6 +90,11 @@ public class MaterielController {
         return new ResponseEntity<>(materielService.getMaterielByActeur(id), HttpStatus.OK);
     }
 
+    @GetMapping("/readByTypeMateriel/{id}")
+    public ResponseEntity<List<Materiel>> getAllByMaterielByType(@PathVariable String id){
+        return new ResponseEntity<>(materielService.getMaterielByTypeMateriel(id), HttpStatus.OK);
+    }
+
     @DeleteMapping("/delete/{id}")
     public String supprimer(@PathVariable String id){
         return materielService.deleteMateriel(id);

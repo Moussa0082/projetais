@@ -27,12 +27,18 @@ public class Vehicule {
    @Column(nullable = true)
    private String codeVehicule;
 
+   @Column(nullable = true)
+   private String description;
+
+   @Column(nullable = true)
+   private int nbKilometrage;
+
    @Convert(converter = MapToJsonConverter.class)
    @Column(columnDefinition = "json")
    private Map<String, Integer> prixParDestination;
 
    @Column
-   private boolean statutVehicule;
+   private boolean statutVehicule = true;
    
    @Column(nullable = true)
    private String photoVehicule;

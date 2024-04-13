@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import java.util.UUID;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,6 +26,7 @@ import projet.ais.models.Alerte;
 import projet.ais.models.Commande;
 import projet.ais.models.DetailCommande;
 import projet.ais.models.Intrant;
+
 import projet.ais.models.Stock;
 import projet.ais.models.Vehicule;
 import projet.ais.repository.ActeurRepository;
@@ -96,7 +99,12 @@ public class IntrantService {
             }
 
             intrant.setIdIntrant(idGenerator.genererCode());
-            intrant.setCondeIntrant(codeGenerator.genererCode());
+            intrant.setCodeIntrant(codeGenerator.genererCode());
+             String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+        intrant.setDateAjout(formattedDateTime);
            Intrant savedIntrant = intrantRepository.save(intrant);        
    
          return savedIntrant;
@@ -117,17 +125,43 @@ public class IntrantService {
         return intrantList;
     } 
 
-    public List<Intrant> getAllIntrantBySuperficie(String id){
-        List<Intrant>  intrantList = intrantRepository.findBySuperficieIdSuperficie(id);
+       //Liste des intrants par speculation
+    public List<Intrant> getAllIntrantBySpeculation(String id){
+        List<Intrant>  intrantList = intrantRepository.findAllBySpeculationIdSpeculation(id);
 
         if(intrantList.isEmpty()){
-            throw new EntityNotFoundException("Aucun intrant trouvé avec id :" +id);
+            throw new EntityNotFoundException("Aucun intrant trouvé");
         }
         intrantList = intrantList
                 .stream().sorted((d1, d2) -> d2.getNomIntrant().compareTo(d1.getNomIntrant()))
                 .collect(Collectors.toList());
         return intrantList;
     } 
+
+       //Liste des intrants par categorie
+    public List<Intrant> getAllIntrantByCategorie(String id){
+        List<Intrant>  intrantList = intrantRepository.findAllBySpeculation_CategorieProduit_IdCategorieProduit(id);
+
+        if(intrantList.isEmpty()){
+            throw new EntityNotFoundException("Aucun intrant trouvé");
+        }
+        intrantList = intrantList
+                .stream().sorted((d1, d2) -> d2.getNomIntrant().compareTo(d1.getNomIntrant()))
+                .collect(Collectors.toList());
+        return intrantList;
+    } 
+
+    // public List<Intrant> getAllIntrantBySuperficie(String id){
+    //     List<Intrant>  intrantList = intrantRepository.findBySuperficieIdSuperficie(id);
+
+    //     if(intrantList.isEmpty()){
+    //         throw new EntityNotFoundException("Aucun intrant trouvé avec id :" +id);
+    //     }
+    //     intrantList = intrantList
+    //             .stream().sorted((d1, d2) -> d2.getNomIntrant().compareTo(d1.getNomIntrant()))
+    //             .collect(Collectors.toList());
+    //     return intrantList;
+    // } 
 
       //Modifier intrant
       public Intrant updateIntrant(Intrant intrant, MultipartFile imageFile , String id) throws Exception {
@@ -159,7 +193,13 @@ public class IntrantService {
             it.setNomIntrant(intrant.getNomIntrant());
             it.setQuantiteIntrant(intrant.getQuantiteIntrant());
             it.setDescriptionIntrant(intrant.getDescriptionIntrant());
-            it.setDateModif(LocalDateTime.now());
+            it.setPrixIntrant(intrant.getPrixIntrant());
+            it.setDateExpiration(intrant.getDateExpiration());
+            String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+        it.setDateModif(formattedDateTime);
             Intrant savedIntrant = intrantRepository.save(it);        
    
            return savedIntrant;
@@ -273,7 +313,7 @@ public class IntrantService {
     
             // Création d'une nouvelle instance de DetailCommande
             detailCommande.setIdDetailCommande(idGenerator.genererCode());
-            detailCommande.setCodeProduit(intrants.getCondeIntrant());
+            detailCommande.setCodeProduit(intrants.getCodeIntrant());
             detailCommande.setQuantiteDemande(quantiteDemandee);
             detailCommande.setQuantiteLivree(0.0); // Initialement aucun n'a été livré
             detailCommande.setQuantiteNonLivree(0.0); // Initialement aucun n'a été livré

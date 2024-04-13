@@ -8,12 +8,15 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.time.format.DateTimeFormatter;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.EntityNotFoundException;
+import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Conseil;
@@ -28,16 +31,19 @@ public class ConseilService {
 
      @Autowired
     private IdGenerator idGenerator;
+     @Autowired
+    CodeGenerator codeGenerator;
+    
 
 
      //Ajouter un conseil
       public Conseil createConseil(Conseil conseil, MultipartFile imageFile, MultipartFile audio, MultipartFile video) throws Exception {
         
-        Conseil c = conseilRepository.findByIdConseil(conseil.getIdConseil());
-        if(c != null){
+        // Conseil c = conseilRepository.findByIdConseil(conseil.getIdConseil());
+        // if(c != null){
 
-            throw new IllegalArgumentException("Un conseil avec l'id " + c + " existe déjà");
-        }
+        //     throw new IllegalArgumentException("Un conseil avec l'id " + c + " existe déjà");
+        // }
 
             // Traitement du fichier image 
             if (imageFile != null) {
@@ -51,7 +57,7 @@ public class ConseilService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    conseil.setPhotoConseil(imageLocation);
+                    conseil.setPhotoConseil("ais/" + imageName );
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
@@ -69,7 +75,7 @@ public class ConseilService {
                     String audioName = UUID.randomUUID().toString() + "_" + audio.getOriginalFilename();
                     Path imagePath = audioRootLocation.resolve(audioName);
                     Files.copy(audio.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    conseil.setAudioConseil(audioLocation);
+                    conseil.setAudioConseil("ais/" + audioName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier audio : " + e.getMessage());
                 }
@@ -87,18 +93,27 @@ public class ConseilService {
                     String videoName = UUID.randomUUID().toString() + "_" + video.getOriginalFilename();
                     Path imagePath = videoRootLocation.resolve(videoName);
                     Files.copy(video.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    conseil.setVideoConseil(videoLocation);
+                    conseil.setVideoConseil("ais/" + videoName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier video : " + e.getMessage());
                 }
             }
 
             conseil.setIdConseil(idGenerator.genererCode());
+            String codes = codeGenerator.genererCode();
+            conseil.setCodeConseil(codes);
+        
+            String pattern = "yyyy-MM-dd HH:mm";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+            LocalDateTime now = LocalDateTime.now();
+            String formattedDateTime = now.format(formatter);
+            conseil.setDateAjout(formattedDateTime);
            Conseil savedConseil = conseilRepository.save(conseil);        
    
          return savedConseil;
    
     }
+
 
 
        //Liste des conseil par acteur
@@ -137,7 +152,7 @@ public class ConseilService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    c.setPhotoConseil(imageLocation);
+                    c.setPhotoConseil("ais/" + imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
@@ -155,7 +170,7 @@ public class ConseilService {
                     String audioName = UUID.randomUUID().toString() + "_" + audio.getOriginalFilename();
                     Path imagePath = audioRootLocation.resolve(audioName);
                     Files.copy(audio.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    c.setAudioConseil(audioLocation);
+                    c.setAudioConseil("ais/" + audioName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier audio : " + e.getMessage());
                 }
@@ -173,13 +188,17 @@ public class ConseilService {
                     String videoName = UUID.randomUUID().toString() + "_" + video.getOriginalFilename();
                     Path imagePath = videoRootLocation.resolve(videoName);
                     Files.copy(video.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    c.setVideoConseil(videoLocation);
+                    c.setVideoConseil("ais/" + videoName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier video : " + e.getMessage());
                 }
             }
 
-            c.setDateModif(LocalDateTime.now());
+            String pattern = "yyyy-MM-dd HH:mm";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+            LocalDateTime now = LocalDateTime.now();
+            String formattedDateTime = now.format(formatter);
+            c.setDateModif(formattedDateTime);
             c.setDescriptionConseil(conseil.getDescriptionConseil());
             c.setTitreConseil(conseil.getTitreConseil());
            Conseil updatedConseil = conseilRepository.save(c);        
@@ -194,7 +213,7 @@ public class ConseilService {
         List<Conseil> conseilList = conseilRepository.findAll();
 
         conseilList = conseilList
-        .stream().sorted((v1,v2) -> v2.getTitreConseil().compareTo(v1.getTitreConseil()))
+        .stream().sorted((v1,v2) -> v2.getDateAjout().compareTo(v1.getDateAjout()))
         .collect(Collectors.toList());
 
         return conseilList;

@@ -45,21 +45,21 @@ public class SuperficieService {
 
         Campagne campagne = campagneRepository.findByIdCampagne(superficie.getCampagne().getIdCampagne());
 
-        List<Intrant> intrants = superficie.getIntrants();
+        // List<Intrant> intrants = superficie.getIntrants();
 
-        List<String> idIntrants = new ArrayList<>();
+        // List<String> idIntrants = new ArrayList<>();
 
-        for(Intrant intrant : intrants){
-            System.out.println("recuperation des intrants");
-            idIntrants.add(intrant.getIdIntrant());
-        }
+        // for(Intrant intrant : intrants){
+        //     System.out.println("recuperation des intrants");
+        //     idIntrants.add(intrant.getIdIntrant());
+        // }
 
-        List<Intrant> intrantList = intrantRepository.findByIdIntrantIn(idIntrants);
+        // List<Intrant> intrantList = intrantRepository.findByIdIntrantIn(idIntrants);
 
-        System.out.println("Apres insertion intrants");
+        // System.out.println("Apres insertion intrants");
 
-        if(intrantList.isEmpty())
-            throw new EntityNotFoundException("Aucune intrant trouvé");
+        // if(intrantList.isEmpty())
+        //     throw new EntityNotFoundException("Aucune intrant trouvé");
 
         if(campagne == null)
             throw new EntityNotFoundException("Aucune campagne trouvé");

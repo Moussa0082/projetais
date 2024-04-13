@@ -67,6 +67,18 @@ public class ParametreGeneraux {
     @Column(nullable = false)
     private String localiteStructure;
 
+    @Column(nullable = false)
+    private String monnaie;
+
+    // @Column(nullable = true)
+    // private String tauxFcranc;
+   
+    @Column(nullable = true)
+    private String tauxDollar;
+
+    @Column(nullable = true)
+    private String tauxYuan;
+
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateAjout;
 

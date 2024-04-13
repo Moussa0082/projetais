@@ -28,6 +28,7 @@ public class Filiere {
 
     @Column(nullable = false)
     private boolean statutFiliere = true;
+    
     @Column(nullable = true)
     private String dateAjout;
 
@@ -54,9 +55,9 @@ public class Filiere {
 
 
 
-    @ManyToOne
-    @JoinColumn( name = "idActeur")
-    private Acteur acteur;
+    // @ManyToOne
+    // @JoinColumn( name = "idActeur")
+    // private Acteur acteur;
     
     @OneToMany
     (mappedBy = "filiere")

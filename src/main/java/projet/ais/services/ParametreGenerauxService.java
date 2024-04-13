@@ -147,7 +147,8 @@ public class ParametreGenerauxService {
          parametreGenerauxExistant.setLibelleNiveau2Pays(parametreGeneraux.getLibelleNiveau2Pays());
          parametreGenerauxExistant.setLibelleNiveau3Pays(parametreGeneraux.getLibelleNiveau3Pays());
          parametreGenerauxExistant.setLocaliteStructure(parametreGeneraux.getLocaliteStructure());
-
+         parametreGenerauxExistant.setTauxDollar(parametreGeneraux.getTauxDollar());
+         parametreGenerauxExistant.setTauxYuan(parametreGeneraux.getTauxYuan());
 
         return parametreGenerauxRepository.save(parametreGenerauxExistant);
       }
