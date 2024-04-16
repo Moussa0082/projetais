@@ -37,7 +37,7 @@ public class Intrant {
     private String photoIntrant;
     
     @Column
-    private boolean statutIntrant;
+    private boolean statutIntrant = true;
 
     @Column(nullable = true)
     private String dateExpiration;

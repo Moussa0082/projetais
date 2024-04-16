@@ -221,7 +221,7 @@ public class ConseilController {
     //Desactiver un conseil methode
       @PutMapping("/enable/{id}")
     @Operation(summary = "Activer un conseil ")
-    public ResponseEntity <String> enableVehicule(@PathVariable String id) throws Exception{
+    public ResponseEntity <String> enableConseil(@PathVariable String id) throws Exception{
     
         conseilService.active(id);
         return new ResponseEntity<>("Conseil activer avec succes", HttpStatus.ACCEPTED);
