@@ -98,6 +98,8 @@ public class StockService {
     IdGenerator idGenerator ;
     @Autowired
     MessageService messageService;
+    @Autowired
+    FileUploade fileUploade;
     
     public Stock createStock(Stock stock, MultipartFile imageFile) throws Exception {
         Unite unite = uniteRepository.findByIdUnite(stock.getUnite().getIdUnite());
@@ -118,7 +120,7 @@ public class StockService {
             throw new IllegalStateException("Aucun acteur trouvé");
 
             if (imageFile != null) {
-                String imageLocation = "C:\\xampp\\htdocs\\ais";
+                String imageLocation = "/ais";
                 try {
                     Path imageRootLocation = Paths.get(imageLocation);
                     if (!Files.exists(imageRootLocation)) {
@@ -128,7 +130,9 @@ public class StockService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    stock.setPhoto("ais/" + imageName);
+                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+
+                    stock.setPhoto(imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
@@ -311,9 +315,12 @@ private String generateQRCodeImage(String qrCodeData) {
 
         stocks.setNomProduit(stock.getNomProduit());
         stocks.setFormeProduit(stock.getFormeProduit());
+        stocks.setOrigineProduit(stock.getOrigineProduit());
+        stocks.setPrix(stock.getPrix());
         stocks.setDateProduction(stock.getDateProduction());
         stocks.setQuantiteStock(stock.getQuantiteStock());
         stocks.setDescriptionStock(stock.getDescriptionStock());
+        stocks.setTypeProduit(stock.getTypeProduit());
         stocks.setPersonneModif(stock.getPersonneModif());       
 
         String pattern = "yyyy-MM-dd HH:mm";
@@ -323,10 +330,7 @@ private String generateQRCodeImage(String qrCodeData) {
 
         stocks.setDateModif(formattedDateTime);
 
-        if(stock.getUnite() != null){
-            stocks.setUnite(stock.getUnite());
-        }
-         
+        
         if(stock.getMagasin() != null){
             stocks.setMagasin(stock.getMagasin());
         }
@@ -339,24 +343,26 @@ private String generateQRCodeImage(String qrCodeData) {
             stocks.setSpeculation(stock.getSpeculation());
         }
         
-
-            if (imageFile != null) {
-                String imageLocation = "C:\\xampp\\htdocs\\ais";
-                try {
-                    Path imageRootLocation = Paths.get(imageLocation);
-                    if (!Files.exists(imageRootLocation)) {
-                        Files.createDirectories(imageRootLocation);
-                    }
-    
-                    String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
-                    Path imagePath = imageRootLocation.resolve(imageName);
-                    Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    stocks.setPhoto("ais/" + imageName);
-                } catch (IOException e) {
-                    throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
+          stocks.setUnite(stock.getUnite());
+        
+        if (imageFile != null) {
+            String imageLocation = "/ais";
+            try {
+                Path imageRootLocation = Paths.get(imageLocation);
+                if (!Files.exists(imageRootLocation)) {
+                    Files.createDirectories(imageRootLocation);
                 }
+
+                String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
+                Path imagePath = imageRootLocation.resolve(imageName);
+                Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+
+                stock.setPhoto(imageName);
+            } catch (IOException e) {
+                throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
             }
-           
+        }
             return stockRepository.save(stocks);
     }
 
@@ -417,6 +423,11 @@ private String generateQRCodeImage(String qrCodeData) {
     //recuperer les stock par categorie produit et magasin
     public List<Stock> getStocksByCategorieAndMagasin(String idCategorieProduit, String idMagasin) {
         return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasin(idCategorieProduit, idMagasin);
+    }
+
+    //recuperer les stock par categorie produit et idActeur
+    public List<Stock> getStocksByCategorieAndActeurIdacteur(String idCategorieProduit, String idActeur) {
+        return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduitAndActeur_IdActeur(idCategorieProduit, idActeur);
     }
 
       // Récupérer les stocks par catégorie
@@ -522,7 +533,7 @@ private String generateQRCodeImage(String qrCodeData) {
         Stock stock = stockRepository.findById(id).orElseThrow(null);
 
         try {
-            stock.setStatutSotck(true);
+            stock.setStatutSotck(false);
         } catch (Exception e) {
             throw new Exception("Erreur lors de l'activation : " + e.getMessage());
         }

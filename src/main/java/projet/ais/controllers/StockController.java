@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import org.springframework.http.MediaType;
+import java.io.IOException;
+
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
@@ -28,6 +32,8 @@ import jakarta.validation.Valid;
 import projet.ais.models.CategorieProduit;
 import projet.ais.models.Speculation;
 import projet.ais.models.Stock;
+import projet.ais.repository.StockRepository;
+import projet.ais.services.FileUploade;
 import projet.ais.services.StockService;
 
 @RestController
@@ -37,6 +43,10 @@ public class StockController {
     
     @Autowired
     StockService stockService;
+    @Autowired
+    StockRepository stockRepository;
+    @Autowired
+    FileUploade fileUploade;
 
     @PostMapping("/addStock")
     @Operation(summary = "Création de stock")
@@ -57,12 +67,12 @@ public class StockController {
             return new ResponseEntity<>(saveStock, HttpStatus.CREATED);
         }
 
-        @PutMapping("/updateStock/{id}")
+        @PutMapping("/updateStock/{idStock}")
     @Operation(summary = "Modification de stock")
     public ResponseEntity<Stock> updatedStock(
         @Valid @RequestParam("stock")  String addstocks,
         @Valid @RequestParam(value = "image",required = false) MultipartFile imageFile,
-        @PathVariable String id
+        @PathVariable String idStock
         ) throws Exception{
             Stock stock = new Stock();
 
@@ -72,7 +82,7 @@ public class StockController {
                 throw new Exception(e.getMessage());
             }
 
-            Stock saveStock = stockService.updateStock(stock, imageFile, id);
+            Stock saveStock = stockService.updateStock(stock, imageFile, idStock);
             return new ResponseEntity<>(saveStock, HttpStatus.OK);
         }
 
@@ -92,6 +102,53 @@ public class StockController {
         return new ResponseEntity<>(stockService.desactive(id), HttpStatus.OK);
     }
 
+    @GetMapping("/{stockId}/image")
+public ResponseEntity<byte[]> getImage(@PathVariable String stockId) {
+    try {
+        // Récupérer le nom de l'image associée au véhicule
+        Stock stock = stockRepository.findByIdStock(stockId);
+        if (stock == null || stock.getPhoto() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String imageName = stock.getPhoto();
+
+        // Récupérer l'image à partir du serveur FTP
+        byte[] imageBytes = fileUploade.getImageByName(imageName);
+
+        // Détecter le type de contenu de l'image en fonction de son extension
+    MediaType contentType = detectContentType(imageName);
+
+    // Retourner l'image avec le type de contenu approprié
+    return ResponseEntity.ok()
+            .contentType(contentType)
+            .body(imageBytes);
+} catch (IOException e) {
+    e.printStackTrace();
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+}
+}
+
+private MediaType detectContentType(String imageName) {
+    String[] parts = imageName.split("\\.");
+    if (parts.length > 1) {
+        String extension = parts[parts.length - 1].toLowerCase();
+        switch (extension) {
+            case "jpg":
+            case "jpeg":
+                return MediaType.IMAGE_JPEG;
+            case "png":
+                return MediaType.IMAGE_PNG;
+            case "gif":
+                return MediaType.IMAGE_GIF;
+            // Ajoutez d'autres cas pour les types de contenu supplémentaires si nécessaire
+            default:
+                break;
+        }
+    }
+    // Par défaut, retourner MediaType.APPLICATION_OCTET_STREAM
+    return MediaType.APPLICATION_OCTET_STREAM;
+}
         @PutMapping("/updateQuantiteStock/{id}")
     @Operation(summary = "Modification de stock")
     public ResponseEntity<Stock> updatedQuantiteStock(
@@ -150,6 +207,11 @@ public class StockController {
         @GetMapping("/categorieAndMagasin/{idCategorie}/{idMagasin}")
         public List<Stock> getStocksByCategorieAndMagasin(@PathVariable String idCategorie, @PathVariable String idMagasin) {
             return stockService.getStocksByCategorieAndMagasin(idCategorie, idMagasin);
+        }
+
+        @GetMapping("/categorieAndIdActeur/{idCategorie}/{idActeur}")
+        public List<Stock> getStocksByCategorieAndActeur(@PathVariable String idCategorie, @PathVariable String idActeur) {
+            return stockService.getStocksByCategorieAndActeurIdacteur(idCategorie, idActeur);
         }
 
         // @GetMapping("/categorie/{idCategorie}")

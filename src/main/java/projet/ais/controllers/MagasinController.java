@@ -21,9 +21,14 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import projet.ais.models.Magasin;
+import projet.ais.repository.MagasinRepository;
+import projet.ais.services.FileUploade;
 import projet.ais.services.MagasinService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+
+import org.springframework.http.MediaType;
+import java.io.IOException;
 
 
 
@@ -34,6 +39,10 @@ public class MagasinController {
     
     @Autowired
     MagasinService magasinService;
+    @Autowired
+    FileUploade fileUploade;
+    @Autowired
+    MagasinRepository magasinRepository;
 
     // @PostMapping("/addMagasin")
     // public ResponseEntity<Magasin> saveMagasin(
@@ -64,9 +73,56 @@ public class MagasinController {
 
     Magasin saveMag = magasinService.createMagasin(magasin1, imageFile);
     return new ResponseEntity<>(saveMag, HttpStatus.CREATED);
-}
+    }
 
     
+    @GetMapping("/{magasinId}/image")
+    public ResponseEntity<byte[]> getImage(@PathVariable String magasinId) {
+    try {
+        // Récupérer le nom de l'image associée au véhicule
+        Magasin magasin = magasinRepository.findByIdMagasin(magasinId);
+        if (magasin == null || magasin.getPhoto() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String imageName = magasin.getPhoto();
+
+        // Récupérer l'image à partir du serveur FTP
+        byte[] imageBytes = fileUploade.getImageByName(imageName);
+
+        // Détecter le type de contenu de l'image en fonction de son extension
+    MediaType contentType = detectContentType(imageName);
+
+    // Retourner l'image avec le type de contenu approprié
+    return ResponseEntity.ok()
+            .contentType(contentType)
+            .body(imageBytes);
+} catch (IOException e) {
+    e.printStackTrace();
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+}
+}
+
+    private MediaType detectContentType(String imageName) {
+    String[] parts = imageName.split("\\.");
+    if (parts.length > 1) {
+        String extension = parts[parts.length - 1].toLowerCase();
+        switch (extension) {
+            case "jpg":
+            case "jpeg":
+                return MediaType.IMAGE_JPEG;
+            case "png":
+                return MediaType.IMAGE_PNG;
+            case "gif":
+                return MediaType.IMAGE_GIF;
+            // Ajoutez d'autres cas pour les types de contenu supplémentaires si nécessaire
+            default:
+                break;
+        }
+    }
+    // Par défaut, retourner MediaType.APPLICATION_OCTET_STREAM
+    return MediaType.APPLICATION_OCTET_STREAM;
+}
     @PutMapping("/update/{idMagasin}")
     public ResponseEntity<Magasin> updatedMagasin(
         @Valid @RequestParam("magasin") String magasin,

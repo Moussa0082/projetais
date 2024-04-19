@@ -35,7 +35,8 @@ public class AlertesService {
     private IdGenerator idGenerator;
      @Autowired
     CodeGenerator codeGenerator;
-    
+    @Autowired
+    FileUploade fileUploade;
 
 
      //Ajouter un Alertes
@@ -43,7 +44,7 @@ public class AlertesService {
         
             // Traitement du fichier image 
             if (imageFile != null) {
-                String imageLocation = "C:\\xampp\\htdocs\\ais";
+                String imageLocation = "/ais";
                 try {
                     Path imageRootLocation = Paths.get(imageLocation);
                     if (!Files.exists(imageRootLocation)) {
@@ -53,7 +54,9 @@ public class AlertesService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    alertes.setPhotoAlerte("ais/" + imageName );
+                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+
+                    alertes.setPhotoAlerte(imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
@@ -61,7 +64,7 @@ public class AlertesService {
 
             // Traitement du fichier audio
             if (audio != null) {
-                String audioLocation = "C:\\xampp\\htdocs\\ais";
+                String audioLocation = "/ais";
                 try {
                     Path audioRootLocation = Paths.get(audioLocation);
                     if (!Files.exists(audioRootLocation)) {
@@ -69,9 +72,11 @@ public class AlertesService {
                     }
     
                     String audioName = UUID.randomUUID().toString() + "_" + audio.getOriginalFilename();
-                    Path imagePath = audioRootLocation.resolve(audioName);
-                    Files.copy(audio.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    alertes.setAudioAlerte("ais/" + audioName);
+                    Path audioPath = audioRootLocation.resolve(audioName);
+                    Files.copy(audio.getInputStream(), audioPath, StandardCopyOption.REPLACE_EXISTING);
+                    String onlineAudioPath =fileUploade.uploadAudioToFTP(audioPath, audioName);
+
+                    alertes.setAudioAlerte(audioName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier audio : " + e.getMessage());
                 }
@@ -79,7 +84,7 @@ public class AlertesService {
 
             // Traitement du fichier audio
             if (video != null) {
-                String videoLocation = "C:\\xampp\\htdocs\\ais";
+                String videoLocation = "ais";
                 try {
                     Path videoRootLocation = Paths.get(videoLocation);
                     if (!Files.exists(videoRootLocation)) {
@@ -87,9 +92,11 @@ public class AlertesService {
                     }
     
                     String videoName = UUID.randomUUID().toString() + "_" + video.getOriginalFilename();
-                    Path imagePath = videoRootLocation.resolve(videoName);
-                    Files.copy(video.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    alertes.setVideoAlerte("ais/" + videoName);
+                    Path videoPath = videoRootLocation.resolve(videoName);
+                    Files.copy(video.getInputStream(), videoPath, StandardCopyOption.REPLACE_EXISTING);
+                    String onlineVideoPath =fileUploade.uploadVideoToFTP(videoPath, videoName);
+
+                    alertes.setVideoAlerte(videoName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier video : " + e.getMessage());
                 }
@@ -138,7 +145,7 @@ public class AlertesService {
 
             // Traitement du fichier image 
             if (imageFile != null) {
-                String imageLocation = "C:\\xampp\\htdocs\\ais";
+                String imageLocation = "/ais";
                 try {
                     Path imageRootLocation = Paths.get(imageLocation);
                     if (!Files.exists(imageRootLocation)) {
@@ -148,7 +155,9 @@ public class AlertesService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    c.setPhotoAlerte("ais/" + imageName);
+                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+
+                    alertes.setPhotoAlerte(imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
@@ -156,7 +165,7 @@ public class AlertesService {
 
             // Traitement du fichier audio
             if (audio != null) {
-                String audioLocation = "C:\\xampp\\htdocs\\ais";
+                String audioLocation = "/ais";
                 try {
                     Path audioRootLocation = Paths.get(audioLocation);
                     if (!Files.exists(audioRootLocation)) {
@@ -164,9 +173,11 @@ public class AlertesService {
                     }
     
                     String audioName = UUID.randomUUID().toString() + "_" + audio.getOriginalFilename();
-                    Path imagePath = audioRootLocation.resolve(audioName);
-                    Files.copy(audio.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    c.setAudioAlerte("ais/" + audioName);
+                    Path audioPath = audioRootLocation.resolve(audioName);
+                    Files.copy(audio.getInputStream(), audioPath, StandardCopyOption.REPLACE_EXISTING);
+                    String onlineAudioPath =fileUploade.uploadAudioToFTP(audioPath, audioName);
+
+                    alertes.setAudioAlerte(audioName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier audio : " + e.getMessage());
                 }
@@ -174,7 +185,7 @@ public class AlertesService {
 
             // Traitement du fichier audio
             if (video != null) {
-                String videoLocation = "C:\\xampp\\htdocs\\ais";
+                String videoLocation = "ais";
                 try {
                     Path videoRootLocation = Paths.get(videoLocation);
                     if (!Files.exists(videoRootLocation)) {
@@ -182,9 +193,11 @@ public class AlertesService {
                     }
     
                     String videoName = UUID.randomUUID().toString() + "_" + video.getOriginalFilename();
-                    Path imagePath = videoRootLocation.resolve(videoName);
-                    Files.copy(video.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    c.setVideoAlerte("ais/" + videoName);
+                    Path videoPath = videoRootLocation.resolve(videoName);
+                    Files.copy(video.getInputStream(), videoPath, StandardCopyOption.REPLACE_EXISTING);
+                    String onlineVideoPath =fileUploade.uploadVideoToFTP(videoPath, videoName);
+
+                    alertes.setVideoAlerte(videoName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier video : " + e.getMessage());
                 }

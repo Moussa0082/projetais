@@ -38,6 +38,8 @@ public class MaterielService {
     CodeGenerator codeGenerator;
     @Autowired
     MessageService messageService;
+    @Autowired
+    FileUploade fileUploade;
     
 
     public Materiel createMateriel(Materiel materiel, MultipartFile imageFile) throws Exception{
@@ -47,8 +49,8 @@ public class MaterielService {
             throw new EntityNotFoundException("Acteur non disponible");
         
         if (imageFile != null) {
-                String imageLocation = "C:\\xampp\\htdocs\\ais";
-                try {
+            String imageLocation = "/ais"; 
+            try {
                     Path imageRootLocation = Paths.get(imageLocation);
                     if (!Files.exists(imageRootLocation)) {
                         Files.createDirectories(imageRootLocation);
@@ -57,7 +59,9 @@ public class MaterielService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    materiel.setPhotoMateriel("ais/" + imageName);
+                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+
+                    materiel.setPhotoMateriel(imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
@@ -92,21 +96,24 @@ public class MaterielService {
         mat.setDateModif(formattedDateTime);
         
         if (imageFile != null) {
-            String imageLocation = "C:\\xampp\\htdocs\\ais";
+            String imageLocation = "/ais"; 
             try {
-                Path imageRootLocation = Paths.get(imageLocation);
-                if (!Files.exists(imageRootLocation)) {
-                    Files.createDirectories(imageRootLocation);
-                }
+                    Path imageRootLocation = Paths.get(imageLocation);
+                    if (!Files.exists(imageRootLocation)) {
+                        Files.createDirectories(imageRootLocation);
+                    }
+    
+                    String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
+                    Path imagePath = imageRootLocation.resolve(imageName);
+                    Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
 
-                String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
-                Path imagePath = imageRootLocation.resolve(imageName);
-                Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                mat.setPhotoMateriel("ais/" + imageName);
-            } catch (IOException e) {
-                throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
+                    materiel.setPhotoMateriel(imageName);
+                } catch (IOException e) {
+                    throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
+                }
             }
-        }
+            
         return materielRepository.save(mat);
     }
 

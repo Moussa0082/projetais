@@ -36,8 +36,9 @@ public class Stock {
     @Column(nullable = true)
     private String typeProduit;
 
-    // @Column(nullable = false)
-    // private String siteProduction;
+    @Column(nullable = true)
+    private String origineProduit;
+
 
     @Column(nullable = true)
     private String descriptionStock;
@@ -59,7 +60,7 @@ public class Stock {
     private String personneModif;
     
     @Column(nullable = false)
-    private boolean statutSotck = true;
+    private boolean statutSotck;
 
     @ManyToOne
     @JoinColumn(name = "idSpeculation")

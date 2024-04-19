@@ -21,7 +21,7 @@ public interface StockRepository extends JpaRepository<Stock, String>{
     
     Stock findByCommandeIdCommande(String idCommande);
     // Stock findByMagasinIdMagasinAndCategorieProduitIdCategorieProduit(String idMagasin, String idCategorieProduit);
-    List<Stock> findByIdStock(String idStock);
+    Stock findByIdStock(String idStock);
 
     List<Stock> findByIdStockIn(List<String> idStock);
     // List<Stock> findByIdStock(List<String> idStock);
@@ -34,6 +34,8 @@ public interface StockRepository extends JpaRepository<Stock, String>{
             String idCategorieProduit, String idMagasin,String idActeur);
     Collection<Stock> findByNomProduit(String nomProduit);
     List<Stock> findByCommande_IdCommande(String id);
+    List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduitAndActeur_IdActeur(String idCategorieProduit,
+            String idActeur);
  
 
 }

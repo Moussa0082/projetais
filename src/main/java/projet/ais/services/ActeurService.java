@@ -60,6 +60,8 @@ public class ActeurService {
     EmailService emailService;
     @Autowired
     IdGenerator idGenerator ;
+    @Autowired
+    FileUploade fileUploade;
     
 
     private Map<String, LocalDateTime> verificationCodeTimestamps = new HashMap<>();
@@ -117,7 +119,7 @@ public class ActeurService {
 
             // Traitement du fichier image siege acteur
             if (imageFile1 != null) {
-                String imageLocation = "C:\\xampp\\htdocs\\ais";
+                String imageLocation = "ais";
                 try {
                     Path imageRootLocation = Paths.get(imageLocation);
                     if (!Files.exists(imageRootLocation)) {
@@ -127,7 +129,9 @@ public class ActeurService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    acteur.setPhotoSiegeActeur("ais/" + imageName);
+                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+
+                    acteur.setPhotoSiegeActeur(imageName);
 
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
@@ -135,7 +139,7 @@ public class ActeurService {
             }
             // image logo acteur 
             if (imageFile2 != null) {
-                String imageLocation = "C:\\xampp\\htdocs\\ais";
+                String imageLocation = "ais";
                 try {
                     Path imageRootLocation = Paths.get(imageLocation);
                     if (!Files.exists(imageRootLocation)) {
@@ -145,7 +149,8 @@ public class ActeurService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile2.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile2.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    acteur.setLogoActeur("ais/" + imageName);
+                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+                    acteur.setLogoActeur(imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
@@ -522,7 +527,7 @@ public class ActeurService {
                             String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
                             Path imagePath = imageRootLocation.resolve(imageName);
                             Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                            ac.setPhotoSiegeActeur("ais/" + imageName);
+                            ac.setPhotoSiegeActeur(imageName);
                         } catch (IOException e) {
                             throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                         }
@@ -539,7 +544,7 @@ public class ActeurService {
                             String imageName = UUID.randomUUID().toString() + "_" + imageFile2.getOriginalFilename();
                             Path imagePath = imageRootLocation.resolve(imageName);
                             Files.copy(imageFile2.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                            ac.setLogoActeur("ais/" + imageName);
+                            ac.setLogoActeur(imageName);
                         } catch (IOException e) {
                             throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                         }

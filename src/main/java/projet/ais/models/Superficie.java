@@ -39,8 +39,8 @@ public class Superficie {
     @Column(nullable = false)
     private boolean statutSuperficie = true;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime dateSemi;
+    @Column(nullable = false)
+    private String dateSemi;
 
     // @Column(columnDefinition = "TIMESTAMP")
     // private LocalDateTime dateAjout;

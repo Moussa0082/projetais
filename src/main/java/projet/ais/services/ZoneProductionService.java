@@ -42,6 +42,8 @@ public class ZoneProductionService {
     IdGenerator idGenerator ;
     @Autowired
     ActeurRepository acteurRepository;
+    @Autowired
+    FileUploade fileUploade;
 
     public ZoneProduction createZoneProduction(ZoneProduction zoneProduction, MultipartFile imageFile) throws Exception{
         ZoneProduction zoneProductions = zoneProductionRepository.findByNomZoneProduction(zoneProduction.getNomZoneProduction());
@@ -54,7 +56,7 @@ public class ZoneProductionService {
             throw new DuplicateRequestException("Cette zone de production existe déjà");
 
         if (imageFile != null) {
-                String imageLocation = "C:\\xampp\\htdocs\\ais";
+                String imageLocation = "/ais";
                 try {
                     Path imageRootLocation = Paths.get(imageLocation);
                     if (!Files.exists(imageRootLocation)) {
@@ -64,7 +66,9 @@ public class ZoneProductionService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    zoneProduction.setPhotoZone("ais/" + imageName);
+                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+
+                    zoneProduction.setPhotoZone(imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
@@ -91,8 +95,9 @@ public class ZoneProductionService {
         zoneProductions.setLongitude(zoneProduction.getLongitude());
         zoneProductions.setDateAjout(zoneProductions.getDateAjout());
         zoneProductions.setPersonneModif(zoneProduction.getPersonneModif() );
+      
         if (imageFile != null) {
-            String imageLocation = "C:\\xampp\\htdocs\\ais";
+            String imageLocation = "/ais";
             try {
                 Path imageRootLocation = Paths.get(imageLocation);
                 if (!Files.exists(imageRootLocation)) {
@@ -102,11 +107,14 @@ public class ZoneProductionService {
                 String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                 Path imagePath = imageRootLocation.resolve(imageName);
                 Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                zoneProductions.setPhotoZone("ais/" + imageName);
+                String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+
+                zoneProduction.setPhotoZone(imageName);
             } catch (IOException e) {
                 throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
             }
         }
+        
         String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         LocalDateTime now = LocalDateTime.now();
