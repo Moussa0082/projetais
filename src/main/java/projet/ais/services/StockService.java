@@ -1,5 +1,6 @@
 package projet.ais.services;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,13 +13,22 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import javax.imageio.ImageIO;
 
+import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+
+import java.awt.image.BufferedImage;
+// import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.converter.BufferedImageHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
 
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
@@ -121,7 +131,12 @@ public class StockService {
             String codes = codeGenerator.genererCode();
             String idCode = idGenerator.genererCode();
 
-            stock.setCodeStock(codes);
+            String qrCodeData = generateQRCodeData(stock);
+        // String qrCodeImageName = generateQRCodeImage(qrCodeData);
+
+        stock.setCodeStock(codes);
+
+            // stock.setCodeStock(codes);
             stock.setIdStock(idCode);
              
             
@@ -169,6 +184,55 @@ public class StockService {
         return st;
     }
 
+
+    private String generateQRCodeData(Stock stock) {
+        // Générer les données du QR code à partir des informations du stock
+        // Vous pouvez personnaliser le contenu du QR code selon vos besoins
+        // Par exemple, stock.getName(), stock.getId(), etc.
+        return stock.getNomProduit() + "_" + stock.getIdStock();
+    }
+
+// private String generateQRCodeImage(String qrCodeData) {
+//     // Générer l'image du QR code à partir des données fournies
+//     // Ici, vous pouvez utiliser une bibliothèque pour générer l'image du QR code
+//     // Retournez le nom de l'image générée
+//     // Assurez-vous de stocker cette image quelque part où elle peut être accessible publiquement
+//     // Par exemple, dans un dossier statique de votre application web
+//     // Assurez-vous également de manipuler les exceptions au besoin
+
+//     // Assumant que vous utilisez ZXing pour générer le QR code
+//     try {
+//         QRCodeWriter qrCodeWriter = new QRCodeWriter();
+//         BitMatrix bitMatrix = qrCodeWriter.encode(qrCodeData, BarcodeFormat.QR_CODE, 250, 250);
+
+//         // Convertir la matrice de bits en image
+//         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//         // MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
+
+//         // Générer un nom unique pour l'image
+//         String imageName = UUID.randomUUID().toString() + ".png";
+
+//         // Enregistrer l'image sur le serveur
+//         Path imagePath = Paths.get("chemin/vers/dossier/static/qr_codes/" + imageName);
+//         Files.write(imagePath, outputStream.toByteArray());
+
+//         // Retourner le nom de l'image générée
+//         return imageName;
+//     } catch (Exception e) {
+//         // Manipuler les exceptions en fonction de vos besoins
+//         e.printStackTrace();
+//         return null;
+//     }
+
+// }
+
+// public  BufferedImage generateQRCodeImage(String barcodeText) throws Exception {
+//     QRCodeWriter barcodeWriter = new QRCodeWriter();
+//     BitMatrix bitMatrix = 
+//       barcodeWriter.encode(barcodeText, BarcodeFormat.QR_CODE, 200, 200);
+
+//     return MatrixToImageWriter.toBufferedImage(bitMatrix);
+// }
     
     public ResponseEntity<String> sendMessageToAllActeur(Stock stock) {
         List<Acteur> allActeurs = acteurRepository.findAll();
@@ -284,7 +348,7 @@ public class StockService {
                 Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                 String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
 
-                stock.setPhoto(imageName);
+                stocks.setPhoto(imageName);
             } catch (IOException e) {
                 throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
             }
@@ -454,7 +518,7 @@ public class StockService {
         Stock stock = stockRepository.findById(id).orElseThrow(null);
 
         try {
-            stock.setStatutSotck(true);
+            stock.setStatutSotck(false);
         } catch (Exception e) {
             throw new Exception("Erreur lors de l'activation : " + e.getMessage());
         }

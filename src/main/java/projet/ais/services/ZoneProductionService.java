@@ -52,8 +52,8 @@ public class ZoneProductionService {
         // if(acteur == null)
         //     throw new IllegalStateException("Aucun acteur trouvé");
 
-        if(zoneProductions != null)
-            throw new DuplicateRequestException("Cette zone de production existe déjà");
+        // if(zoneProductions != null)
+        //     throw new DuplicateRequestException("Cette zone de production existe déjà");
 
         if (imageFile != null) {
             //  String imageLocation = "C:\\xampp\\htdocs\\ais";
@@ -111,7 +111,7 @@ public class ZoneProductionService {
                 Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                 String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
 
-                zoneProduction.setPhotoZone(imageName);
+                zoneProductions.setPhotoZone(imageName);
             } catch (IOException e) {
                 throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
             }

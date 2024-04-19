@@ -321,7 +321,7 @@ public class VehiculeService {
                     // Téléchargement de l'image vers le serveur FTP et récupération du chemin en ligne
                    // Téléchargement de l'image vers le serveur FTP et récupération du chemin en ligne
                     String onlineImagePath = uploadImageToFTP(imagePath, imageName);
-                    vehicule.setPhotoVehicule(imageName); // Enregistrement du chemin en ligne dans l'objet Vehicule
+                    vh.setPhotoVehicule(imageName); // Enregistrement du chemin en ligne dans l'objet Vehicule
     
                     
                 } catch (IOException e) {

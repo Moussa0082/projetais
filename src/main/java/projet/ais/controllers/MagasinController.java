@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,20 +44,37 @@ public class MagasinController {
     @Autowired
     MagasinRepository magasinRepository;
 
+    // @PostMapping("/addMagasin")
+    // public ResponseEntity<Magasin> saveMagasin(
+    //     @Valid @RequestParam("magasin") String magasins,
+    //     @Valid @RequestParam(value = "image",required = false) MultipartFile imageFile) throws Exception{
+
+    //         Magasin magasin1 = new Magasin();
+    //         try {
+    //             magasin1 = new JsonMapper().readValue(magasins,Magasin.class);
+    //         }  catch (JsonProcessingException e) {
+    //             throw new Exception(e.getMessage());
+    //         }
+    //     Magasin saveMag = magasinService.createMagasin(magasin1, imageFile);
+    //     return new ResponseEntity<>(saveMag, HttpStatus.CREATED);
+    // }
     @PostMapping("/addMagasin")
     public ResponseEntity<Magasin> saveMagasin(
-        @Valid @RequestParam("magasin") String magasins,
-        @Valid @RequestParam(value = "image",required = false) MultipartFile imageFile) throws Exception{
+    @Valid @RequestParam("magasin") String magasins,
+    @RequestParam(value = "image", required = false) MultipartFile imageFile) throws Exception {
 
-            Magasin magasin1 = new Magasin();
-            try {
-                magasin1 = new JsonMapper().readValue(magasins,Magasin.class);
-            }  catch (JsonProcessingException e) {
-                throw new Exception(e.getMessage());
-            }
-        Magasin saveMag = magasinService.createMagasin(magasin1, imageFile);
-        return new ResponseEntity<>(saveMag, HttpStatus.CREATED);
+    Magasin magasin1;
+    try {
+        ObjectMapper objectMapper = new ObjectMapper();
+        magasin1 = objectMapper.readValue(magasins, Magasin.class);
+    } catch (JsonProcessingException e) {
+        throw new Exception(e.getMessage());
     }
+
+    Magasin saveMag = magasinService.createMagasin(magasin1, imageFile);
+    return new ResponseEntity<>(saveMag, HttpStatus.CREATED);
+}
+
     
     @GetMapping("/{magasinId}/image")
 public ResponseEntity<byte[]> getImage(@PathVariable String magasinId) {

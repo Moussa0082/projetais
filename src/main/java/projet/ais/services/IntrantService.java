@@ -190,7 +190,7 @@ public class IntrantService {
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                     String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
 
-                    intrant.setPhotoIntrant(imageName);
+                    it.setPhotoIntrant(imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }

@@ -119,7 +119,7 @@ public class ActeurService {
 
             // Traitement du fichier image siege acteur
             if (imageFile1 != null) {
-                String imageLocation = "ais";
+                String imageLocation = "/ais";
                 try {
                     Path imageRootLocation = Paths.get(imageLocation);
                     if (!Files.exists(imageRootLocation)) {
@@ -139,7 +139,7 @@ public class ActeurService {
             }
             // image logo acteur 
             if (imageFile2 != null) {
-                String imageLocation = "ais";
+                String imageLocation = "/ais";
                 try {
                     Path imageRootLocation = Paths.get(imageLocation);
                     if (!Files.exists(imageRootLocation)) {
@@ -516,39 +516,43 @@ public class ActeurService {
         Acteur ac = acteurRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Acteur non trouver avec l'id " + id));
         
                      // Traitement du fichier image siege acteur
-                     if (imageFile1 != null) {
-                        String imageLocation = "C:\\xampp\\htdocs\\ais";
-                        try {
-                            Path imageRootLocation = Paths.get(imageLocation);
-                            if (!Files.exists(imageRootLocation)) {
-                                Files.createDirectories(imageRootLocation);
-                            }
-            
-                            String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
-                            Path imagePath = imageRootLocation.resolve(imageName);
-                            Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                            ac.setPhotoSiegeActeur(imageName);
-                        } catch (IOException e) {
-                            throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
-                        }
+            if (imageFile1 != null) {
+                String imageLocation = "/ais";
+                try {
+                    Path imageRootLocation = Paths.get(imageLocation);
+                    if (!Files.exists(imageRootLocation)) {
+                        Files.createDirectories(imageRootLocation);
                     }
-                    // image logo acteur 
-                    if (imageFile2 != null) {
-                        String imageLocation = "C:\\xampp\\htdocs\\ais";
-                        try {
-                            Path imageRootLocation = Paths.get(imageLocation);
-                            if (!Files.exists(imageRootLocation)) {
-                                Files.createDirectories(imageRootLocation);
-                            }
-            
-                            String imageName = UUID.randomUUID().toString() + "_" + imageFile2.getOriginalFilename();
-                            Path imagePath = imageRootLocation.resolve(imageName);
-                            Files.copy(imageFile2.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                            ac.setLogoActeur(imageName);
-                        } catch (IOException e) {
-                            throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
-                        }
+    
+                    String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
+                    Path imagePath = imageRootLocation.resolve(imageName);
+                    Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+
+                    ac.setPhotoSiegeActeur(imageName);
+
+                } catch (IOException e) {
+                    throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
+                }
+            }
+            // image logo acteur 
+            if (imageFile2 != null) {
+                String imageLocation = "/ais";
+                try {
+                    Path imageRootLocation = Paths.get(imageLocation);
+                    if (!Files.exists(imageRootLocation)) {
+                        Files.createDirectories(imageRootLocation);
                     }
+    
+                    String imageName = UUID.randomUUID().toString() + "_" + imageFile2.getOriginalFilename();
+                    Path imagePath = imageRootLocation.resolve(imageName);
+                    Files.copy(imageFile2.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+                    ac.setLogoActeur(imageName);
+                } catch (IOException e) {
+                    throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
+                }
+            }
             
                     // Date d = new Date(); 
                     // SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
