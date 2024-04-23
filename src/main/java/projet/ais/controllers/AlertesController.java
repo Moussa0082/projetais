@@ -203,7 +203,7 @@ public class AlertesController {
         return new ResponseEntity<>(alertesService.getAllAlertes(), HttpStatus.OK);
     }
 
-
+    
     //Desactiver un alerte methode
     @PutMapping("/disable/{id}")
     @Operation(summary = "Désactiver un alerte ")
@@ -214,7 +214,7 @@ public class AlertesController {
     }
 
     //Desactiver un alerte methode
-      @PutMapping("/enable/{id}")
+    @PutMapping("/enable/{id}")
     @Operation(summary = "Activer un alerte ")
     public ResponseEntity <String> enableVehicule(@PathVariable String id) throws Exception{
     
