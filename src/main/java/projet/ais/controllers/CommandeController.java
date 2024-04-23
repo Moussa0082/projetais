@@ -40,18 +40,40 @@ public class CommandeController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<String> ajouterCommandeAvecStocks(@RequestBody CommandeAvecStocks commandeAvecStocks) {
+    public List<Commande> passerCommande(@RequestBody CommandeAvecStocks commandeRequest) {
         try {
-            Commande commande = commandeAvecStocks.getCommande();
-            List<Stock> stocks = commandeAvecStocks.getStocks();
-            List<Double> quantitesDemandees = commandeAvecStocks.getQuantitesDemandees();
-            commandeService.ajouterStocksACommandes(commande, stocks, quantitesDemandees);
-            return ResponseEntity.ok("Commande ajoutée avec succès.");
+            return commandeService.ajouterStocksEtIntrantsACommandes(
+                commandeRequest.getStocks(),
+                commandeRequest.getIntrants(),
+                commandeRequest.getQuantitesStocks(),
+                commandeRequest.getQuantitesIntrants()
+            );
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Une erreur est survenue lors de l'ajout de la commande : " + e.getMessage());
+            // Gérer l'exception
+            e.printStackTrace();
+            return Collections.emptyList();
         }
     }
+
+
+
+
+    // public ResponseEntity<String> ajouterCommandeAvecStocks(@RequestBody CommandeAvecStocks commandeAvecStocks) {
+    //     try {
+    //         Commande commande = commandeAvecStocks.getCommande();
+    //         List<Stock> stocks = commandeAvecStocks.getStocks();
+    //         List<Double> quantitesDemandees = commandeAvecStocks.getQuantitesDemandees();
+    //         commandeService.ajouterStocksACommandes(commande, stocks, quantitesDemandees);
+    //         return ResponseEntity.ok("Commande ajoutée avec succès.");
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    //             .body("Une erreur est survenue lors de l'ajout de la commande : " + e.getMessage());
+    //     }
+    // }
+
+    
+
+
     // @PostMapping("/add")
     // public ResponseEntity<String> ajouterCommandeAvecStocks(@RequestBody CommandeAvecStocks commandeAvecStocks) {
     //     try {

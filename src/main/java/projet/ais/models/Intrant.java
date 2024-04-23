@@ -5,8 +5,14 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import java.util.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import lombok.Data;
@@ -62,6 +68,12 @@ public class Intrant {
     // @ManyToOne
     // @JoinColumn(name = "idSuperficie")
     // private Superficie superficie;
+    
+    
+    
+    @ManyToMany(mappedBy = "intrant", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private List<Commande>  commande;
 
     
 }

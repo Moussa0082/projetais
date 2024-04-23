@@ -99,6 +99,8 @@ public class Acteur {
    
     private Boolean statutActeur  ;
 
+    private Boolean isConnected  ;
+
     @OneToMany
     (mappedBy = "acteur")
     @JsonIgnore

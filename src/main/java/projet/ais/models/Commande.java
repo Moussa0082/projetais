@@ -82,8 +82,18 @@ public class Commande {
     @JoinTable(name = "commande_stock",
         joinColumns = @JoinColumn(name = "id_commande"),
         inverseJoinColumns = @JoinColumn(name = "id_stock"))
-    private List<Stock> stock; 
+    private List<Stock> stock;
 
+    @ManyToMany
+    // @JsonIgnore
+    @JoinTable(name = "commande_intrant",
+        joinColumns = @JoinColumn(name = "id_commande"),
+        inverseJoinColumns = @JoinColumn(name = "id_intrant"))
+    private List<Intrant> intrant; 
+
+
+
+     
 
     
     @ManyToMany(cascade = CascadeType.ALL)

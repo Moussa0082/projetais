@@ -386,12 +386,14 @@ private String generateQRCodeImage(String qrCodeData) {
             throw new IllegalStateException("Aucun stock trouvé");
         
             stockList = stockList
-             .stream().sorted((s1,s2) -> s2.getDescriptionStock().compareTo(s1.getDescriptionStock()))
+             .stream().sorted((s1,s2) -> s2.getNomProduit().compareTo(s1.getNomProduit()))
         .collect(Collectors.toList());
         //  System.out.println("service : "+stockList);
 
         return stockList;
     }
+
+   
 
     public List<Stock> getAllStockBySpeculation(String id){
         List<Stock> stockList = stockRepository.findBySpeculationIdSpeculation(id);

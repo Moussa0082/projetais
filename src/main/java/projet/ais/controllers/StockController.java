@@ -170,15 +170,17 @@ private MediaType detectContentType(String imageName) {
         @GetMapping("/getAllStocks")
         @Operation(summary = "Liste des stocks")
         public ResponseEntity<List<Stock>> listeStock(){
-           
             return new ResponseEntity<>(stockService.getAllStock(), HttpStatus.OK);
         }
+
+      
 
         @GetMapping("/getAllStocksByActeurs/{id}")
         @Operation(summary = "Liste des stocks par d'un acteur ")
         public ResponseEntity<List<Stock>> listeStockParActeur(@PathVariable String id){
             return new ResponseEntity<>(stockService.getAllStockByActeur(id), HttpStatus.OK);
         }
+
 
         @GetMapping("/getAllStocksBySpeculation/{id}")
         @Operation(summary = "Liste des stocks par d'un acteur ")

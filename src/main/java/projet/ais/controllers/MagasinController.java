@@ -149,6 +149,7 @@ public class MagasinController {
     public ResponseEntity<Magasin> desactiveMagasin(@PathVariable String id) throws Exception {
         return new ResponseEntity<>(magasinService.desactive(id), HttpStatus.OK);
     }
+    
     @GetMapping("/getAllMagagin")
     @Operation(summary = "Liste des magasins")
     public ResponseEntity<List<Magasin>> listeMagasin(){
