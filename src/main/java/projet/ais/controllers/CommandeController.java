@@ -40,36 +40,47 @@ public class CommandeController {
 
 
     @PostMapping("/add")
-    public List<Commande> passerCommande(@RequestBody CommandeAvecStocks commandeRequest) {
-        try {
-            return commandeService.ajouterStocksEtIntrantsACommandes(
-                commandeRequest.getStocks(),
-                commandeRequest.getIntrants(),
-                commandeRequest.getQuantitesStocks(),
-                commandeRequest.getQuantitesIntrants()
-            );
-        } catch (Exception e) {
-            // Gérer l'exception
-            e.printStackTrace();
-            return Collections.emptyList();
-        }
-    }
-
-
-
-
-    // public ResponseEntity<String> ajouterCommandeAvecStocks(@RequestBody CommandeAvecStocks commandeAvecStocks) {
+    // public ResponseEntity<Commande> passerCommande(@RequestBody CommandeAvecStocks commandeRequest) {
     //     try {
-    //         Commande commande = commandeAvecStocks.getCommande();
-    //         List<Stock> stocks = commandeAvecStocks.getStocks();
-    //         List<Double> quantitesDemandees = commandeAvecStocks.getQuantitesDemandees();
-    //         commandeService.ajouterStocksACommandes(commande, stocks, quantitesDemandees);
-    //         return ResponseEntity.ok("Commande ajoutée avec succès.");
+    //         List<Stock> stocks = commandeRequest.getStocks();
+    //         Commande commande = commandeRequest.getCommande();
+    //         List<Double> quantitesDemandees = commandeRequest.getQuantitesDemandees();
+    //         Commande commandes = commandeService.ajouterStocksACommande(commande,stocks, quantitesDemandees);
+    //         return new ResponseEntity<>(commandes, HttpStatus.OK);
     //     } catch (Exception e) {
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-    //             .body("Une erreur est survenue lors de l'ajout de la commande : " + e.getMessage());
+    //         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     //     }
     // }
+    // public List<Commande> passerCommande(@RequestBody CommandeAvecStocks commandeRequest) {
+    //     try {
+    //         return commandeService.ajouterStocksEtIntrantsACommandes(
+    //             commandeRequest.getStocks(),
+    //             commandeRequest.getIntrants(),
+    //             commandeRequest.getQuantitesStocks(),
+    //             commandeRequest.getQuantitesIntrants()
+    //         );
+    //     } catch (Exception e) {
+    //         // Gérer l'exception
+    //         e.printStackTrace();
+    //         return Collections.emptyList();
+    //     }
+    // }
+
+
+
+
+    public ResponseEntity<String> ajouterCommandeAvecStocks(@RequestBody CommandeAvecStocks commandeAvecStocks) {
+        try {
+            Commande commande = commandeAvecStocks.getCommande();
+            List<Stock> stocks = commandeAvecStocks.getStocks();
+            List<Double> quantitesDemandees = commandeAvecStocks.getQuantitesDemandees();
+            commandeService.ajouterStocksACommande(commande, stocks, quantitesDemandees);
+            return ResponseEntity.ok("Commande ajoutée avec succès.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Une erreur est survenue lors de l'ajout de la commande : " + e.getMessage());
+        }
+    }
 
     
 

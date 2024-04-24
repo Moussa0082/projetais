@@ -85,7 +85,7 @@ public class Commande {
     private List<Stock> stock;
 
     @ManyToMany
-    // @JsonIgnore
+    @JsonIgnore
     @JoinTable(name = "commande_intrant",
         joinColumns = @JoinColumn(name = "id_commande"),
         inverseJoinColumns = @JoinColumn(name = "id_intrant"))
