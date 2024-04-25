@@ -12,6 +12,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.io.ByteArrayOutputStream;
 
+
+// import org.apache.http.client.methods.HttpPost;
+// import org.apache.http.entity.FileEntity;
+// import org.apache.http.impl.client.HttpClients;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +27,16 @@ import projet.ais.IdGenerator;
 import projet.ais.models.Vehicule;
 import projet.ais.repository.VehiculeRepository;
 
+// import org.apache.http.HttpEntity;
+// import org.apache.http.HttpResponse;
+// import org.apache.http.client.HttpClient;
+// import org.apache.http.client.methods.HttpPost;
+// import org.apache.http.entity.ContentType;
+// import org.apache.http.entity.FileEntity;
+// import org.apache.http.impl.client.HttpClients;
+// import org.apache.commons.net.ftp.FTP;
+// import org.apache.commons.net.ftp.FTPClient;
+import java.io.File;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 

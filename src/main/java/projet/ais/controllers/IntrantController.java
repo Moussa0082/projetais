@@ -142,11 +142,11 @@ public class IntrantController {
     }
 
          //liste intrant pas acteur
-    @GetMapping("/listeIntrantBySpeculation/{id}")
-    @Operation(summary = "affichage de la liste des intrants par Speculation")
-    public ResponseEntity<List<Intrant>> listeIntrantBySpeculation(@PathVariable String id){
-        return  new ResponseEntity<>(intrantService.getAllIntrantBySpeculation(id), HttpStatus.OK);
-    }
+    // @GetMapping("/listeIntrantBySpeculation/{id}")
+    // @Operation(summary = "affichage de la liste des intrants par Speculation")
+    // public ResponseEntity<List<Intrant>> listeIntrantBySpeculation(@PathVariable String id){
+    //     return  new ResponseEntity<>(intrantService.getAllIntrantBySpeculation(id), HttpStatus.OK);
+    // }
 
          //liste intrant pas acteur
     @GetMapping("/listeIntrantByCategorie/{id}")

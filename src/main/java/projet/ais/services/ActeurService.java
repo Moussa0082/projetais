@@ -241,7 +241,7 @@ public class ActeurService {
 
  public ResponseEntity<String> sendMessageToAdmin(Acteur acteur) throws Exception {
 
-    Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
+    Acteur admins = acteurRepository.findByTypeActeurLibelle("admin");
 
     if (admins != null) { // Vérifiez si des administrateurs ont été trouvés
         for (TypeActeur adminType : admins.getTypeActeur()) {

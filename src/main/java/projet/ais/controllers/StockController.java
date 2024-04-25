@@ -67,12 +67,12 @@ public class StockController {
             return new ResponseEntity<>(saveStock, HttpStatus.CREATED);
         }
 
-        @PutMapping("/updateStock/{id}")
+        @PutMapping("/updateStock/{idStock}")
     @Operation(summary = "Modification de stock")
     public ResponseEntity<Stock> updatedStock(
         @Valid @RequestParam("stock")  String addstocks,
         @Valid @RequestParam(value = "image",required = false) MultipartFile imageFile,
-        @PathVariable String id
+        @PathVariable String idStock
         ) throws Exception{
             Stock stock = new Stock();
 
@@ -82,7 +82,7 @@ public class StockController {
                 throw new Exception(e.getMessage());
             }
 
-            Stock saveStock = stockService.updateStock(stock, imageFile, id);
+            Stock saveStock = stockService.updateStock(stock, imageFile, idStock);
             return new ResponseEntity<>(saveStock, HttpStatus.OK);
         }
 
@@ -170,15 +170,17 @@ private MediaType detectContentType(String imageName) {
         @GetMapping("/getAllStocks")
         @Operation(summary = "Liste des stocks")
         public ResponseEntity<List<Stock>> listeStock(){
-           
             return new ResponseEntity<>(stockService.getAllStock(), HttpStatus.OK);
         }
+
+      
 
         @GetMapping("/getAllStocksByActeurs/{id}")
         @Operation(summary = "Liste des stocks par d'un acteur ")
         public ResponseEntity<List<Stock>> listeStockParActeur(@PathVariable String id){
             return new ResponseEntity<>(stockService.getAllStockByActeur(id), HttpStatus.OK);
         }
+
 
         @GetMapping("/getAllStocksBySpeculation/{id}")
         @Operation(summary = "Liste des stocks par d'un acteur ")
@@ -207,6 +209,11 @@ private MediaType detectContentType(String imageName) {
         @GetMapping("/categorieAndMagasin/{idCategorie}/{idMagasin}")
         public List<Stock> getStocksByCategorieAndMagasin(@PathVariable String idCategorie, @PathVariable String idMagasin) {
             return stockService.getStocksByCategorieAndMagasin(idCategorie, idMagasin);
+        }
+
+        @GetMapping("/categorieAndIdActeur/{idCategorie}/{idActeur}")
+        public List<Stock> getStocksByCategorieAndActeur(@PathVariable String idCategorie, @PathVariable String idActeur) {
+            return stockService.getStocksByCategorieAndActeurIdacteur(idCategorie, idActeur);
         }
 
         // @GetMapping("/categorie/{idCategorie}")

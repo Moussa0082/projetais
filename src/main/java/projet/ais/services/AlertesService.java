@@ -12,17 +12,22 @@ import java.time.format.DateTimeFormatter;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
+import projet.ais.models.Acteur;
 import projet.ais.models.Alertes;
 
 import java.util.stream.Collectors;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.AlertesRepository;
 
 @Service
@@ -37,6 +42,10 @@ public class AlertesService {
     CodeGenerator codeGenerator;
     @Autowired
     FileUploade fileUploade;
+    @Autowired
+    ActeurRepository acteurRepository;
+    @Autowired
+    MessageService messageService;
 
 
      //Ajouter un Alertes
@@ -112,12 +121,35 @@ public class AlertesService {
             String formattedDateTime = now.format(formatter);
             alertes.setDateAjout(formattedDateTime);
            Alertes savedAlertes = AlertesRepository.save(alertes);        
-   
+           sendMessageToAllActeur();
          return savedAlertes;
    
     }
 
 
+    public ResponseEntity<String> sendMessageToAllActeur() {
+        List<Acteur> allActeurs = acteurRepository.findAll();
+       
+
+        // TypeActeur transporteur = typeActeurRepository.findByLibelle("Transporteur");
+        // TypeActeur fournisseur = typeActeurRepository.findByLibelle("Fournisseur");
+        for (Acteur acteur : allActeurs) {
+            Acteur admins = acteurRepository.findByTypeActeurLibelle("admin");
+            
+            if (acteur != admins) {
+            
+            // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
+            String mes = "Bonjour une nouvelle conseil vient d'être ajouté";
+                try {
+                    messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  acteur);
+                } catch (Exception e) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur : " + e.getMessage());
+                }
+            }
+        
+        }
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
 
     //    //Liste des Alertes par acteur
     // public List<Alertes> getAllAlertesByActeur(String id){
@@ -185,7 +217,7 @@ public class AlertesService {
 
             // Traitement du fichier audio
             if (video != null) {
-                String videoLocation = "ais";
+                String videoLocation = "/ais";
                 try {
                     Path videoRootLocation = Paths.get(videoLocation);
                     if (!Files.exists(videoRootLocation)) {

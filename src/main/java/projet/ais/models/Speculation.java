@@ -29,6 +29,8 @@ public class Speculation {
     private boolean statutSpeculation = true;
 
     @ManyToOne
+    // @JsonIgnore
+
     @JoinColumn(name = "idCategorieProduit")
     private CategorieProduit categorieProduit;
 
@@ -49,10 +51,10 @@ public class Speculation {
     @JsonIgnore
     private List<Stock> stockList;
 
-    @OneToMany
-    (mappedBy = "speculation")
-    @JsonIgnore
-    private List<Intrant> intrants;
+    // @OneToMany
+    // (mappedBy = "speculation")
+    // @JsonIgnore
+    // private List<Intrant> intrants;
 
     @ManyToOne
     @JsonIgnore

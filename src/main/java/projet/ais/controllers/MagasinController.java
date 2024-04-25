@@ -73,11 +73,11 @@ public class MagasinController {
 
     Magasin saveMag = magasinService.createMagasin(magasin1, imageFile);
     return new ResponseEntity<>(saveMag, HttpStatus.CREATED);
-}
+    }
 
     
     @GetMapping("/{magasinId}/image")
-public ResponseEntity<byte[]> getImage(@PathVariable String magasinId) {
+    public ResponseEntity<byte[]> getImage(@PathVariable String magasinId) {
     try {
         // Récupérer le nom de l'image associée au véhicule
         Magasin magasin = magasinRepository.findByIdMagasin(magasinId);
@@ -103,7 +103,7 @@ public ResponseEntity<byte[]> getImage(@PathVariable String magasinId) {
 }
 }
 
-private MediaType detectContentType(String imageName) {
+    private MediaType detectContentType(String imageName) {
     String[] parts = imageName.split("\\.");
     if (parts.length > 1) {
         String extension = parts[parts.length - 1].toLowerCase();
@@ -149,6 +149,7 @@ private MediaType detectContentType(String imageName) {
     public ResponseEntity<Magasin> desactiveMagasin(@PathVariable String id) throws Exception {
         return new ResponseEntity<>(magasinService.desactive(id), HttpStatus.OK);
     }
+    
     @GetMapping("/getAllMagagin")
     @Operation(summary = "Liste des magasins")
     public ResponseEntity<List<Magasin>> listeMagasin(){

@@ -23,7 +23,16 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.encoder.QRCode;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import java.awt.image.BufferedImage;
 // import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.context.annotation.Bean;
@@ -132,9 +141,9 @@ public class StockService {
             String idCode = idGenerator.genererCode();
 
             String qrCodeData = generateQRCodeData(stock);
-        // String qrCodeImageName = generateQRCodeImage(qrCodeData);
+        String qrCodeImageName = generateQRCodeImage(qrCodeData);
 
-        stock.setCodeStock(codes);
+        stock.setCodeStock(qrCodeImageName);
 
             // stock.setCodeStock(codes);
             stock.setIdStock(idCode);
@@ -192,39 +201,39 @@ public class StockService {
         return stock.getNomProduit() + "_" + stock.getIdStock();
     }
 
-// private String generateQRCodeImage(String qrCodeData) {
-//     // Générer l'image du QR code à partir des données fournies
-//     // Ici, vous pouvez utiliser une bibliothèque pour générer l'image du QR code
-//     // Retournez le nom de l'image générée
-//     // Assurez-vous de stocker cette image quelque part où elle peut être accessible publiquement
-//     // Par exemple, dans un dossier statique de votre application web
-//     // Assurez-vous également de manipuler les exceptions au besoin
+private String generateQRCodeImage(String qrCodeData) {
+    // Générer l'image du QR code à partir des données fournies
+    // Ici, vous pouvez utiliser une bibliothèque pour générer l'image du QR code
+    // Retournez le nom de l'image générée
+    // Assurez-vous de stocker cette image quelque part où elle peut être accessible publiquement
+    // Par exemple, dans un dossier statique de votre application web
+    // Assurez-vous également de manipuler les exceptions au besoin
 
-//     // Assumant que vous utilisez ZXing pour générer le QR code
-//     try {
-//         QRCodeWriter qrCodeWriter = new QRCodeWriter();
-//         BitMatrix bitMatrix = qrCodeWriter.encode(qrCodeData, BarcodeFormat.QR_CODE, 250, 250);
+    // Assumant que vous utilisez ZXing pour générer le QR code
+    try {
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix = qrCodeWriter.encode(qrCodeData, BarcodeFormat.QR_CODE, 250, 250);
 
-//         // Convertir la matrice de bits en image
-//         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//         // MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
+        // Convertir la matrice de bits en image
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
 
-//         // Générer un nom unique pour l'image
-//         String imageName = UUID.randomUUID().toString() + ".png";
+        // Générer un nom unique pour l'image
+        String imageName = UUID.randomUUID().toString() + ".png";
 
-//         // Enregistrer l'image sur le serveur
-//         Path imagePath = Paths.get("chemin/vers/dossier/static/qr_codes/" + imageName);
-//         Files.write(imagePath, outputStream.toByteArray());
+        // Enregistrer l'image sur le serveur
+        Path imagePath = Paths.get("chemin/vers/dossier/static/qr_codes/" + imageName);
+        Files.write(imagePath, outputStream.toByteArray());
 
-//         // Retourner le nom de l'image générée
-//         return imageName;
-//     } catch (Exception e) {
-//         // Manipuler les exceptions en fonction de vos besoins
-//         e.printStackTrace();
-//         return null;
-//     }
+        // Retourner le nom de l'image générée
+        return imageName;
+    } catch (Exception e) {
+        // Manipuler les exceptions en fonction de vos besoins
+        e.printStackTrace();
+        return null;
+    }
 
-// }
+}
 
 // public  BufferedImage generateQRCodeImage(String barcodeText) throws Exception {
 //     QRCodeWriter barcodeWriter = new QRCodeWriter();
@@ -306,9 +315,12 @@ public class StockService {
 
         stocks.setNomProduit(stock.getNomProduit());
         stocks.setFormeProduit(stock.getFormeProduit());
+        stocks.setOrigineProduit(stock.getOrigineProduit());
+        stocks.setPrix(stock.getPrix());
         stocks.setDateProduction(stock.getDateProduction());
         stocks.setQuantiteStock(stock.getQuantiteStock());
         stocks.setDescriptionStock(stock.getDescriptionStock());
+        stocks.setTypeProduit(stock.getTypeProduit());
         stocks.setPersonneModif(stock.getPersonneModif());       
 
         String pattern = "yyyy-MM-dd HH:mm";
@@ -318,10 +330,7 @@ public class StockService {
 
         stocks.setDateModif(formattedDateTime);
 
-        if(stock.getUnite() != null){
-            stocks.setUnite(stock.getUnite());
-        }
-         
+        
         if(stock.getMagasin() != null){
             stocks.setMagasin(stock.getMagasin());
         }
@@ -334,7 +343,8 @@ public class StockService {
             stocks.setSpeculation(stock.getSpeculation());
         }
         
-
+          stocks.setUnite(stock.getUnite());
+        
         if (imageFile != null) {
             String imageLocation = "/ais";
             try {
@@ -348,7 +358,7 @@ public class StockService {
                 Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                 String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
 
-                stocks.setPhoto(imageName);
+                stock.setPhoto(imageName);
             } catch (IOException e) {
                 throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
             }
@@ -376,12 +386,14 @@ public class StockService {
             throw new IllegalStateException("Aucun stock trouvé");
         
             stockList = stockList
-             .stream().sorted((s1,s2) -> s2.getDescriptionStock().compareTo(s1.getDescriptionStock()))
+             .stream().sorted((s1,s2) -> s2.getNomProduit().compareTo(s1.getNomProduit()))
         .collect(Collectors.toList());
         //  System.out.println("service : "+stockList);
 
         return stockList;
     }
+
+   
 
     public List<Stock> getAllStockBySpeculation(String id){
         List<Stock> stockList = stockRepository.findBySpeculationIdSpeculation(id);
@@ -413,6 +425,11 @@ public class StockService {
     //recuperer les stock par categorie produit et magasin
     public List<Stock> getStocksByCategorieAndMagasin(String idCategorieProduit, String idMagasin) {
         return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasin(idCategorieProduit, idMagasin);
+    }
+
+    //recuperer les stock par categorie produit et idActeur
+    public List<Stock> getStocksByCategorieAndActeurIdacteur(String idCategorieProduit, String idActeur) {
+        return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduitAndActeur_IdActeur(idCategorieProduit, idActeur);
     }
 
       // Récupérer les stocks par catégorie

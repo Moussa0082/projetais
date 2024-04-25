@@ -20,13 +20,13 @@ public class Unite {
     @Column(nullable = true)
     private String codeUnite;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String nomUnite;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String sigleUnite;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String description;
 
     @Column(nullable = true)
@@ -46,7 +46,7 @@ public class Unite {
     private Acteur acteur;
     
     @OneToMany
-    (mappedBy = "unite")
+    (mappedBy = "unite" , cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Stock> stockList;
 }

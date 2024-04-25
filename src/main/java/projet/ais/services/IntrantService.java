@@ -129,21 +129,21 @@ public class IntrantService {
     } 
 
        //Liste des intrants par speculation
-    public List<Intrant> getAllIntrantBySpeculation(String id){
-        List<Intrant>  intrantList = intrantRepository.findAllBySpeculationIdSpeculation(id);
+    // public List<Intrant> getAllIntrantBySpeculation(String id){
+    //     List<Intrant>  intrantList = intrantRepository.findAllBySpeculationIdSpeculation(id);
 
-        if(intrantList.isEmpty()){
-            throw new EntityNotFoundException("Aucun intrant trouvé");
-        }
-        intrantList = intrantList
-                .stream().sorted((d1, d2) -> d2.getNomIntrant().compareTo(d1.getNomIntrant()))
-                .collect(Collectors.toList());
-        return intrantList;
-    } 
+    //     if(intrantList.isEmpty()){
+    //         throw new EntityNotFoundException("Aucun intrant trouvé");
+    //     }
+    //     intrantList = intrantList
+    //             .stream().sorted((d1, d2) -> d2.getNomIntrant().compareTo(d1.getNomIntrant()))
+    //             .collect(Collectors.toList());
+    //     return intrantList;
+    // } 
 
        //Liste des intrants par categorie
     public List<Intrant> getAllIntrantByCategorie(String id){
-        List<Intrant>  intrantList = intrantRepository.findAllBySpeculation_CategorieProduit_IdCategorieProduit(id);
+        List<Intrant>  intrantList = intrantRepository.findAllByCategorieProduit_IdCategorieProduit(id);
 
         if(intrantList.isEmpty()){
             throw new EntityNotFoundException("Aucun intrant trouvé");
@@ -253,48 +253,6 @@ public class IntrantService {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-  
           public Commande ajouterIntrantACommande(Commande commande, List<Intrant> intrant, List<Double> quantitesDemandees) throws Exception {
         // Récupération des stocks correspondant aux identifiants fournis
         List<Intrant> intrantsFound = intrantRepository.findByIdIntrantIn(
