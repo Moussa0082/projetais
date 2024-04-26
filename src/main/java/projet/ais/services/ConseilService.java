@@ -191,7 +191,7 @@ public class ConseilService {
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                     String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
 
-                    conseil.setPhotoConseil(imageName );
+                    c.setPhotoConseil(imageName );
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
@@ -211,7 +211,7 @@ public class ConseilService {
                     Files.copy(audio.getInputStream(), audioPath, StandardCopyOption.REPLACE_EXISTING);
                     String onlineAudioPath =fileUploade.uploadAudioToFTP(audioPath, audioName);
 
-                    conseil.setAudioConseil(audioName );
+                    c.setAudioConseil(audioName );
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier audio : " + e.getMessage());
                 }
@@ -231,7 +231,7 @@ public class ConseilService {
                     Files.copy(video.getInputStream(), videoPath, StandardCopyOption.REPLACE_EXISTING);
                     String onlineVideoPath =fileUploade.uploadVideoToFTP(videoPath, videoName);
 
-                    conseil.setVideoConseil(videoName );
+                    c.setVideoConseil(videoName );
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier video : " + e.getMessage());
                 }

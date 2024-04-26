@@ -189,7 +189,7 @@ public class AlertesService {
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                     String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
 
-                    alertes.setPhotoAlerte(imageName);
+                    c.setPhotoAlerte(imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
@@ -209,7 +209,7 @@ public class AlertesService {
                     Files.copy(audio.getInputStream(), audioPath, StandardCopyOption.REPLACE_EXISTING);
                     String onlineAudioPath =fileUploade.uploadAudioToFTP(audioPath, audioName);
 
-                    alertes.setAudioAlerte(audioName);
+                    c.setAudioAlerte(audioName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier audio : " + e.getMessage());
                 }
@@ -229,7 +229,7 @@ public class AlertesService {
                     Files.copy(video.getInputStream(), videoPath, StandardCopyOption.REPLACE_EXISTING);
                     String onlineVideoPath =fileUploade.uploadVideoToFTP(videoPath, videoName);
 
-                    alertes.setVideoAlerte(videoName);
+                    c.setVideoAlerte(videoName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier video : " + e.getMessage());
                 }
