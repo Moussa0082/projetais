@@ -72,7 +72,7 @@ public class Magasin {
 
     @OneToMany
     (mappedBy = "magasin")
-    @JsonIgnore
+    // @JsonIgnore
     private List<Commande> commande;
 
     // @ManyToOne

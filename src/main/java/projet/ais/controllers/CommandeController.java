@@ -68,36 +68,37 @@ public class CommandeController {
 
 
 
-
-    public ResponseEntity<String> ajouterCommandeAvecStocks(@RequestBody CommandeAvecStocks commandeAvecStocks) {
-        try {
-            Commande commande = commandeAvecStocks.getCommande();
-            List<Stock> stocks = commandeAvecStocks.getStocks();
-            List<Double> quantitesDemandees = commandeAvecStocks.getQuantitesDemandees();
-            commandeService.ajouterStocksACommande(commande, stocks, quantitesDemandees);
-            return ResponseEntity.ok("Commande ajoutée avec succès.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Une erreur est survenue lors de l'ajout de la commande : " + e.getMessage());
-        }
-    }
-
-    
-
-
-    // @PostMapping("/add")
+ //Marche
     // public ResponseEntity<String> ajouterCommandeAvecStocks(@RequestBody CommandeAvecStocks commandeAvecStocks) {
     //     try {
-    //         // Commande commande = commandeAvecStocks.getCommande();
+    //         Commande commande = commandeAvecStocks.getCommande();
     //         List<Stock> stocks = commandeAvecStocks.getStocks();
     //         List<Double> quantitesDemandees = commandeAvecStocks.getQuantitesDemandees();
-    //         commandeService.ajouterStocksACommande(stocks, quantitesDemandees);
+    //         commandeService.ajouterStocksACommande(commande, stocks, quantitesDemandees);
     //         return ResponseEntity.ok("Commande ajoutée avec succès.");
     //     } catch (Exception e) {
     //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
     //             .body("Une erreur est survenue lors de l'ajout de la commande : " + e.getMessage());
     //     }
     // }
+
+    
+
+
+    // @PostMapping("/ajouterStocksACommande")
+    public ResponseEntity<?> ajouterStocksACommande(@RequestBody CommandeAvecStocks commandeAvecStocks) {
+        try {
+            Commande commandes = commandeService.ajouterStocksACommande(
+                commandeAvecStocks.getCommande(),
+                commandeAvecStocks.getStocks(),
+                commandeAvecStocks.getQuantitesDemandees()
+            );
+            return ResponseEntity.ok(commandes);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la création des commandes : " + e.getMessage());
+        }
+    }
+    
     
     
           //Valider commande
