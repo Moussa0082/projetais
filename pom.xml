@@ -29,11 +29,6 @@
 			<version>2.0.2</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/com.google.zxing/core -->
-
-
-        <!-- end swagger  -->
-
 		<!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
 <dependency>
     <groupId>commons-fileupload</groupId>
@@ -41,26 +36,45 @@
     <version>1.5</version>
 </dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.5.14</version>
-		</dependency>
+<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+<dependency>
+    <groupId>org.apache.httpcomponents</groupId>
+    <artifactId>httpclient</artifactId>
+    <version>4.5.14</version>
+</dependency>
 
-		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.15.1</version>
-		</dependency>
+ <!-- firebase push notification -->
+ <dependency>
+    <groupId>com.google.firebase</groupId>
+    <artifactId>firebase-admin</artifactId>
+    <version>9.1.1</version>
+</dependency>
 
-		<!-- https://mvnrepository.com/artifact/commons-net/commons-net -->
-		<dependency>
-			<groupId>commons-net</groupId>
-			<artifactId>commons-net</artifactId>
-			<version>3.10.0</version>
-		</dependency>
+   <!-- https://mvnrepository.com/artifact/com.stripe/stripe-java -->
+   <dependency>
+	<groupId>com.stripe</groupId>
+	<artifactId>stripe-java</artifactId>
+	<version>24.24.0</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/com.google.zxing/core --><!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+
+
+<dependency>
+    <groupId>commons-io</groupId>
+    <artifactId>commons-io</artifactId>
+    <version>2.15.1</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/commons-net/commons-net -->
+<dependency>
+    <groupId>commons-net</groupId>
+    <artifactId>commons-net</artifactId>
+    <version>3.10.0</version>
+</dependency>
+
+
+        <!-- end swagger  -->
 
 		 <!-- sms api start -->
        <!-- <dependency>
@@ -78,26 +92,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-
-     <!-- https://mvnrepository.com/artifact/com.stripe/stripe-java -->
-			<dependency>
-				<groupId>com.stripe</groupId>
-				<artifactId>stripe-java</artifactId>
-				<version>24.24.0</version>
-			</dependency>
-   
-		<!-- https://mvnrepository.com/artifact/com.google.zxing/core -->
-  <dependency>
-		<groupId>com.google.zxing</groupId>
-		<artifactId>core</artifactId>
-		<version>3.5.2</version>
-		</dependency>
-
-		<dependency>
-		<groupId>com.google.zxing</groupId>
-		<artifactId>javase</artifactId>
-		<version>3.5.2</version>
 		</dependency>
 
 		<dependency>
@@ -133,7 +127,18 @@
     <artifactId>whatsapp-api-client-java</artifactId>
     <version>0.1.6</version>
 </dependency>
-
+<!-- https://mvnrepository.com/artifact/com.google.zxing/core -->
+<dependency>
+    <groupId>com.google.zxing</groupId>
+    <artifactId>core</artifactId>
+    <version>3.5.3</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/com.google.zxing/javase -->
+<dependency>
+    <groupId>com.google.zxing</groupId>
+    <artifactId>javase</artifactId>
+    <version>3.5.3</version>
+</dependency>
 <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>

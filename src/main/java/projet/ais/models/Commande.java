@@ -15,6 +15,7 @@ import jakarta.persistence.PrePersist;
 import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 
@@ -67,6 +68,7 @@ public class Commande {
     @ManyToOne
     @JoinColumn(name = "idActeur")
     // @JsonIgnore
+    // @JsonProperty
     private Acteur acteur;
 
     @ManyToOne
@@ -85,7 +87,7 @@ public class Commande {
     private List<Stock> stock;
 
     @ManyToMany
-    @JsonIgnore
+    // @JsonIgnore
     @JoinTable(name = "commande_intrant",
         joinColumns = @JoinColumn(name = "id_commande"),
         inverseJoinColumns = @JoinColumn(name = "id_intrant"))
@@ -104,8 +106,6 @@ public class Commande {
     @JsonIgnore
     private List<DetailCommande> detailCommandeList;
 
-    // public void setStocks(List<Stock> stocks) {
-    //     this.stock = stocks;
-    // }
+    public Commande() {}
 
 }

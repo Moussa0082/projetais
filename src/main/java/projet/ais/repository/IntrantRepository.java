@@ -17,8 +17,8 @@ public interface IntrantRepository extends JpaRepository<Intrant , String> {
     List<Intrant> findByIdIntrantIn(List<String> idIntrants);
 
     List<Intrant> findAllByActeurIdActeur(String idIntrant);
-    List<Intrant> findAllBySpeculationIdSpeculation(String idSpeculation);
-    List<Intrant> findAllBySpeculation_CategorieProduit_IdCategorieProduit(String idCategorieProduit);
-
+    // List<Intrant> findAllBySpeculationIdSpeculation(String idSpeculation);
+    // List<Intrant> findAllBySpeculation_CategorieProduit_IdCategorieProduit(String idCategorieProduit);
+    List<Intrant> findAllByCategorieProduit_IdCategorieProduit(String idCategorieProduit);
     Collection<Intrant> findByNomIntrant(String nomIntrant);
 }

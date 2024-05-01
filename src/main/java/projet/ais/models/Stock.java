@@ -22,8 +22,8 @@ public class Stock {
     @Column(nullable = true)
     private String nomProduit;
 
-    @Column(nullable = true)
-    private String formeProduit;
+    // @Column(nullable = true)
+    // private String formeProduit;
 
     private String dateProduction;
 
@@ -52,6 +52,9 @@ public class Stock {
 
     @Column(nullable = true)
     private String dateAjout;
+
+    @Column(nullable = true)
+    private String formeProduit;
 
     @Column(nullable = true)
     private String dateModif;
@@ -87,7 +90,9 @@ public class Stock {
     @JsonIgnore
     private List<Sortie_Stock> sortie_Stock;
 
-  
+    @ManyToOne
+    @JoinColumn(name = "idForme")
+    private Forme forme;
 
 }
 

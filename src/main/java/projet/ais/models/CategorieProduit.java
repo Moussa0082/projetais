@@ -51,6 +51,11 @@ public class CategorieProduit {
     @JoinColumn(name = "idFiliere")
     private Filiere filiere;
 
+    @OneToMany
+    (mappedBy = "categorieProduit")
+    @JsonIgnore
+    private List<Intrant> intrants;
+
     // @OneToMany
     // (mappedBy = "categorieProduit")
     // private List<Magasin> magasin;

@@ -57,10 +57,17 @@ public class Intrant {
     @Column(nullable=true)
     private String personneModif;
 
+    @Column(nullable=true)
+    private String unite;
+
     @ManyToOne
-    @JoinColumn(name = "idSpeculation")
-    private Speculation speculation;
-    
+    @JoinColumn(name = "idCategorieProduit")
+    private CategorieProduit categorieProduit;
+
+    @ManyToOne
+    @JoinColumn(name = "idForme")
+    private Forme forme;
+
     @ManyToOne
     @JoinColumn(name = "idActeur")
     private Acteur acteur;

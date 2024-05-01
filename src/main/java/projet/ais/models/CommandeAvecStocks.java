@@ -7,13 +7,16 @@ import lombok.Data;
 @Data
 public class CommandeAvecStocks {
     private  Commande commande;
+    private  Acteur acteur;
     private List<Stock> stocks;
     // private List<DetailCommande> detailsCommande;
+    private List<Intrant> intrants;
     private List<Double> quantitesDemandees;
     
-    // private List<Intrant> intrants;
     // private List<Double> quantitesStocks;
-    // private List<Double> quantitesIntrants;
+    private List<Double> quantitesIntrants;
 
     // Constructeur, getters, setters
 }
+
+

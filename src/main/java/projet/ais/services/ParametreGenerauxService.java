@@ -30,6 +30,8 @@ public class ParametreGenerauxService {
     private ParametreGenerauxRepository parametreGenerauxRepository;
         @Autowired
     IdGenerator idGenerator ;
+    @Autowired
+    FileUploade fileUploade;
     
 
      //Ajouter parametreGeneral 
@@ -45,7 +47,7 @@ public class ParametreGenerauxService {
             if (existantParamatreGeneraux == null) {
                // Vérifier si le paramètre general existe déjà
                   if (imageFile1 != null) {
-                String imageLocation = "C:\\xampp\\htdocs\\ais";
+                String imageLocation = "/ais";
                 try {
                     Path imageRootLocation = Paths.get(imageLocation);
                     if (!Files.exists(imageRootLocation)) {
@@ -55,7 +57,9 @@ public class ParametreGenerauxService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    parametreGeneraux.setLogoSysteme("ais/" + imageName);
+                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+
+                    parametreGeneraux.setLogoSysteme(imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
@@ -117,22 +121,26 @@ public class ParametreGenerauxService {
 
          ParametreGeneraux parametreGenerauxExistant = parametreGenerauxRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Paramètre général introuvable "));
         
-         if (imageFile1 != null) {
-            String imageLocation = "C:\\xampp\\htdocs\\ais";
-            try {
-                Path imageRootLocation = Paths.get(imageLocation);
-                if (!Files.exists(imageRootLocation)) {
-                    Files.createDirectories(imageRootLocation);
-                }
+         
+            // Vérifier si le paramètre general existe déjà
+               if (imageFile1 != null) {
+             String imageLocation = "/ais";
+             try {
+                 Path imageRootLocation = Paths.get(imageLocation);
+                 if (!Files.exists(imageRootLocation)) {
+                     Files.createDirectories(imageRootLocation);
+                 }
+ 
+                 String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
+                 Path imagePath = imageRootLocation.resolve(imageName);
+                 Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                 String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
 
-                String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
-                Path imagePath = imageRootLocation.resolve(imageName);
-                Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                parametreGenerauxExistant.setLogoSysteme("ais/" + imageName);
-            } catch (IOException e) {
-                throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
-            }
-        }
+                 parametreGenerauxExistant.setLogoSysteme(imageName);
+             } catch (IOException e) {
+                 throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
+             }
+         }
 
          parametreGenerauxExistant.setSigleStructure(parametreGeneraux.getSigleStructure());
          parametreGenerauxExistant.setNomStructure(parametreGeneraux.getNomStructure());

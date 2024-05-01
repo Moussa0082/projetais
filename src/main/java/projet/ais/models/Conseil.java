@@ -46,7 +46,7 @@ public class Conseil {
     
     
     @Column
-    private boolean statutConseil = false;
+    private boolean statutConseil = true;
 
 
      @ManyToOne

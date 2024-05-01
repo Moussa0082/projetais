@@ -23,8 +23,9 @@ import java.time.LocalDateTime;
 
 
 @Entity
-@Getter
-@Setter
+// @Getter
+// @Setter
+@Data
 // @AllArgsConstructor
 public class Acteur {
 
@@ -196,7 +197,10 @@ public class Acteur {
    (mappedBy = "acteur")
    @JsonIgnore
    private List<Campagne> campagnes;
-
+   
+   public Acteur(){
+    
+   }
 
 }
 

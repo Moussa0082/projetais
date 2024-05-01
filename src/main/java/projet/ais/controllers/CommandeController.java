@@ -84,14 +84,16 @@ public class CommandeController {
 
     
 
-
     // @PostMapping("/ajouterStocksACommande")
-    public ResponseEntity<?> ajouterStocksACommande(@RequestBody CommandeAvecStocks commandeAvecStocks) {
+    public ResponseEntity<?> ajouterStocksACommande(@RequestBody CommandeAvecStocks commandeAvecStocks ) {
         try {
             Commande commandes = commandeService.ajouterStocksACommande(
                 commandeAvecStocks.getCommande(),
+                commandeAvecStocks.getActeur(),
                 commandeAvecStocks.getStocks(),
-                commandeAvecStocks.getQuantitesDemandees()
+                commandeAvecStocks.getIntrants(),
+                commandeAvecStocks.getQuantitesDemandees(),
+                commandeAvecStocks.getQuantitesIntrants()
             );
             return ResponseEntity.ok(commandes);
         } catch (Exception e) {
