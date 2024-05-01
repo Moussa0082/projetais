@@ -585,7 +585,7 @@ public class ActeurService {
         List<Acteur> acteurList = acteurRepository.findAll();
 
         acteurList = acteurList
-                .stream().sorted((d1, d2) -> d2.getEmailActeur().compareTo(d1.getEmailActeur()))
+                .stream().sorted((d1, d2) -> d2.getDateAjout().compareTo(d1.getDateAjout()))
                 .collect(Collectors.toList());
         return acteurList;
     }

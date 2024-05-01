@@ -139,7 +139,7 @@ public class AlertesService {
             if (acteur != admins) {
             
             // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
-            String mes = "Bonjour une nouvelle conseil vient d'être ajouté";
+            String mes = "Bonjour une nouvelle alerte vient d'être ajouté";
                 try {
                     messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  acteur);
                 } catch (Exception e) {

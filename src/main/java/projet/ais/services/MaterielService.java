@@ -12,6 +12,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -77,9 +79,36 @@ public class MaterielService {
         LocalDateTime now = LocalDateTime.now();
         String formattedDateTime = now.format(formatter);
         materiel.setDateAjout(formattedDateTime);
-        return materielRepository.save(materiel);
+        Materiel saveMateriel = materielRepository.save(materiel);
+        sendMessageToAllActeur(saveMateriel);
+        return saveMateriel;
     }
 
+    public ResponseEntity<String> sendMessageToAllActeur(Materiel materiel) {
+        List<Acteur> allActeurs = acteurRepository.findAll();
+       
+
+        // TypeActeur transporteur = typeActeurRepository.findByLibelle("Transporteur");
+        // TypeActeur fournisseur = typeActeurRepository.findByLibelle("Fournisseur");
+        for (Acteur acteur : allActeurs) {
+            // Acteur admins = acteurRepository.findByTypeActeurLibelle("admin");
+            
+            // if (acteur != admins) {}
+            
+            // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
+            String mes = "Bonjour " + acteur.getNomActeur().toUpperCase() + " Un nouveau materiel de type location vient d'être ajouté " + " Nom : " + materiel.getNom();
+                try {
+                    messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  acteur);
+                } catch (Exception e) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur : " + e.getMessage());
+                }
+            
+        
+        }
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+    
     public Materiel updateMateriel(Materiel materiel, String id, MultipartFile imageFile) throws Exception{
         Materiel mat = materielRepository.findById(id).orElseThrow();
 
