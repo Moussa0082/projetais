@@ -109,11 +109,34 @@ public class IntrantService {
         String formattedDateTime = now.format(formatter);
         intrant.setDateAjout(formattedDateTime);
            Intrant savedIntrant = intrantRepository.save(intrant);        
-   
+           sendMessageToAllActeur(intrant);
          return savedIntrant;
    
     }
 
+    public ResponseEntity<String> sendMessageToAllActeur(Intrant intrant) {
+        List<Acteur> allActeurs = acteurRepository.findAll();
+       
+
+        // TypeActeur transporteur = typeActeurRepository.findByLibelle("Transporteur");
+        // TypeActeur fournisseur = typeActeurRepository.findByLibelle("Fournisseur");
+        for (Acteur acteur : allActeurs) {
+            // Acteur admins = acteurRepository.findByTypeActeurLibelle("admin");
+            
+            // if (acteur != admins) {}
+            
+            // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
+            String mes = "Bonjour " + acteur.getNomActeur().toUpperCase() + " Un nouveau produit de type intrant vient d'être ajouté " + " Nom : " + intrant.getNomIntrant();
+                try {
+                    messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  acteur);
+                } catch (Exception e) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur : " + e.getMessage());
+                }
+            
+        
+        }
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
 
        //Liste des intrants par acteur
     public List<Intrant> getAllIntrantByActeur(String id){
@@ -153,6 +176,8 @@ public class IntrantService {
                 .collect(Collectors.toList());
         return intrantList;
     } 
+
+   
 
     // public List<Intrant> getAllIntrantBySuperficie(String id){
     //     List<Intrant>  intrantList = intrantRepository.findBySuperficieIdSuperficie(id);
@@ -201,6 +226,7 @@ public class IntrantService {
             it.setDescriptionIntrant(intrant.getDescriptionIntrant());
             it.setPrixIntrant(intrant.getPrixIntrant());
             it.setDateExpiration(intrant.getDateExpiration());
+            it.setUnite(intrant.getUnite());
             String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         LocalDateTime now = LocalDateTime.now();
