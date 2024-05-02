@@ -19,6 +19,7 @@ import projet.ais.models.Magasin;
 import projet.ais.models.Materiel;
 import projet.ais.models.Stock;
 import projet.ais.models.TypeActeur;
+import projet.ais.models.Unite;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.AlerteRepository;
 import projet.ais.repository.CommandeRepository;
@@ -107,7 +108,7 @@ public class CommandeService {
             // double quantiteDemandee = quantitesDemandees.get(i);
             double quantiteDemandee = quantitesDemandees.orElse(Collections.emptyList()).get(i);
         // Vérifier si la quantité est égale à 1 ou si la quantité demandée est supérieure à celle restante
-        if (quantiteDemandee == 1 || quantiteDemandee >= stock.getQuantiteStock()) {
+        if (quantiteDemandee >= stock.getQuantiteStock()) {
             throw new Exception("La quantité rentant pour le produit " + stock.getNomProduit() + "est insuffisant");
         }
     }
@@ -116,7 +117,7 @@ public class CommandeService {
         // double quantiteInt = quantitesIntrants.get(i);
         double quantiteInt = quantitesIntrants.orElse(Collections.emptyList()).get(i);
         
-        if (quantiteInt == 1 || quantiteInt >= intrant.getQuantiteIntrant()) {
+        if ( quantiteInt >= intrant.getQuantiteIntrant()) {
             throw new Exception("La quantité restant pour l'intrant " + intrant.getNomIntrant() + "est insuffisant");
         }
     }
@@ -127,11 +128,11 @@ public class CommandeService {
     commande.setDateCommande(formattedDateTime);
     commande.setStatutCommande(true);
     commande.setActeur(acteur);
-    Acteur acteurProprietaire = null;
-    if (!stockss.isEmpty()) {
-        acteurProprietaire = stockss.get(0).getActeur();
-    } else if (!intrantss.isEmpty()) {
-        acteurProprietaire = intrantss.get(0).getActeur();
+    Acteur acteurProprietaire = new Acteur();
+    if (!stocksFound.isEmpty()) {
+        acteurProprietaire = stocksFound.get(0).getActeur();
+    } else if (!intrantsFound.isEmpty()) {
+        acteurProprietaire = intrantsFound.get(0).getActeur();
     }
     
     // Utiliser l'acteur propriétaire trouvé pour définir l'acteur de la commande
@@ -245,7 +246,49 @@ public class CommandeService {
     }
 
     return savedCommande;
+   }
+
+
+    
+   public void confirmerCommande(String idDetailCommande, double quantiteLivree) throws Exception {
+    // Rechercher le détail de la commande par l'ID
+    Optional<DetailCommande> optionalDetailCommande = detailCommandeRepository.findById(idDetailCommande);
+
+    if (optionalDetailCommande.isPresent()) {
+        DetailCommande detailCommande = optionalDetailCommande.get();
+
+        // Mettre à jour la quantité livrée
+        double quantiteNonLivree = detailCommande.getQuantiteDemande() - quantiteLivree;
+        if (quantiteNonLivree < 0) {
+            throw new Exception("La quantité livrée ne peut dépasser la quantité demandée");
+        }
+
+        detailCommande.setQuantiteLivree(quantiteLivree);
+        detailCommande.setQuantiteNonLivree(quantiteNonLivree);
+
+        // Enregistrer les modifications dans la base de données
+        detailCommandeRepository.save(detailCommande);
+
+        // Récupérer tous les détails de commande liés à la même commande
+        List<DetailCommande> allDetailsForCommande = detailCommandeRepository.findByCommandeIdCommande(detailCommande.getCommande().getIdCommande());
+
+        // Vérifier si la somme des quantités livrées pour tous les détails de commande est égale à la quantité demandée
+        double quantiteTotaleLivree = allDetailsForCommande.stream().mapToDouble(DetailCommande::getQuantiteLivree).sum();
+        double quantiteDemandee = allDetailsForCommande.stream().mapToDouble(DetailCommande::getQuantiteDemande).sum();
+
+        if (quantiteTotaleLivree == quantiteDemandee) {
+            // Mettre à jour le statut de la commande à "confirmé"
+            Commande commande = detailCommande.getCommande();
+            commande.setStatutCommandeLivrer(true);
+            commandeRepository.save(commande);
+        }
+    } else {
+        // Lever une exception si le détail de la commande n'est pas trouvé
+        throw new Exception("Détail de la commande non trouvé");
+    }
 }
+
+
 
 
     
@@ -491,6 +534,21 @@ public ResponseEntity<String> confirmerLivraisonVendeur(String id, Map<String, D
 
 
 
+      public List<Commande> getAllCommandes(){
+        List<Commande> commandeList = commandeRepository.findAll();
+
+        if(commandeList.isEmpty())
+             throw new EntityNotFoundException("Liste commande vide");
+
+             commandeList = commandeList
+        .stream().sorted((u1,u2) -> u2.getDateCommande().compareTo(u1.getDateCommande()))
+        .collect(Collectors.toList());
+
+        return commandeList;
+    }
+
+
+
     public String confirmerCommande(String idCommande) throws Exception {
 
         Commande commande = commandeRepository.findByIdCommande(idCommande);
@@ -512,6 +570,15 @@ public ResponseEntity<String> confirmerLivraisonVendeur(String id, Map<String, D
     public List<Commande> getAllCommandeByActeur(String idActeur) {
         // Récupérer tout les commandes de l'utilisateur depuis la base de données
         List<Commande> commande = commandeRepository.findByActeurIdActeur(idActeur);
+
+        commande.sort(Comparator.comparing(Commande::getDateCommande).reversed());
+
+        return commande;
+    }
+
+    public List<Commande> getAllCommandeByActeurProprietaire(String acteurProprietaire) {
+        // Récupérer tout les commandes de l'acteur proprietaire depuis la base de données
+        List<Commande> commande = commandeRepository.findByActeurProprietaireIdActeur(acteurProprietaire);
 
         commande.sort(Comparator.comparing(Commande::getDateCommande).reversed());
 

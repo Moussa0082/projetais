@@ -184,7 +184,7 @@ public class Acteur {
 
    @OneToMany
    (mappedBy = "acteur")
-//    @JsonIgnore
+   @JsonIgnore
    private List<Commande> commandeList;
 
 

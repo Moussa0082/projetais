@@ -123,6 +123,16 @@ return ResponseEntity.status(HttpStatus.OK).body("Commande passer avec succes");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la confirmation de la livraison des produits : " + e.getMessage());
         }
     }
+
+    @PutMapping("/confirmerLivraison/{idDetailCommande}/{quantiteLivree}")
+    public ResponseEntity<?> confirmerLivrasonProduit(@PathVariable String idDetailCommande, @PathVariable double quantiteLivree) {
+    try {
+        commandeService.confirmerCommande(idDetailCommande, quantiteLivree);
+        return ResponseEntity.ok("Commande confirmée avec succès pour le produit : " + idDetailCommande);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la confirmation de la commande pour le produit : " + e.getMessage());
+    }
+}
      
 
     @PostMapping("/confirmerCommande/{idCommande}")
@@ -136,10 +146,22 @@ return ResponseEntity.status(HttpStatus.OK).body("Commande passer avec succes");
         }
     }
 
-    @GetMapping("/getAllCommande/{idActeur}")
+    @GetMapping("/getAllCommandeByActeur/{idActeur}")
     @Operation(summary="Liste des commandes d'un acteur celui qui a commandé")
-    public ResponseEntity<List<Commande>> list(@PathVariable String idActeur) {
+    public ResponseEntity<List<Commande>> listByActeur(@PathVariable String idActeur) {
         return new ResponseEntity<>(commandeService.getAllCommandeByActeur(idActeur), HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllCommandeByActeurProprietaire/{acteurProprietaire}")
+    @Operation(summary="Liste des commandes d'un acteur celui qui a commandé")
+    public ResponseEntity<List<Commande>> getAllCommandeByActeurProprietaire(@PathVariable String acteurProprietaire) {
+        return new ResponseEntity<>(commandeService.getAllCommandeByActeurProprietaire(acteurProprietaire), HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllCommande")
+    @Operation(summary="Liste des commandes d'un acteur celui qui à qui appartient les stock comandés")
+    public ResponseEntity<List<Commande>> getAllCommandes() {
+        return new ResponseEntity<>(commandeService.getAllCommandes(), HttpStatus.OK);
     }
 
     @GetMapping("/readByActeur/{id}")

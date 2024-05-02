@@ -70,10 +70,6 @@ public class Magasin {
     @JsonIgnore
     private List<Stock> stockList;
 
-    @OneToMany
-    (mappedBy = "magasin")
-    // @JsonIgnore
-    private List<Commande> commande;
 
     // @ManyToOne
     // @JoinColumn(name = "idCategorieProduit")

@@ -143,10 +143,9 @@ public class StockService {
             String qrCodeData = generateQRCodeData(stock);
         String qrCodeImageName = generateQRCodeImage(qrCodeData);
 
-        stock.setCodeStock(qrCodeImageName);
+        stock.setIdStock(idCode);
+        stock.setCodeStock(codes);
 
-            // stock.setCodeStock(codes);
-            stock.setIdStock(idCode);
              
             
             String pattern = "yyyy-MM-dd HH:mm";
@@ -277,7 +276,7 @@ private String generateQRCodeImage(String qrCodeData) {
             
             // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
             String mes = "Bonjour M. " + acteur.getNomActeur() + " M. " +  ac.getNomActeur() + " habitant à " + ac.getAdresseActeur() + " vient d'ajouter un produit au stock: " 
-                + stock.getNomProduit() + "\n\n Lien vers le produit est : " + stock.getPhoto();
+                + stock.getNomProduit() + "\n \n Lien vers le produit est : " + "https://koumi.ml/api-koumi/Stock/"+stock.getIdStock()+"/image";
                 try {
                     Alerte alerte = new Alerte(acteur.getEmailActeur(), mes, "Nouveau produit");
                     emailService.sendSimpleMail(alerte);
