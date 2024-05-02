@@ -285,8 +285,8 @@ List<Stock> stocksFound = stockRepository.findByIdStockIn(
             al.setDateAjout(formattedDateTime);
             al.setActeur(proprietaire);
             alerteRepository.save(al);
-            // emailService.sendSimpleMail(al);
-            // messageService.sendMessageAndSave(proprietaire.getWhatsAppActeur(),message, proprietaire);
+            emailService.sendSimpleMail(al);
+            messageService.sendMessageAndSave(proprietaire.getWhatsAppActeur(),message, proprietaire);
         } else {
             System.out.println("Adresse e-mail introuvable pour le propriétaire du stock : " + proprietaire);
         }
@@ -305,8 +305,8 @@ List<Stock> stocksFound = stockRepository.findByIdStockIn(
             al.setDateAjout(formattedDateTime);
             al.setActeur(proprietaire);
             alerteRepository.save(al);
-            // emailService.sendSimpleMail(al);
-            // messageService.sendMessageAndSave(proprietaire.getWhatsAppActeur(),message, proprietaire);
+            emailService.sendSimpleMail(al);
+            messageService.sendMessageAndSave(proprietaire.getWhatsAppActeur(),message, proprietaire);
         } else {
             System.out.println("Adresse e-mail introuvable pour le propriétaire du stock : " + proprietaire);
         }
