@@ -179,14 +179,25 @@ public class CommandeService {
 
 
 
-    public Commande ajouterStocksACommande(Commande commande ,Acteur acteur,List<Stock> stocks, List<Intrant> intrants, List<Double> quantitesDemandees, List<Double> quantitesIntrants) throws Exception {
+    public Commande ajouterStocksACommande(Acteur acteur, Optional<List<Stock>> stocks, Optional<List<Intrant>> intrants, Optional<List<Double>>  quantitesDemandees, Optional<List<Double>>  quantitesIntrants) throws Exception {
+    
+        Commande commande = new Commande();
+
+        // Récupération des stocks correspondant aux identifiants fournis
+
+    // Extraire les listes des Optionals
+    List<Stock> stockss = stocks.orElse(Collections.emptyList());
+    List<Intrant> intrantss = intrants.orElse(Collections.emptyList());
+
     // Récupération des stocks correspondant aux identifiants fournis
-    List<Stock> stocksFound = stockRepository.findByIdStockIn(
-        stocks.stream().map(Stock::getIdStock).collect(Collectors.toList())
-    );
-    // Récupération des intrant correspondant aux identifiants fournis
+List<Stock> stocksFound = stockRepository.findByIdStockIn(
+    stocks.map(stockList -> stockList.stream().map(Stock::getIdStock).collect(Collectors.toList())).orElse(Collections.emptyList())
+);
+
+
+    // Récupération des intrants correspondant aux identifiants fournis
     List<Intrant> intrantsFound = intrantRepository.findByIdIntrantIn(
-        intrants.stream().map(Intrant::getIdIntrant).collect(Collectors.toList())
+        intrants.map(intrantList -> intrantList.stream().map(Intrant::getIdIntrant).collect(Collectors.toList())).orElse(Collections.emptyList())
     );
     
 
@@ -203,7 +214,9 @@ public class CommandeService {
     // Enregistrement des détails de la commande pour chaque produit
     for (int i = 0; i < stocksFound.size(); i++) {
         Stock stock = stocksFound.get(i);
-        double quantiteDemandee = quantitesDemandees.get(i);
+        // double quantiteDemandee = quantitesDemandees.get(i);
+        double quantiteDemandee = quantitesDemandees.orElse(Collections.emptyList()).get(i);
+
 
         // Création d'une nouvelle instance de DetailCommande
         DetailCommande detailCommande = new DetailCommande();
@@ -230,7 +243,9 @@ public class CommandeService {
     // Enregistrement des détails de la commande pour chaque intrant
     for (int i = 0; i < intrantsFound.size(); i++) {
         Intrant intrant = intrantsFound.get(i);
-        double quantiteInt = quantitesIntrants.get(i);
+        // double quantiteInt = quantitesIntrants.get(i);
+        double quantiteInt = quantitesIntrants.orElse(Collections.emptyList()).get(i);
+
 
         // Création d'une nouvelle instance de DetailCommande
         DetailCommande detailCommande = new DetailCommande();
@@ -270,8 +285,28 @@ public class CommandeService {
             al.setDateAjout(formattedDateTime);
             al.setActeur(proprietaire);
             alerteRepository.save(al);
-            emailService.sendSimpleMail(al);
-            messageService.sendMessageAndSave(proprietaire.getWhatsAppActeur(),message, proprietaire);
+            // emailService.sendSimpleMail(al);
+            // messageService.sendMessageAndSave(proprietaire.getWhatsAppActeur(),message, proprietaire);
+        } else {
+            System.out.println("Adresse e-mail introuvable pour le propriétaire du stock : " + proprietaire);
+        }
+    }
+    for (Intrant intrant : intrantsFound) {
+        Acteur proprietaire = intrant.getActeur();
+        String message = "Une commande a été  passé par " + savedCommande.getActeur().getNomActeur() + " code commande " + savedCommande.getCodeCommande().toUpperCase() + "rendez vous sur l'appli Koumi pour voir les details et confirmer la commande";
+        // String message = "Les produits suivants ont été commandés par " + savedCommande.getActeur().getNomActeur() + " :\n" +
+        //                  "- " + stock.getNomProduit() + " : quantités " + savedDetailCommande.getQuantiteDemande() + "\n" +
+        //                  "Veuillez lui livrer sa commande dans les plus brefs délais";
+        System.out.println( "Message : " + message);
+        // Envoi d'un e-mail uniquement si le propriétaire a une adresse e-mail
+        if (proprietaire != null && proprietaire.getEmailActeur() != null) {
+            Alerte al = new Alerte(proprietaire.getEmailActeur(), message, "Nouvelle commande de produits");
+            al.setId(idGenerator.genererCode());
+            al.setDateAjout(formattedDateTime);
+            al.setActeur(proprietaire);
+            alerteRepository.save(al);
+            // emailService.sendSimpleMail(al);
+            // messageService.sendMessageAndSave(proprietaire.getWhatsAppActeur(),message, proprietaire);
         } else {
             System.out.println("Adresse e-mail introuvable pour le propriétaire du stock : " + proprietaire);
         }
@@ -753,4 +788,5 @@ public ResponseEntity<String> confirmerLivraisonVendeur(String id, Map<String, D
             commandeList.sort(Comparator.comparing(Commande::getDateCommande).reversed());
         return commandeList;
     }
+
 }

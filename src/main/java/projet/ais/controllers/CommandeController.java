@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import projet.ais.models.Commande;
 import projet.ais.models.CommandeAvecStocks;
 import projet.ais.models.DetailCommande;
+import projet.ais.models.Intrant;
 import projet.ais.models.Stock;
 import projet.ais.services.CommandeService;
 
@@ -39,18 +40,17 @@ public class CommandeController {
     private CommandeService commandeService;
 
 
-    @PostMapping("/add")
     // public ResponseEntity<Commande> passerCommande(@RequestBody CommandeAvecStocks commandeRequest) {
-    //     try {
-    //         List<Stock> stocks = commandeRequest.getStocks();
-    //         Commande commande = commandeRequest.getCommande();
-    //         List<Double> quantitesDemandees = commandeRequest.getQuantitesDemandees();
-    //         Commande commandes = commandeService.ajouterStocksACommande(commande,stocks, quantitesDemandees);
-    //         return new ResponseEntity<>(commandes, HttpStatus.OK);
-    //     } catch (Exception e) {
-    //         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    //     }
-    // }
+        //     try {
+            //         List<Stock> stocks = commandeRequest.getStocks();
+            //         Commande commande = commandeRequest.getCommande();
+            //         List<Double> quantitesDemandees = commandeRequest.getQuantitesDemandees();
+            //         Commande commandes = commandeService.ajouterStocksACommande(commande,stocks, quantitesDemandees);
+            //         return new ResponseEntity<>(commandes, HttpStatus.OK);
+            //     } catch (Exception e) {
+                //         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                //     }
+                // }
     // public List<Commande> passerCommande(@RequestBody CommandeAvecStocks commandeRequest) {
     //     try {
     //         return commandeService.ajouterStocksEtIntrantsACommandes(
@@ -65,14 +65,14 @@ public class CommandeController {
     //         return Collections.emptyList();
     //     }
     // }
-
+    
 
 
  //Marche
     // public ResponseEntity<String> ajouterCommandeAvecStocks(@RequestBody CommandeAvecStocks commandeAvecStocks) {
     //     try {
-    //         Commande commande = commandeAvecStocks.getCommande();
-    //         List<Stock> stocks = commandeAvecStocks.getStocks();
+        //         Commande commande = commandeAvecStocks.getCommande();
+        //         List<Stock> stocks = commandeAvecStocks.getStocks();
     //         List<Double> quantitesDemandees = commandeAvecStocks.getQuantitesDemandees();
     //         commandeService.ajouterStocksACommande(commande, stocks, quantitesDemandees);
     //         return ResponseEntity.ok("Commande ajoutée avec succès.");
@@ -81,21 +81,29 @@ public class CommandeController {
     //             .body("Une erreur est survenue lors de l'ajout de la commande : " + e.getMessage());
     //     }
     // }
-
     
-
+    
+    
     // @PostMapping("/ajouterStocksACommande")
+    @PostMapping("/add")
     public ResponseEntity<?> ajouterStocksACommande(@RequestBody CommandeAvecStocks commandeAvecStocks ) {
         try {
-            Commande commandes = commandeService.ajouterStocksACommande(
-                commandeAvecStocks.getCommande(),
-                commandeAvecStocks.getActeur(),
-                commandeAvecStocks.getStocks(),
-                commandeAvecStocks.getIntrants(),
-                commandeAvecStocks.getQuantitesDemandees(),
-                commandeAvecStocks.getQuantitesIntrants()
-            );
-            return ResponseEntity.ok(commandes);
+            // Envelopper les listes dans des objets Optional
+Optional<List<Stock>> optionalStocks = Optional.ofNullable(commandeAvecStocks.getStocks());
+Optional<List<Intrant>> optionalIntrants = Optional.ofNullable(commandeAvecStocks.getIntrants());
+Optional<List<Double>> optionalQuantitesDemandees = Optional.ofNullable(commandeAvecStocks.getQuantitesDemandees());
+Optional<List<Double>> optionalQuantitesIntrants = Optional.ofNullable(commandeAvecStocks.getQuantitesIntrants());
+
+// Appeler la méthode ajouterStocksACommande en passant les objets Optional
+commandeService.ajouterStocksACommande(
+    commandeAvecStocks.getActeur(),
+    optionalStocks,
+    optionalIntrants,
+    optionalQuantitesDemandees,
+    optionalQuantitesIntrants
+);
+          
+return ResponseEntity.status(HttpStatus.OK).body("Commande passer avec succes");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la création des commandes : " + e.getMessage());
         }
@@ -103,13 +111,13 @@ public class CommandeController {
     
     
     
-          //Valider commande
-            @PutMapping("/{id}/enable")
-            public ResponseEntity<String> enableCommande(@PathVariable("id") String id) {
-                try {
-                    return commandeService.enableCommande(id);
-                } catch (Exception e) {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    //Valider commande
+    @PutMapping("/{id}/enable")
+    public ResponseEntity<String> enableCommande(@PathVariable("id") String id) {
+        try {
+            return commandeService.enableCommande(id);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body("Une erreur est survenue lors de la validation de la commande : " + e.getMessage());
                 }
             }
