@@ -72,6 +72,12 @@ public class Commande {
     private Acteur acteur;
 
     @ManyToOne
+    @JoinColumn(name = "acteurProprietaire")
+    // @JsonIgnore
+    // @JsonProperty
+    private Acteur acteurProprietaire;
+
+    @ManyToOne
     @JoinColumn(name = "idMagasin")
     // @JsonIgnore
     private Magasin magasin;

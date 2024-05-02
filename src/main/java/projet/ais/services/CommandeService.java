@@ -183,16 +183,14 @@ public class CommandeService {
     
         Commande commande = new Commande();
 
-        // Récupération des stocks correspondant aux identifiants fournis
-
     // Extraire les listes des Optionals
     List<Stock> stockss = stocks.orElse(Collections.emptyList());
     List<Intrant> intrantss = intrants.orElse(Collections.emptyList());
 
     // Récupération des stocks correspondant aux identifiants fournis
-List<Stock> stocksFound = stockRepository.findByIdStockIn(
-    stocks.map(stockList -> stockList.stream().map(Stock::getIdStock).collect(Collectors.toList())).orElse(Collections.emptyList())
-);
+    List<Stock> stocksFound = stockRepository.findByIdStockIn(
+        stocks.map(stockList -> stockList.stream().map(Stock::getIdStock).collect(Collectors.toList())).orElse(Collections.emptyList())
+    );
 
 
     // Récupération des intrants correspondant aux identifiants fournis
@@ -204,20 +202,55 @@ List<Stock> stocksFound = stockRepository.findByIdStockIn(
     // Date et heure actuelles formatées
     String formattedDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
+        for (int i = 0; i < stocksFound.size(); i++) {
+            Stock stock = stocksFound.get(i);
+            // double quantiteDemandee = quantitesDemandees.get(i);
+            double quantiteDemandee = quantitesDemandees.orElse(Collections.emptyList()).get(i);
+        // Vérifier si la quantité est égale à 1 ou si la quantité demandée est supérieure à celle restante
+        if (quantiteDemandee == 1 || quantiteDemandee >= stock.getQuantiteStock()) {
+            throw new Exception("La quantité rentant pour le produit " + stock.getNomProduit() + "est insuffisant");
+        }
+    }
+    for (int i = 0; i < intrantsFound.size(); i++) {
+        Intrant intrant = intrantsFound.get(i);
+        // double quantiteInt = quantitesIntrants.get(i);
+        double quantiteInt = quantitesIntrants.orElse(Collections.emptyList()).get(i);
+        
+        if (quantiteInt == 1 || quantiteInt >= intrant.getQuantiteIntrant()) {
+            throw new Exception("La quantité restant pour l'intrant " + intrant.getNomIntrant() + "est insuffisant");
+        }
+    }
+
     // Mise à jour des informations de la commande
     commande.setIdCommande(idGenerator.genererCode());
     commande.setCodeCommande(codeGenerator.genererCode());
     commande.setDateCommande(formattedDateTime);
     commande.setStatutCommande(true);
     commande.setActeur(acteur);
-    Commande savedCommande = commandeRepository.save(commande);
-    // Enregistrement des détails de la commande pour chaque produit
+    Acteur acteurProprietaire = null;
+    if (!stockss.isEmpty()) {
+        acteurProprietaire = stockss.get(0).getActeur();
+    } else if (!intrantss.isEmpty()) {
+        acteurProprietaire = intrantss.get(0).getActeur();
+    }
+    
+    // Utiliser l'acteur propriétaire trouvé pour définir l'acteur de la commande
+    if (acteurProprietaire != null) {
+    commande.setActeurProprietaire(acteurProprietaire);
+    } else {
+        // Si aucun acteur propriétaire n'est trouvé, utilisez l'acteur passé en paramètre
+        System.out.println("aucun acteur trouver");
+    }
+   Commande savedCommande = commandeRepository.save(commande);
+   // Enregistrement des détails de la commande pour chaque produit
+   // Récupérer l'acteur propriétaire à partir des stocks ou des intrants
     for (int i = 0; i < stocksFound.size(); i++) {
         Stock stock = stocksFound.get(i);
         // double quantiteDemandee = quantitesDemandees.get(i);
         double quantiteDemandee = quantitesDemandees.orElse(Collections.emptyList()).get(i);
+  
 
-
+   
         // Création d'une nouvelle instance de DetailCommande
         DetailCommande detailCommande = new DetailCommande();
         detailCommande.setIdDetailCommande(idGenerator.genererCode());
@@ -245,8 +278,7 @@ List<Stock> stocksFound = stockRepository.findByIdStockIn(
         Intrant intrant = intrantsFound.get(i);
         // double quantiteInt = quantitesIntrants.get(i);
         double quantiteInt = quantitesIntrants.orElse(Collections.emptyList()).get(i);
-
-
+       
         // Création d'une nouvelle instance de DetailCommande
         DetailCommande detailCommande = new DetailCommande();
         detailCommande.setIdDetailCommande(idGenerator.genererCode());

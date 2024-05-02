@@ -179,7 +179,7 @@ return ResponseEntity.status(HttpStatus.OK).body("Commande passer avec succes");
         }
     }
 
-    @GetMapping("/getAllCommande/{id}")
+    @GetMapping("/getAllCommande/{idActeur}")
     @Operation(summary="Liste des commandes d'un acteur")
     public ResponseEntity<List<Commande>> list(@PathVariable String idActeur) {
         return new ResponseEntity<>(commandeService.getAllCommandeByActeur(idActeur), HttpStatus.OK);
