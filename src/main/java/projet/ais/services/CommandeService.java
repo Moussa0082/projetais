@@ -19,6 +19,7 @@ import projet.ais.models.Magasin;
 import projet.ais.models.Materiel;
 import projet.ais.models.Stock;
 import projet.ais.models.TypeActeur;
+import projet.ais.models.Unite;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.AlerteRepository;
 import projet.ais.repository.CommandeRepository;
@@ -107,7 +108,7 @@ public class CommandeService {
             // double quantiteDemandee = quantitesDemandees.get(i);
             double quantiteDemandee = quantitesDemandees.orElse(Collections.emptyList()).get(i);
         // Vérifier si la quantité est égale à 1 ou si la quantité demandée est supérieure à celle restante
-        if (quantiteDemandee == 1 || quantiteDemandee >= stock.getQuantiteStock()) {
+        if (quantiteDemandee >= stock.getQuantiteStock()) {
             throw new Exception("La quantité rentant pour le produit " + stock.getNomProduit() + "est insuffisant");
         }
     }
@@ -116,7 +117,7 @@ public class CommandeService {
         // double quantiteInt = quantitesIntrants.get(i);
         double quantiteInt = quantitesIntrants.orElse(Collections.emptyList()).get(i);
         
-        if (quantiteInt == 1 || quantiteInt >= intrant.getQuantiteIntrant()) {
+        if ( quantiteInt >= intrant.getQuantiteIntrant()) {
             throw new Exception("La quantité restant pour l'intrant " + intrant.getNomIntrant() + "est insuffisant");
         }
     }
@@ -127,11 +128,11 @@ public class CommandeService {
     commande.setDateCommande(formattedDateTime);
     commande.setStatutCommande(true);
     commande.setActeur(acteur);
-    Acteur acteurProprietaire = null;
-    if (!stockss.isEmpty()) {
-        acteurProprietaire = stockss.get(0).getActeur();
-    } else if (!intrantss.isEmpty()) {
-        acteurProprietaire = intrantss.get(0).getActeur();
+    Acteur acteurProprietaire = new Acteur();
+    if (!stocksFound.isEmpty()) {
+        acteurProprietaire = stocksFound.get(0).getActeur();
+    } else if (!intrantsFound.isEmpty()) {
+        acteurProprietaire = intrantsFound.get(0).getActeur();
     }
     
     // Utiliser l'acteur propriétaire trouvé pour définir l'acteur de la commande
@@ -217,8 +218,8 @@ public class CommandeService {
             al.setDateAjout(formattedDateTime);
             al.setActeur(proprietaire);
             alerteRepository.save(al);
-            emailService.sendSimpleMail(al);
-            messageService.sendMessageAndSave(proprietaire.getWhatsAppActeur(),message, proprietaire);
+            // emailService.sendSimpleMail(al);
+            // messageService.sendMessageAndSave(proprietaire.getWhatsAppActeur(),message, proprietaire);
         } else {
             System.out.println("Adresse e-mail introuvable pour le propriétaire du stock : " + proprietaire);
         }
@@ -237,15 +238,15 @@ public class CommandeService {
             al.setDateAjout(formattedDateTime);
             al.setActeur(proprietaire);
             alerteRepository.save(al);
-            emailService.sendSimpleMail(al);
-            messageService.sendMessageAndSave(proprietaire.getWhatsAppActeur(),message, proprietaire);
+            // emailService.sendSimpleMail(al);
+            // messageService.sendMessageAndSave(proprietaire.getWhatsAppActeur(),message, proprietaire);
         } else {
             System.out.println("Adresse e-mail introuvable pour le propriétaire du stock : " + proprietaire);
         }
     }
 
     return savedCommande;
-}
+   }
 
 
     
@@ -491,6 +492,21 @@ public ResponseEntity<String> confirmerLivraisonVendeur(String id, Map<String, D
 
 
 
+      public List<Commande> getAllCommandes(){
+        List<Commande> commandeList = commandeRepository.findAll();
+
+        if(commandeList.isEmpty())
+             throw new EntityNotFoundException("Liste commande vide");
+
+             commandeList = commandeList
+        .stream().sorted((u1,u2) -> u2.getDateCommande().compareTo(u1.getDateCommande()))
+        .collect(Collectors.toList());
+
+        return commandeList;
+    }
+
+
+
     public String confirmerCommande(String idCommande) throws Exception {
 
         Commande commande = commandeRepository.findByIdCommande(idCommande);
@@ -512,6 +528,15 @@ public ResponseEntity<String> confirmerLivraisonVendeur(String id, Map<String, D
     public List<Commande> getAllCommandeByActeur(String idActeur) {
         // Récupérer tout les commandes de l'utilisateur depuis la base de données
         List<Commande> commande = commandeRepository.findByActeurIdActeur(idActeur);
+
+        commande.sort(Comparator.comparing(Commande::getDateCommande).reversed());
+
+        return commande;
+    }
+
+    public List<Commande> getAllCommandeByActeurProprietaire(String acteurProprietaire) {
+        // Récupérer tout les commandes de l'acteur proprietaire depuis la base de données
+        List<Commande> commande = commandeRepository.findByActeurProprietaireIdActeur(acteurProprietaire);
 
         commande.sort(Comparator.comparing(Commande::getDateCommande).reversed());
 

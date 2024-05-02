@@ -12,6 +12,7 @@ public interface CommandeRepository extends JpaRepository<Commande,String>{
 
          Commande findByIdCommande(String idCommande);
         List<Commande> findByActeurIdActeur(String idActeur);
+        List<Commande> findByActeurProprietaireIdActeur(String acteurProprietaire);
 
     
 }

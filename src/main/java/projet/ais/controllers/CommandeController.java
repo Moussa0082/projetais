@@ -136,10 +136,22 @@ return ResponseEntity.status(HttpStatus.OK).body("Commande passer avec succes");
         }
     }
 
-    @GetMapping("/getAllCommande/{idActeur}")
+    @GetMapping("/getAllCommandeByActeur/{idActeur}")
     @Operation(summary="Liste des commandes d'un acteur celui qui a commandé")
-    public ResponseEntity<List<Commande>> list(@PathVariable String idActeur) {
+    public ResponseEntity<List<Commande>> listByActeur(@PathVariable String idActeur) {
         return new ResponseEntity<>(commandeService.getAllCommandeByActeur(idActeur), HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllCommandeByActeurProprietaire/{acteurProprietaire}")
+    @Operation(summary="Liste des commandes d'un acteur celui qui a commandé")
+    public ResponseEntity<List<Commande>> getAllCommandeByActeurProprietaire(@PathVariable String acteurProprietaire) {
+        return new ResponseEntity<>(commandeService.getAllCommandeByActeurProprietaire(acteurProprietaire), HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllCommande")
+    @Operation(summary="Liste des commandes d'un acteur celui qui à qui appartient les stock comandés")
+    public ResponseEntity<List<Commande>> getAllCommandes() {
+        return new ResponseEntity<>(commandeService.getAllCommandes(), HttpStatus.OK);
     }
 
     @GetMapping("/readByActeur/{id}")
