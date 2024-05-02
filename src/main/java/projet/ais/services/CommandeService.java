@@ -250,6 +250,48 @@ public class CommandeService {
 
 
     
+   public void confirmerCommande(String idDetailCommande, double quantiteLivree) throws Exception {
+    // Rechercher le détail de la commande par l'ID
+    Optional<DetailCommande> optionalDetailCommande = detailCommandeRepository.findById(idDetailCommande);
+
+    if (optionalDetailCommande.isPresent()) {
+        DetailCommande detailCommande = optionalDetailCommande.get();
+
+        // Mettre à jour la quantité livrée
+        double quantiteNonLivree = detailCommande.getQuantiteDemande() - quantiteLivree;
+        if (quantiteNonLivree < 0) {
+            throw new Exception("La quantité livrée ne peut dépasser la quantité demandée");
+        }
+
+        detailCommande.setQuantiteLivree(quantiteLivree);
+        detailCommande.setQuantiteNonLivree(quantiteNonLivree);
+
+        // Enregistrer les modifications dans la base de données
+        detailCommandeRepository.save(detailCommande);
+
+        // Récupérer tous les détails de commande liés à la même commande
+        List<DetailCommande> allDetailsForCommande = detailCommandeRepository.findByCommandeIdCommande(detailCommande.getCommande().getIdCommande());
+
+        // Vérifier si la somme des quantités livrées pour tous les détails de commande est égale à la quantité demandée
+        double quantiteTotaleLivree = allDetailsForCommande.stream().mapToDouble(DetailCommande::getQuantiteLivree).sum();
+        double quantiteDemandee = allDetailsForCommande.stream().mapToDouble(DetailCommande::getQuantiteDemande).sum();
+
+        if (quantiteTotaleLivree == quantiteDemandee) {
+            // Mettre à jour le statut de la commande à "confirmé"
+            Commande commande = detailCommande.getCommande();
+            commande.setStatutCommandeLivrer(true);
+            commandeRepository.save(commande);
+        }
+    } else {
+        // Lever une exception si le détail de la commande n'est pas trouvé
+        throw new Exception("Détail de la commande non trouvé");
+    }
+}
+
+
+
+
+    
     
    
    // validé une commande en tant qu'acheteur

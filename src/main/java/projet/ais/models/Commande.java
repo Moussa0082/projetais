@@ -77,34 +77,27 @@ public class Commande {
     // @JsonProperty
     private Acteur acteurProprietaire;
 
-    @ManyToOne
-    @JoinColumn(name = "idMagasin")
-    // @JsonIgnore
-    private Magasin magasin;
 
     @Column(nullable = true)
     private String personneModif;
 
     @ManyToMany
-    // @JsonIgnore
     @JoinTable(name = "commande_stock",
-        joinColumns = @JoinColumn(name = "id_commande"),
-        inverseJoinColumns = @JoinColumn(name = "id_stock"))
+    joinColumns = @JoinColumn(name = "id_commande"),
+    inverseJoinColumns = @JoinColumn(name = "id_stock"))
+    @JsonIgnore
     private List<Stock> stock;
 
     @ManyToMany
-    // @JsonIgnore
     @JoinTable(name = "commande_intrant",
         joinColumns = @JoinColumn(name = "id_commande"),
         inverseJoinColumns = @JoinColumn(name = "id_intrant"))
-    private List<Intrant> intrant; 
-
-
-
-     
+        @JsonIgnore
+    private List<Intrant> intrant;
 
     
     @ManyToMany(cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Materiel> materielList;
 
     @OneToMany

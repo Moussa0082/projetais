@@ -11,6 +11,7 @@ import projet.ais.models.Stock;
 public interface DetailCommandeRepository extends JpaRepository<DetailCommande,String>{
 
     DetailCommande findByIdDetailCommande(String idDetailCommande);
+    List<DetailCommande> findByCommandeIdCommande(String idCommande);
 
 
     List<DetailCommande> findByNomProduit(String nomProduit);

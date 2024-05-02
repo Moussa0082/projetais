@@ -123,6 +123,16 @@ return ResponseEntity.status(HttpStatus.OK).body("Commande passer avec succes");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la confirmation de la livraison des produits : " + e.getMessage());
         }
     }
+
+    @PutMapping("/confirmerLivraison/{idDetailCommande}/{quantiteLivree}")
+    public ResponseEntity<?> confirmerLivrasonProduit(@PathVariable String idDetailCommande, @PathVariable double quantiteLivree) {
+    try {
+        commandeService.confirmerCommande(idDetailCommande, quantiteLivree);
+        return ResponseEntity.ok("Commande confirmée avec succès pour le produit : " + idDetailCommande);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la confirmation de la commande pour le produit : " + e.getMessage());
+    }
+}
      
 
     @PostMapping("/confirmerCommande/{idCommande}")

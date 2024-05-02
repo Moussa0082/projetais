@@ -10,8 +10,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 
 @SpringBootApplication
 public class AisApplication {
-	
-	
+		
 
 	public static void main(String[] args) {
 		SpringApplication.run(AisApplication.class, args);
