@@ -1,5 +1,6 @@
 package projet.ais.services;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -20,6 +21,7 @@ public class FileUploade {
     private static final String FTP_PASSWORD = "H8hd#e3KejJR";
     // private static final String FTP_IMAGES_DIRECTORY = "/images";
     
+    @Async
     public String uploadImageToFTP(Path imagePath, String imageName) throws Exception {
         FTPClient ftpClient = new FTPClient();
         try {

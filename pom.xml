@@ -43,13 +43,6 @@
     <version>4.5.14</version>
 </dependency>
 
- <!-- firebase push notification -->
- <dependency>
-    <groupId>com.google.firebase</groupId>
-    <artifactId>firebase-admin</artifactId>
-    <version>9.1.1</version>
-</dependency>
-
    <!-- https://mvnrepository.com/artifact/com.stripe/stripe-java -->
    <dependency>
 	<groupId>com.stripe</groupId>

@@ -157,30 +157,30 @@ public class StockService {
         stock.setDateProduction(formattedDateTime);
         Stock st = stockRepository.save(stock);
         
-        if (st.getActeur().getTypeActeur() != null) {
-        for (TypeActeur typeActeur : st.getActeur().getTypeActeur()) {
-        if (typeActeur.getLibelle().equals("Producteur")) {
-            System.out.println("Producteur mail: " + st.getActeur().getEmailActeur());
+    //     if (st.getActeur().getTypeActeur() != null) {
+    //     for (TypeActeur typeActeur : st.getActeur().getTypeActeur()) {
+    //     if (typeActeur.getLibelle().equals("Producteur")) {
+    //         System.out.println("Producteur mail: " + st.getActeur().getEmailActeur());
             
-            // Récupérer tous les acteurs de type "Commerçant"
-            List<Acteur> allCommercants = acteurRepository.findAllByTypeActeur_Libelle("Commerçant");
+    //         // Récupérer tous les acteurs de type "Commerçant"
+    //         List<Acteur> allCommercants = acteurRepository.findAllByTypeActeur_Libelle("Commerçant");
             
-            // Envoyer un e-mail à chaque acteur commerçant
-            for (Acteur commercant : allCommercants) {
-                if (commercant != null) {
-                    System.out.println("E-mail commerçant: " + commercant.getEmailActeur());
-                    Alerte alerte = new Alerte(commercant.getEmailActeur(), "Nouveau produit ajouté", "Un nouveau produit a été ajouté");
-                    emailService.sendSimpleMail(alerte);
-                } else {
-                    System.out.println("E-mail commerçant non trouvé");
-                }
-            }
-            break; // Sortir de la boucle dès que "Producteur" est trouvé
-        }
-    }
-    } else {
-        System.out.println("Type d'acteur non trouvé");
-    }
+    //         // Envoyer un e-mail à chaque acteur commerçant
+    //         for (Acteur commercant : allCommercants) {
+    //             if (commercant != null) {
+    //                 System.out.println("E-mail commerçant: " + commercant.getEmailActeur());
+    //                 Alerte alerte = new Alerte(commercant.getEmailActeur(), "Nouveau produit ajouté", "Un nouveau produit a été ajouté");
+    //                 emailService.sendSimpleMail(alerte);
+    //             } else {
+    //                 System.out.println("E-mail commerçant non trouvé");
+    //             }
+    //         }
+    //         break; // Sortir de la boucle dès que "Producteur" est trouvé
+    //     }
+    // }
+    // } else {
+    //     System.out.println("Type d'acteur non trouvé");
+    // }
 
 
     try {
@@ -253,7 +253,7 @@ private String generateQRCodeImage(String qrCodeData) {
             
             // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
             String mes = "Bonjour M. " + acteur.getNomActeur() + " M. " +  ac.getNomActeur() + " habitant à " + ac.getAdresseActeur() + " vient d'ajouter un produit au stock: " 
-                + stock.getNomProduit() + "\n\n Lien vers le produit est : " + stock.getPhoto();
+                + stock.getNomProduit() + "\n\n Lien vers le produit est : " + "https://koumi.ml/api-koumi/Stock/"+stock.getIdStock()+"/image";
                 try {
                     messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  acteur);
                 } catch (Exception e) {
