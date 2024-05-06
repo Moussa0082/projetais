@@ -20,7 +20,7 @@ import org.springframework.http.ResponseEntity;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api-koumi")
+@RequestMapping("/api-koumi/detailCommande")
 public class DetailCommandeController {
 
 

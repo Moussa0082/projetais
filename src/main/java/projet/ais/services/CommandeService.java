@@ -307,22 +307,21 @@ public class CommandeService {
         List<DetailCommande> detailsCommande = commande.getDetailCommandeList();
          
         // Récupérer la liste des acteurs propriétaires des produits commandés
-        List<Acteur> acteursProprietaires = detailsCommande.stream()
-        .map(detail -> detail.getNomProduit()) // Récupérer le nom du produit de chaque détail
-        .flatMap(nomProduit -> stockRepository.findByNomProduit(nomProduit).stream()) // Convertir la collection de Stock en un flux
-        .map(stock -> stock.getActeur()) // Récupérer l'acteur associé à chaque stock
-        .distinct()
-        .collect(Collectors.toList());
+        // Acteur acteursProprietaires = detailsCommande.stream()
+        // .map(detail -> detail.getNomProduit()) // Récupérer le nom du produit de chaque détail
+        // .flatMap(nomProduit -> stockRepository.findByNomProduit(nomProduit).stream()) // Convertir la collection de Stock en un flux
+        // .map(stock -> stock.getActeur()) // Récupérer l'acteur associé à chaque stock
+        // .distinct()
+        // .collect(Collectors.toList());
 
-
+        Acteur acteurProprietaire = commande.getActeurProprietaire();
         // Informer chaque acteur propriétaire
-        for (Acteur acteurProprietaire : acteursProprietaires) {
             // Construire le message pour l'acteur propriétaire
             String message = "Commande validé , vos produits ont été commandés par " + commande.getActeur().getNomActeur() +
                     " (Commande n° " + commande.getCodeCommande() + ").Rendez - vous sur l'appli Koumi pour voir vos produits commandés ";
 
             // Envoyer le message ou l'alerte à l'acteur propriétaire
-            // messageService.sendMessageAndSave(acteurProprietaire.getWhatsAppActeur(), message, acteurProprietaire);
+            messageService.sendMessageAndSave(acteurProprietaire.getWhatsAppActeur(), message, acteurProprietaire);
 
             // Créer et sauvegarder une alerte
             String pattern = "yyyy-MM-dd HH:mm";
@@ -337,9 +336,9 @@ public class CommandeService {
 
             // Envoyer un e-mail à l'acteur propriétaire
             // emailService.sendSimpleMail(alerte);
-        }
+        
 
-        return new ResponseEntity<>("La commande a été validée avec succès, les acteurs propriétaires ont été informés.", HttpStatus.OK);
+        return new ResponseEntity<>("La commande a été validée avec succès, le propriétaire a été informés.", HttpStatus.OK);
     } else {
         return new ResponseEntity<>("Commande non trouvée avec l'ID " + id, HttpStatus.BAD_REQUEST);
     }
@@ -366,22 +365,22 @@ public class CommandeService {
         List<DetailCommande> detailsCommande = commande.getDetailCommandeList();
 
         // Récupérer la liste des acteurs propriétaires des produits commandés
-        List<Acteur> acteursProprietaires = detailsCommande.stream()
-        .map(detail -> detail.getNomProduit()) // Récupérer le nom du produit de chaque détail
-        .flatMap(nomProduit -> stockRepository.findByNomProduit(nomProduit).stream()) // Convertir la collection de Stock en un flux
-        .map(stock -> stock.getActeur()) // Récupérer l'acteur associé à chaque stock
-        .distinct()
-        .collect(Collectors.toList());
-
-
+        // List<Acteur> acteursProprietaires = detailsCommande.stream()
+        // .map(detail -> detail.getNomProduit()) // Récupérer le nom du produit de chaque détail
+        // .flatMap(nomProduit -> stockRepository.findByNomProduit(nomProduit).stream()) // Convertir la collection de Stock en un flux
+        // .map(stock -> stock.getActeur()) // Récupérer l'acteur associé à chaque stock
+        // .distinct()
+        // .collect(Collectors.toList());
+     
+        Acteur acteurProprietaire = commande.getActeurProprietaire();
         // Informer chaque acteur propriétaire
-        for (Acteur acteurProprietaire : acteursProprietaires) {
+        // for (Acteur acteurProprietaire : acteursProprietaires) {
             // Construire le message pour l'acteur propriétaire
             String message = "Commande annulé " + commande.getActeur().getNomActeur().toUpperCase() + " a annulé la " +
                     " (Commande n° " + commande.getCodeCommande() + ")  .  ";
 
             // Envoyer le message ou l'alerte à l'acteur propriétaire
-            // messageService.sendMessageAndSave(acteurProprietaire.getWhatsAppActeur(), message, acteurProprietaire);
+            messageService.sendMessageAndSave(acteurProprietaire.getWhatsAppActeur(), message, acteurProprietaire);
 
             // Créer et sauvegarder une alerte
             String pattern = "yyyy-MM-dd HH:mm";
@@ -396,7 +395,7 @@ public class CommandeService {
 
             // Envoyer un e-mail à l'acteur propriétaire
             // emailService.sendSimpleMail(alerte);
-        }
+        // }
 
         return new ResponseEntity<>("La commande a été annulé avec succès, les acteurs propriétaires ont été informés.", HttpStatus.OK);
     } else {

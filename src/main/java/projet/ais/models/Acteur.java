@@ -23,9 +23,9 @@ import java.time.LocalDateTime;
 
 
 @Entity
-// @Getter
-// @Setter
-@Data
+@Getter
+@Setter
+// @Data
 // @AllArgsConstructor
 public class Acteur {
 
