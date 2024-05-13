@@ -110,7 +110,7 @@ public class Acteur {
     @OneToMany
     (mappedBy = "acteur")
     private List<Speculation> speculations;
-
+    
 
 
     @OneToMany(mappedBy = "acteur")
