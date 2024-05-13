@@ -20,7 +20,7 @@ import projet.ais.repository.Niveau1PaysRepository;
 import projet.ais.services.Niveau1PaysService;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("api-koumi/niveau1Pays")
 public class Niveau1PaysController {
 

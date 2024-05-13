@@ -15,7 +15,7 @@ import projet.ais.services.EmailService;
 
 @RestController
 @RequestMapping("api-koumi/mail")
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class EmailController {
 
     

@@ -21,7 +21,7 @@ import projet.ais.services.FiliereService;
 
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("api-koumi/Filiere")
 public class FiliereController {
 

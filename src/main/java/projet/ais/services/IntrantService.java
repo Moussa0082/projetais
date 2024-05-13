@@ -7,8 +7,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
-import java.util.UUID;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -126,7 +124,7 @@ public class IntrantService {
             // if (acteur != admins) {}
             
             // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
-            String mes = "Bonjour " + acteur.getNomActeur().toUpperCase() + " Un nouveau produit de type intrant vient d'être ajouté " + " Nom : " + intrant.getNomIntrant();
+            String mes = "Bonjour " + acteur.getNomActeur().toUpperCase() + " Un nouveau produit de type intrant vient d'être ajouté " + " Nom : " + intrant.getNomIntrant()  + "\n\n Lien vers le produit est : " + "https://koumi.ml/api-koumi/intrant/"+intrant.getIdIntrant()+"/image";
                 try {
                     messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  acteur);
                 } catch (Exception e) {

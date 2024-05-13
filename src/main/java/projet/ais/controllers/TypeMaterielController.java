@@ -20,7 +20,7 @@ import projet.ais.models.TypeMateriel;
 import projet.ais.services.TypeMaterielService;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("api-koumi/TypeMateriel")
 public class TypeMaterielController {
     

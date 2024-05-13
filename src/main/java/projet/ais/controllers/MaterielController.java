@@ -30,7 +30,7 @@ import org.springframework.http.MediaType;
 import java.io.IOException;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("api-koumi/Materiel")
 public class MaterielController {
     

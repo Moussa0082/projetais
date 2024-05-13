@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("api-koumi/send")
 
 public class MessageController {

@@ -52,7 +52,7 @@ public class TypeActeur {
     // private LocalDateTime dateModif;
 
 
-    @ManyToMany(mappedBy = "typeActeur", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "typeActeur")
     @JsonIgnore
     private List<Acteur> acteur;
 
