@@ -114,22 +114,24 @@ public class IntrantService {
 
     public ResponseEntity<String> sendMessageToAllActeur(Intrant intrant) {
         List<Acteur> allActeurs = acteurRepository.findAll();
-       
+        Acteur ac = intrant.getActeur();
 
         // TypeActeur transporteur = typeActeurRepository.findByLibelle("Transporteur");
         // TypeActeur fournisseur = typeActeurRepository.findByLibelle("Fournisseur");
         for (Acteur acteur : allActeurs) {
             // Acteur admins = acteurRepository.findByTypeActeurLibelle("admin");
             
-            // if (acteur != admins) {}
-            
-            // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
-            String mes = "Bonjour " + acteur.getNomActeur().toUpperCase() + " Un nouveau produit de type intrant vient d'être ajouté " + " Nom : " + intrant.getNomIntrant()  + "\n\n Lien vers le produit est : " + "https://koumi.ml/api-koumi/intrant/"+intrant.getIdIntrant()+"/image";
-                try {
-                    messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  acteur);
-                } catch (Exception e) {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur : " + e.getMessage());
-                }
+            if (ac != acteur) {
+                
+                // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
+                String mes = "Bonjour " + acteur.getNomActeur().toUpperCase() + " Un nouveau produit de type intrant vient d'être ajouté " + " Nom : " + intrant.getNomIntrant() + "\n\n Lien vers le produit est : " + "https://koumi.ml/api-koumi/intrant/"+intrant.getIdIntrant()+"/image";;
+                    try {
+                        messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  acteur);
+                    } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur : " + e.getMessage());
+                    }
+
+            }
             
         
         }

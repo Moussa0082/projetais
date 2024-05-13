@@ -7,12 +7,17 @@ import projet.ais.models.Acteur;
 import projet.ais.models.CategorieProduit;
 import projet.ais.models.Magasin;
 import projet.ais.models.Stock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.lang.Nullable;
 import java.util.*;
 
 @Repository
 public interface StockRepository extends JpaRepository<Stock, String>{
     
     // Stock findByIdStock(String id);
+    
+    Page<Stock> findAll(Pageable pageable);
     List<Stock> findByActeurIdActeur(String id);
     List<Stock> findBySpeculationIdSpeculation(String id);
     List<Stock> findByMagasinIdMagasin(String id);

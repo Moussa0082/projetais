@@ -198,9 +198,7 @@ public class Acteur {
    @JsonIgnore
    private List<Campagne> campagnes;
    
-   public Acteur(){
-    
-   }
+   
 
 }
 

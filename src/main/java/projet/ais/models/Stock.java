@@ -90,9 +90,9 @@ public class Stock {
     @JsonIgnore
     private List<Sortie_Stock> sortie_Stock;
 
-    @ManyToOne
-    @JoinColumn(name = "idForme")
-    private Forme forme;
+    // @ManyToOne
+    // @JoinColumn(name = "idForme")
+    // private Forme forme;
 
 }
 
