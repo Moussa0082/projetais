@@ -4,6 +4,8 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.MediaType;
 import java.io.IOException;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -167,13 +172,32 @@ private MediaType detectContentType(String imageName) {
             return new ResponseEntity<>(saveStock, HttpStatus.OK);
         }
 
-        @GetMapping("/getAllStocks")
-        @Operation(summary = "Liste des stocks")
-        public ResponseEntity<List<Stock>> listeStock(){
-            return new ResponseEntity<>(stockService.getAllStock(), HttpStatus.OK);
-        }
+        // @GetMapping("/getAllStocks")
+        // @Operation(summary = "Liste des stocks")
+        // public ResponseEntity<List<Stock>> listeStock(){
+        //     return new ResponseEntity<>(stockService.getLastTenStocks(), HttpStatus.OK);
+        // }
 
+                                    
+        @GetMapping("/getAllStocks")
+    public ResponseEntity<Page<Stock>> getStocks(@RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Stock> stocks = stockService.getAllStocksPageable(pageable);
+        return ResponseEntity.ok().body(stocks);
+    }
+
+    @GetMapping("all")
+    public List<Stock> allUsers(@RequestParam(name = "page",defaultValue = "0") Integer page) {
       
+      Integer size = 2;
+      Pageable pageable = PageRequest.of(page, size);
+      Page<Stock> pageStock = stockRepository.findAll(pageable);
+  
+      return pageStock.getContent();
+    }
+  
+    
 
         @GetMapping("/getAllStocksByActeurs/{id}")
         @Operation(summary = "Liste des stocks par d'un acteur ")

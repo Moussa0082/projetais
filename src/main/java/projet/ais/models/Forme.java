@@ -32,10 +32,10 @@ public class Forme {
     @Column(nullable = true)
     private String dateAjout;
 
-    @OneToMany
-    (mappedBy = "forme")
-    @JsonIgnore
-    private List<Stock> stocks;
+    // @OneToMany
+    // (mappedBy = "forme")
+    // @JsonIgnore
+    // private List<Stock> stocks;
 
     @OneToMany
     (mappedBy = "forme")

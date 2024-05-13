@@ -12,6 +12,11 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 
 import javax.imageio.ImageIO;
 
@@ -36,6 +41,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import java.awt.image.BufferedImage;
 // import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.converter.BufferedImageHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 
@@ -241,6 +247,12 @@ private String generateQRCodeImage(String qrCodeData) {
 
 //     return MatrixToImageWriter.toBufferedImage(bitMatrix);
 // }
+
+
+    public Page<Stock> getAllStocksPageable(Pageable pageable) {
+        return stockRepository.findAll(pageable);
+    }
+
     
     public ResponseEntity<String> sendMessageToAllActeur(Stock stock) {
         List<Acteur> allActeurs = acteurRepository.findAll();
@@ -250,16 +262,18 @@ private String generateQRCodeImage(String qrCodeData) {
         // TypeActeur fournisseur = typeActeurRepository.findByLibelle("Fournisseur");
         for (Acteur acteur : allActeurs) {
             // if (!acteur.getIdActeur().equals(ac.getIdActeur())  && !acteur.getTypeActeur().contains(transporteur) && !acteur.getTypeActeur().contains(fournisseur)) {
-            
-            // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
-            String mes = "Bonjour M. " + acteur.getNomActeur() + " M. " +  ac.getNomActeur() + " habitant à " + ac.getAdresseActeur() + " vient d'ajouter un produit au stock: " 
-                + stock.getNomProduit() + "\n\n Lien vers le produit est : " + "https://koumi.ml/api-koumi/Stock/"+stock.getIdStock()+"/image";
-                try {
-                    messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  acteur);
-                } catch (Exception e) {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur : " + e.getMessage());
-                }
-            
+              if(ac != acteur){
+
+                  // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
+                  String mes = "Bonjour M. " + acteur.getNomActeur() + " M. " +  ac.getNomActeur() + " habitant à " + ac.getAdresseActeur() + " vient d'ajouter un produit au stock: " 
+                      + stock.getNomProduit() + "\n\n Lien vers le produit est : " + "https://koumi.ml/api-koumi/Stock/"+stock.getIdStock()+"/image";
+                      try {
+                          messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  acteur);
+                      } catch (Exception e) {
+                          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur : " + e.getMessage());
+                      }
+                  
+              }
         
         }
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
@@ -385,12 +399,29 @@ private String generateQRCodeImage(String qrCodeData) {
             throw new IllegalStateException("Aucun stock trouvé");
         
             stockList = stockList
-             .stream().sorted((s1,s2) -> s2.getNomProduit().compareTo(s1.getNomProduit()))
+             .stream().sorted((s1,s2) -> s2.getDescriptionStock().compareTo(s1.getDescriptionStock()))
         .collect(Collectors.toList());
         //  System.out.println("service : "+stockList);
 
         return stockList;
     }
+
+     public List<Stock> getLastTenStocks() {
+    // Création d'un objet Pageable pour récupérer les 10 premiers éléments, triés par date d'ajout décroissante
+    Pageable pageable = PageRequest.of(0, 10, Sort.by("dateAjout").descending());
+    
+    // Récupération des stocks à partir de la page
+    Page<Stock> stockPage = stockRepository.findAll(pageable);
+
+    // Vérification si la page est vide
+    if (stockPage.isEmpty()) {
+        throw new IllegalStateException("Aucun stock trouvé");
+    }
+
+    // Retourne les stocks de la page
+    return stockPage.getContent();
+}
+
 
    
 
