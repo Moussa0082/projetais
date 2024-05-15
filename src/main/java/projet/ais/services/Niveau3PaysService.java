@@ -7,12 +7,15 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.sun.jdi.request.DuplicateRequestException;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.IdGenerator;
+import projet.ais.models.Niveau2Pays;
 import projet.ais.models.Niveau3Pays;
 import projet.ais.repository.Niveau3PaysRepository;
 
@@ -82,6 +85,14 @@ private String genererChaineAleatoire(String source, int longueur) {
     }
     return resultat.toString();
 }
+
+
+
+
+    public Page<Niveau3Pays> getAllNiveau3PaysPageable(Pageable pageable) {
+        return niveau3PaysRepository.findAll(pageable);
+    }
+
 
 
 

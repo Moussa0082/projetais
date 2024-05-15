@@ -6,11 +6,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
+import projet.ais.models.TypeMateriel;
 import projet.ais.models.TypeVoiture;
 import projet.ais.models.Unite;
 import projet.ais.repository.TypeVoitureRepository;
@@ -85,6 +88,11 @@ public class TypeVoitureService {
         .collect(Collectors.toList());
 
         return typeVoiture;
+    }
+
+
+     public Page<TypeVoiture> getAllTypeVoiturePageable(Pageable pageable) {
+        return typeVoitureRepository.findAll(pageable);
     }
 
 

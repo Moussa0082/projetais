@@ -1,6 +1,9 @@
 package projet.ais.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import java.util.*;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import projet.ais.models.CategorieProduit;
 import projet.ais.models.Commande;
 import projet.ais.models.CommandeAvecStocks;
 import projet.ais.models.DetailCommande;
@@ -66,6 +70,13 @@ return ResponseEntity.status(HttpStatus.OK).body("Commande passer avec succes");
     }
     
     
+    @GetMapping("/getAllCommandesWithPagination")
+    public ResponseEntity<Page<Commande>> getCommandes(@RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Commande> commandes = commandeService.getAllCommandePageable(pageable);
+        return ResponseEntity.ok().body(commandes);
+    }
     
     //Valider commande
     @PutMapping("/{id}/enable")

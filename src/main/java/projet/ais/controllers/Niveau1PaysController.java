@@ -1,6 +1,9 @@
 package projet.ais.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import java.util.*;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import projet.ais.models.Conseil;
 import projet.ais.models.Niveau1Pays;
 import projet.ais.repository.Niveau1PaysRepository;
 import projet.ais.services.Niveau1PaysService;
@@ -66,6 +71,14 @@ public ResponseEntity<Niveau1Pays> updatesNiveau1Pays(@RequestBody Niveau1Pays n
       @Operation(summary = "Liste globale des niveau 1 pays")
     public ResponseEntity<List<Niveau1Pays>> getAllTypeNiveau1Pays() throws Exception {
         return new ResponseEntity<>(niveau1PaysService.getAllNiveau1Pays(), HttpStatus.OK);
+    }
+
+      @GetMapping("/getAllNiveau1PaysWithPagination")
+    public ResponseEntity<Page<Niveau1Pays>> getNiveau1Pays(@RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Niveau1Pays> niveau1Pays = niveau1PaysService.getAllNiveau1PaysPageable(pageable);
+        return ResponseEntity.ok().body(niveau1Pays);
     }
 
            //Activer niveau 1 pays

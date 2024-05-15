@@ -3,6 +3,9 @@ package projet.ais.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import projet.ais.models.Acteur;
 import projet.ais.models.CategorieProduit;
+import projet.ais.models.Conseil;
 import projet.ais.models.Filiere;
 import projet.ais.models.MessageWa;
 import projet.ais.services.MessageService;
@@ -44,6 +48,14 @@ public class MessageController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur : " + e.getMessage());
         }
+    }
+
+      @GetMapping("/getAllMessagesWithPagination")
+    public ResponseEntity<Page<MessageWa>> getMessagesWa(@RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<MessageWa> messagesWa = messageService.getAllMessagePageable(pageable);
+        return ResponseEntity.ok().body(messagesWa);
     }
 
     @GetMapping("/readAllMessage")

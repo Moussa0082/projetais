@@ -1,6 +1,9 @@
 package projet.ais.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,10 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.*;
 
 import io.swagger.v3.oas.annotations.Operation;
+import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Pays;
 import projet.ais.repository.PaysRepository;
 import projet.ais.services.PaysService;
@@ -56,6 +61,15 @@ public class PaysController {
    public ResponseEntity<Pays> updatesPays(@RequestBody Pays pays, @PathVariable String id) {
     return new ResponseEntity<>(paysService.updatePays(pays, id), HttpStatus.OK);
 }
+
+ 
+ @GetMapping("/getAllPaysWithPagination")
+    public ResponseEntity<Page<Pays>> getPays(@RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Pays> pays = paysService.getAllPaysPageable(pageable);
+        return ResponseEntity.ok().body(pays);
+    }
 
 
            // Get Liste des  pays

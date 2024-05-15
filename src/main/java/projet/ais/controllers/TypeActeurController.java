@@ -2,6 +2,9 @@ package projet.ais.controllers;
 
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,10 +15,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
+import projet.ais.models.Niveau1Pays;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.TypeActeurRepository;
 import projet.ais.services.TypeActeurService;
@@ -59,6 +64,14 @@ public class TypeActeurController {
     }
 }
 
+
+    @GetMapping("/getAllTypeActeursWithPagination")
+    public ResponseEntity<Page<TypeActeur>> getTypeActeurs(@RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<TypeActeur> typeActeurs = typeActeurService.getAllTypeActeurPageable(pageable);
+        return ResponseEntity.ok().body(typeActeurs);
+    }
 
            // Get Liste des  type acteur
       @GetMapping("/read")

@@ -1,6 +1,9 @@
 package projet.ais.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import java.util.*;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Vehicule;
 import projet.ais.repository.VehiculeRepository;
 import projet.ais.services.VehiculeService;
@@ -129,6 +133,15 @@ private MediaType detectContentType(String imageName) {
         }
   
       }
+
+
+       @GetMapping("/getAllVehiculesWithPagination")
+    public ResponseEntity<Page<Vehicule>> getVehicules(@RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Vehicule> vehicules = vehiculeService.getAllVehiculePageable(pageable);
+        return ResponseEntity.ok().body(vehicules);
+    }
 
 
          //liste vehicule

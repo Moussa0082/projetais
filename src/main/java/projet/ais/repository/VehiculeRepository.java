@@ -1,8 +1,11 @@
 package projet.ais.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import projet.ais.models.Acteur;
+import projet.ais.models.Stock;
 import projet.ais.models.Vehicule;
 import java.util.*;
 
@@ -19,5 +22,11 @@ public interface VehiculeRepository extends JpaRepository<Vehicule , String> {
     Vehicule findByNomVehiculeAndActeur(String nomVehicule, Acteur acteur);
 
     Vehicule findByNomVehiculeAndCapaciteVehiculeAndActeur(String nomVehicule, String capaciteVehicule, Acteur acteur);
+
+
+    Page<Vehicule> findByActeur_IdActeur(String idActeur, Pageable pageable);
+
+
+    Page<Vehicule> findByTypeVoiture_IdTypeVoitureAndStatutVehicule(String idTypeVoiture, boolean statutVehicule,Pageable pageable);
     
 }

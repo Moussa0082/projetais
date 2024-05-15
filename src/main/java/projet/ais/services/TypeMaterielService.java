@@ -6,11 +6,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
+import projet.ais.models.TypeActeur;
 import projet.ais.models.TypeMateriel;
 import projet.ais.repository.TypeMaterielRepository;
 
@@ -71,6 +74,12 @@ public class TypeMaterielService {
         .collect(Collectors.toList());
 
         return typeMateriel;
+    }
+
+
+
+       public Page<TypeMateriel> getAllTypeMaterielPageable(Pageable pageable) {
+        return typeMaterielRepository.findAll(pageable);
     }
 
     // public List<TypeMateriel> getTypeMaterielByActeur(String id){

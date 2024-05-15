@@ -1,6 +1,8 @@
 package projet.ais.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
@@ -11,6 +13,7 @@ import java.util.stream.Collectors;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.IdGenerator;
+import projet.ais.models.Acteur;
 import projet.ais.models.CategorieProduit;
 import projet.ais.models.Continent;
 import projet.ais.repository.ContinentRepository;
@@ -120,6 +123,10 @@ public class ContinentService {
                     .collect(Collectors.toList());
             return continentList;
         }
+
+        public Page<Continent> getAllContinentPageable(Pageable pageable) {
+        return continentRepository.findAll(pageable);
+    }
     
         //activer un continent
           public Continent active(String id) throws Exception{

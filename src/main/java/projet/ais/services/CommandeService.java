@@ -1,6 +1,8 @@
 package projet.ais.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -450,6 +452,10 @@ public ResponseEntity<String> confirmerLivraisonVendeur(String id, Map<String, D
 }
 
 
+
+   public Page<Commande> getAllCommandePageable(Pageable pageable) {
+        return commandeRepository.findAll(pageable);
+    }
 
 
     

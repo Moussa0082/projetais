@@ -1,6 +1,9 @@
 package projet.ais.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -8,11 +11,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import projet.ais.models.Alertes;
 import projet.ais.models.CategorieProduit;
 import projet.ais.services.CategorieService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +49,14 @@ public class CategorieController {
     @Operation(summary="Activation de categorie de produit à travers son id")
     public ResponseEntity<CategorieProduit> activeCategories(@PathVariable String id) throws Exception {
         return new ResponseEntity<>(categorieService.active(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllCategorieWithPagination")
+    public ResponseEntity<Page<CategorieProduit>> getCategorieProduit(@RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CategorieProduit> categorieProduits = categorieService.getAllCategorieProduitPageable(pageable);
+        return ResponseEntity.ok().body(categorieProduits);
     }
 
     @PutMapping("/desactiver/{id}")

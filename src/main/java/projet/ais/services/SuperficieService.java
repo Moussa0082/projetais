@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -94,6 +96,12 @@ public class SuperficieService {
         sup.setDateModif(formattedDateTime);
         return superficieRepository.save(sup);
     }
+
+
+    public Page<Superficie> getAllSuperficiePageable(Pageable pageable) {
+        return superficieRepository.findAll(pageable);
+    }
+
     
     public List<Superficie> getAllSuperficie(){
         List<Superficie> superficieList = superficieRepository.findAll();

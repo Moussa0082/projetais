@@ -1,6 +1,9 @@
 package projet.ais.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,6 +23,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import projet.ais.models.Commande;
 import projet.ais.models.Conseil;
 import projet.ais.repository.ConseilRepository;
 import projet.ais.services.ConseilService;
@@ -193,6 +197,14 @@ public class ConseilController {
   
       }
 
+
+       @GetMapping("/getAllConseilsWithPagination")
+    public ResponseEntity<Page<Conseil>> getConseils(@RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Conseil> conseils = conseilService.getAllConseilPageable(pageable);
+        return ResponseEntity.ok().body(conseils);
+    }
 
          //liste conseil
     @GetMapping("/listeConseilByActeur/{id}")

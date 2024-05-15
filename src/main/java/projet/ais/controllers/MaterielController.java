@@ -3,6 +3,9 @@ package projet.ais.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,6 +24,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import projet.ais.models.Conseil;
 import projet.ais.models.Materiel;
 import projet.ais.repository.MaterielRepository;
 import projet.ais.services.FileUploade;
@@ -106,6 +110,14 @@ private MediaType detectContentType(String imageName) {
     // Par défaut, retourner MediaType.APPLICATION_OCTET_STREAM
     return MediaType.APPLICATION_OCTET_STREAM;
 }
+
+  @GetMapping("/getAllMaterielsWithPagination")
+    public ResponseEntity<Page<Materiel>> getMateriels(@RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Materiel> materiels = materielService.getAllMaterielPageable(pageable);
+        return ResponseEntity.ok().body(materiels);
+    }
     
     @PutMapping("/update/{id}")
     @Operation(summary = "Modification du materiel")

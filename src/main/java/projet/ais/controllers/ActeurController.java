@@ -1,6 +1,9 @@
 package projet.ais.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,6 +32,7 @@ import java.util.*;
 import projet.ais.config.ResponseHandler;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
+import projet.ais.models.Stock;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.TypeActeurRepository;
@@ -132,6 +136,14 @@ public class ActeurController {
                 return MediaType.APPLICATION_OCTET_STREAM;
             }
 
+
+             @GetMapping("/getAllActeurWithPagination")
+    public ResponseEntity<Page<Acteur>> getActeurs(@RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Acteur> acteur = acteurService.getAllActeurPageable(pageable);
+        return ResponseEntity.ok().body(acteur);
+    }
 
 
             // @PostMapping("/{idActeur}/types")

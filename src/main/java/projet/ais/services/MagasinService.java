@@ -17,6 +17,8 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +26,8 @@ import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Filiere;
+import projet.ais.models.Forme;
+import projet.ais.models.Intrant;
 import projet.ais.models.Magasin;
 import projet.ais.models.Stock;
 import projet.ais.repository.ActeurRepository;
@@ -136,6 +140,24 @@ public class MagasinService {
 
         return magasinList;
     }
+
+
+
+    public Page<Magasin> getAllMagasinPageable(Pageable pageable) {
+        return magasinRepository.findAll(pageable);
+    }
+
+     // recuperer les magasins par  niveau1Pays avec pagination
+    public Page<Magasin> getMagasinByNiveau1PaysWithPagination(String idNiveau1Pays,Pageable pageable) {
+        return magasinRepository.findByNiveau1Pays_IdNiveau1PaysAndStatutMagasin(idNiveau1Pays, true, pageable);
+    }
+
+    // recuperer les magasins par  acteur avec pagination
+    public Page<Magasin> getMagasinByActeurWithPagination(String idActeur,Pageable pageable) {
+        return magasinRepository.findByActeur_IdActeur(idActeur, pageable);
+    }
+
+
 
     public List<Magasin> getMagasinByActeur(String id) {
         List<Magasin> magasinList = magasinRepository.findByActeurIdActeur(id);

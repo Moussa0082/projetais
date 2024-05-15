@@ -5,11 +5,14 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
+import projet.ais.models.Acteur;
 import projet.ais.models.Forme;
 import projet.ais.repository.FormeRepository;
 
@@ -58,6 +61,12 @@ public class FormeService {
 
         return formeRepository.save(formes);
     }
+
+
+    public Page<Forme> getAllFormePageable(Pageable pageable) {
+        return formeRepository.findAll(pageable);
+    }
+
 
     public String deleteForme(String id){
         Forme formes = formeRepository.findById(id).orElseThrow();
