@@ -30,7 +30,7 @@ import projet.ais.services.FileUploade;
 import projet.ais.services.ParametreGenerauxService;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+// @CrossOrigin(origins = "*")
 @RequestMapping("api-koumi/parametreGeneraux")
 public class ParametreGenerauxController {
 

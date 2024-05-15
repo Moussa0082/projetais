@@ -20,7 +20,7 @@ import projet.ais.repository.PaysRepository;
 import projet.ais.services.PaysService;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+// @CrossOrigin(origins = "*")
 @RequestMapping("api-koumi/pays")
 public class PaysController {
 

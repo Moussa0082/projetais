@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+// @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("api-koumi/Speculation")
 public class SpeculationController {
     

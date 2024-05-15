@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("api-koumi/Unite")
+// @CrossOrigin
 public class UniteController {
     
     @Autowired

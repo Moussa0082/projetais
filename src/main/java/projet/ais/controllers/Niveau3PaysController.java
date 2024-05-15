@@ -21,7 +21,7 @@ import projet.ais.repository.Niveau3PaysRepository;
 import projet.ais.services.Niveau3PaysService;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+// @CrossOrigin(origins = "*")
 @RequestMapping("api-koumi/nivveau3Pays")
 public class Niveau3PaysController {
 

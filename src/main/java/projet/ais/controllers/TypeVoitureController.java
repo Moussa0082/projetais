@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+// @CrossOrigin(origins = "*")
 @RequestMapping("api-koumi/TypeVoiture")
 public class TypeVoitureController {
     

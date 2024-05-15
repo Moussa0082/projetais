@@ -20,7 +20,7 @@ import projet.ais.repository.ContinentRepository;
 import projet.ais.services.ContinentService;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+// @CrossOrigin(origins = "*")
 @RequestMapping("api-koumi/continent")
 public class ContinentController {
     

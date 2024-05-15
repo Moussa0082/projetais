@@ -21,7 +21,7 @@ import projet.ais.models.Forme;
 import projet.ais.services.FormeService;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+// @CrossOrigin(origins = "*")
 @RequestMapping("api-koumi/formeproduit")
 public class FormeController {
 

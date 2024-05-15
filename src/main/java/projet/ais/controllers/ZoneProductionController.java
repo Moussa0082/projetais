@@ -32,7 +32,7 @@ import java.io.IOException;
 
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+// @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("api-koumi/ZoneProduction")
 public class ZoneProductionController {
     

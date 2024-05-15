@@ -17,7 +17,7 @@ import com.stripe.model.Charge;
 import projet.ais.services.StripeService;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+// @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/payments")
 public class PaymentController {
 

@@ -32,7 +32,7 @@ import projet.ais.services.CommandeService;
 
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+// @CrossOrigin(origins = "*")
 @RequestMapping("api-koumi/commande")
 public class CommandeController {
 

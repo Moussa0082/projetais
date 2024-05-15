@@ -40,7 +40,7 @@ import org.springframework.http.MediaType;
 import java.io.IOException;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+// @CrossOrigin(origins = "*")
 @RequestMapping("api-koumi/acteur")
 public class ActeurController {
 
