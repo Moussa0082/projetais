@@ -12,6 +12,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
+import projet.ais.models.Forme;
+import projet.ais.models.Magasin;
 import projet.ais.models.Materiel;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.MaterielRepository;
@@ -107,6 +111,22 @@ public class MaterielService {
         }
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
+
+
+     public Page<Materiel> getAllMaterielPageable(Pageable pageable) {
+        return materielRepository.findAll(pageable);
+    }
+
+    // recuperer les materiels par  type materiel avec pagination
+    public Page<Materiel> getMaterielByTypeMaterielWithPagination(String idTypeMateriel,Pageable pageable) {
+        return materielRepository.findByTypeMateriel_IdTypeMaterielAndStatut(idTypeMateriel, true, pageable);
+    }
+
+    // recuperer les magasins par  acteur avec pagination
+    public Page<Magasin> getMaterielByActeurWithPagination(String idActeur,Pageable pageable) {
+        return materielRepository.findByActeur_IdActeur(idActeur, pageable);
+    }
+
 
     
     public Materiel updateMateriel(Materiel materiel, String id, MultipartFile imageFile) throws Exception{

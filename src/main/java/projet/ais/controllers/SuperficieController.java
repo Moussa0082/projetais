@@ -3,6 +3,9 @@ package projet.ais.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,9 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Superficie;
 import projet.ais.services.SuperficieService;
 
@@ -43,6 +48,14 @@ public class SuperficieController {
     @GetMapping("/getSuperficie")
     public ResponseEntity<List<Superficie>> liste() {
         return new ResponseEntity<>(superficieService.getAllSuperficie(), HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllSuperficiesWithPagination")
+    public ResponseEntity<Page<Superficie>> getSuperficies(@RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Superficie> superficies = superficieService.getAllSuperficiePageable(pageable);
+        return ResponseEntity.ok().body(superficies);
     }
 
     @GetMapping("/getSuperficieByActeur/{id}")

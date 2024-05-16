@@ -5,6 +5,8 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.time.format.DateTimeFormatter;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.IdGenerator;
+import projet.ais.models.MessageWa;
 import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Niveau2Pays;
 import projet.ais.repository.Niveau1PaysRepository;
@@ -117,6 +120,11 @@ private String genererChaineAleatoire(String source, int longueur) {
     niveau2PaysExistant.setDateModif(formattedDateTime);
     return niveau2PaysRepository.save(niveau2PaysExistant);
   }
+
+
+    public Page<Niveau2Pays> getAllNiveau2PaysPageable(Pageable pageable) {
+        return niveau2PaysRepository.findAll(pageable);
+    }
 
         //Recuperer la liste des niveau2Pays
      public List<Niveau2Pays> getAllNiveau2Pays() throws Exception{

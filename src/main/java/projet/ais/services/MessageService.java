@@ -6,12 +6,15 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import jakarta.mail.Message;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import projet.ais.CodeGenerator;
@@ -22,6 +25,7 @@ import projet.ais.IdGenerator;
 import projet.ais.config.GreenApiConfig;
 import projet.ais.models.Acteur;
 import projet.ais.models.CategorieProduit;
+import projet.ais.models.Forme;
 import projet.ais.models.MessageWa;
 import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Speculation;
@@ -120,6 +124,10 @@ public class MessageService {
         sendMessage.sendMessages(whatsAppActeur, msg);
         
         return message;
+    }
+
+    public Page<MessageWa> getAllMessagePageable(Pageable pageable) {
+        return messageRepository.findAll(pageable);
     }
 
     public List<MessageWa> getAllMessage(){

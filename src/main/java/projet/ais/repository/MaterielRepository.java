@@ -1,7 +1,10 @@
 package projet.ais.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import projet.ais.models.Magasin;
 import projet.ais.models.Materiel;
 import projet.ais.models.Vehicule;
 
@@ -16,4 +19,8 @@ public interface MaterielRepository  extends JpaRepository<Materiel , String>{
     List<Materiel> findByIdMaterielAndActeurIdActeur(String idMaterien, String idActeur);
 
     List<Materiel> findAllByTypeMaterielIdTypeMateriel(String idTypeMateriel);
+
+    Page<Materiel> findByTypeMateriel_IdTypeMaterielAndStatut(String idTypeMateriel, boolean statut, Pageable pageable);
+
+    Page<Magasin> findByActeur_IdActeur(String idActeur, Pageable pageable);
 }

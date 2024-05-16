@@ -6,11 +6,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
+import projet.ais.models.TypeMateriel;
 import projet.ais.models.Unite;
 import projet.ais.repository.UniteRepository;
 
@@ -59,6 +62,12 @@ public class UniteService {
         unites.setDateModif(formattedDateTime);
         return uniteRepository.save(unites);
     }
+
+
+    public Page<Unite> getAllUnitePageable(Pageable pageable) {
+        return uniteRepository.findAll(pageable);
+    }
+
 
     public List<Unite> getAllUnites(){
         List<Unite> uniteList = uniteRepository.findAll();

@@ -3,6 +3,9 @@ package projet.ais.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +21,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import projet.ais.models.Niveau1Pays;
 import projet.ais.models.ZoneProduction;
 import projet.ais.repository.ZoneProductionRepository;
 import projet.ais.services.FileUploade;
@@ -142,6 +146,16 @@ private MediaType detectContentType(String imageName) {
         public ResponseEntity<List<ZoneProduction>> getAllZones() {
             return new ResponseEntity<>(zoneProductionService.getZoneProduction(), HttpStatus.OK);
         }
+
+
+        @GetMapping("/getAllZoneProductionsWithPagination")
+    public ResponseEntity<Page<ZoneProduction>> getZoneProductions(@RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ZoneProduction> zoneProductions = zoneProductionService.getAllZoneProductionPageable(pageable);
+        return ResponseEntity.ok().body(zoneProductions);
+    }
+
         
         @GetMapping("/getAllZonesByActeurs/{id}")
     public ResponseEntity<List<ZoneProduction>> listeZoneByActeurs(@PathVariable String id) {

@@ -3,6 +3,9 @@ package projet.ais.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,9 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import projet.ais.models.Conseil;
 import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Niveau2Pays;
 import projet.ais.repository.Niveau2PaysRepository;
@@ -54,6 +59,14 @@ public class Niveau2PaysController {
 public ResponseEntity<Niveau2Pays> updatesNiveau2Pays(@RequestBody Niveau2Pays niveau2Pays, @PathVariable String id) {
     return new ResponseEntity<>(niveau2PaysService.updateNiveau2Pays(niveau2Pays, id), HttpStatus.OK);
 
+}
+
+@GetMapping("/getAllNiveau2PaysWithPagination")
+public ResponseEntity<Page<Niveau2Pays>> getNiveau2Pays(@RequestParam() int page,
+                                              @RequestParam() int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    Page<Niveau2Pays> niveau2Pays = niveau2PaysService.getAllNiveau2PaysPageable(pageable);
+    return ResponseEntity.ok().body(niveau2Pays);
 }
 
     //liste 

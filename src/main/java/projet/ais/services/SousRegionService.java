@@ -4,6 +4,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.IdGenerator;
 import projet.ais.models.Niveau1Pays;
+import projet.ais.models.Niveau2Pays;
 import projet.ais.models.Pays;
 import projet.ais.models.SousRegion;
 import projet.ais.repository.SousRegionRepository;
@@ -137,6 +140,10 @@ private String genererChaineAleatoire(String source, int longueur) {
         return sousRegionList;
     }
 
+
+     public Page<SousRegion> getAllSousRegionPageable(Pageable pageable) {
+        return sousRegionRepository.findAll(pageable);
+    }
 
            //Activer sous region
         public SousRegion active(String id) throws Exception{

@@ -1,6 +1,9 @@
 package projet.ais.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import java.util.*;
@@ -21,6 +24,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import projet.ais.models.Conseil;
 import projet.ais.models.Intrant;
 import projet.ais.repository.IntrantRepository;
 import projet.ais.services.FileUploade;
@@ -133,6 +137,14 @@ public class IntrantController {
   
       }
 
+
+       @GetMapping("/getAllIntrantsWithPagination")
+    public ResponseEntity<Page<Intrant>> getConseils(@RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Intrant> intrants = intrantService.getAllIntrantPageable(pageable);
+        return ResponseEntity.ok().body(intrants);
+    }
 
          //liste intrant pas acteur
     @GetMapping("/listeIntrantByActeur/{id}")

@@ -1,6 +1,9 @@
 package projet.ais.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,10 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.*;
 
 import io.swagger.v3.oas.annotations.Operation;
+import projet.ais.models.Conseil;
 import projet.ais.models.Continent;
 import projet.ais.repository.ContinentRepository;
 import projet.ais.services.ContinentService;
@@ -46,6 +51,14 @@ public class ContinentController {
         }
     }
     
+
+     @GetMapping("/getAllContinentWithPagination")
+    public ResponseEntity<Page<Continent>> getContinents(@RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Continent> continents = continentService.getAllContinentPageable(pageable);
+        return ResponseEntity.ok().body(continents);
+    }
 
     //Modifier un continent
 //     @PutMapping("/update/{id}")

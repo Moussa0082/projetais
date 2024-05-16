@@ -5,6 +5,8 @@ package projet.ais.repository;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import projet.ais.models.Intrant;
@@ -21,4 +23,9 @@ public interface IntrantRepository extends JpaRepository<Intrant , String> {
     // List<Intrant> findAllBySpeculation_CategorieProduit_IdCategorieProduit(String idCategorieProduit);
     List<Intrant> findAllByCategorieProduit_IdCategorieProduit(String idCategorieProduit);
     Collection<Intrant> findByNomIntrant(String nomIntrant);
+
+    Page<Intrant> findByCategorieProduit_IdCategorieProduitAndStatutIntrant(String idIntrant, boolean statutIntrant,
+            Pageable pageable);
+
+    Page<Intrant> findByActeur_IdActeur(String idActeur, Pageable pageable);
 }

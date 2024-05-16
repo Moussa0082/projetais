@@ -250,7 +250,8 @@ private String generateQRCodeImage(String qrCodeData) {
 
 
     public Page<Stock> getAllStocksPageable(Pageable pageable) {
-        return stockRepository.findAll(pageable);
+        return stockRepository.findAllByStatutSotck(true,pageable);
+        // return stockRepository.findAll(pageable);
     }
 
     
@@ -457,6 +458,24 @@ private String generateQRCodeImage(String qrCodeData) {
         return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasin(idCategorieProduit, idMagasin);
     }
 
+    // recuperer les stock par  magasin avec pagination
+    public Page<Stock> getStocksByMagasinWithPagination(String idMagasin,Pageable pageable) {
+        return stockRepository.findByMagasin_IdMagasinAndStatutSotck(idMagasin, true,pageable);
+    }
+
+
+    // recuperer les stock par  acteur avec pagination
+    public Page<Stock> getStocksByActeurWithPagination(String idActeur,Pageable pageable) {
+        return stockRepository.findByActeur_IdActeur(idActeur, pageable);
+    }
+
+
+    
+    //Avec pagination stock par magasin , acteur  et categorie 
+    public Page<Stock> listeStockByCategorieProduitAndMagasinWithPagination(String idCategorieProduit, String idMagasin, Pageable pageable) {
+        return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndStatutSotck(idCategorieProduit,idMagasin, true,pageable);
+    }
+
     //recuperer les stock par categorie produit et idActeur
     public List<Stock> getStocksByCategorieAndActeurIdacteur(String idCategorieProduit, String idActeur) {
         return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduitAndActeur_IdActeur(idCategorieProduit, idActeur);
@@ -466,6 +485,12 @@ private String generateQRCodeImage(String qrCodeData) {
     public List<Stock> getStocksByCategorie(CategorieProduit categorie) {
         return stockRepository.findBySpeculation_CategorieProduit(categorie);
     }
+
+
+    public Page<Stock> getStocksByCategorieWithPagination(CategorieProduit categorie, Pageable pageable) {
+        return stockRepository.findBySpeculation_CategorieProduitAndStatutSotck(categorie, true, pageable);
+    }
+
 
     public List<Stock> listeStockByCategorieProduitAndMagasinAndActeur( String idCategorie, String idMagasin ,String idActeur) throws Exception {
 

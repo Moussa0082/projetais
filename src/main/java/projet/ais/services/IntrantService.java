@@ -11,6 +11,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
 import projet.ais.models.Commande;
 import projet.ais.models.DetailCommande;
+import projet.ais.models.Forme;
 import projet.ais.models.Intrant;
 
 import projet.ais.models.Stock;
@@ -164,6 +167,18 @@ public class IntrantService {
     //     return intrantList;
     // } 
 
+
+      // recuperer les intrants par  categorie avec pagination
+    public Page<Intrant> getIntrantByCategorieProduitWithPagination(String idIntrant,Pageable pageable) {
+        return intrantRepository.findByCategorieProduit_IdCategorieProduitAndStatutIntrant(idIntrant, true, pageable);
+    }
+
+    // recuperer les intrants par  acteur avec pagination
+    public Page<Intrant> getIntrantByActeurWithPagination(String idActeur,Pageable pageable) {
+        return intrantRepository.findByActeur_IdActeur(idActeur, pageable);
+    }
+
+
        //Liste des intrants par categorie
     public List<Intrant> getAllIntrantByCategorie(String id){
         List<Intrant>  intrantList = intrantRepository.findAllByCategorieProduit_IdCategorieProduit(id);
@@ -177,7 +192,9 @@ public class IntrantService {
         return intrantList;
     } 
 
-   
+    public Page<Intrant> getAllIntrantPageable(Pageable pageable) {
+        return intrantRepository.findAll(pageable);
+    }    
 
     // public List<Intrant> getAllIntrantBySuperficie(String id){
     //     List<Intrant>  intrantList = intrantRepository.findBySuperficieIdSuperficie(id);
@@ -279,102 +296,102 @@ public class IntrantService {
     }
 
 
-          public Commande ajouterIntrantACommande(Commande commande, List<Intrant> intrant, List<Double> quantitesDemandees) throws Exception {
-        // Récupération des stocks correspondant aux identifiants fournis
-        List<Intrant> intrantsFound = intrantRepository.findByIdIntrantIn(
-            intrant.stream().map(Intrant::getIdIntrant).collect(Collectors.toList())
-        );
+    //       public Commande ajouterIntrantACommande(Commande commande, List<Intrant> intrant, List<Double> quantitesDemandees) throws Exception {
+    //     // Récupération des stocks correspondant aux identifiants fournis
+    //     List<Intrant> intrantsFound = intrantRepository.findByIdIntrantIn(
+    //         intrant.stream().map(Intrant::getIdIntrant).collect(Collectors.toList())
+    //     );
     
-        // Date et heure actuelles formatées
-        String formattedDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    //     // Date et heure actuelles formatées
+    //     String formattedDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     
-        // Mise à jour des informations de la commande
-        commande.setIdCommande(idGenerator.genererCode());
-        commande.setCodeCommande(codeGenerator.genererCode());
-        commande.setDateCommande(formattedDateTime);
-        commande.setStatutCommande(true);
-        Commande savedCommande = commandeRepository.save(commande);
+    //     // Mise à jour des informations de la commande
+    //     commande.setIdCommande(idGenerator.genererCode());
+    //     commande.setCodeCommande(codeGenerator.genererCode());
+    //     commande.setDateCommande(formattedDateTime);
+    //     commande.setStatutCommande(true);
+    //     Commande savedCommande = commandeRepository.save(commande);
     
-        // Enregistrement des détails de la commande pour chaque produit
-        for (int i = 0; i < intrantsFound.size(); i++) {
-            Intrant intrants = intrantsFound.get(i);
-            double quantiteDemandee = quantitesDemandees.get(i);
-            DetailCommande detailCommande = new DetailCommande();
+    //     // Enregistrement des détails de la commande pour chaque produit
+    //     for (int i = 0; i < intrantsFound.size(); i++) {
+    //         Intrant intrants = intrantsFound.get(i);
+    //         double quantiteDemandee = quantitesDemandees.get(i);
+    //         DetailCommande detailCommande = new DetailCommande();
     
-            // Création d'une nouvelle instance de DetailCommande
-            detailCommande.setIdDetailCommande(idGenerator.genererCode());
-            detailCommande.setCodeProduit(intrants.getCodeIntrant());
-            detailCommande.setQuantiteDemande(quantiteDemandee);
-            detailCommande.setQuantiteLivree(0.0); // Initialement aucun n'a été livré
-            detailCommande.setQuantiteNonLivree(0.0); // Initialement aucun n'a été livré
-            detailCommande.setNomProduit(intrants.getNomIntrant());
-            detailCommande.setDateAjout(formattedDateTime);
-            detailCommande.setCommande(savedCommande);
+    //         // Création d'une nouvelle instance de DetailCommande
+    //         detailCommande.setIdDetailCommande(idGenerator.genererCode());
+    //         detailCommande.setCodeProduit(intrants.getCodeIntrant());
+    //         detailCommande.setQuantiteDemande(quantiteDemandee);
+    //         detailCommande.setQuantiteLivree(0.0); // Initialement aucun n'a été livré
+    //         detailCommande.setQuantiteNonLivree(0.0); // Initialement aucun n'a été livré
+    //         detailCommande.setNomProduit(intrants.getNomIntrant());
+    //         detailCommande.setDateAjout(formattedDateTime);
+    //         detailCommande.setCommande(savedCommande);
     
-            // Enregistrement du détail de la commande
-            detailCommandeRepository.save(detailCommande);
+    //         // Enregistrement du détail de la commande
+    //         detailCommandeRepository.save(detailCommande);
     
-            // Mise à jour de la quantité en stock
-            double quantiteRestante = intrants.getQuantiteIntrant() - quantiteDemandee;
-            intrants.setQuantiteIntrant(quantiteRestante);
-            intrantRepository.save(intrants);
+    //         // Mise à jour de la quantité en stock
+    //         double quantiteRestante = intrants.getQuantiteIntrant() - quantiteDemandee;
+    //         intrants.setQuantiteIntrant(quantiteRestante);
+    //         intrantRepository.save(intrants);
     
-            // Mise à jour de la quantité demandée totale dans la commande
-            savedCommande.setQuantiteDemande(savedCommande.getQuantiteDemande() + quantiteDemandee);
-        }
+    //         // Mise à jour de la quantité demandée totale dans la commande
+    //         savedCommande.setQuantiteDemande(savedCommande.getQuantiteDemande() + quantiteDemandee);
+    //     }
     
-        // Envoi de notifications aux propriétaires des stocks
-        Map<Acteur, List<DetailCommande>> proprietairesStocksDetails = new HashMap<>();
+    //     // Envoi de notifications aux propriétaires des stocks
+    //     Map<Acteur, List<DetailCommande>> proprietairesStocksDetails = new HashMap<>();
     
-        // Parcourir les stocks trouvés
-        for (Intrant intrant2 : intrantsFound) {
-            Acteur proprietaire = intrant2.getActeur(); // Récupérer le propriétaire du stock
+    //     // Parcourir les stocks trouvés
+    //     for (Intrant intrant2 : intrantsFound) {
+    //         Acteur proprietaire = intrant2.getActeur(); // Récupérer le propriétaire du stock
     
-            // Vérifier si le propriétaire est déjà présent dans la Map, sinon ajouter une nouvelle entrée
-            if (!proprietairesStocksDetails.containsKey(proprietaire)) {
-                proprietairesStocksDetails.put(proprietaire, new ArrayList<>());
-            }
+    //         // Vérifier si le propriétaire est déjà présent dans la Map, sinon ajouter une nouvelle entrée
+    //         if (!proprietairesStocksDetails.containsKey(proprietaire)) {
+    //             proprietairesStocksDetails.put(proprietaire, new ArrayList<>());
+    //         }
     
-            // Ajouter le détail de commande à la liste des détails de commande du propriétaire
-            List<DetailCommande> details = detailCommandeRepository.findByNomProduit(intrant2.getNomIntrant());
-            proprietairesStocksDetails.get(proprietaire).addAll(details);
-        }
+    //         // Ajouter le détail de commande à la liste des détails de commande du propriétaire
+    //         List<DetailCommande> details = detailCommandeRepository.findByNomProduit(intrant2.getNomIntrant());
+    //         proprietairesStocksDetails.get(proprietaire).addAll(details);
+    //     }
     
-        // Parcourir les entrées de la Map pour envoyer les messages à chaque propriétaire avec les détails de ses stocks commandés
-        for (Map.Entry<Acteur, List<DetailCommande>> entry : proprietairesStocksDetails.entrySet()) {
-            Acteur proprietaire = entry.getKey();
-            List<DetailCommande> detailsCommande = entry.getValue();
+    //     // Parcourir les entrées de la Map pour envoyer les messages à chaque propriétaire avec les détails de ses stocks commandés
+    //     for (Map.Entry<Acteur, List<DetailCommande>> entry : proprietairesStocksDetails.entrySet()) {
+    //         Acteur proprietaire = entry.getKey();
+    //         List<DetailCommande> detailsCommande = entry.getValue();
     
-            // Construire le message pour ce propriétaire avec les détails des stocks commandés
-            String message = "Les produits suivants ont été commandés par " + savedCommande.getActeur().getNomActeur() + " :\n";
-            Set<String> produitsDemandes = new HashSet<>();
-            for (DetailCommande detail : detailsCommande) {
-                String nomProduit = detail.getNomProduit();
-                double quantiteDemandee = detail.getQuantiteDemande();
+    //         // Construire le message pour ce propriétaire avec les détails des stocks commandés
+    //         String message = "Les produits suivants ont été commandés par " + savedCommande.getActeur().getNomActeur() + " :\n";
+    //         Set<String> produitsDemandes = new HashSet<>();
+    //         for (DetailCommande detail : detailsCommande) {
+    //             String nomProduit = detail.getNomProduit();
+    //             double quantiteDemandee = detail.getQuantiteDemande();
     
-                // Vérifier si le produit a déjà été ajouté au message
-                if (!produitsDemandes.contains(nomProduit)) {
-                    produitsDemandes.add(nomProduit);
-                    message += "- " + nomProduit + " : quantité demandée " + quantiteDemandee + "\n";
-                }
-            }
+    //             // Vérifier si le produit a déjà été ajouté au message
+    //             if (!produitsDemandes.contains(nomProduit)) {
+    //                 produitsDemandes.add(nomProduit);
+    //                 message += "- " + nomProduit + " : quantité demandée " + quantiteDemandee + "\n";
+    //             }
+    //         }
     
-            // Envoyer un message par WhatsApp et e-mail uniquement si le propriétaire a un WhatsAppActeur ou un EmailActeur
-            if (proprietaire != null && proprietaire.getWhatsAppActeur() != null && proprietaire.getEmailActeur() != null) {
-                messageService.sendMessageAndSave(proprietaire.getWhatsAppActeur(), message, proprietaire);
-                Alerte al = new Alerte(proprietaire.getEmailActeur(), message, "Nouvelle commande d'intrant");
-                al.setId(idGenerator.genererCode());
-                al.setDateAjout(formattedDateTime);
-                al.setActeur(proprietaire);
-                alerteRepository.save(al);
-                emailService.sendSimpleMail(al);
-            } else {
-                System.out.println("Non trouvé");
-            }
-         }
+    //         // Envoyer un message par WhatsApp et e-mail uniquement si le propriétaire a un WhatsAppActeur ou un EmailActeur
+    //         if (proprietaire != null && proprietaire.getWhatsAppActeur() != null && proprietaire.getEmailActeur() != null) {
+    //             messageService.sendMessageAndSave(proprietaire.getWhatsAppActeur(), message, proprietaire);
+    //             Alerte al = new Alerte(proprietaire.getEmailActeur(), message, "Nouvelle commande d'intrant");
+    //             al.setId(idGenerator.genererCode());
+    //             al.setDateAjout(formattedDateTime);
+    //             al.setActeur(proprietaire);
+    //             alerteRepository.save(al);
+    //             emailService.sendSimpleMail(al);
+    //         } else {
+    //             System.out.println("Non trouvé");
+    //         }
+    //      }
     
-        return savedCommande;
-    }
+    //     return savedCommande;
+    // }
     
     
     

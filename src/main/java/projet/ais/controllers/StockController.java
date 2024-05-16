@@ -178,6 +178,63 @@ private MediaType detectContentType(String imageName) {
             return new ResponseEntity<>(stockService.getAllStock(), HttpStatus.OK);
         }
 
+        @GetMapping("/getAllStocksByActeurWithPagination")
+        public ResponseEntity<Page<Stock>> getStocksByActeur(@RequestParam String idActeur,
+                                                                @RequestParam int page,
+                                                                @RequestParam int size) {
+  
+    
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Stock> stocks = stockService.getStocksByActeurWithPagination(idActeur, pageable);
+    
+            return ResponseEntity.ok().body(stocks);
+        }
+
+        @GetMapping("/getAllStocksByCategorieWithPagination")
+        public ResponseEntity<Page<Stock>> getStocksByCategorie(@RequestParam String idCategorie,
+                                                                @RequestParam int page,
+                                                                @RequestParam int size) {
+            CategorieProduit categorie = new CategorieProduit();
+            categorie.setIdCategorieProduit(idCategorie);
+    
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Stock> stocks = stockService.getStocksByCategorieWithPagination(categorie, pageable);
+    
+            return ResponseEntity.ok().body(stocks);
+        }
+
+
+        
+
+    @GetMapping("/getAllStocksByCategorieAndMagasinWithPagination")
+    public ResponseEntity<Page<Stock>> listeStockByCategorieProduitAndMagasinWithPagination(
+            @RequestParam String idCategorie,
+            @RequestParam String idMagasin,
+            @RequestParam int page,
+            @RequestParam int size) {
+
+        CategorieProduit categorie = new CategorieProduit();
+        categorie.setIdCategorieProduit(idCategorie);
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Stock> stocks = stockService.listeStockByCategorieProduitAndMagasinWithPagination(idCategorie, idMagasin, pageable);
+
+        return ResponseEntity.ok().body(stocks);
+    }
+
+
+    @GetMapping("/getAllStocksByMagasinWithPagination")
+    public ResponseEntity<Page<Stock>> getStocksByCMagasinWithPagination(
+            @RequestParam String idMagasin,
+            @RequestParam int page,
+            @RequestParam int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Stock> stocks = stockService.getStocksByMagasinWithPagination(idMagasin, pageable);
+
+        return ResponseEntity.ok().body(stocks);
+    }
+
                                     
         @GetMapping("/getAllStocksWithPagination")
     public ResponseEntity<Page<Stock>> getStocks(@RequestParam() int page,
@@ -187,15 +244,15 @@ private MediaType detectContentType(String imageName) {
         return ResponseEntity.ok().body(stocks);
     }
 
-    @GetMapping("all")
-    public List<Stock> allUsers(@RequestParam(name = "page",defaultValue = "0") Integer page) {
+    // @GetMapping("all")
+    // public List<Stock> allUsers(@RequestParam(name = "page",defaultValue = "0") Integer page) {
       
-      Integer size = 2;
-      Pageable pageable = PageRequest.of(page, size);
-      Page<Stock> pageStock = stockRepository.findAll(pageable);
+    //   Integer size = 2;
+    //   Pageable pageable = PageRequest.of(page, size);
+    //   Page<Stock> pageStock = stockRepository.findAll(pageable);
   
-      return pageStock.getContent();
-    }
+    //   return pageStock.getContent();
+    // }
   
     
 

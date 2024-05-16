@@ -3,6 +3,9 @@ package projet.ais.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,6 +23,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import projet.ais.models.Conseil;
 import projet.ais.models.Magasin;
 import projet.ais.repository.MagasinRepository;
 import projet.ais.services.FileUploade;
@@ -166,6 +170,14 @@ public class MagasinController {
     @Operation(summary = "Liste des magasins par region et par acteur")
     public ResponseEntity<List<Magasin>> listeMagasinByNiveau1PaysAndActeur(@PathVariable String idActeur, @PathVariable String idNiveau1Pays) throws Exception{
         return new ResponseEntity<>(magasinService.listeMagasinByNiveau1PaysAndActeur(idActeur, idNiveau1Pays), HttpStatus.OK);
+    }
+
+     @GetMapping("/getAllMagasinWithPagination")
+    public ResponseEntity<Page<Magasin>> getMagasins(@RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Magasin> magasins = magasinService.getAllMagasinPageable(pageable);
+        return ResponseEntity.ok().body(magasins);
     }
 
     @GetMapping("/getAllMagasinByPays/{id}")

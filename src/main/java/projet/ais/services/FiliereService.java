@@ -1,6 +1,8 @@
 package projet.ais.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -95,6 +97,12 @@ public class FiliereService {
   //               .collect(Collectors.toList());
   //   return filiereList;
   // }
+
+   public Page<Filiere> getAllFilierePageable(Pageable pageable) {
+        return filiereRepository.findAll(pageable);
+    }
+
+
 
   public String DeleteFiliere(String id){
     Filiere filiere = filiereRepository.findById(id).orElseThrow(null);

@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 
 import org.apache.el.stream.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,7 @@ import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
 import projet.ais.models.Filiere;
 import projet.ais.models.SousRegion;
+import projet.ais.models.Superficie;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.TypeActeurRepository;
 
@@ -121,6 +124,14 @@ private String genererChaineAleatoire(String source, int longueur) {
 
     return typeActeurRepository.save(typeActeurExistant);
   }
+
+
+
+   public Page<TypeActeur> getAllTypeActeurPageable(Pageable pageable) {
+        return typeActeurRepository.findAll(pageable);
+    }
+
+
 
         //Recuperer la liste des type acteur
      public List<TypeActeur> getAllTypeActeur() throws Exception{

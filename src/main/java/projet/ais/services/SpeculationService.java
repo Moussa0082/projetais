@@ -1,12 +1,15 @@
 package projet.ais.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.CategorieProduit;
+import projet.ais.models.Niveau2Pays;
 import projet.ais.models.RenvoieParametre;
 import projet.ais.models.Speculation;
 import projet.ais.repository.ActeurRepository;
@@ -96,6 +99,11 @@ public class SpeculationService {
         .collect(Collectors.toList());
 
         return speculations;
+    }
+
+
+     public Page<Speculation> getAllSpeculationPageable(Pageable pageable) {
+        return speculationRepository.findAll(pageable);
     }
 
     public List<Speculation> getAllSpeculationByActeur(String id){

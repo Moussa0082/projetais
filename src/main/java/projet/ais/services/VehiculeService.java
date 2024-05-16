@@ -18,12 +18,16 @@ import java.io.ByteArrayOutputStream;
 // import org.apache.http.impl.client.HttpClients;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
+import projet.ais.models.Stock;
+import projet.ais.models.TypeMateriel;
 import projet.ais.models.Vehicule;
 import projet.ais.repository.VehiculeRepository;
 
@@ -174,6 +178,24 @@ public class VehiculeService {
             }
         }
     }
+
+
+     // recuperer les vehicules par  typevoiture avec pagination
+    public Page<Vehicule> getVehiculeByTypeVoitureWithPagination(String idTypeVoiture,Pageable pageable) {
+        return vehiculeRepository.findByTypeVoiture_IdTypeVoitureAndStatutVehicule(idTypeVoiture, true, pageable);
+    }
+
+    // recuperer les vehicules par  categorie avec pagination
+    public Page<Vehicule> getVehiculeByActeurWithPagination(String idActeur,Pageable pageable) {
+        return vehiculeRepository.findByActeur_IdActeur(idActeur, pageable);
+    }
+
+
+      public Page<Vehicule> getAllVehiculePageable(Pageable pageable) {
+        return vehiculeRepository.findAll(pageable);
+    }
+
+
      //créer un vehicule
     //     public Vehicule createVehicule(Vehicule vehicule, MultipartFile imageFile) throws Exception  {
         

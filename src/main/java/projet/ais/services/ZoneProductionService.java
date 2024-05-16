@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 import java.text.SimpleDateFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +24,7 @@ import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
 import projet.ais.models.Commande;
 import projet.ais.models.Stock;
+import projet.ais.models.TypeMateriel;
 import projet.ais.models.Unite;
 import projet.ais.models.ZoneProduction;
 import projet.ais.repository.ActeurRepository;
@@ -190,6 +193,12 @@ public class ZoneProductionService {
         }
         return zoneProductionRepository.save(zoneProduction);
     }
+
+
+     public Page<ZoneProduction> getAllZoneProductionPageable(Pageable pageable) {
+        return zoneProductionRepository .findAll(pageable);
+    }
+
 
   // faire une commande d'un ou plusieurs produits à la fois
 //     public Commande ajouterStocksACommande(Commande commande, List<Stock> stocks, List<Double> quantitesDemandees) throws Exception {

@@ -2,6 +2,8 @@ package projet.ais.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,6 +30,10 @@ public interface MagasinRepository  extends JpaRepository<Magasin, String>{
     // List<Magasin> findByNiveau1PaysAndActeur(@Param("idNiveau1Pays") String idNiveau1Pays,
     //                                          @Param("idActeur") String idActeur);
     List<Magasin> findAllByActeurIdActeurAndNiveau1PaysIdNiveau1Pays(String idActeur,String idNiveau1Pays);
+
+    Page<Magasin> findByNiveau1Pays_IdNiveau1PaysAndStatutMagasin(String idNiveau1Pays, boolean statutMagasin, Pageable pageable);
+
+    Page<Magasin> findByActeur_IdActeur(String idActeur, Pageable pageable);
 
     // List<Magasin> findByNiveau1PaysAndActeur(String idNiveau1Pays, String idActeur);
 }

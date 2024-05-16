@@ -2,12 +2,17 @@ package projet.ais.controllers;
 
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Unite;
 import projet.ais.services.UniteService;
 
@@ -44,6 +49,15 @@ public class UniteController {
     @Operation(summary = "activation d'unité")
     public ResponseEntity<Unite> activeUnite(@PathVariable String id) throws Exception {
         return new ResponseEntity<>(uniteService.active(id), HttpStatus.CREATED);
+    }
+
+
+    @GetMapping("/getAllUnitesWithPagination")
+    public ResponseEntity<Page<Unite>> getUnites(@RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Unite> unites = uniteService.getAllUnitePageable(pageable);
+        return ResponseEntity.ok().body(unites);
     }
 
     @PutMapping("/desactiver/{id}")
