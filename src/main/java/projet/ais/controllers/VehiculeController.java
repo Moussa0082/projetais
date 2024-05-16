@@ -142,6 +142,26 @@ private MediaType detectContentType(String imageName) {
         Page<Vehicule> vehicules = vehiculeService.getAllVehiculePageable(pageable);
         return ResponseEntity.ok().body(vehicules);
     }
+       @GetMapping("/getAllVehiculesByTypeVoitureWithPagination")
+    public ResponseEntity<Page<Vehicule>> getVehiculeByTypeVoitureWithPagination(
+        @RequestParam() String  idTypeVoiture,
+        @RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Vehicule> vehicules = vehiculeService.getVehiculeByTypeVoitureWithPagination(idTypeVoiture,pageable);
+        return ResponseEntity.ok().body(vehicules);
+    }
+
+
+    @GetMapping("/getAllVehiculesByActeurWithPagination")
+    public ResponseEntity<Page<Vehicule>> getVehiculeByActeurWithPagination(
+        @RequestParam() String  idActeur,
+        @RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Vehicule> vehicules = vehiculeService.getVehiculeByActeurWithPagination(idActeur,pageable);
+        return ResponseEntity.ok().body(vehicules);
+    }
 
 
          //liste vehicule

@@ -221,6 +221,19 @@ private MediaType detectContentType(String imageName) {
 
         return ResponseEntity.ok().body(stocks);
     }
+    @GetMapping("/getAllStocksByMagasinAndActeurWithPagination")
+    public ResponseEntity<Page<Stock>> getStocksByMagasinAndActeurWithPagination(
+            @RequestParam String idMagasin,
+            @RequestParam String idActeur,
+            @RequestParam int page,
+            @RequestParam int size) {
+
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Stock> stocks = stockService.getStocksByMagasinAndActeurWithPagination(idMagasin, idActeur,pageable);
+
+        return ResponseEntity.ok().body(stocks);
+    }
 
 
     @GetMapping("/getAllStocksByMagasinWithPagination")

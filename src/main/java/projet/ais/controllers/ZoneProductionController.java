@@ -155,6 +155,7 @@ private MediaType detectContentType(String imageName) {
         Page<ZoneProduction> zoneProductions = zoneProductionService.getAllZoneProductionPageable(pageable);
         return ResponseEntity.ok().body(zoneProductions);
     }
+        
 
         
         @GetMapping("/getAllZonesByActeurs/{id}")
