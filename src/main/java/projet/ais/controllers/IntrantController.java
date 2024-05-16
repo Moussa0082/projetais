@@ -139,10 +139,20 @@ public class IntrantController {
 
 
        @GetMapping("/getAllIntrantsWithPagination")
-    public ResponseEntity<Page<Intrant>> getConseils(@RequestParam() int page,
+    public ResponseEntity<Page<Intrant>> getIntrants(@RequestParam() int page,
                                                   @RequestParam() int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Intrant> intrants = intrantService.getAllIntrantPageable(pageable);
+        return ResponseEntity.ok().body(intrants);
+    }
+
+       @GetMapping("/getAllIntrantsByActeurWithPagination")
+    public ResponseEntity<Page<Intrant>> getIntrantsByActeur(
+        @RequestParam() String idActeur,
+        @RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Intrant> intrants = intrantService.getIntrantByActeurWithPagination(idActeur,pageable);
         return ResponseEntity.ok().body(intrants);
     }
 

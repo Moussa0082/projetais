@@ -123,7 +123,7 @@ public class MaterielService {
     }
 
     // recuperer les magasins par  acteur avec pagination
-    public Page<Magasin> getMaterielByActeurWithPagination(String idActeur,Pageable pageable) {
+    public Page<Materiel> getMaterielByActeurWithPagination(String idActeur,Pageable pageable) {
         return materielRepository.findByActeur_IdActeur(idActeur, pageable);
     }
 

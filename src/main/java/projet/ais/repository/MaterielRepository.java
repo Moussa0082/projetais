@@ -22,5 +22,5 @@ public interface MaterielRepository  extends JpaRepository<Materiel , String>{
 
     Page<Materiel> findByTypeMateriel_IdTypeMaterielAndStatut(String idTypeMateriel, boolean statut, Pageable pageable);
 
-    Page<Magasin> findByActeur_IdActeur(String idActeur, Pageable pageable);
+    Page<Materiel> findByActeur_IdActeur(String idActeur, Pageable pageable);
 }

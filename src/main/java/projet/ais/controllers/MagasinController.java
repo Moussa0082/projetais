@@ -180,6 +180,28 @@ public class MagasinController {
         return ResponseEntity.ok().body(magasins);
     }
 
+     @GetMapping("/getAllMagasinByNiveau1PaysWithPagination")
+    public ResponseEntity<Page<Magasin>> getMagasinsByNiveau1Pays(
+        @RequestParam() String idNiveau1Pays,
+        @RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Magasin> magasins = magasinService.getMagasinByNiveau1PaysWithPagination(idNiveau1Pays,pageable);
+        return ResponseEntity.ok().body(magasins);
+    }
+
+     @GetMapping("/getAllMagasinsByActeurWithPagination")
+    public ResponseEntity<Page<Magasin>> getMagasinsByActeur(
+        @RequestParam() String idActeur,
+        @RequestParam() int page,
+                                                  @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Magasin> magasins = magasinService.getMagasinByActeurWithPagination(idActeur,pageable);
+        return ResponseEntity.ok().body(magasins);
+    }
+
+
+
     @GetMapping("/getAllMagasinByPays/{id}")
     @Operation(summary = "Liste des magasins par niveau 1 pays")
     public ResponseEntity<List<Magasin>> listeMagasinByNiveau1Pays(@PathVariable String id){

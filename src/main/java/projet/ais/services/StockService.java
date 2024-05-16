@@ -469,6 +469,11 @@ private String generateQRCodeImage(String qrCodeData) {
         return stockRepository.findByActeur_IdActeur(idActeur, pageable);
     }
 
+    // recuperer les stock par  acteur avec pagination
+    public Page<Stock> getStocksByMagasinAndActeurWithPagination(String idMagasin,String idActeur,Pageable pageable) {
+        return stockRepository.findByMagasin_IdMagasinAndActeur_IdActeur(idMagasin,idActeur, pageable);
+    }
+
 
     
     //Avec pagination stock par magasin , acteur  et categorie 

@@ -155,8 +155,11 @@ public class AlertesService {
 
 
      public Page<Alertes> getAllAlertesPageable(Pageable pageable) {
-        return AlertesRepository.findAll(pageable);
+        return AlertesRepository.findByPhotoAlerteIsNotNull(pageable);
     }
+    //  public Page<Alertes> getAllAlertesPageable(Pageable pageable) {
+    //     return AlertesRepository.findAll(pageable);
+    // }
 
     //    //Liste des Alertes par acteur
     // public List<Alertes> getAllAlertesByActeur(String id){

@@ -118,6 +118,26 @@ private MediaType detectContentType(String imageName) {
         Page<Materiel> materiels = materielService.getAllMaterielPageable(pageable);
         return ResponseEntity.ok().body(materiels);
     }
+
+  @GetMapping("/getAllMaterielsByTypeMaterielWithPagination")
+    public ResponseEntity<Page<Materiel>> getMaterielByTypeMaterielWithPagination(
+        @RequestParam() String idTypeMateriel,
+        @RequestParam() int page,
+        @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Materiel> materiels = materielService.getMaterielByTypeMaterielWithPagination(idTypeMateriel,pageable);
+        return ResponseEntity.ok().body(materiels);
+    }
+
+  @GetMapping("/getAllMaterielsByActeurWithPagination")
+    public ResponseEntity<Page<Materiel>> getMaterielByActeurWithPagination(
+        @RequestParam() String idActeur,
+        @RequestParam() int page,
+        @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Materiel> materiels = materielService.getMaterielByActeurWithPagination(idActeur,pageable);
+        return ResponseEntity.ok().body(materiels);
+    }
     
     @PutMapping("/update/{id}")
     @Operation(summary = "Modification du materiel")
