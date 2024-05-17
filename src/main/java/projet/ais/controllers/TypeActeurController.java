@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.models.Niveau1Pays;
+import projet.ais.models.Speculation;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.TypeActeurRepository;
 import projet.ais.services.TypeActeurService;
@@ -64,6 +67,8 @@ public class TypeActeurController {
     }
 }
 
+    
+
 
     @GetMapping("/getAllTypeActeursWithPagination")
     public ResponseEntity<Page<TypeActeur>> getTypeActeurs(@RequestParam() int page,
@@ -74,10 +79,25 @@ public class TypeActeurController {
     }
 
            // Get Liste des  type acteur
+    //   @GetMapping("/read")
+    //   @Operation(summary = "Affichage de la liste des types d'acteur")
+    // public ResponseEntity<List<TypeActeur>> getAllTypeActeur() throws Exception {
+    //     return new ResponseEntity<>(typeActeurService.getAllTypeActeur(), HttpStatus.OK);
+    // }
       @GetMapping("/read")
-      @Operation(summary = "Affichage de la liste des types d'acteur")
-    public ResponseEntity<List<TypeActeur>> getAllTypeActeur() throws Exception {
-        return new ResponseEntity<>(typeActeurService.getAllTypeActeur(), HttpStatus.OK);
+    public ResponseEntity<List<TypeActeur>> getAllTypeActeurs() {
+        List<TypeActeur> typeActeurs = typeActeurService.getAllTypeActeurs();
+
+        if (typeActeurs.isEmpty()) {
+            throw new EntityNotFoundException("TypeActeurs non trouvé");
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(typeActeurs);
     }
 
        //Supprimer type acteur

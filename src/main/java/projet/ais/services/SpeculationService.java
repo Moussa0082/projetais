@@ -20,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 
 import jakarta.persistence.EntityNotFoundException;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -88,18 +89,32 @@ public class SpeculationService {
         return speculationRepository.save(speculations);
     }
 
-    public List<Speculation> getAllSpeculation(){
+    public List<Speculation> getAllSpeculation() {
         List<Speculation> speculations = speculationRepository.findAll();
 
-        if(speculations.isEmpty())
+        if (speculations.isEmpty()) {
             throw new EntityNotFoundException("Speculation non trouvé");
-        
+        }
+
         speculations = speculations
-        .stream().sorted((s1, s2) -> s2.getNomSpeculation().compareTo(s1.getNomSpeculation()))
-        .collect(Collectors.toList());
+            .stream()
+            .map(this::ensureUtf8Encoding)
+            .sorted((s1, s2) -> s2.getNomSpeculation().compareTo(s1.getNomSpeculation()))
+            .collect(Collectors.toList());
 
         return speculations;
     }
+
+    private Speculation ensureUtf8Encoding(Speculation speculation) {
+        String nomSpeculation = speculation.getNomSpeculation();
+        if (!StandardCharsets.UTF_8.newEncoder().canEncode(nomSpeculation)) {
+            byte[] bytes = nomSpeculation.getBytes(StandardCharsets.ISO_8859_1);
+            nomSpeculation = new String(bytes, StandardCharsets.UTF_8);
+            speculation.setNomSpeculation(nomSpeculation);
+        }
+        return speculation;
+    }
+
 
 
      public Page<Speculation> getAllSpeculationPageable(Pageable pageable) {
