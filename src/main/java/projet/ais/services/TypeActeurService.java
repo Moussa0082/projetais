@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.Random;
 import java.time.LocalDate;
 import java.util.Date;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 
 import java.time.format.DateTimeFormatter;
@@ -32,6 +33,7 @@ import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
 import projet.ais.models.Filiere;
 import projet.ais.models.SousRegion;
+import projet.ais.models.Speculation;
 import projet.ais.models.Superficie;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.TypeActeurRepository;
@@ -131,6 +133,36 @@ private String genererChaineAleatoire(String source, int longueur) {
         return typeActeurRepository.findAll(pageable);
     }
 
+     public List<TypeActeur> getAllTypeActeurs() {
+        List<TypeActeur> typeActeurs = typeActeurRepository.findAll();
+
+        if (typeActeurs.isEmpty()) {
+            throw new EntityNotFoundException("TypeActeur non trouvé");
+        }
+
+        typeActeurs = typeActeurs
+            .stream()
+            .map(this::ensureUtf8Encoding)
+            .sorted((s1, s2) -> s2.getLibelle().compareTo(s1.getLibelle()))
+            .collect(Collectors.toList());
+
+        return typeActeurs;
+    }
+
+     private TypeActeur ensureUtf8Encoding(TypeActeur typeActeur) {
+    // Example logic to ensure UTF-8 encoding on the libelle field
+    try {
+        String libelle = typeActeur.getLibelle();
+        if (libelle != null) {
+            byte[] utf8Bytes = libelle.getBytes("UTF-8");
+            typeActeur.setLibelle(new String(utf8Bytes, "UTF-8"));
+        }
+    } catch (UnsupportedEncodingException e) {
+        // Handle encoding exception
+        e.printStackTrace();
+    }
+    return typeActeur;
+}
 
 
         //Recuperer la liste des type acteur
