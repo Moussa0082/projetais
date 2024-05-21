@@ -35,5 +35,7 @@ public interface MagasinRepository  extends JpaRepository<Magasin, String>{
 
     Page<Magasin> findByActeur_IdActeur(String idActeur, Pageable pageable);
 
+    Page<Magasin> findAllByStatutMagasin(boolean statutMagsin, Pageable pageable);
+
     // List<Magasin> findByNiveau1PaysAndActeur(String idNiveau1Pays, String idActeur);
 }

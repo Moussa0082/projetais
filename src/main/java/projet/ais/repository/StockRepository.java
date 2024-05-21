@@ -42,7 +42,7 @@ public interface StockRepository extends JpaRepository<Stock, String>{
     List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduitAndActeur_IdActeur(String idCategorieProduit,
             String idActeur);
     Page<Stock> findAllByStatutSotck(boolean statutSotck,Pageable pageable);
-    Page<Stock> findBySpeculation_CategorieProduitAndStatutSotck(CategorieProduit categorie, boolean b,
+    Page<Stock> findBySpeculation_CategorieProduitAndStatutSotck(CategorieProduit categorie, boolean statutSotck,
             Pageable pageable);
     Page<Stock> findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndStatutSotck(
             String idCategorieProduit, String idMagasin, boolean statutSotck, Pageable pageable);
