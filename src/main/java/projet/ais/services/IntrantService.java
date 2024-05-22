@@ -169,8 +169,8 @@ public class IntrantService {
 
 
       // recuperer les intrants par  categorie avec pagination
-    public Page<Intrant> getIntrantByCategorieProduitWithPagination(String idIntrant,Pageable pageable) {
-        return intrantRepository.findByCategorieProduit_IdCategorieProduitAndStatutIntrant(idIntrant, true, pageable);
+    public Page<Intrant> getIntrantByCategorieWithPagination(String idCategorieProduit,Pageable pageable) {
+        return intrantRepository.findByCategorieProduit_IdCategorieProduitAndStatutIntrant(idCategorieProduit, true, pageable);
     }
 
     // recuperer les intrants par  acteur avec pagination
@@ -193,7 +193,7 @@ public class IntrantService {
     } 
 
     public Page<Intrant> getAllIntrantPageable(Pageable pageable) {
-        return intrantRepository.findAll(pageable);
+        return intrantRepository.findAllByStatutIntrant(true,pageable);
     }    
 
     // public List<Intrant> getAllIntrantBySuperficie(String id){

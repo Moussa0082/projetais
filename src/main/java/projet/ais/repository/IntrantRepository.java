@@ -24,8 +24,10 @@ public interface IntrantRepository extends JpaRepository<Intrant , String> {
     List<Intrant> findAllByCategorieProduit_IdCategorieProduit(String idCategorieProduit);
     Collection<Intrant> findByNomIntrant(String nomIntrant);
 
-    Page<Intrant> findByCategorieProduit_IdCategorieProduitAndStatutIntrant(String idIntrant, boolean statutIntrant,
+    Page<Intrant> findByCategorieProduit_IdCategorieProduitAndStatutIntrant(String idCategorieProduit, boolean statutIntrant,
             Pageable pageable);
 
     Page<Intrant> findByActeur_IdActeur(String idActeur, Pageable pageable);
+
+    Page<Intrant> findAllByStatutIntrant(boolean statutIntrant, Pageable pageable);
 }

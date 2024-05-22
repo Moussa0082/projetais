@@ -144,7 +144,7 @@ public class MagasinService {
 
 
     public Page<Magasin> getAllMagasinPageable(Pageable pageable) {
-        return magasinRepository.findAll(pageable);
+        return magasinRepository.findAllByStatutMagasin(true,pageable);
     }
 
      // recuperer les magasins par  niveau1Pays avec pagination
