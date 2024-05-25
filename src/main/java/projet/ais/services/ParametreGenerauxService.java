@@ -150,9 +150,9 @@ public class ParametreGenerauxService {
             parametreGenerauxExistant.setEmailStructure(parametreGeneraux.getEmailStructure());
             parametreGenerauxExistant.setTelephoneStructure(parametreGeneraux.getTelephoneStructure());
             parametreGenerauxExistant.setWhattsAppStructure(parametreGeneraux.getWhattsAppStructure());
-            parametreGenerauxExistant.setLibelleNiveau1Pays(parametreGeneraux.getLibelleNiveau1Pays());
-            parametreGenerauxExistant.setLibelleNiveau2Pays(parametreGeneraux.getLibelleNiveau2Pays());
-            parametreGenerauxExistant.setLibelleNiveau3Pays(parametreGeneraux.getLibelleNiveau3Pays());
+            // parametreGenerauxExistant.setLibelleNiveau1Pays(parametreGeneraux.getLibelleNiveau1Pays());
+            // parametreGenerauxExistant.setLibelleNiveau2Pays(parametreGeneraux.getLibelleNiveau2Pays());
+            // parametreGenerauxExistant.setLibelleNiveau3Pays(parametreGeneraux.getLibelleNiveau3Pays());
             parametreGenerauxExistant.setLocaliteStructure(parametreGeneraux.getLocaliteStructure());
             parametreGenerauxExistant.setTauxDollar(parametreGeneraux.getTauxDollar());
             parametreGenerauxExistant.setTauxYuan(parametreGeneraux.getTauxYuan());
@@ -201,9 +201,9 @@ public class ParametreGenerauxService {
          parametreGenerauxExistant.setEmailStructure(parametreGeneraux.getEmailStructure());
          parametreGenerauxExistant.setTelephoneStructure(parametreGeneraux.getTelephoneStructure());
          parametreGenerauxExistant.setWhattsAppStructure(parametreGeneraux.getWhattsAppStructure());
-         parametreGenerauxExistant.setLibelleNiveau1Pays(parametreGeneraux.getLibelleNiveau1Pays());
-         parametreGenerauxExistant.setLibelleNiveau2Pays(parametreGeneraux.getLibelleNiveau2Pays());
-         parametreGenerauxExistant.setLibelleNiveau3Pays(parametreGeneraux.getLibelleNiveau3Pays());
+        //  parametreGenerauxExistant.setLibelleNiveau1Pays(parametreGeneraux.getLibelleNiveau1Pays());
+        //  parametreGenerauxExistant.setLibelleNiveau2Pays(parametreGeneraux.getLibelleNiveau2Pays());
+        //  parametreGenerauxExistant.setLibelleNiveau3Pays(parametreGeneraux.getLibelleNiveau3Pays());
          parametreGenerauxExistant.setLocaliteStructure(parametreGeneraux.getLocaliteStructure());
          parametreGenerauxExistant.setTauxDollar(parametreGeneraux.getTauxDollar());
          parametreGenerauxExistant.setTauxYuan(parametreGeneraux.getTauxYuan());

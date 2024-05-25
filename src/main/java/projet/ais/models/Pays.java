@@ -22,6 +22,15 @@ public class Pays {
     private String nomPays;
 
     @Column(nullable = false)
+    private String libelleNiveau1Pays;
+
+    @Column(nullable = false)
+    private String libelleNiveau2Pays;
+
+    @Column(nullable = false)
+    private String libelleNiveau3Pays;
+
+    @Column(nullable = false)
     private String descriptionPays;
 
     @Column(nullable = true)
@@ -40,6 +49,11 @@ public class Pays {
     (mappedBy = "pays")
     @JsonIgnore
     private List<Niveau1Pays> niveau1PaysList;
+
+    @OneToMany
+    (mappedBy = "pays")
+    @JsonIgnore
+    private List<Acteur> acteursList;
 
     @ManyToOne
     @JoinColumn( name = "idSousRegion")
