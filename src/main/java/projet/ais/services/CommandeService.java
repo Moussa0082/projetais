@@ -160,7 +160,7 @@ public class CommandeService {
         detailCommande.setCodeProduit(stock.getCodeStock());
         detailCommande.setQuantiteDemande(quantiteDemandee);
         detailCommande.setQuantiteLivree(0.0); // Initialement aucun n'a été livré
-        detailCommande.setQuantiteNonLivree(0.0); // Initialement aucun n'a été livré
+        detailCommande.setQuantiteNonLivree(quantiteDemandee); // Initialement aucun n'a été livré
         detailCommande.setNomProduit(stock.getNomProduit());
         detailCommande.setDateAjout(formattedDateTime);
         detailCommande.setCommande(savedCommande);
@@ -188,7 +188,7 @@ public class CommandeService {
         detailCommande.setCodeProduit(intrant.getCodeIntrant());
         detailCommande.setQuantiteDemande(quantiteInt);
         detailCommande.setQuantiteLivree(0.0); // Initialement aucun n'a été livré
-        detailCommande.setQuantiteNonLivree(0.0); // Initialement aucun n'a été livré
+        detailCommande.setQuantiteNonLivree(quantiteInt); // Initialement aucun n'a été livré
         detailCommande.setNomProduit(intrant.getNomIntrant());
         detailCommande.setDateAjout(formattedDateTime);
         detailCommande.setCommande(savedCommande);
@@ -268,8 +268,10 @@ public class CommandeService {
         detailCommande.setQuantiteLivree(quantiteLivree);
         detailCommande.setQuantiteNonLivree(quantiteNonLivree);
 
+        String msg = "La livraison de votre commande de " + optionalDetailCommande.get().getNomProduit().toUpperCase() + " passé le " + optionalDetailCommande.get().getCommande().getDateCommande()  + " a été confirmer avec succès par le proprietaire en cas de retard de livraison vous pouvez le contacter à son numéro " + optionalDetailCommande.get().getCommande().getActeurProprietaire().getWhatsAppActeur() ;
         // Enregistrer les modifications dans la base de données
         detailCommandeRepository.save(detailCommande);
+        messageService.sendMessageAndSave(optionalDetailCommande.get().getCommande().getActeur().getWhatsAppActeur(), msg, optionalDetailCommande.get().getCommande().getActeur());
 
         // Récupérer tous les détails de commande liés à la même commande
         List<DetailCommande> allDetailsForCommande = detailCommandeRepository.findByCommandeIdCommande(detailCommande.getCommande().getIdCommande());
@@ -283,6 +285,9 @@ public class CommandeService {
             Commande commande = detailCommande.getCommande();
             commande.setStatutCommandeLivrer(true);
             commandeRepository.save(commande);
+            String msgg = "La livraison de tous les produits de votre commande avec le code " + optionalDetailCommande.get().getCommande().getCodeCommande() + " a été confirmé par " + "  proprietaire en cas de retard de livraison vous pouvez le contacter à son numéro " + optionalDetailCommande.get().getCommande().getActeurProprietaire().getWhatsAppActeur() ;
+            messageService.sendMessageAndSave(optionalDetailCommande.get().getCommande().getActeur().getWhatsAppActeur(), msgg, optionalDetailCommande.get().getCommande().getActeur());
+
         }
     } else {
         // Lever une exception si le détail de la commande n'est pas trouvé

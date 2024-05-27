@@ -191,7 +191,10 @@ public class Acteur {
    @JsonIgnore
    private List<Campagne> campagnes;
    
+
    
+   @OneToMany(mappedBy = "acteur")
+   private List<Rating> ratings;
 
 }
 

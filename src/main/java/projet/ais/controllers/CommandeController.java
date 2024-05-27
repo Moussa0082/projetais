@@ -135,6 +135,7 @@ return ResponseEntity.status(HttpStatus.OK).body("Commande passer avec succes");
         }
     }
 
+    
     @PutMapping("/confirmerLivraison/{idDetailCommande}/{quantiteLivree}")
     public ResponseEntity<?> confirmerLivrasonProduit(@PathVariable String idDetailCommande, @PathVariable double quantiteLivree) {
     try {
@@ -151,7 +152,7 @@ return ResponseEntity.status(HttpStatus.OK).body("Commande passer avec succes");
     public ResponseEntity<String> confirmer(@PathVariable String idCommande) {
         try {
             commandeService.confirmerCommande(idCommande);
-            return ResponseEntity.ok("Livraison Confirmer panier avec succès");
+            return ResponseEntity.ok("Livraison Confirmer  avec succès");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'ajout au panier : " + e.getMessage());
         }
