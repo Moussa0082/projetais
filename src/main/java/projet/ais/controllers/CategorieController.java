@@ -26,7 +26,7 @@ import java.util.List;
 
 
 @RestController
-@CrossOrigin
+// @CrossOrigin(origins = "*")
 @RequestMapping("api-koumi/Categorie")
 public class CategorieController {
     

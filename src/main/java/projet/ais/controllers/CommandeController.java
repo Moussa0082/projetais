@@ -36,7 +36,7 @@ import projet.ais.services.CommandeService;
 
 
 @RestController
-@CrossOrigin
+// @CrossOrigin(origins = "*")
 @RequestMapping("api-koumi/commande")
 public class CommandeController {
 
@@ -100,6 +100,20 @@ return ResponseEntity.status(HttpStatus.OK).body("Commande passer avec succes");
             }
         }
 
+
+          
+    @GetMapping("/{commandeId}/details")
+    public ResponseEntity<List<DetailCommande>> getDetailsByCommandeId(@PathVariable String commandeId) {
+        List<DetailCommande> details = commandeService.getDetailsByCommandeId(commandeId);
+        return ResponseEntity.ok(details);
+    }
+
+    
+    @GetMapping("/{commandeId}/details/count")
+    public ResponseEntity<String> getDetailCountByCommandeId(@PathVariable String commandeId) {
+        String count = commandeService.getDetailCountByCommandeId(commandeId);
+        return ResponseEntity.ok(count);
+    }
     
 
     @PostMapping("/addCommandeMateriel")
@@ -135,7 +149,7 @@ return ResponseEntity.status(HttpStatus.OK).body("Commande passer avec succes");
         }
     }
 
-    
+
     @PutMapping("/confirmerLivraison/{idDetailCommande}/{quantiteLivree}")
     public ResponseEntity<?> confirmerLivrasonProduit(@PathVariable String idDetailCommande, @PathVariable double quantiteLivree) {
     try {

@@ -352,7 +352,16 @@ public class CommandeService {
 }
 
       
+        public List<DetailCommande> getDetailsByCommandeId(String idCommande) {
+            Optional<Commande> commandes = commandeRepository.findById(idCommande);
+            return detailCommandeRepository.findByCommande(commandes);
+        }
 
+
+        public String getDetailCountByCommandeId(String commandeId) {
+            Commande commande = commandeRepository.findById(commandeId).orElseThrow(() -> new RuntimeException("Commande non trouvée"));
+            return detailCommandeRepository.countByCommande(commande);
+        }
     
 
 

@@ -20,7 +20,7 @@ import projet.ais.models.RegroupementParametre;
 import projet.ais.services.RegroupementSevice;
 
 @RestController
-@CrossOrigin
+// @CrossOrigin(origins = "*")
 @RequestMapping("api-koumi/RegroupemenParametre")
 public class RegroupementController {
     

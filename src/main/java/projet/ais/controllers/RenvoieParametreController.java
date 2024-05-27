@@ -20,7 +20,7 @@ import projet.ais.models.RenvoieParametre;
 import projet.ais.services.RenvoieParametreService;
 
 @RestController
-@CrossOrigin
+// @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("api-koumi/RenvoiParametre")
 public class RenvoieParametreController {
     

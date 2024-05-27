@@ -127,7 +127,7 @@ public class IntrantService {
             if (ac != acteur) {
                 
                 // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
-                String mes = "Bonjour " + acteur.getNomActeur().toUpperCase() + " Un nouveau produit de type intrant vient d'être ajouté " + " Nom : " + intrant.getNomIntrant();
+                String mes = "Bonjour " + acteur.getNomActeur().toUpperCase() + " Un nouveau produit de type intrant vient d'être ajouté " + " Nom : " + intrant.getNomIntrant() + "\n\n Lien vers le produit est : " + "https://koumi.ml/api-koumi/intrant/"+intrant.getIdIntrant()+"/image";;
                     try {
                         messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  acteur);
                     } catch (Exception e) {
@@ -170,7 +170,7 @@ public class IntrantService {
 
       // recuperer les intrants par  categorie avec pagination
     public Page<Intrant> getIntrantByCategorieWithPagination(String idCategorieProduit,Pageable pageable) {
-        return intrantRepository.findByCategorieProduit_IdCategorieProduitAndStatutIntrant(idCategorieProduit, true, pageable);
+        return intrantRepository.findByCategorieProduit_IdCategorieProduitAndStatutIntrantAndActeurStatutActeur(idCategorieProduit, true, true, pageable);
     }
 
     // recuperer les intrants par  acteur avec pagination
@@ -193,7 +193,7 @@ public class IntrantService {
     } 
 
     public Page<Intrant> getAllIntrantPageable(Pageable pageable) {
-        return intrantRepository.findAllByStatutIntrant(true,pageable);
+        return intrantRepository.findAllByStatutIntrantAndActeurStatutActeur(true,true,pageable);
     }    
 
     // public List<Intrant> getAllIntrantBySuperficie(String id){

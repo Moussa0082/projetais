@@ -25,7 +25,7 @@ import projet.ais.models.Superficie;
 import projet.ais.services.SuperficieService;
 
 @RestController
-@CrossOrigin
+// @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("api-koumi/Superficie")
 public class SuperficieController {
     

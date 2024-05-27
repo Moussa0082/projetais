@@ -42,7 +42,7 @@ import projet.ais.services.FileUploade;
 import projet.ais.services.StockService;
 
 @RestController
-@CrossOrigin
+// @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("api-koumi/Stock")
 public class StockController {
     

@@ -1,6 +1,7 @@
 package projet.ais.controllers;
 
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,9 +31,10 @@ import projet.ais.models.ParametreGeneraux;
 import projet.ais.repository.ParametreGenerauxRepository;
 import projet.ais.services.FileUploade;
 import projet.ais.services.ParametreGenerauxService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
-@CrossOrigin
 @RequestMapping("api-koumi/parametreGeneraux")
 public class ParametreGenerauxController {
 
@@ -42,8 +46,7 @@ public class ParametreGenerauxController {
     private ParametreGenerauxRepository parametreGenerauxRepository;
     @Autowired
     FileUploade fileUploade;
-
-
+    private static final Logger logger = LoggerFactory.getLogger(ParametreGenerauxController.class);
      //Create user
           @PostMapping("/create")
     @Operation(summary = "Création d'un paramètre général")
@@ -118,7 +121,35 @@ public class ParametreGenerauxController {
         return MediaType.APPLICATION_OCTET_STREAM;
     }
      
-    //Mettre à jour un user
+     @PutMapping("/updateParam/{id}")
+    @Operation(summary = "Mise à jour d'un paramètre général par son Id")
+    public ResponseEntity<ParametreGeneraux> updateParametreG(
+            @PathVariable String id,
+            @RequestParam("parametreGeneral") String parametreGeneralString,
+            @RequestParam(value = "image", required = false) MultipartFile imageFile) {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ParametreGeneraux parametreGeneraux;
+        try {
+            parametreGeneraux = objectMapper.readValue(parametreGeneralString, ParametreGeneraux.class);
+        } catch (JsonMappingException e) {
+            logger.error("Erreur de mappage JSON : ", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (JsonProcessingException e) {
+            logger.error("Erreur de traitement JSON : ", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        try {
+            ParametreGeneraux parametreGeneralMisAjour = parametreGenerauxService.updateParametreGene(parametreGeneraux, id, imageFile);
+            return new ResponseEntity<>(parametreGeneralMisAjour, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Erreur lors de la mise à jour de ParametreGeneraux : ", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //Mettre à jour 
       @PutMapping("/update/{id}")
     @Operation(summary = "Mise à jour d'un paramètre général par son Id ")
     public ResponseEntity<ParametreGeneraux> updateParametreGeneraux(

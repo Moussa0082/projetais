@@ -182,7 +182,7 @@ public class VehiculeService {
 
      // recuperer les vehicules par  typevoiture avec pagination
     public Page<Vehicule> getVehiculeByTypeVoitureWithPagination(String idTypeVoiture,Pageable pageable) {
-        return vehiculeRepository.findByTypeVoiture_IdTypeVoitureAndStatutVehicule(idTypeVoiture, true, pageable);
+        return vehiculeRepository.findByTypeVoiture_IdTypeVoitureAndStatutVehiculeAndActeurStatutActeur(idTypeVoiture, true,true, pageable);
     }
 
     // recuperer les vehicules par  categorie avec pagination

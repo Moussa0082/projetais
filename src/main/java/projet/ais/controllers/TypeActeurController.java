@@ -29,8 +29,8 @@ import projet.ais.repository.TypeActeurRepository;
 import projet.ais.services.TypeActeurService;
 
 @RestController
-@CrossOrigin
 @RequestMapping("api-koumi/typeActeur")
+// @CrossOrigin
 public class TypeActeurController {
 
     @Autowired

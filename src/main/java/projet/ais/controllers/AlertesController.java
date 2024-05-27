@@ -33,7 +33,7 @@ import org.springframework.http.MediaType;
 import java.io.IOException;
 
 @RestController
-@CrossOrigin
+// @CrossOrigin(origins = "*")
 @RequestMapping("api-koumi/alertes")
 public class AlertesController {
     

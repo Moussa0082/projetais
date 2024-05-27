@@ -66,8 +66,8 @@ public class Acteur {
     @Column(nullable = true)
     private String logoActeur;
 
-    @Column(nullable = true)
-    private String niveau3PaysActeur;
+    // @Column(nullable = true)
+    // private String niveau3PaysActeur;
 
     
     @Column(nullable = false)
@@ -90,17 +90,14 @@ public class Acteur {
     @Column(nullable = true)
     private String emailActeur;
 
-
-    // @Column(nullable = false)
-    // private String MaillonActeur;
-
-    // @Column(nullable = true)
-    // private String filiereActeur;
-
-   
     private Boolean statutActeur  ;
 
     private Boolean isConnected  ;
+
+    // @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "idPays")
+    private Pays pays;
 
     @OneToMany
     (mappedBy = "acteur")
@@ -110,9 +107,7 @@ public class Acteur {
     @OneToMany
     (mappedBy = "acteur")
     private List<Speculation> speculations;
-    
-
-
+  
     @OneToMany(mappedBy = "acteur")
     @JsonIgnore
     private List<Unite> unite;

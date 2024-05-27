@@ -31,7 +31,7 @@ import projet.ais.repository.VehiculeRepository;
 import projet.ais.services.VehiculeService;
 
 @RestController
-@CrossOrigin
+// @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("api-koumi/vehicule")
 public class VehiculeController {
 

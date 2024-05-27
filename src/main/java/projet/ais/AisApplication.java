@@ -16,13 +16,6 @@ public class AisApplication {
 		SpringApplication.run(AisApplication.class, args);
 	}
 	
-
-	//  @Bean
-    // public HttpMessageConverter<BufferedImage> createImageHttpMessageConverter() {
-    //  return new BufferedImageHttpMessageConverter();
-    // }
-
-	
 }
 
 

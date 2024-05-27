@@ -871,11 +871,11 @@ public String sendOtpCodeEmail(String email) throws Exception {
         if (acteur.isPresent()) {
             acteur.get().setStatutActeur(true);
             acteurRepository.save(acteur.get());
-             Alerte alerte = new Alerte(acteur.get().getEmailActeur(), "Votre compte a été activé par le super admin vous pouvez acceder votre compte" , "Activation de compte par l'administrateur de koumi");
+             Alerte alerte = new Alerte(acteur.get().getEmailActeur(), "Votre compte a été activé par l'admin vous pouvez acceder votre compte" , "Activation de compte par l'administrateur de koumi");
              alerte.setId(idGenerator.genererCode());
              alerteRepository.save(alerte);
              emailService.sendSimpleMail(alerte);
-             messageService.sendMessagePersonnalAndSave(acteur.get().getWhatsAppActeur(), "Votre compte a été activé par le super admin vous pouvez acceder votre compte");
+             messageService.sendMessagePersonnalAndSave(acteur.get().getWhatsAppActeur(), "Votre compte a été activé par l'admin vous pouvez acceder votre compte");
             return new ResponseEntity<>("Le compte de " + acteur.get().getNomActeur() +  " a été activé avec succès", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Acteur non trouvé avec l'ID " + id, HttpStatus.BAD_REQUEST);

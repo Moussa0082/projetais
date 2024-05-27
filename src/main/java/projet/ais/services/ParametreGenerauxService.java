@@ -112,6 +112,56 @@ public class ParametreGenerauxService {
         }
     
     
+        public ParametreGeneraux updateParametreGene(ParametreGeneraux parametreGeneraux, String id, MultipartFile imageFile1) throws Exception {
+            ParametreGeneraux parametreGenerauxExistant = parametreGenerauxRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Paramètre général introuvable"));
+    
+            // Log start of update
+            System.out.println("Début de la mise à jour du paramètre général avec ID: " + id);
+    
+            // Vérifier et traiter le fichier image
+            if (imageFile1 != null && !imageFile1.isEmpty()) {
+                String imageLocation = "/ais";
+                try {
+                    Path imageRootLocation = Paths.get(imageLocation);
+                    if (!Files.exists(imageRootLocation)) {
+                        Files.createDirectories(imageRootLocation);
+                    }
+    
+                    String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
+                    Path imagePath = imageRootLocation.resolve(imageName);
+                    Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                    String onlineImagePath = fileUploade.uploadImageToFTP(imagePath, imageName);
+    
+                    parametreGenerauxExistant.setLogoSysteme(imageName);
+                    // Log successful image update
+                    System.out.println("Image mise à jour avec succès: " + imageName);
+                } catch (IOException e) {
+                    throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
+                }
+            }
+    
+            // Mettre à jour les autres champs
+            parametreGenerauxExistant.setSigleStructure(parametreGeneraux.getSigleStructure());
+            parametreGenerauxExistant.setNomStructure(parametreGeneraux.getNomStructure());
+            parametreGenerauxExistant.setSigleSysteme(parametreGeneraux.getSigleStructure());
+            parametreGenerauxExistant.setNomSysteme(parametreGeneraux.getNomSysteme());
+            parametreGenerauxExistant.setSloganSysteme(parametreGeneraux.getSloganSysteme());
+            parametreGenerauxExistant.setAdresseStructure(parametreGeneraux.getAdresseStructure());
+            parametreGenerauxExistant.setEmailStructure(parametreGeneraux.getEmailStructure());
+            parametreGenerauxExistant.setTelephoneStructure(parametreGeneraux.getTelephoneStructure());
+            parametreGenerauxExistant.setWhattsAppStructure(parametreGeneraux.getWhattsAppStructure());
+            // parametreGenerauxExistant.setLibelleNiveau1Pays(parametreGeneraux.getLibelleNiveau1Pays());
+            // parametreGenerauxExistant.setLibelleNiveau2Pays(parametreGeneraux.getLibelleNiveau2Pays());
+            // parametreGenerauxExistant.setLibelleNiveau3Pays(parametreGeneraux.getLibelleNiveau3Pays());
+            parametreGenerauxExistant.setLocaliteStructure(parametreGeneraux.getLocaliteStructure());
+            parametreGenerauxExistant.setTauxDollar(parametreGeneraux.getTauxDollar());
+            parametreGenerauxExistant.setTauxYuan(parametreGeneraux.getTauxYuan());
+    
+            // Log successful parameter update
+            System.out.println("Mise à jour des paramètres réussie pour l'ID: " + id);
+    
+            return parametreGenerauxRepository.save(parametreGenerauxExistant);
+        }
         //Modifier paramètre methode
        
     
@@ -151,9 +201,9 @@ public class ParametreGenerauxService {
          parametreGenerauxExistant.setEmailStructure(parametreGeneraux.getEmailStructure());
          parametreGenerauxExistant.setTelephoneStructure(parametreGeneraux.getTelephoneStructure());
          parametreGenerauxExistant.setWhattsAppStructure(parametreGeneraux.getWhattsAppStructure());
-         parametreGenerauxExistant.setLibelleNiveau1Pays(parametreGeneraux.getLibelleNiveau1Pays());
-         parametreGenerauxExistant.setLibelleNiveau2Pays(parametreGeneraux.getLibelleNiveau2Pays());
-         parametreGenerauxExistant.setLibelleNiveau3Pays(parametreGeneraux.getLibelleNiveau3Pays());
+        //  parametreGenerauxExistant.setLibelleNiveau1Pays(parametreGeneraux.getLibelleNiveau1Pays());
+        //  parametreGenerauxExistant.setLibelleNiveau2Pays(parametreGeneraux.getLibelleNiveau2Pays());
+        //  parametreGenerauxExistant.setLibelleNiveau3Pays(parametreGeneraux.getLibelleNiveau3Pays());
          parametreGenerauxExistant.setLocaliteStructure(parametreGeneraux.getLocaliteStructure());
          parametreGenerauxExistant.setTauxDollar(parametreGeneraux.getTauxDollar());
          parametreGenerauxExistant.setTauxYuan(parametreGeneraux.getTauxYuan());

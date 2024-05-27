@@ -20,7 +20,7 @@ import projet.ais.models.Sortie_Stock;
 import projet.ais.services.Sortie_StockService;
 
 @RestController
-@CrossOrigin
+// @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("api-koumi/sortieStock")
 public class Sortie_StockController {
     

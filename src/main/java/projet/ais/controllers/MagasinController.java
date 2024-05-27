@@ -37,7 +37,7 @@ import java.io.IOException;
 
 
 @RestController
-@CrossOrigin
+// @CrossOrigin(origins = "*")
 @RequestMapping("api-koumi/Magasin")
 public class MagasinController {
     

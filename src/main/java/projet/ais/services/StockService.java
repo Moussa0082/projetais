@@ -250,8 +250,7 @@ private String generateQRCodeImage(String qrCodeData) {
 
 
     public Page<Stock> getAllStocksPageable(Pageable pageable) {
-        return stockRepository.findAllByStatutSotck(true,pageable);
-        // return stockRepository.findAll(pageable);
+        return stockRepository.findAllByStatutSotckAndActeurStatutActeur(true, true,pageable);
     }
 
     
@@ -460,7 +459,7 @@ private String generateQRCodeImage(String qrCodeData) {
 
     // recuperer les stock par  magasin avec pagination
     public Page<Stock> getStocksByMagasinWithPagination(String idMagasin,Pageable pageable) {
-        return stockRepository.findByMagasin_IdMagasinAndStatutSotck(idMagasin, true,pageable);
+        return stockRepository.findByMagasin_IdMagasinAndStatutSotckAndActeurStatutActeur(idMagasin,true, true,pageable);
     }
 
 
@@ -478,7 +477,7 @@ private String generateQRCodeImage(String qrCodeData) {
     
     //Avec pagination stock par magasin , acteur  et categorie 
     public Page<Stock> listeStockByCategorieProduitAndMagasinWithPagination(String idCategorieProduit, String idMagasin, Pageable pageable) {
-        return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndStatutSotck(idCategorieProduit,idMagasin, true,pageable);
+        return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndStatutSotckAndActeurStatutActeur(idCategorieProduit,idMagasin, true, true,pageable);
     }
 
     //recuperer les stock par categorie produit et idActeur
@@ -493,7 +492,7 @@ private String generateQRCodeImage(String qrCodeData) {
 
 
     public Page<Stock> getStocksByCategorieWithPagination(CategorieProduit categorie, Pageable pageable) {
-        return stockRepository.findBySpeculation_CategorieProduitAndStatutSotck(categorie, true, pageable);
+        return stockRepository.findBySpeculation_CategorieProduitAndStatutSotckAndActeurStatutActeur(categorie,true, true, pageable);
     }
 
 

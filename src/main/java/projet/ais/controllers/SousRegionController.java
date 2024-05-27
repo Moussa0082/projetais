@@ -25,7 +25,7 @@ import projet.ais.repository.SousRegionRepository;
 import projet.ais.services.SousRegionService;
 
 @RestController
-@CrossOrigin
+// @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("api-koumi/sousRegion")
 public class SousRegionController {
 

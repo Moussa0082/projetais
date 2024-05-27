@@ -52,14 +52,14 @@ public class ParametreGeneraux {
     @Column(nullable = false)
     private String whattsAppStructure;
 
-    @Column(nullable = false)
-    private String libelleNiveau1Pays;
+    // @Column(nullable = false)
+    // private String libelleNiveau1Pays;
 
-    @Column(nullable = false)
-    private String libelleNiveau2Pays;
+    // @Column(nullable = false)
+    // private String libelleNiveau2Pays;
 
-    @Column(nullable = false)
-    private String libelleNiveau3Pays;
+    // @Column(nullable = false)
+    // private String libelleNiveau3Pays;
 
     @Column(nullable = false)
     private String codeNiveauStructure;
@@ -70,9 +70,6 @@ public class ParametreGeneraux {
     @Column(nullable = false)
     private String monnaie;
 
-    // @Column(nullable = true)
-    // private String tauxFcranc;
-   
     @Column(nullable = true)
     private String tauxDollar;
 
