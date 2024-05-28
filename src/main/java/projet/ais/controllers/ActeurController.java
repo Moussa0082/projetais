@@ -136,6 +136,13 @@ public class ActeurController {
                 return MediaType.APPLICATION_OCTET_STREAM;
             }
 
+            
+    @GetMapping("/libelleNiveau1Pays/{id}")
+    public ResponseEntity<String> getLibelleNiveau1Pays(@PathVariable String id) {
+        String libelleNiveau1Pays = acteurService.getLibelleNiveau1PaysForActeur(id);
+        return ResponseEntity.ok(libelleNiveau1Pays);
+    }
+
 
              @GetMapping("/getAllActeurWithPagination")
     public ResponseEntity<Page<Acteur>> getActeurs(@RequestParam() int page,

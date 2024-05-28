@@ -60,10 +60,17 @@ public ResponseEntity<Niveau1Pays> updatesNiveau1Pays(@RequestBody Niveau1Pays n
 }
 
     //liste 
-    @GetMapping("/listeNiveau1PaysByIdPays/{id}")
+    @GetMapping("/listeNiveau1PaysByNomPays/{nomPays}")
     @Operation(summary = "affichage de la liste des niveau 1 pays par pays")
-    public ResponseEntity<List<Niveau1Pays>> listeNiveau1PaysByIdPays(@PathVariable String id){
-        return  new ResponseEntity<>(niveau1PaysService.getAllNiveau1PaysByPays(id), HttpStatus.OK);
+    public ResponseEntity<List<Niveau1Pays>> listeNiveau1PaysByNomPays(@PathVariable String nomPays){
+        return  new ResponseEntity<>(niveau1PaysService.getAllNiveau1PaysByPays(nomPays), HttpStatus.OK);
+    }
+
+    //liste 
+    @GetMapping("/listeNiveau1PaysByIdPays/{idPays}")
+    @Operation(summary = "affichage de la liste des niveau 1 pays par pays")
+    public ResponseEntity<List<Niveau1Pays>> listeNiveau1PaysByIdPays(@PathVariable String idPays){
+        return  new ResponseEntity<>(niveau1PaysService.getAllNiveau1PaysByIdPays(idPays), HttpStatus.OK);
     }
 
            // Get Liste des  niveau 1 pays

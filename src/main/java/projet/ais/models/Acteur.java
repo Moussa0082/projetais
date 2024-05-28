@@ -66,8 +66,8 @@ public class Acteur {
     @Column(nullable = true)
     private String logoActeur;
 
-    // @Column(nullable = true)
-    // private String niveau3PaysActeur;
+    @Column(nullable = true)
+    private String niveau3PaysActeur;
 
     
     @Column(nullable = false)

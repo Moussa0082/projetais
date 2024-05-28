@@ -11,6 +11,7 @@ public interface Niveau1PaysRepository extends JpaRepository<Niveau1Pays, String
     Niveau1Pays findByIdNiveau1Pays(String id);
 
     List<Niveau1Pays> findByPaysIdPays(String idPays);
+    List<Niveau1Pays> findByPaysNomPays(String nomPays);
 
     
 

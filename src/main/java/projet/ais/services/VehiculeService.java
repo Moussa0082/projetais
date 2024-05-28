@@ -192,7 +192,7 @@ public class VehiculeService {
 
 
       public Page<Vehicule> getAllVehiculePageable(Pageable pageable) {
-        return vehiculeRepository.findAll(pageable);
+        return vehiculeRepository.findAllByStatutVehiculeAndActeurStatutActeur(true,true,pageable);
     }
 
 

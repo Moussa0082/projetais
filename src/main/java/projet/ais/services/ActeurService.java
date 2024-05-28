@@ -30,12 +30,15 @@ import projet.ais.IdGenerator;
 import projet.ais.Exception.NoContentException;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
+import projet.ais.models.Pays;
+
 import java.time.format.DateTimeFormatter;
 
 import projet.ais.models.Stock;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.AlerteRepository;
+import projet.ais.repository.PaysRepository;
 import projet.ais.repository.TypeActeurRepository;
 
 @Service
@@ -52,6 +55,9 @@ public class ActeurService {
 
     @Autowired
     private AlerteRepository alerteRepository;
+
+    @Autowired
+    private PaysRepository paysRepository;
 
     @Autowired
      MessageService messageService;
@@ -114,6 +120,19 @@ public class ActeurService {
                 }
             }
             
+            
+            
+        // Récupérer tous les pays depuis le repository
+        // List<Pays> tousLesPays = paysRepository.findAll();
+
+        // Trouver le pays correspondant au niveau3Pays de l'acteur
+        // Pays paysCorrespondant = tousLesPays.stream()
+        //     .filter(pays -> pays.getNomPays().toLowerCase().equals(acteur.getNiveau3PaysActeur().toLowerCase()))
+        //     .findFirst()
+        //     .orElseThrow(() -> new RuntimeException("Pays correspondant non trouvé"));
+
+        // // Affecter l'objet Pays correspondant au niveau3Pays de l'acteur
+        // acteur.setPays(paysCorrespondant);
             
             //On hashe le mot de passe
             String passWordHasher = passwordEncoder.encode(acteur.getPassword());
@@ -239,6 +258,24 @@ public class ActeurService {
                      
             return savedActeur;
                
+    }
+
+
+
+    public String getLibelleNiveau1PaysForActeur(String idActeur) {
+        Acteur acteur = acteurRepository.findById(idActeur).orElseThrow(() -> new RuntimeException("Acteur non trouvé"));
+        String niveau3PaysNom = acteur.getNiveau3PaysActeur().toLowerCase();
+
+        // Récupérer tous les pays depuis le repository
+        List<Pays> tousLesPays = paysRepository.findAll();
+
+        // Trouver le pays correspondant au niveau3PaysActeur
+        Pays paysCorrespondant = tousLesPays.stream()
+            .filter(pays -> pays.getNomPays().toLowerCase().equals(niveau3PaysNom))
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("Pays correspondant non trouvé"));
+
+        return paysCorrespondant.getLibelleNiveau1Pays();
     }
 
  public ResponseEntity<String> sendMessageToAdmin(Acteur acteur) throws Exception {

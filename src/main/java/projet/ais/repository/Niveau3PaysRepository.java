@@ -12,4 +12,6 @@ public interface Niveau3PaysRepository  extends JpaRepository<Niveau3Pays, Strin
 
     List<Niveau3Pays> findByNiveau2PaysIdNiveau2Pays(String idNiveau2Pays);
 
+    List<Niveau3Pays> findByNiveau2PaysIdNiveau2Pays_Niveau1PaysIdNiveau1Pays_PaysNomPays(String nomPays);
+
 }
