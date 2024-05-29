@@ -68,6 +68,13 @@ public ResponseEntity<Niveau3Pays> updatesNiveau3Pays(@RequestBody Niveau3Pays n
         return ResponseEntity.ok().body(niveau1Pays);
     }
 
+     //liste 
+    @GetMapping("/listeNiveau3PaysByNomPays/{nomPays}")
+    @Operation(summary = "affichage de la liste des niveau 1 pays par pays")
+    public ResponseEntity<List<Niveau3Pays>> listeNiveau3PaysByNomPays(@PathVariable String nomPays){
+        return  new ResponseEntity<>(niveau3PaysService.getAllNiveau3PaysByPays(nomPays), HttpStatus.OK);
+    }
+
            // Get Liste des  niveau 2 pays
       @GetMapping("/read")
       @Operation(summary = "Liste globale des niveau 3 pays")

@@ -136,8 +136,21 @@ private String genererChaineAleatoire(String source, int longueur) {
 
 
       //Liste Niveau1Pays par pays
-    public List<Niveau1Pays> getAllNiveau1PaysByPays(String id){
-        List<Niveau1Pays>  niveau1PaysList = niveau1PaysRepository.findByPaysIdPays(id);
+    public List<Niveau1Pays> getAllNiveau1PaysByPays(String nomPays){
+        List<Niveau1Pays>  niveau1PaysList = niveau1PaysRepository.findByPaysNomPays(nomPays);
+
+        if(niveau1PaysList.isEmpty()){
+            throw new EntityNotFoundException("Aucun niveau 1 pays trouvé");
+        }
+        niveau1PaysList = niveau1PaysList
+                .stream().sorted((d1, d2) -> d2.getNomN1().compareTo(d1.getNomN1()))
+                .collect(Collectors.toList());
+        return niveau1PaysList;
+    } 
+
+      //Liste Niveau1Pays par pays
+    public List<Niveau1Pays> getAllNiveau1PaysByIdPays(String idPays){
+        List<Niveau1Pays>  niveau1PaysList = niveau1PaysRepository.findByPaysIdPays(idPays);
 
         if(niveau1PaysList.isEmpty()){
             throw new EntityNotFoundException("Aucun niveau 1 pays trouvé");

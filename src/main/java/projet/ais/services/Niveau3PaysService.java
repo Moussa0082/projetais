@@ -15,6 +15,7 @@ import com.sun.jdi.request.DuplicateRequestException;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.IdGenerator;
+import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Niveau2Pays;
 import projet.ais.models.Niveau3Pays;
 import projet.ais.repository.Niveau3PaysRepository;
@@ -87,6 +88,18 @@ private String genererChaineAleatoire(String source, int longueur) {
 }
 
 
+
+   public List<Niveau3Pays> getAllNiveau3PaysByPays(String nomPays){
+        List<Niveau3Pays>  niveau3PaysList = niveau3PaysRepository.findByNiveau2PaysIdNiveau2Pays_Niveau1PaysIdNiveau1Pays_PaysNomPays(nomPays);
+
+        if(niveau3PaysList.isEmpty()){
+            throw new EntityNotFoundException("Aucun niveau 3 pays trouvé");
+        }
+        niveau3PaysList = niveau3PaysList
+                .stream().sorted((d1, d2) -> d2.getNomN3().compareTo(d1.getNomN3()))
+                .collect(Collectors.toList());
+        return niveau3PaysList;
+    }
 
 
     public Page<Niveau3Pays> getAllNiveau3PaysPageable(Pageable pageable) {

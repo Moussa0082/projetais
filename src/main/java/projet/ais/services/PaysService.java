@@ -108,6 +108,9 @@ private String genererChaineAleatoire(String source, int longueur) {
     Pays paysExistant = paysRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("type d'acteur introuvable avec id :" +id));
     paysExistant.setNomPays(pays.getNomPays());
     paysExistant.setDescriptionPays(pays.getDescriptionPays());
+    paysExistant.setLibelleNiveau1Pays(pays.getLibelleNiveau1Pays());
+    paysExistant.setLibelleNiveau2Pays(pays.getLibelleNiveau2Pays());
+    paysExistant.setLibelleNiveau3Pays(pays.getLibelleNiveau3Pays());
     paysExistant.setSousRegion(pays.getSousRegion());
 
     String pattern = "yyyy-MM-dd HH:mm";
