@@ -155,7 +155,7 @@ public class AlertesService {
 
 
      public Page<Alertes> getAllAlertesPageable(Pageable pageable) {
-        return AlertesRepository.findByPhotoAlerteIsNotNull(pageable);
+        return AlertesRepository.findByPhotoAlerteIsNotNullAndStatutAlerte(true,pageable);
     }
     //  public Page<Alertes> getAllAlertesPageable(Pageable pageable) {
     //     return AlertesRepository.findAll(pageable);

@@ -38,16 +38,13 @@ import java.io.IOException;
 public class ConseilController {
 
 
-   @Autowired
-   private ConseilService conseilService;
-   @Autowired
+    @Autowired
+    private ConseilService conseilService;
+    @Autowired
     FileUploade fileUploade;
     @Autowired
     ConseilRepository conseilRepository;
 
-
-
-   
     @PostMapping("/create")
     @Operation(summary = "Ajout d'un conseil")
      public ResponseEntity<Conseil> createConeil(

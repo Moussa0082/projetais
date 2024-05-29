@@ -1,6 +1,7 @@
 package projet.ais.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -15,5 +16,8 @@ public interface DetailCommandeRepository extends JpaRepository<DetailCommande,S
 
 
     List<DetailCommande> findByNomProduit(String nomProduit);
+    List<DetailCommande> findByCommandeIdCommande(Commande commande);
+    List<DetailCommande> findByCommande(Optional<Commande> commandes);
+	String countByCommande(Commande commande);
     
 }

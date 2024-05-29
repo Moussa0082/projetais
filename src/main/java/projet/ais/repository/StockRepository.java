@@ -41,14 +41,14 @@ public interface StockRepository extends JpaRepository<Stock, String>{
     List<Stock> findByCommande_IdCommande(String id);
     List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduitAndActeur_IdActeur(String idCategorieProduit,
             String idActeur);
-    Page<Stock> findAllByStatutSotck(boolean statutSotck,Pageable pageable);
-    Page<Stock> findBySpeculation_CategorieProduitAndStatutSotck(CategorieProduit categorie, boolean statutSotck,
+    Page<Stock> findAllByStatutSotckAndActeurStatutActeur(boolean statutSotck,boolean statutActeur ,Pageable pageable);
+    Page<Stock> findBySpeculation_CategorieProduitAndStatutSotckAndActeurStatutActeur(CategorieProduit categorie, boolean statutSotck, boolean statutActeur,
             Pageable pageable);
-    Page<Stock> findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndStatutSotck(
-            String idCategorieProduit, String idMagasin, boolean statutSotck, Pageable pageable);
+    Page<Stock> findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndStatutSotckAndActeurStatutActeur(
+            String idCategorieProduit, String idMagasin, boolean statutSotck, boolean statutActeur,Pageable pageable);
     List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasinAndStatutSotck(
             String idCategorieProduit, String idMagasin, boolean statutSotck, Pageable pageable);
-   Page<Stock> findByMagasin_IdMagasinAndStatutSotck(String idMagasin, boolean statutSotck, Pageable pageable);
+   Page<Stock> findByMagasin_IdMagasinAndStatutSotckAndActeurStatutActeur(String idMagasin, boolean statutSotck, boolean statutActeur,Pageable pageable);
    Page<Stock> findByActeur_IdActeur(String idActeur, Pageable pageable);
 Page<Stock> findByMagasin_IdMagasinAndActeur_IdActeur(String idMagasin, String idActeur, Pageable pageable);
  

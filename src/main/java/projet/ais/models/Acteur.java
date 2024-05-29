@@ -94,7 +94,9 @@ public class Acteur {
 
     private Boolean isConnected  ;
 
-    @OneToOne
+    // @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "idPays")
     private Pays pays;
 
     @OneToMany

@@ -27,6 +27,6 @@ public interface VehiculeRepository extends JpaRepository<Vehicule , String> {
     Page<Vehicule> findByActeur_IdActeur(String idActeur, Pageable pageable);
 
 
-    Page<Vehicule> findByTypeVoiture_IdTypeVoitureAndStatutVehicule(String idTypeVoiture, boolean statutVehicule,Pageable pageable);
+    Page<Vehicule> findByTypeVoiture_IdTypeVoitureAndStatutVehiculeAndActeurStatutActeur(String idTypeVoiture, boolean statutVehicule, boolean statutActeur , Pageable pageable);
     
 }

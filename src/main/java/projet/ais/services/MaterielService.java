@@ -114,12 +114,12 @@ public class MaterielService {
 
 
      public Page<Materiel> getAllMaterielPageable(Pageable pageable) {
-        return materielRepository.findAll(pageable);
+        return materielRepository.findAllByStatutAndActeurStatutActeur(true,true,pageable);
     }
 
     // recuperer les materiels par  type materiel avec pagination
     public Page<Materiel> getMaterielByTypeMaterielWithPagination(String idTypeMateriel,Pageable pageable) {
-        return materielRepository.findByTypeMateriel_IdTypeMaterielAndStatut(idTypeMateriel, true, pageable);
+        return materielRepository.findByTypeMateriel_IdTypeMaterielAndStatutAndActeurStatutActeur(idTypeMateriel, true, true, pageable);
     }
 
     // recuperer les magasins par  acteur avec pagination
