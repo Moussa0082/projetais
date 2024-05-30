@@ -278,6 +278,39 @@ public class ActeurService {
         return paysCorrespondant.getLibelleNiveau1Pays();
     }
 
+    public String getLibelleNiveau2PaysForActeur(String idActeur) {
+        Acteur acteur = acteurRepository.findById(idActeur).orElseThrow(() -> new RuntimeException("Acteur non trouvé"));
+        String niveau3PaysNom = acteur.getNiveau3PaysActeur().toLowerCase();
+
+        // Récupérer tous les pays depuis le repository
+        List<Pays> tousLesPays = paysRepository.findAll();
+
+        // Trouver le pays correspondant au niveau3PaysActeur
+        Pays paysCorrespondant = tousLesPays.stream()
+            .filter(pays -> pays.getNomPays().toLowerCase().equals(niveau3PaysNom))
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("Pays correspondant non trouvé"));
+
+        return paysCorrespondant.getLibelleNiveau2Pays();
+    }
+
+    public String getLibelleNiveau3PaysForActeur(String idActeur) {
+        Acteur acteur = acteurRepository.findById(idActeur).orElseThrow(() -> new RuntimeException("Acteur non trouvé"));
+        String niveau3PaysNom = acteur.getNiveau3PaysActeur().toLowerCase();
+
+        // Récupérer tous les pays depuis le repository
+        List<Pays> tousLesPays = paysRepository.findAll();
+
+        // Trouver le pays correspondant au niveau3PaysActeur
+        Pays paysCorrespondant = tousLesPays.stream()
+            .filter(pays -> pays.getNomPays().toLowerCase().equals(niveau3PaysNom))
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("Pays correspondant non trouvé"));
+
+        return paysCorrespondant.getLibelleNiveau3Pays();
+    }
+
+
  public ResponseEntity<String> sendMessageToAdmin(Acteur acteur) throws Exception {
 
     Acteur admins = acteurRepository.findByTypeActeurLibelle("admin");

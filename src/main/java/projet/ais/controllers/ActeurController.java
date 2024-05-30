@@ -143,6 +143,18 @@ public class ActeurController {
         return ResponseEntity.ok(libelleNiveau1Pays);
     }
 
+    @GetMapping("/libelleNiveau2Pays/{id}")
+    public ResponseEntity<String> getLibelleNiveau2Pays(@PathVariable String id) {
+        String libelleNiveau2Pays = acteurService.getLibelleNiveau2PaysForActeur(id);
+        return ResponseEntity.ok(libelleNiveau2Pays);
+    }
+
+    @GetMapping("/libelleNiveau3Pays/{id}")
+    public ResponseEntity<String> getLibelleNiveau3Pays(@PathVariable String id) {
+        String libelleNiveau3Pays = acteurService.getLibelleNiveau3PaysForActeur(id);
+        return ResponseEntity.ok(libelleNiveau3Pays);
+    }
+
 
              @GetMapping("/getAllActeurWithPagination")
     public ResponseEntity<Page<Acteur>> getActeurs(@RequestParam() int page,
