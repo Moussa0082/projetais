@@ -30,8 +30,21 @@ public class Pays {
     @Column(nullable = false)
     private String libelleNiveau3Pays;
 
+    @Column(nullable = true)
+    private String monnaie;
+
+    @Column(nullable = true)
+    private String tauxDollar;
+
+    @Column(nullable = true)
+    private String tauxYuan;
+
     @Column(nullable = false)
     private String descriptionPays;
+
+    @Column(nullable = true)
+    private String whattsAppPays;
+
 
     @Column(nullable = true)
     private String personneModif;
