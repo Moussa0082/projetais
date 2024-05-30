@@ -154,8 +154,8 @@ public class ParametreGenerauxService {
             // parametreGenerauxExistant.setLibelleNiveau2Pays(parametreGeneraux.getLibelleNiveau2Pays());
             // parametreGenerauxExistant.setLibelleNiveau3Pays(parametreGeneraux.getLibelleNiveau3Pays());
             parametreGenerauxExistant.setLocaliteStructure(parametreGeneraux.getLocaliteStructure());
-            parametreGenerauxExistant.setTauxDollar(parametreGeneraux.getTauxDollar());
-            parametreGenerauxExistant.setTauxYuan(parametreGeneraux.getTauxYuan());
+            // parametreGenerauxExistant.setTauxDollar(parametreGeneraux.getTauxDollar());
+            // parametreGenerauxExistant.setTauxYuan(parametreGeneraux.getTauxYuan());
     
             // Log successful parameter update
             System.out.println("Mise à jour des paramètres réussie pour l'ID: " + id);
@@ -205,8 +205,8 @@ public class ParametreGenerauxService {
         //  parametreGenerauxExistant.setLibelleNiveau2Pays(parametreGeneraux.getLibelleNiveau2Pays());
         //  parametreGenerauxExistant.setLibelleNiveau3Pays(parametreGeneraux.getLibelleNiveau3Pays());
          parametreGenerauxExistant.setLocaliteStructure(parametreGeneraux.getLocaliteStructure());
-         parametreGenerauxExistant.setTauxDollar(parametreGeneraux.getTauxDollar());
-         parametreGenerauxExistant.setTauxYuan(parametreGeneraux.getTauxYuan());
+        //  parametreGenerauxExistant.setTauxDollar(parametreGeneraux.getTauxDollar());
+        //  parametreGenerauxExistant.setTauxYuan(parametreGeneraux.getTauxYuan());
 
         return parametreGenerauxRepository.save(parametreGenerauxExistant);
       }

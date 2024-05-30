@@ -112,6 +112,10 @@ private String genererChaineAleatoire(String source, int longueur) {
     paysExistant.setLibelleNiveau2Pays(pays.getLibelleNiveau2Pays());
     paysExistant.setLibelleNiveau3Pays(pays.getLibelleNiveau3Pays());
     paysExistant.setSousRegion(pays.getSousRegion());
+    paysExistant.setMonnaie(pays.getMonnaie());
+    paysExistant.setTauxDollar(pays.getTauxDollar());
+    paysExistant.setTauxYuan(pays.getTauxYuan());
+    paysExistant.setWhattsAppPays(pays.getWhattsAppPays());
 
     String pattern = "yyyy-MM-dd HH:mm";
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
