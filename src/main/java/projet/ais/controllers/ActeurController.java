@@ -155,6 +155,22 @@ public class ActeurController {
         return ResponseEntity.ok(libelleNiveau3Pays);
     }
 
+    @GetMapping("/monnaie/{id}")
+    public ResponseEntity<String> getMonnaie(@PathVariable String id) {
+        String monnaie = acteurService.getMonnaiePaysForActeur(id);
+        return ResponseEntity.ok(monnaie);
+    }
+    @GetMapping("/tauxDollar/{id}")
+    public ResponseEntity<String> getTauxDollar(@PathVariable String id) {
+        String tauxDollar = acteurService.getTauxDollarPaysForActeur(id);
+        return ResponseEntity.ok(tauxDollar);
+    }
+    @GetMapping("/tauxYuan/{id}")
+    public ResponseEntity<String> getTauxYuan(@PathVariable String id) {
+        String tauxYuan = acteurService.getTauxYuanPaysForActeur(id);
+        return ResponseEntity.ok(tauxYuan);
+    }
+
 
              @GetMapping("/getAllActeurWithPagination")
     public ResponseEntity<Page<Acteur>> getActeurs(@RequestParam() int page,
