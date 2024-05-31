@@ -110,7 +110,7 @@ public class IntrantService {
         String formattedDateTime = now.format(formatter);
         intrant.setDateAjout(formattedDateTime);
            Intrant savedIntrant = intrantRepository.save(intrant);        
-           sendMessageToAllActeur(intrant);
+        //    sendMessageToAllActeur(intrant);
          return savedIntrant;
    
     }
