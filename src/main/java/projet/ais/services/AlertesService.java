@@ -123,7 +123,7 @@ public class AlertesService {
             String formattedDateTime = now.format(formatter);
             alertes.setDateAjout(formattedDateTime);
            Alertes savedAlertes = AlertesRepository.save(alertes);        
-           sendMessageToAllActeur();
+        //    sendMessageToAllActeur();
          return savedAlertes;
    
     }

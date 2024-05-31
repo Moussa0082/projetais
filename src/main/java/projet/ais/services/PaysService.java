@@ -115,6 +115,7 @@ private String genererChaineAleatoire(String source, int longueur) {
     paysExistant.setMonnaie(pays.getMonnaie());
     paysExistant.setTauxDollar(pays.getTauxDollar());
     paysExistant.setTauxYuan(pays.getTauxYuan());
+    paysExistant.setTauxEuro(pays.getTauxEuro());
     paysExistant.setWhattsAppPays(pays.getWhattsAppPays());
 
     String pattern = "yyyy-MM-dd HH:mm";
