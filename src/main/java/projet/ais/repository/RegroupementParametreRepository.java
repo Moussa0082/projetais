@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import projet.ais.models.RegroupementParametre;
 
 @Repository
-public interface RegroupementParametreRepository  extends JpaRepository<RegroupementParametre, String>{
+public interface RegroupementParametreRepository extends JpaRepository<RegroupementParametre, String>{
     
-    RegroupementParametre findByIdRegroupement(String id);
 }

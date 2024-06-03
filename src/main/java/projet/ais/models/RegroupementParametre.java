@@ -1,24 +1,27 @@
 package projet.ais.models;
-import java.time.LocalDateTime;
-import java.util.Date;
 
-import jakarta.persistence.*;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Entity
 @Data
 public class RegroupementParametre {
-
-    @Id
+    
+     @Id
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String idRegroupement;
+    private String idRegroupementParametre;
 
     @Column(nullable = false)
-    private String parametreRegroupe;
+    private String libelleRegroupement;
 
     @Column(nullable = false)
-    private String libelle;
-
+    private String description;
 
     @Column(nullable = true)
     private String dateAjout;
@@ -29,9 +32,6 @@ public class RegroupementParametre {
     @Column(nullable = false)
     private boolean statutRegroupement = true;
 
-    @Column(nullable = true)
-    private String personneModif;
-
-    @OneToOne
-    private ParametreFiche parametreFiche;
+    @OneToMany(mappedBy = "regroupementParametre", cascade = CascadeType.ALL)
+    private List<ParametreFiche> parametreFiche;
 }

@@ -10,10 +10,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import lombok.Data;
 import java.util.List;
+
+import org.hibernate.annotations.ManyToAny;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -65,5 +70,10 @@ public class ParametreFiche {
 
     @Column(nullable = false)
     private boolean statutParametre = true;
+
+    @ManyToOne
+    @JoinColumn( name = "idRegroupementParametre")
+    @JsonIgnore
+    private RegroupementParametre regroupementParametre;
 
 }

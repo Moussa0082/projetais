@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import projet.ais.IdGenerator;
 import projet.ais.models.ParametreFiche;
-import projet.ais.models.RegroupementParametre;
 import projet.ais.models.RenvoieParametre;
 import projet.ais.repository.ParametreFicheRepository;
 import projet.ais.repository.RenvoieParametreRepository;
