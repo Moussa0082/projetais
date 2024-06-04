@@ -141,8 +141,7 @@ public class Acteur {
     // @JsonIgnore
     // private List<Filiere> filieresList;
 
-    @OneToMany
-    (mappedBy = "acteur")
+    @OneToMany(mappedBy = "acteur")
     @JsonIgnore
     private List<ZoneProduction> zoneProductions;
 
