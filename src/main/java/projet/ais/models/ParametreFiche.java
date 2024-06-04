@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
@@ -71,9 +72,7 @@ public class ParametreFiche {
     @Column(nullable = false)
     private boolean statutParametre = true;
 
-    @ManyToOne
-    @JoinColumn( name = "idRegroupementParametre")
+    @ManyToMany(mappedBy = "parametreFiche")
     @JsonIgnore
-    private RegroupementParametre regroupementParametre;
-
+    private List<RegroupementParametre> regroupementParametre;
 }
