@@ -42,4 +42,12 @@ public class DetailCommande {
     @JoinColumn(name = "idCommande")
     private Commande commande;
 
+    @ManyToOne
+    @JoinColumn(name = "idStock")
+    private Stock stock;
+    
+    @ManyToOne
+    @JoinColumn(name = "idIntrant")
+    private Intrant intrant;
+
 }

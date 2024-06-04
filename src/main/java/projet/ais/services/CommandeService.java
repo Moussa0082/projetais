@@ -164,6 +164,7 @@ public class CommandeService {
         detailCommande.setNomProduit(stock.getNomProduit());
         detailCommande.setDateAjout(formattedDateTime);
         detailCommande.setCommande(savedCommande);
+        detailCommande.setStock(stock);
 
         // Enregistrement du détail de la commande
          detailCommandeRepository.save(detailCommande);
@@ -192,6 +193,7 @@ public class CommandeService {
         detailCommande.setNomProduit(intrant.getNomIntrant());
         detailCommande.setDateAjout(formattedDateTime);
         detailCommande.setCommande(savedCommande);
+        detailCommande.setIntrant(intrant);
 
         // Enregistrement du détail de la commande
        detailCommandeRepository.save(detailCommande);

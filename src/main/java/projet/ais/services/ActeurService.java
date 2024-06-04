@@ -356,6 +356,21 @@ public class ActeurService {
 
         return paysCorrespondant.getTauxYuan();
     }
+    public String getTauxEuroPaysForActeur(String idActeur) {
+        Acteur acteur = acteurRepository.findById(idActeur).orElseThrow(() -> new RuntimeException("Acteur non trouvé"));
+        String niveau3PaysNom = acteur.getNiveau3PaysActeur().toLowerCase();
+
+        // Récupérer tous les pays depuis le repository
+        List<Pays> tousLesPays = paysRepository.findAll();
+
+        // Trouver le pays correspondant au niveau3PaysActeur
+        Pays paysCorrespondant = tousLesPays.stream()
+            .filter(pays -> pays.getNomPays().toLowerCase().equals(niveau3PaysNom))
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("Pays correspondant non trouvé"));
+
+        return paysCorrespondant.getTauxEuro();
+    }
 
 
  public ResponseEntity<String> sendMessageToAdmin(Acteur acteur) throws Exception {

@@ -90,6 +90,11 @@ public class Stock {
     @JsonIgnore
     private List<Sortie_Stock> sortie_Stock;
 
+    @OneToMany
+    (mappedBy = "stock")
+    @JsonIgnore
+    private List<DetailCommande> detailCommandes;
+
     @OneToMany(mappedBy = "stock")
     private List<Rating> ratings;
 

@@ -165,6 +165,12 @@ public class ActeurController {
         String tauxDollar = acteurService.getTauxDollarPaysForActeur(id);
         return ResponseEntity.ok(tauxDollar);
     }
+    
+    @GetMapping("/tauxEuro/{id}")
+    public ResponseEntity<String> getTauxEuro(@PathVariable String id) {
+        String tauxEuro = acteurService.getTauxEuroPaysForActeur(id);
+        return ResponseEntity.ok(tauxEuro);
+    }
     @GetMapping("/tauxYuan/{id}")
     public ResponseEntity<String> getTauxYuan(@PathVariable String id) {
         String tauxYuan = acteurService.getTauxYuanPaysForActeur(id);
