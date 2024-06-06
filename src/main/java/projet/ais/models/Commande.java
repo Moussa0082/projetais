@@ -43,6 +43,8 @@ public class Commande {
     
     private String dateCommande;
 
+    private boolean isProprietaire;
+
     // @Column(nullable = true)
     // private String codeProduit;
     

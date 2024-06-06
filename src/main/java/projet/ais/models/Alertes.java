@@ -25,6 +25,9 @@ public class Alertes {
     private String photoAlerte;
 
     @Column(nullable = true)
+    private String codePays;
+
+    @Column(nullable = true)
     private String dateAjout;
  
     @Column(nullable = true)
@@ -42,5 +45,8 @@ public class Alertes {
     
     @Column
     private boolean statutAlerte = true;
+
+    @Column
+    private String pays;
 
 }

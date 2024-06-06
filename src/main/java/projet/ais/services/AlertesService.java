@@ -13,6 +13,8 @@ import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,7 @@ import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alertes;
+import projet.ais.models.Pays;
 
 import java.util.stream.Collectors;
 import java.time.format.DateTimeFormatter;
@@ -31,6 +34,7 @@ import java.util.*;
 
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.AlertesRepository;
+import projet.ais.repository.PaysRepository;
 
 @Service
 public class AlertesService {
@@ -48,6 +52,9 @@ public class AlertesService {
     ActeurRepository acteurRepository;
     @Autowired
     MessageService messageService;
+
+    @Autowired
+    PaysRepository paysRepository;
 
 
      //Ajouter un Alertes
@@ -157,6 +164,47 @@ public class AlertesService {
      public Page<Alertes> getAllAlertesPageable(Pageable pageable) {
         return AlertesRepository.findByPhotoAlerteIsNotNullAndStatutAlerte(true,pageable);
     }
+
+    //   public Page<Alertes> getAlertesByPaysForActeur(String idActeur, Alertes al, int page, int size) {
+    //     Acteur acteur = acteurRepository.findById(idActeur)
+    //         .orElseThrow(() -> new RuntimeException("Acteur non trouvé"));
+
+    //     String niveau3PaysNom = acteur.getNiveau3PaysActeur().toLowerCase();
+
+    //     // Create a pageable object
+    //     Pageable pageable = PageRequest.of(page, size);
+
+    //     // Get the paginated list of countries
+    //     Page<Pays> paysPage = paysRepository.findAll(pageable);
+
+    //     // Find the country that matches the actor's country
+    //     Pays paysCorrespondant = paysPage.get()
+    //         .filter(pays -> pays.getNomPays().toLowerCase().equals(niveau3PaysNom))
+    //         .findFirst()
+    //         .orElseThrow(() -> new RuntimeException("Pays correspondant non trouvé"));
+
+    //     // Check if the country's name matches the alert's country
+    //     if (paysCorrespondant.getNomPays().toLowerCase().equals(al.getPays().toLowerCase())) {
+    //         return new PageImpl<>(List.of(al), pageable, 1);
+    //     }
+
+    //     return Page.empty(pageable);
+    // }
+
+
+    public Page<Alertes> getAlertesByPaysForActeur(String idActeur, int page, int size) {
+        Acteur acteur = acteurRepository.findById(idActeur)
+            .orElseThrow(() -> new RuntimeException("Acteur non trouvé"));
+
+        String niveau3PaysNom = acteur.getNiveau3PaysActeur().toLowerCase();
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        // Retrieve alerts where the country matches the actor's country, photo is not null, and status matches
+        return AlertesRepository.findByPhotoAlerteIsNotNullAndStatutAlerteAndPays(true, niveau3PaysNom, pageable);
+    }
+
+
     //  public Page<Alertes> getAllAlertesPageable(Pageable pageable) {
     //     return AlertesRepository.findAll(pageable);
     // }
@@ -252,6 +300,8 @@ public class AlertesService {
             c.setDateModif(formattedDateTime);
             c.setDescriptionAlerte(alertes.getDescriptionAlerte());
             c.setTitreAlerte(alertes.getTitreAlerte());
+            c.setPays(alertes.getPays());
+            c.setCodePays(alertes.getCodePays());
            Alertes updatedAlertes = AlertesRepository.save(c);
    
          return updatedAlertes;

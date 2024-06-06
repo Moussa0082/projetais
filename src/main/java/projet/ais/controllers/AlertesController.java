@@ -200,6 +200,15 @@ public class AlertesController {
         return ResponseEntity.ok().body(alertes);
     }
 
+    //recuperer les alertes par pays de lacteur connecté
+    @GetMapping("/alertesByPaysForConnectedActor")
+    public Page<Alertes> getAlertesByPaysForActeur(
+            @RequestParam String idActeur,
+            @RequestParam int page,
+            @RequestParam int size) {
+        return alertesService.getAlertesByPaysForActeur(idActeur, page, size);
+    }
+
 
     //      //liste alerte
     // @GetMapping("/listealerteByActeur/{id}")
