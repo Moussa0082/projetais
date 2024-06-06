@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import projet.ais.IdGenerator;
 import projet.ais.models.ParametreFiche;
@@ -22,18 +23,39 @@ public class RegroupementParametreService {
     @Autowired
     private IdGenerator idGenerator;
 
+    // public RegroupementParametre createRegroupementParametres(RegroupementParametre regroupementParametres) {
+    //     String idCodes = idGenerator.genererCode();
+    //     regroupementParametres.setIdRegroupementParametre(idCodes);
+
+    //     String pattern = "yyyy-MM-dd HH:mm";
+    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+    //     String formattedDateTime = LocalDateTime.now().format(formatter);
+    //     regroupementParametres.setDateAjout(formattedDateTime);
+
+    
+    //     return regroupementParametreRepository.save(regroupementParametres);
+    // }
+
+    @Transactional
     public RegroupementParametre createRegroupementParametres(RegroupementParametre regroupementParametres) {
         String idCodes = idGenerator.genererCode();
         regroupementParametres.setIdRegroupementParametre(idCodes);
-
+    
         String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         String formattedDateTime = LocalDateTime.now().format(formatter);
         regroupementParametres.setDateAjout(formattedDateTime);
-
+    
+        // if (regroupementParametres.getParametreFiche() != null) {
+        //     for (ParametreFiche parametreFiche : regroupementParametres.getParametreFiche()) {
+        //         parametreFiche.setRegroupementParametre(regroupementParametres);
+        //     }
+        // }
     
         return regroupementParametreRepository.save(regroupementParametres);
     }
+    
+
 
     public RegroupementParametre updateRegroupementParametre(RegroupementParametre regroupementParametre, String id) {
         RegroupementParametre existingRegroupement = regroupementParametreRepository.findById(id)

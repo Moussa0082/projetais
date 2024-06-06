@@ -1,11 +1,16 @@
 package projet.ais.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 
@@ -32,6 +37,9 @@ public class RegroupementParametre {
     @Column(nullable = false)
     private boolean statutRegroupement = true;
 
-    @OneToMany(mappedBy = "regroupementParametre", cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "regroupement_parametre_parametre_fiche",
+        joinColumns = @JoinColumn(name = "id_regroupement_parametre"),
+        inverseJoinColumns = @JoinColumn(name = "id_parametre_fiche"))
     private List<ParametreFiche> parametreFiche;
 }

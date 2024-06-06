@@ -113,9 +113,9 @@ private String genererChaineAleatoire(String source, int longueur) {
     paysExistant.setLibelleNiveau3Pays(pays.getLibelleNiveau3Pays());
     paysExistant.setSousRegion(pays.getSousRegion());
     paysExistant.setMonnaie(pays.getMonnaie());
-    paysExistant.setTauxDollar(pays.getTauxDollar());
-    paysExistant.setTauxYuan(pays.getTauxYuan());
-    paysExistant.setTauxEuro(pays.getTauxEuro());
+    // paysExistant.setTauxDollar(pays.getTauxDollar());
+    // paysExistant.setTauxYuan(pays.getTauxYuan());
+    // paysExistant.setTauxEuro(pays.getTauxEuro());
     paysExistant.setWhattsAppPays(pays.getWhattsAppPays());
 
     String pattern = "yyyy-MM-dd HH:mm";
@@ -145,7 +145,7 @@ private String genererChaineAleatoire(String source, int longueur) {
         return paysList;
     }
 
-           //Activer un  pays
+           //Activer un  pays 
         public Pays active(String id) throws Exception{
         Pays p = paysRepository.findByIdPays(id);
         if(p == null){
