@@ -192,6 +192,17 @@ public class IntrantService {
         return intrantList;
     } 
 
+     // recuperer les intrants par  libelle categorie
+    // public Page<Intrant> getAllIntrantByLibelleCategorie(String libelle,Pageable pageable) {
+    //     return intrantRepository.findAllByCategorieProduit_libelleCategorie(libelle, pageable);
+    // }
+
+     // recuperer les intrants par  libelle categorie
+    public Page<Intrant> getAllIntrantByLibelleCategorie(String libelle,Pageable pageable) {
+        return intrantRepository.findAllByCategorieProduit_filiere_libelleFiliere(libelle, pageable);
+    }
+
+
     public Page<Intrant> getAllIntrantPageable(Pageable pageable) {
         return intrantRepository.findAllByStatutIntrantAndActeurStatutActeur(true,true,pageable);
     }    

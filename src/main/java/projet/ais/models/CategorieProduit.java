@@ -46,7 +46,7 @@ public class CategorieProduit {
     (mappedBy = "categorieProduit")
     @JsonIgnore
     private List<Speculation> speculationList;
-
+    
     @ManyToOne
     @JoinColumn(name = "idFiliere")
     private Filiere filiere;

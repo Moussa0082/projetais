@@ -22,6 +22,8 @@ public interface IntrantRepository extends JpaRepository<Intrant , String> {
     // List<Intrant> findAllBySpeculationIdSpeculation(String idSpeculation);
     // List<Intrant> findAllBySpeculation_CategorieProduit_IdCategorieProduit(String idCategorieProduit);
     List<Intrant> findAllByCategorieProduit_IdCategorieProduit(String idCategorieProduit);
+    Page<Intrant> findAllByCategorieProduit_libelleCategorie(String libelle , Pageable pageable);
+    Page<Intrant> findAllByCategorieProduit_filiere_libelleFiliere(String libelle , Pageable pageable);
     Collection<Intrant> findByNomIntrant(String nomIntrant);
 
     Page<Intrant> findByCategorieProduit_IdCategorieProduitAndStatutIntrantAndActeurStatutActeur(String idCategorieProduit, boolean statutIntrant,
