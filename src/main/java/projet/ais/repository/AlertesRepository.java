@@ -13,5 +13,6 @@ public interface AlertesRepository extends JpaRepository<Alertes , String> {
       Page<Alertes> findByPhotoAlerteIsNotNullAndStatutAlerte(boolean statutAlerte,Pageable pageable);
     Page<Alertes> findByPhotoAlerteIsNotNullAndStatutAlerteAndPays(boolean statutAlerte, String niveau3PaysNom,
             Pageable pageable);
+    Alertes findByPays(String pays);
 
 }

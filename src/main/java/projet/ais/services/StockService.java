@@ -147,12 +147,12 @@ public class StockService {
             String idCode = idGenerator.genererCode();
 
             String qrCodeData = generateQRCodeData(stock);
-        String qrCodeImageName = generateQRCodeImage(qrCodeData);
+            String qrCodeImageName = generateQRCodeImage(qrCodeData);
+            stock.setPays(acteur.getNiveau3PaysActeur());
 
-        stock.setIdStock(idCode);
-        stock.setCodeStock(codes);
+            stock.setIdStock(idCode);
+            stock.setCodeStock(codes);
 
-             
             
             String pattern = "yyyy-MM-dd HH:mm";
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
@@ -249,8 +249,23 @@ private String generateQRCodeImage(String qrCodeData) {
 // }
 
 
-    public Page<Stock> getAllStocksPageable(Pageable pageable) {
-        return stockRepository.findAllByStatutSotckAndActeurStatutActeur(true, true,pageable);
+    // public Page<Stock> getAllStocksPageable(Pageable pageable) {
+    //     return stockRepository.findAllByStatutSotckAndActeurStatutActeur(true, true,pageable);
+    // }
+
+    public Page<Stock> getAllStocksPageable(String niveau3PaysActeur, Pageable pageable) {
+        Page<Stock> stocksByPays = stockRepository.findAllByStatutSotckTrueAndActeurStatutActeurTrueAndActeurNiveau3PaysActeur(niveau3PaysActeur, pageable);
+
+        // If no stocks found for the given country, fetch stocks not from the given country
+        if (!stocksByPays.hasContent()) {
+            System.out.println("Pas d'autres stocks à fetch pour le pays " + niveau3PaysActeur);
+            return stockRepository.findAllByStatutSotckAndActeurStatutActeur(true,true, pageable);
+        }
+
+        System.out.println("Stocks  fetch pour le pays " + niveau3PaysActeur);
+
+
+        return stocksByPays;
     }
 
     

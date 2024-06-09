@@ -1,6 +1,8 @@
 package projet.ais.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import projet.ais.models.Acteur;
@@ -52,5 +54,15 @@ public interface StockRepository extends JpaRepository<Stock, String>{
    Page<Stock> findByActeur_IdActeur(String idActeur, Pageable pageable);
 Page<Stock> findByMagasin_IdMagasinAndActeur_IdActeur(String idMagasin, String idActeur, Pageable pageable);
  
+//  @Query("SELECT s FROM Stock s WHERE s.pays = :pays AND s.statutSotck = true AND s.acteurStatutActeur = true")
+//     Page<Stock> findAllByPays(@Param("pays") String pays, Pageable pageable);
+
+//     @Query("SELECT s FROM Stock s WHERE s.pays != :pays AND s.statutSotck = true AND s.acteurStatutActeur = true")
+//     Page<Stock> findAllByPaysNot(@Param("pays") String pays, Pageable pageable);
+Page<Stock> findAllByPaysAndStatutSotckTrueAndActeurStatutActeurTrue(String pays, Pageable pageable);
+Page<Stock> findAllByPaysNotAndStatutSotckTrueAndActeurStatutActeurTrue(String pays, Pageable pageable);
+Page<Stock> findAllByStatutSotckTrueAndActeurStatutActeurTrueAndActeurNiveau3PaysActeur(String niveau3PaysActeur,
+                Pageable pageable);
+
 
 }

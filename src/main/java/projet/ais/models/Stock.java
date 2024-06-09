@@ -61,6 +61,9 @@ public class Stock {
     
     @Column(nullable=true)
     private String personneModif;
+
+    @Column(nullable=true)
+    private String pays;
     
     @Column(nullable = false)
     private boolean statutSotck;
