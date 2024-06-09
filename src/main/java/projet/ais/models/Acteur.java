@@ -103,9 +103,12 @@ public class Acteur {
     (mappedBy = "acteur")
     @JsonIgnore
     private List<Stock> stockList;
+    
 
-    @OneToMany
-    (mappedBy = "acteur")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "acteur_speculation",
+        joinColumns = @JoinColumn(name = "id_acteur"),
+        inverseJoinColumns = @JoinColumn(name = "id_speculation"))
     private List<Speculation> speculations;
   
     @OneToMany(mappedBy = "acteur")

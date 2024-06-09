@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Data
 public class Speculation {
-
+    
     @Id
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idSpeculation;
@@ -56,10 +56,9 @@ public class Speculation {
     // @JsonIgnore
     // private List<Intrant> intrants;
 
-    @ManyToOne
+    @ManyToMany
     @JsonIgnore
-    @JoinColumn( name = "idActeur")
-    private Acteur acteur;
+    private List<Acteur> acteur;
 
     
     @OneToMany
