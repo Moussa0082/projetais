@@ -253,7 +253,7 @@ private String generateQRCodeImage(String qrCodeData) {
     //     return stockRepository.findAllByStatutSotckAndActeurStatutActeur(true, true,pageable);
     // }
 
-    public Page<Stock> getAllStocksPageable(String niveau3PaysActeur, Pageable pageable) {
+    public Page<Stock> getAllStocksPageableByPays(String niveau3PaysActeur, Pageable pageable) {
         Page<Stock> stocksByPays = stockRepository.findAllByStatutSotckTrueAndActeurStatutActeurTrueAndActeurNiveau3PaysActeur(niveau3PaysActeur, pageable);
 
         // If no stocks found for the given country, fetch stocks not from the given country
@@ -266,6 +266,10 @@ private String generateQRCodeImage(String qrCodeData) {
 
 
         return stocksByPays;
+    }
+
+    public Page<Stock> getAllStocksPageable(Pageable pageable) {
+        return stockRepository.findAllByStatutSotckAndActeurStatutActeur(true, true,pageable);
     }
 
     

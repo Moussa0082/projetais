@@ -249,14 +249,25 @@ private MediaType detectContentType(String imageName) {
     }
 
                                     
-        @GetMapping("/getAllStocksWithPagination")
-        public ResponseEntity<Page<Stock>> getAllStocksPageable(
+        @GetMapping("/getAllStocksByPaysWithPagination")
+        public ResponseEntity<Page<Stock>> getAllStocksPageableByPays(
                 @RequestParam String pays,
                 @RequestParam int page,
                 @RequestParam int size) {
     
             Pageable pageable = PageRequest.of(page, size);
-            Page<Stock> stocks = stockService.getAllStocksPageable(pays, pageable);
+            Page<Stock> stocks = stockService.getAllStocksPageableByPays(pays, pageable);
+    
+            return ResponseEntity.ok(stocks);
+        }
+
+        @GetMapping("/getAllStocksWithPagination")
+        public ResponseEntity<Page<Stock>> getAllStocksPageable(
+                @RequestParam int page,
+                @RequestParam int size) {
+    
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Stock> stocks = stockService.getAllStocksPageable(pageable);
     
             return ResponseEntity.ok(stocks);
         }
