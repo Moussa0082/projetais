@@ -35,6 +35,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import projet.ais.models.CategorieProduit;
+import projet.ais.models.Intrant;
 import projet.ais.models.Speculation;
 import projet.ais.models.Stock;
 import projet.ais.repository.StockRepository;
@@ -235,6 +236,15 @@ private MediaType detectContentType(String imageName) {
         return ResponseEntity.ok().body(stocks);
     }
 
+    @GetMapping("/listeStockByLibelleCategorie")
+    public ResponseEntity<Page<Stock>> getStocksByLibelleCategorie(
+        @RequestParam() String libelle,
+        @RequestParam() int page,
+        @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Stock> stocks = stockService.getAllStockByLibelleCategorie(libelle, pageable);
+        return ResponseEntity.ok().body(stocks);
+    }
 
     @GetMapping("/getAllStocksByMagasinWithPagination")
     public ResponseEntity<Page<Stock>> getStocksByCMagasinWithPagination(
@@ -289,6 +299,12 @@ private MediaType detectContentType(String imageName) {
         public ResponseEntity<List<Stock>> listeStockParActeur(@PathVariable String id){
             return new ResponseEntity<>(stockService.getAllStockByActeur(id), HttpStatus.OK);
         }
+        
+        // @GetMapping("/getAllStocksByLibelleCategorie/{libelle}")
+        // @Operation(summary = "Liste des stocks par libelle categorie ")
+        // public ResponseEntity<List<Stock>> listeStockParLibelleCategorie(@PathVariable String libelle){
+        //     return new ResponseEntity<>(stockService.getAllStockByLibelleCategorie(libelle), HttpStatus.OK);
+        // }
 
 
         @GetMapping("/getAllStocksBySpeculation/{id}")

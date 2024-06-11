@@ -309,6 +309,7 @@ public class ActeurService {
 
         return paysCorrespondant.getLibelleNiveau3Pays();
     }
+
     public String getMonnaiePaysForActeur(String idActeur) {
         Acteur acteur = acteurRepository.findById(idActeur).orElseThrow(() -> new RuntimeException("Acteur non trouvé"));
         String niveau3PaysNom = acteur.getNiveau3PaysActeur().toLowerCase();
@@ -325,52 +326,53 @@ public class ActeurService {
         return paysCorrespondant.getMonnaie();
     }
 
-    public String getTauxDollarPaysForActeur(String idActeur) {
-        Acteur acteur = acteurRepository.findById(idActeur).orElseThrow(() -> new RuntimeException("Acteur non trouvé"));
-        String niveau3PaysNom = acteur.getNiveau3PaysActeur().toLowerCase();
+    // public String getTauxDollarPaysForActeur(String idActeur) {
+    //     Acteur acteur = acteurRepository.findById(idActeur).orElseThrow(() -> new RuntimeException("Acteur non trouvé"));
+    //     String niveau3PaysNom = acteur.getNiveau3PaysActeur().toLowerCase();
 
-        // Récupérer tous les pays depuis le repository
-        List<Pays> tousLesPays = paysRepository.findAll();
+    //     // Récupérer tous les pays depuis le repository
+    //     List<Pays> tousLesPays = paysRepository.findAll();
 
-        // Trouver le pays correspondant au niveau3PaysActeur
-        Pays paysCorrespondant = tousLesPays.stream()
-            .filter(pays -> pays.getNomPays().toLowerCase().equals(niveau3PaysNom))
-            .findFirst()
-            .orElseThrow(() -> new RuntimeException("Pays correspondant non trouvé"));
+    //     // Trouver le pays correspondant au niveau3PaysActeur
+    //     Pays paysCorrespondant = tousLesPays.stream()
+    //         .filter(pays -> pays.getNomPays().toLowerCase().equals(niveau3PaysNom))
+    //         .findFirst()
+    //         .orElseThrow(() -> new RuntimeException("Pays correspondant non trouvé"));
 
-        return paysCorrespondant.getTauxDollar();
-    }
+    //     return paysCorrespondant.getTauxDollar();
+    // }
     
-    public String getTauxYuanPaysForActeur(String idActeur) {
-        Acteur acteur = acteurRepository.findById(idActeur).orElseThrow(() -> new RuntimeException("Acteur non trouvé"));
-        String niveau3PaysNom = acteur.getNiveau3PaysActeur().toLowerCase();
+    // public String getTauxYuanPaysForActeur(String idActeur) {
+    //     Acteur acteur = acteurRepository.findById(idActeur).orElseThrow(() -> new RuntimeException("Acteur non trouvé"));
+    //     String niveau3PaysNom = acteur.getNiveau3PaysActeur().toLowerCase();
 
-        // Récupérer tous les pays depuis le repository
-        List<Pays> tousLesPays = paysRepository.findAll();
+    //     // Récupérer tous les pays depuis le repository
+    //     List<Pays> tousLesPays = paysRepository.findAll();
 
-        // Trouver le pays correspondant au niveau3PaysActeur
-        Pays paysCorrespondant = tousLesPays.stream()
-            .filter(pays -> pays.getNomPays().toLowerCase().equals(niveau3PaysNom))
-            .findFirst()
-            .orElseThrow(() -> new RuntimeException("Pays correspondant non trouvé"));
+    //     // Trouver le pays correspondant au niveau3PaysActeur
+    //     Pays paysCorrespondant = tousLesPays.stream()
+    //         .filter(pays -> pays.getNomPays().toLowerCase().equals(niveau3PaysNom))
+    //         .findFirst()
+    //         .orElseThrow(() -> new RuntimeException("Pays correspondant non trouvé"));
 
-        return paysCorrespondant.getTauxYuan();
-    }
-    public String getTauxEuroPaysForActeur(String idActeur) {
-        Acteur acteur = acteurRepository.findById(idActeur).orElseThrow(() -> new RuntimeException("Acteur non trouvé"));
-        String niveau3PaysNom = acteur.getNiveau3PaysActeur().toLowerCase();
+    //     return paysCorrespondant.getTauxYuan();
+    // }
 
-        // Récupérer tous les pays depuis le repository
-        List<Pays> tousLesPays = paysRepository.findAll();
+    // public String getTauxEuroPaysForActeur(String idActeur) {
+    //     Acteur acteur = acteurRepository.findById(idActeur).orElseThrow(() -> new RuntimeException("Acteur non trouvé"));
+    //     String niveau3PaysNom = acteur.getNiveau3PaysActeur().toLowerCase();
 
-        // Trouver le pays correspondant au niveau3PaysActeur
-        Pays paysCorrespondant = tousLesPays.stream()
-            .filter(pays -> pays.getNomPays().toLowerCase().equals(niveau3PaysNom))
-            .findFirst()
-            .orElseThrow(() -> new RuntimeException("Pays correspondant non trouvé"));
+    //     // Récupérer tous les pays depuis le repository
+    //     List<Pays> tousLesPays = paysRepository.findAll();
 
-        return paysCorrespondant.getTauxEuro();
-    }
+    //     // Trouver le pays correspondant au niveau3PaysActeur
+    //     Pays paysCorrespondant = tousLesPays.stream()
+    //         .filter(pays -> pays.getNomPays().toLowerCase().equals(niveau3PaysNom))
+    //         .findFirst()
+    //         .orElseThrow(() -> new RuntimeException("Pays correspondant non trouvé"));
+
+    //     return paysCorrespondant.getTauxEuro();
+    // }
 
 
  public ResponseEntity<String> sendMessageToAdmin(Acteur acteur) throws Exception {

@@ -82,5 +82,7 @@ public class Intrant {
     @JsonIgnore
     private List<Commande>  commande;
 
-    
+    @ManyToOne
+    @JoinColumn( name = "idMonnaie")
+    private  Monnaie monnaie;
 }

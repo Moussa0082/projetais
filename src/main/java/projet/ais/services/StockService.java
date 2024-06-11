@@ -50,6 +50,7 @@ import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
 import projet.ais.models.CategorieProduit;
+import projet.ais.models.Intrant;
 import projet.ais.models.Magasin;
 import projet.ais.models.Speculation;
 import projet.ais.models.Stock;
@@ -457,6 +458,20 @@ private String generateQRCodeImage(String qrCodeData) {
         return stockList;
     }
 
+    //liste des stock par libelle categorie
+    // public List<Stock> getAllStockByLibelleCategorie(String libelle){
+    //     List<Stock> stockList = stockRepository.findBySpeculation_CategorieProduit_libelleCategorie(libelle);
+
+    //     if(stockList.isEmpty())
+    //         throw new IllegalStateException("Aucun stock trouvé");
+        
+    //         stockList = stockList
+    //          .stream().sorted((s1,s2) -> s2.getDescriptionStock().compareTo(s1.getDescriptionStock()))
+    //     .collect(Collectors.toList());
+
+    //     return stockList;
+    // }
+
     public List<Stock> getAllStockByActeur(String id){
         List<Stock> stockList = stockRepository.findByActeurIdActeur(id);
 
@@ -481,7 +496,11 @@ private String generateQRCodeImage(String qrCodeData) {
         return stockRepository.findByMagasin_IdMagasinAndStatutSotckAndActeurStatutActeur(idMagasin,true, true,pageable);
     }
 
-
+     // recuperer les intrants par  libelle categorie
+    public Page<Stock> getAllStockByLibelleCategorie(String libelle,Pageable pageable) {
+        return stockRepository.findBySpeculation_CategorieProduit_filiere_libelleFiliere(libelle, pageable);
+    }
+    
     // recuperer les stock par  acteur avec pagination
     public Page<Stock> getStocksByActeurWithPagination(String idActeur,Pageable pageable) {
         return stockRepository.findByActeur_IdActeur(idActeur, pageable);

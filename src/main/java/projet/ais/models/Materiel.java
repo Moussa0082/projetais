@@ -83,4 +83,7 @@ public class Materiel {
     @JsonIgnore
     private List<Commande> commandes;
 
+    @ManyToOne
+    @JoinColumn( name = "idMonnaie")
+    private  Monnaie monnaie;
 }

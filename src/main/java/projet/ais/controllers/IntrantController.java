@@ -156,16 +156,27 @@ public class IntrantController {
         return ResponseEntity.ok().body(intrants);
     }
 
-       @GetMapping("/getAllIntrantsByCategorieWithPagination")
+    @GetMapping("/getAllIntrantsByCategorieWithPagination")
     public ResponseEntity<Page<Intrant>> getIntrantsByCategorieWithPagination(
         @RequestParam() String idCategorie,
         @RequestParam() int page,
-                                                  @RequestParam() int size) {
+        @RequestParam() int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Intrant> intrants = intrantService.getIntrantByCategorieWithPagination(idCategorie,pageable);
         return ResponseEntity.ok().body(intrants);
     }
 
+    @GetMapping("/listeIntrantByLibelleCategorie")
+    public ResponseEntity<Page<Intrant>> getIntrantsByLibelleCategorie(
+        @RequestParam() String libelle,
+        @RequestParam() int page,
+        @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Intrant> intrants = intrantService.getAllIntrantByLibelleCategorie(libelle, pageable);
+        return ResponseEntity.ok().body(intrants);
+    }
+
+      
          //liste intrant pas acteur
     @GetMapping("/listeIntrantByActeur/{id}")
     @Operation(summary = "affichage de la liste des intrants par acteur")
@@ -180,7 +191,7 @@ public class IntrantController {
     //     return  new ResponseEntity<>(intrantService.getAllIntrantBySpeculation(id), HttpStatus.OK);
     // }
 
-         //liste intrant pas acteur
+         //liste intrant pas id categorie
     @GetMapping("/listeIntrantByCategorie/{id}")
     @Operation(summary = "affichage de la liste des intrants par Categorie")
     public ResponseEntity<List<Intrant>> listeIntrantByCategorie(@PathVariable String id){
