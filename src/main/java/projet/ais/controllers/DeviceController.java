@@ -54,6 +54,11 @@ public class DeviceController {
     public ResponseEntity<List<Device>> listeDevice() {
         return new ResponseEntity<>(deviceService.getAllDevice(), HttpStatus.CREATED);
     }
+    
+    @GetMapping("/getDeviseByMonnaie/{id}")
+    public ResponseEntity<List<Device>> listeDeviceByMonnaie(@PathVariable String id) {
+        return new ResponseEntity<>(deviceService.getAllDeviceByMonnaie(id), HttpStatus.CREATED);
+    }
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression")
