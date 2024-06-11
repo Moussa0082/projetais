@@ -33,14 +33,14 @@ public class Pays {
     @Column(nullable = true)
     private String monnaie;
 
-    @Column(nullable = true)
-    private String tauxDollar;
+    // @Column(nullable = true)
+    // private String tauxDollar;
 
-    @Column(nullable = true)
-    private String tauxYuan;
+    // @Column(nullable = true)
+    // private String tauxYuan;
     
-    @Column(nullable = true)
-    private String tauxEuro;
+    // @Column(nullable = true)
+    // private String tauxEuro;
 
     @Column(nullable = false)
     private String descriptionPays;

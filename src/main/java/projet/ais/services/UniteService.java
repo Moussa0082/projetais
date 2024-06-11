@@ -24,7 +24,7 @@ public class UniteService {
     UniteRepository uniteRepository;
     @Autowired
     CodeGenerator codeGenerator;
-  @Autowired
+    @Autowired
     IdGenerator idGenerator ;
 
 

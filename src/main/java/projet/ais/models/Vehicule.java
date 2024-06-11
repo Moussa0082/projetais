@@ -14,7 +14,7 @@ import lombok.Data;
 @Entity
 @Data
 public class Vehicule {
-    
+     
    @Id
    private String idVehicule;
 
@@ -65,5 +65,9 @@ public class Vehicule {
    @ManyToOne
    @JoinColumn(name = "idTypeVoiture")
    private TypeVoiture typeVoiture;
+
+   @ManyToOne
+   @JoinColumn( name = "idMonnaie")
+   private  Monnaie monnaie;
 
 }

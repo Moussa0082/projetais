@@ -98,6 +98,10 @@ public class Stock {
     @OneToMany(mappedBy = "stock")
     private List<Rating> ratings;
 
+    @ManyToOne
+    @JoinColumn( name = "idMonnaie")
+    private  Monnaie monnaie;
+    
     // @ManyToOne
     // @JoinColumn(name = "idForme")
     // private Forme forme;

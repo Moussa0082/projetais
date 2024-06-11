@@ -160,22 +160,23 @@ public class ActeurController {
         String monnaie = acteurService.getMonnaiePaysForActeur(id);
         return ResponseEntity.ok(monnaie);
     }
-    @GetMapping("/tauxDollar/{id}")
-    public ResponseEntity<String> getTauxDollar(@PathVariable String id) {
-        String tauxDollar = acteurService.getTauxDollarPaysForActeur(id);
-        return ResponseEntity.ok(tauxDollar);
-    }
+
+    // @GetMapping("/tauxDollar/{id}")
+    // public ResponseEntity<String> getTauxDollar(@PathVariable String id) {
+    //     String tauxDollar = acteurService.getTauxDollarPaysForActeur(id);
+    //     return ResponseEntity.ok(tauxDollar);
+    // }
     
-    @GetMapping("/tauxEuro/{id}")
-    public ResponseEntity<String> getTauxEuro(@PathVariable String id) {
-        String tauxEuro = acteurService.getTauxEuroPaysForActeur(id);
-        return ResponseEntity.ok(tauxEuro);
-    }
-    @GetMapping("/tauxYuan/{id}")
-    public ResponseEntity<String> getTauxYuan(@PathVariable String id) {
-        String tauxYuan = acteurService.getTauxYuanPaysForActeur(id);
-        return ResponseEntity.ok(tauxYuan);
-    }
+    // @GetMapping("/tauxEuro/{id}")
+    // public ResponseEntity<String> getTauxEuro(@PathVariable String id) {
+    //     String tauxEuro = acteurService.getTauxEuroPaysForActeur(id);
+    //     return ResponseEntity.ok(tauxEuro);
+    // }
+    // @GetMapping("/tauxYuan/{id}")
+    // public ResponseEntity<String> getTauxYuan(@PathVariable String id) {
+    //     String tauxYuan = acteurService.getTauxYuanPaysForActeur(id);
+    //     return ResponseEntity.ok(tauxYuan);
+    // }
 
 
              @GetMapping("/getAllActeurWithPagination")
