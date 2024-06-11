@@ -33,7 +33,7 @@ import projet.ais.services.AlertesOffLineService;
 import projet.ais.services.FileUploade;
 
 @RestController
-@RequestMapping("/alertsOffLine")
+@RequestMapping("/alertesOffLine")
 public class AlertesOffLineController {
 
     
@@ -167,10 +167,10 @@ public class AlertesOffLineController {
                 return MediaType.APPLICATION_OCTET_STREAM;
             }
 
-             @PutMapping("/update/{id}")
+             @PutMapping("/update/{idAlerteOffLine}")
       @Operation(summary = "Mise à jour d'un alerte OffLine")
       public ResponseEntity<AlertesOffLine> updatealerte(
-              @PathVariable String id,
+              @PathVariable String idAlerteOffLine,
               @Valid @RequestParam("alerteOffLine") String alerteOffLineString,
               @RequestParam(value = "imageAlerteOffLine", required = false)  MultipartFile imageFile,
               @RequestParam(value = "audioAlerteOffLine", required = false)  MultipartFile audio,
@@ -184,7 +184,7 @@ public class AlertesOffLineController {
           }
 
           try {
-            AlertesOffLine alerteOffLineMisAjour = alertesOffLineService.updateAlertes(alerte, imageFile, audio, video ,id);
+            AlertesOffLine alerteOffLineMisAjour = alertesOffLineService.updateAlertes(alerte, imageFile, audio, video ,idAlerteOffLine);
             return new ResponseEntity<>(alerteOffLineMisAjour, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
