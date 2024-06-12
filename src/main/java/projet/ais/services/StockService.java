@@ -345,6 +345,10 @@ private String generateQRCodeImage(String qrCodeData) {
         stocks.setDateModif(formattedDateTime);
 
         
+        if(stock.getMonnaie() != null){
+            stocks.setMonnaie(stock.getMonnaie());
+        }
+        
         if(stock.getMagasin() != null){
             stocks.setMagasin(stock.getMagasin());
         }

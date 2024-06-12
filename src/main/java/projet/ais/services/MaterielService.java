@@ -138,6 +138,11 @@ public class MaterielService {
         mat.setNom(materiel.getNom());
         mat.setPrixParHeure(materiel.getPrixParHeure());
         mat.setPersonneModif(materiel.getPersonneModif());
+
+        if(materiel.getMonnaie() != null){
+            mat.setMonnaie(materiel.getMonnaie());
+        }
+        
         String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         LocalDateTime now = LocalDateTime.now();

@@ -374,6 +374,9 @@ public class VehiculeService {
             vh.setDescription(vehicule.getDescription());
             vh.setNbKilometrage(vehicule.getNbKilometrage());
             
+            if(vehicule.getMonnaie() != null){
+                vh.setMonnaie(vehicule.getMonnaie());
+            }
         String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         LocalDateTime now = LocalDateTime.now();
