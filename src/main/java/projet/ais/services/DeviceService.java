@@ -47,7 +47,8 @@ public class DeviceService {
         Device d = deviceRepository.findById(id).orElseThrow(null);
 
         d.setNomDevice(device.getNomDevice());
-        d.setTaux(d.getTaux());
+        d.setSigle(device.getSigle());
+        d.setTaux(device.getTaux());
 
         String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);

@@ -20,6 +20,9 @@ public class Device {
     private String nomDevice;
 
     @Column(nullable = false)
+    private String sigle;
+    
+    @Column(nullable = false)
     private double taux;
 
     @Column(nullable = true)
