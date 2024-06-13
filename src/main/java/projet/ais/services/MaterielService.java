@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -13,10 +14,13 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -24,6 +28,7 @@ import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Forme;
+import projet.ais.models.Intrant;
 import projet.ais.models.Magasin;
 import projet.ais.models.Materiel;
 import projet.ais.repository.ActeurRepository;
@@ -126,6 +131,53 @@ public class MaterielService {
     public Page<Materiel> getMaterielByActeurWithPagination(String idActeur,Pageable pageable) {
         return materielRepository.findByActeur_IdActeur(idActeur, pageable);
     }
+
+
+
+    public Page<Materiel> getAllMaterielPageableByPays(String niveau3PaysActeur, Pageable pageable) {
+        Page<Materiel> materielByPays = materielRepository.findAllByStatutTrueAndPaysAndActeurStatutActeurTrue(niveau3PaysActeur.trim().toLowerCase(), pageable);
+        
+        if (!materielByPays.hasContent()) {
+            System.out.println("Pas d'autres materiels à fetch pour le pays " + niveau3PaysActeur);
+            return materielRepository.findAllByStatutAndActeurStatutActeur(true, true, pageable);
+        } else {
+            System.out.println("Materiels fetch pour le pays " + niveau3PaysActeur);
+            List<Materiel> materielsList = new ArrayList<>(materielByPays.getContent());
+
+            // Si le nombre de materiels est inférieur au nombre requis, compléter avec des materiels d'autres pays
+            if (materielsList.size() < pageable.getPageSize()) {
+                Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - materielsList.size());
+                Page<Materiel> materielComplement = materielRepository.findAllByStatutTrueAndActeurStatutActeurTrueAndPaysNot(niveau3PaysActeur.trim().toLowerCase(), complementPageable);
+                materielsList.addAll(materielComplement.getContent());
+            }
+
+            return new PageImpl<>(materielsList, pageable, materielByPays.getTotalElements() + materielsList.size());
+        }
+    }
+
+      @Transactional
+    public Page<Materiel> getAllMaterielPageableByPaysByCategorie(String idTypeMateriel, String niveau3PaysActeur, Pageable pageable) {
+        // Fetch materiel by type materiel from the specified country
+        Page<Materiel> materielByPays = materielRepository.findAllByTypeMaterielIdTypeMaterielAndStatutTrueAndPaysAndActeurStatutActeurTrue(
+            idTypeMateriel, niveau3PaysActeur.trim().toLowerCase(), pageable);
+
+        List<Materiel> materielsList = new ArrayList<>(materielByPays.getContent());
+
+        // Fetch materiels from other countries if needed
+        if (materielsList.size() < pageable.getPageSize()) {
+            Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - materielsList.size());
+            Page<Materiel> materielComplement = materielRepository.findAllByTypeMateriel_IdTypeMaterielAndStatutTrueAndActeurStatutActeurTrueAndPaysNot(
+                idTypeMateriel, niveau3PaysActeur.trim().toLowerCase(), complementPageable);
+            materielsList.addAll(materielComplement.getContent());
+        }
+
+        return new PageImpl<>(materielsList, pageable, materielByPays.getTotalElements() + materielsList.size());
+    }
+
+
+    
+
+
 
 
     

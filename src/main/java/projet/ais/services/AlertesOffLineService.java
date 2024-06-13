@@ -6,14 +6,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
 import java.time.format.DateTimeFormatter;
-
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -21,27 +20,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alertes;
 import projet.ais.models.AlertesOffLine;
 import projet.ais.models.Pays;
-
-import java.util.stream.Collectors;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-
 import projet.ais.repository.ActeurRepository;
+import projet.ais.repository.AlertesOffLineRepository;
 import projet.ais.repository.AlertesRepository;
 import projet.ais.repository.PaysRepository;
 
 @Service
-public class AlertesService {
-    
-      @Autowired
-    private AlertesRepository AlertesRepository;
+public class AlertesOffLineService {
+     @Autowired
+    private AlertesOffLineRepository alertesOffLineRepository;
 
      @Autowired
     private IdGenerator idGenerator;
@@ -59,7 +52,7 @@ public class AlertesService {
 
 
      //Ajouter un Alertes
-      public Alertes createAlertes(Alertes alertes, MultipartFile imageFile, MultipartFile audio, MultipartFile video) throws Exception {
+      public AlertesOffLine createAlertes(AlertesOffLine alertes, MultipartFile imageFile, MultipartFile audio, MultipartFile video) throws Exception {
         
             // Traitement du fichier image 
             if (imageFile != null) {
@@ -75,7 +68,7 @@ public class AlertesService {
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                     String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
 
-                    alertes.setPhotoAlerte(imageName);
+                    alertes.setPhotoAlerteOffLine(imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
@@ -95,7 +88,7 @@ public class AlertesService {
                     Files.copy(audio.getInputStream(), audioPath, StandardCopyOption.REPLACE_EXISTING);
                     String onlineAudioPath =fileUploade.uploadAudioToFTP(audioPath, audioName);
 
-                    alertes.setAudioAlerte(audioName);
+                    alertes.setAudioAlerteOffLine(audioName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier audio : " + e.getMessage());
                 }
@@ -115,22 +108,22 @@ public class AlertesService {
                     Files.copy(video.getInputStream(), videoPath, StandardCopyOption.REPLACE_EXISTING);
                     String onlineVideoPath =fileUploade.uploadVideoToFTP(videoPath, videoName);
 
-                    alertes.setVideoAlerte(videoName);
+                    alertes.setVideoAlerteOffLine(videoName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier video : " + e.getMessage());
                 }
             }
 
-            alertes.setIdAlerte(idGenerator.genererCode());
+            alertes.setIdAlerteOffLine(idGenerator.genererCode());
             String codes = codeGenerator.genererCode();
-            alertes.setCodeAlerte(codes);
+            alertes.setCodeAlerteOffLine(codes);
         
             String pattern = "yyyy-MM-dd HH:mm";
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
             LocalDateTime now = LocalDateTime.now();
             String formattedDateTime = now.format(formatter);
             alertes.setDateAjout(formattedDateTime);
-           Alertes savedAlertes = AlertesRepository.save(alertes);        
+            AlertesOffLine savedAlertes = alertesOffLineRepository.save(alertes);        
         //    sendMessageToAllActeur();
          return savedAlertes;
    
@@ -162,8 +155,8 @@ public class AlertesService {
     }
 
 
-     public Page<Alertes> getAllAlertesPageable(Pageable pageable) {
-        return AlertesRepository.findByPhotoAlerteIsNotNullAndStatutAlerte(true,pageable);
+     public Page<AlertesOffLine> getAllAlertesPageable(Pageable pageable) {
+        return alertesOffLineRepository.findByPhotoAlerteOffLineIsNotNullAndStatutAlerteOffLine(true,pageable);
     }
 
     //   public Page<Alertes> getAlertesByPaysForActeur(String idActeur, Alertes al, int page, int size) {
@@ -193,7 +186,7 @@ public class AlertesService {
     // }
 
 
-    public Page<Alertes> getAlertesByPaysForActeur(String idActeur, int page, int size) {
+    public Page<AlertesOffLine> getAlertesOffByPaysForActeur(String idActeur, int page, int size) {
         Acteur acteur = acteurRepository.findById(idActeur)
             .orElseThrow(() -> new RuntimeException("Acteur non trouvé"));
 
@@ -202,7 +195,15 @@ public class AlertesService {
         Pageable pageable = PageRequest.of(page, size);
 
         // Retrieve alerts where the country matches the actor's country, photo is not null, and status matches
-        return AlertesRepository.findByPhotoAlerteIsNotNullAndStatutAlerteAndPays(true, niveau3PaysNom, pageable);
+        return alertesOffLineRepository.findByPhotoAlerteOffLineIsNotNullAndStatutAlerteOffLineAndPays(true, niveau3PaysNom, pageable);
+    }
+
+    public Page<AlertesOffLine> getAlertesOffLineByPays(String pays, int page, int size) {
+        AlertesOffLine al = alertesOffLineRepository.findByPays(pays);
+
+        Pageable pageable = PageRequest.of(page, size);
+        // Retrieve alerts where the country matches the actor's country, photo is not null, and status matches
+        return alertesOffLineRepository.findByPhotoAlerteOffLineIsNotNullAndStatutAlerteOffLineAndPays(true, al.getPays(), pageable);
     }
 
 
@@ -225,13 +226,13 @@ public class AlertesService {
 
 
       //Modifier Alertes
-      public Alertes updateAlertes(Alertes alertes, MultipartFile imageFile, MultipartFile audio, MultipartFile video, String id) throws Exception {
+      public AlertesOffLine updateAlertes(AlertesOffLine alertes, MultipartFile imageFile, MultipartFile audio, MultipartFile video, String id) throws Exception {
         
         
-        Alertes c = AlertesRepository.findByIdAlerte(alertes.getIdAlerte());
+        AlertesOffLine c = alertesOffLineRepository.findByIdAlerteOffLine(alertes.getIdAlerteOffLine());
         if(c == null){
 
-            throw new IllegalArgumentException("Le Alertes avec l'id " + c + " n'existe déjà");
+            throw new IllegalArgumentException("L'alertes offline  avec l'id " + c + " n'existe déjà");
         }
 
             // Traitement du fichier image 
@@ -248,7 +249,7 @@ public class AlertesService {
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                     String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
 
-                    c.setPhotoAlerte(imageName);
+                    c.setPhotoAlerteOffLine(imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
@@ -268,7 +269,7 @@ public class AlertesService {
                     Files.copy(audio.getInputStream(), audioPath, StandardCopyOption.REPLACE_EXISTING);
                     String onlineAudioPath =fileUploade.uploadAudioToFTP(audioPath, audioName);
 
-                    c.setAudioAlerte(audioName);
+                    c.setAudioAlerteOffLine(audioName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier audio : " + e.getMessage());
                 }
@@ -288,7 +289,7 @@ public class AlertesService {
                     Files.copy(video.getInputStream(), videoPath, StandardCopyOption.REPLACE_EXISTING);
                     String onlineVideoPath =fileUploade.uploadVideoToFTP(videoPath, videoName);
 
-                    c.setVideoAlerte(videoName);
+                    c.setVideoAlerteOffLine(videoName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier video : " + e.getMessage());
                 }
@@ -299,64 +300,46 @@ public class AlertesService {
             LocalDateTime now = LocalDateTime.now();
             String formattedDateTime = now.format(formatter);
             c.setDateModif(formattedDateTime);
-            c.setDescriptionAlerte(alertes.getDescriptionAlerte());
-            c.setTitreAlerte(alertes.getTitreAlerte());
+            c.setDescriptionAlerteOffLine(alertes.getDescriptionAlerteOffLine());
+            c.setTitreAlerteOffLine(alertes.getTitreAlerteOffLine());
             c.setPays(alertes.getPays());
             c.setCodePays(alertes.getCodePays());
-           Alertes updatedAlertes = AlertesRepository.save(c);
+           AlertesOffLine updatedAlertes = alertesOffLineRepository.save(c);
    
          return updatedAlertes;
         
    
     }
-
-     public Page<Alertes> getAlertesByPays(String pays, int page, int size) {
-        Alertes al = AlertesRepository.findByPays(pays);
-
-        Pageable pageable = PageRequest.of(page, size);
-        // Retrieve alerts where the country matches the actor's country, photo is not null, and status matches
-        return AlertesRepository.findByPhotoAlerteIsNotNullAndStatutAlerteAndPays(true, al.getPays().toLowerCase(), pageable);
-    }
   
-      //Liste des Alertess
-       public List<Alertes> getAllAlertes(){
-        List<Alertes> AlertesList = AlertesRepository.findAll();
+      
 
-        AlertesList = AlertesList
-        .stream().sorted((v1,v2) -> v2.getDateAjout().compareTo(v1.getDateAjout()))
-        .collect(Collectors.toList());
+    public String deleteAlertesOffLine(String id){
+        AlertesOffLine alertes = alertesOffLineRepository.findById(id).orElseThrow(null);
 
-        return AlertesList;
+        alertesOffLineRepository.delete(alertes);
+        return "Alertes OffLine supprimé avec success";
     }
 
-    public String deleteAlertes(String id){
-        Alertes alertes = AlertesRepository.findById(id).orElseThrow(null);
-
-        AlertesRepository.delete(alertes);
-        return "Alertes supprimé avec success";
-    }
-
-    public Alertes active(String id) throws Exception{
-        Alertes alertes = AlertesRepository.findById(id).orElseThrow(null);
+    public AlertesOffLine active(String id) throws Exception{
+        AlertesOffLine alertes = alertesOffLineRepository.findById(id).orElseThrow(null);
 
         try {
-            alertes.setStatutAlerte(true);
+            alertes.setStatutAlerteOffLine(true);
         } catch (Exception e) {
-            throw new Exception("Erreur lors de l'activation du Alertes: " + e.getMessage());
+            throw new Exception("Erreur lors de l'activation du Alertes Offline: " + e.getMessage());
         }
-        return AlertesRepository.save(alertes);
+        return alertesOffLineRepository.save(alertes);
     }
 
-    public Alertes desactive(String id) throws Exception{
-        Alertes alertes = AlertesRepository.findById(id).orElseThrow(null);
+    public AlertesOffLine desactive(String id) throws Exception{
+        AlertesOffLine alertes = alertesOffLineRepository.findById(id).orElseThrow(null);
 
         try {
-            alertes.setStatutAlerte(false);
+            alertes.setStatutAlerteOffLine(false);
         } catch (Exception e) {
-            throw new Exception("Erreur lors de la desactivation du Alertes : " + e.getMessage());
+            throw new Exception("Erreur lors de la desactivation du Alertes OffLine : " + e.getMessage());
         }
-        return AlertesRepository.save(alertes);
+        return alertesOffLineRepository.save(alertes);
     }
-    
     
 }

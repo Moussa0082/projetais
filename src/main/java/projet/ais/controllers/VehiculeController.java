@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import projet.ais.models.Materiel;
 import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Vehicule;
 import projet.ais.repository.VehiculeRepository;
@@ -133,6 +134,19 @@ private MediaType detectContentType(String imageName) {
         }
   
       }
+
+
+
+          @GetMapping("/getVehiculesByPaysWithPagination")
+    public Page<Vehicule> getAllVehiculesPageableByPays(@RequestParam String niveau3PaysActeur, Pageable pageable) {
+        return vehiculeService.getAllVehiculePageableByPays(niveau3PaysActeur, pageable);
+    }
+
+    @GetMapping("/getVehiculesByPaysAndCategorieWithPagination")
+    public Page<Vehicule> getAllVehiculesPageableByPaysAndCategorie(@RequestParam String idTypeVoiture, @RequestParam String niveau3PaysActeur,  Pageable pageable) {
+        return vehiculeService.getAllVehiculePageableByPaysByCategorie(idTypeVoiture, niveau3PaysActeur , pageable);
+    }
+
 
 
        @GetMapping("/getAllVehiculesWithPagination")

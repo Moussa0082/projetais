@@ -39,6 +39,9 @@ public class Vehicule {
 
    @Column
    private boolean statutVehicule = true;
+
+   @Column(nullable=true)
+    private String pays;
    
    @Column(nullable = true)
    private String photoVehicule;

@@ -61,6 +61,9 @@ public class Materiel {
     @Column
     private boolean statutCommande = false;
 
+    @Column(nullable=true)
+    private String pays;
+
 
     @Column(nullable = true)
     private String dateAjout;
