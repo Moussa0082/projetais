@@ -13,6 +13,7 @@ import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Device;
 import projet.ais.models.Monnaie;
+import projet.ais.models.Niveau1Pays;
 import projet.ais.repository.DeviceRepository;
 
 @Service
@@ -46,7 +47,8 @@ public class DeviceService {
         Device d = deviceRepository.findById(id).orElseThrow(null);
 
         d.setNomDevice(device.getNomDevice());
-        d.setTaux(d.getTaux());
+        d.setSigle(device.getSigle());
+        d.setTaux(device.getTaux());
 
         String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
@@ -74,6 +76,20 @@ public class DeviceService {
 
         return devices;
     }
+
+    public List<Device> getAllDeviceByMonnaie(String id){
+        List<Device> devices = deviceRepository.findByMonnaie_idMonnaie(id);
+
+        if(devices.isEmpty())
+            throw new EntityNotFoundException("Liste vide");
+
+            devices = devices
+        .stream().sorted((u1,u2) -> u2.getNomDevice().compareTo(u1.getNomDevice()))
+        .collect(Collectors.toList());
+
+        return devices;
+    }
+
 
     public Device active(String id) throws Exception{
         Device device = deviceRepository.findById(id).orElseThrow(null);

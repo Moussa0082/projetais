@@ -393,6 +393,19 @@ public class IntrantService {
             it.setPrixIntrant(intrant.getPrixIntrant());
             it.setDateExpiration(intrant.getDateExpiration());
             it.setUnite(intrant.getUnite());
+
+            if(intrant.getCategorieProduit() != null){
+                it.setCategorieProduit(intrant.getCategorieProduit());
+            }
+
+            if(intrant.getForme() != null){
+                it.setForme(intrant.getForme());
+            }
+
+            if(intrant.getMonnaie() != null){
+                it.setMonnaie(intrant.getMonnaie());
+            }
+
             String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         LocalDateTime now = LocalDateTime.now();
