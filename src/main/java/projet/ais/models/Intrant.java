@@ -58,6 +58,9 @@ public class Intrant {
     private String personneModif;
 
     @Column(nullable=true)
+    private String pays;
+
+    @Column(nullable=true)
     private String unite;
 
     @ManyToOne

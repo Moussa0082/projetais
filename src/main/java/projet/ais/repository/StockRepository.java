@@ -62,10 +62,52 @@ Page<Stock> findByMagasin_IdMagasinAndActeur_IdActeur(String idMagasin, String i
 
 //     @Query("SELECT s FROM Stock s WHERE s.pays != :pays AND s.statutSotck = true AND s.acteurStatutActeur = true")
 //     Page<Stock> findAllByPaysNot(@Param("pays") String pays, Pageable pageable);
-Page<Stock> findAllByPaysAndStatutSotckTrueAndActeurStatutActeurTrue(String pays, Pageable pageable);
-Page<Stock> findAllByPaysNotAndStatutSotckTrueAndActeurStatutActeurTrue(String pays, Pageable pageable);
-Page<Stock> findAllByStatutSotckTrueAndActeurStatutActeurTrueAndActeurNiveau3PaysActeur(String niveau3PaysActeur,
+        Page<Stock> findAllByPaysAndStatutSotckTrueAndActeurStatutActeurTrue(String pays, Pageable pageable);
+        Page<Stock> findAllByPaysNotAndStatutSotckTrueAndActeurStatutActeurTrue(String pays, Pageable pageable);
+        Page<Stock> findAllByStatutSotckTrueAndActeurStatutActeurTrueAndActeurNiveau3PaysActeur(String niveau3PaysActeur,
+                        Pageable pageable);
+// @Query(value = "SELECT s.* FROM stock s " +
+// "JOIN acteur a ON s.acteur_id = a.id " +
+// "WHERE s.statut_sotck = true " +
+// "AND a.statut_acteur = true " +
+// "AND LOWER(a.niveau3_pays_acteur) = LOWER(:niveau3PaysActeur)",
+// countQuery = "SELECT COUNT(*) FROM stock s " +
+//      "JOIN acteur a ON s.id_acteur = a.id " +
+//      "WHERE s.statut_sotck = true " +
+//      "AND a.statut_acteur = true " +
+//      "AND LOWER(a.niveau3_pays_acteur) = LOWER(:niveau3PaysActeur)",
+// nativeQuery = true)
+// Page<Stock> findAllByStatutStockTrueAndActeurStatutActeurTrueAndActeurNiveau3PaysActeur(@Param("niveau3PaysActeur") String niveau3PaysActeur, Pageable pageable);
+
+             
+//         @Query(value = "SELECT s.* FROM stock s " +
+//         "JOIN acteur a ON s.id_acteur = a.id " +
+//         "WHERE s.statut_sotck = true " +
+//         "AND a.statut_acteur = true " +
+//         "AND LOWER(a.niveau3_pays_acteur) = LOWER(:niveau3PaysActeur)",
+//         countQuery = "SELECT COUNT(*) FROM stock s " +
+//      "JOIN acteur a ON s.id_acteur = a.id " +
+//      "WHERE s.statut_sotck = true " +
+//      "AND a.statut_acteur = true " +
+//      "AND LOWER(a.niveau3_pays_acteur) = LOWER(:niveau3PaysActeur)",
+//       nativeQuery = true)
+//   Page<Stock> findAllByActeurNiveau3PaysActeur(@Param("niveau3PaysActeur") String niveau3PaysActeur, Pageable pageable);
+        
+        Page<Stock> findAllByStatutSotckTrueAndPaysAndActeurStatutActeurTrue(String pays, Pageable pageable);
+        Page<Stock> findAllByStatutSotckTrueAndActeurStatutActeurTrueAndPaysNot(String pays,
+                Pageable complementPageable);
+                Page<Stock> findBySpeculation_CategorieProduitAndPaysAndStatutSotckAndActeurStatutActeur(CategorieProduit categorie, String pays ,
+                boolean statutSotck, boolean statutActeur,
                 Pageable pageable);
+                Page<Stock> findBySpeculation_CategorieProduitAndPaysNotAndStatutSotckAndActeurStatutActeur(CategorieProduit categorie, String pays ,
+                boolean statutSotck, boolean statutActeur,
+                Pageable pageable);
+                Page<Stock> findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndPaysAndStatutSotckAndActeurStatutActeur(
+                        String idCategorieProduit, String idMagasin, String pays, boolean statutSotck, boolean statutActeur,Pageable pageable);
+                Page<Stock> findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndPaysNotAndStatutSotckAndActeurStatutActeur(
+                        String idCategorieProduit, String idMagasin, String pays, boolean statutSotck, boolean statutActeur,Pageable pageable);
+                        Page<Stock> findByMagasin_IdMagasinAndPaysAndStatutSotckAndActeurStatutActeur(String pays, String idMagasin, boolean statutSotck, boolean statutActeur,Pageable pageable);
+                        Page<Stock> findByMagasin_IdMagasinAndPaysNotAndStatutSotckAndActeurStatutActeur(String pays, String idMagasin, boolean statutSotck, boolean statutActeur,Pageable pageable);
 
 
 }

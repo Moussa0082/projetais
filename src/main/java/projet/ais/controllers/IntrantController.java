@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import projet.ais.models.Conseil;
 import projet.ais.models.Intrant;
+import projet.ais.models.Stock;
 import projet.ais.repository.IntrantRepository;
 import projet.ais.services.FileUploade;
 import projet.ais.services.IntrantService;
@@ -146,6 +147,41 @@ public class IntrantController {
         return ResponseEntity.ok().body(intrants);
     }
 
+
+    @PutMapping("/update-pays/{id}")
+    public String updatePaysForStocks(@PathVariable String id) {
+        intrantService.updatePaysForIntrantsss(id);
+        return "Mise à jour de la colonne pays réussie";
+    }
+
+    @GetMapping("/getIntrantsByPaysWithPagination")
+    public Page<Intrant> getAllIntrantsPageableByPays(@RequestParam String niveau3PaysActeur, Pageable pageable) {
+        return intrantService.getAllIntrantPageableByPays(niveau3PaysActeur, pageable);
+    }
+
+    @GetMapping("/getIntrantsByPaysAndCategorieWithPagination")
+    public Page<Intrant> getAllIntrantsPageableByPaysAndCategorie(@RequestParam String idCategorieProduit, @RequestParam String niveau3PaysActeur,  Pageable pageable) {
+        return intrantService.getAllIntrantPageableByPaysByCategorie(idCategorieProduit, niveau3PaysActeur , pageable);
+    }
+
+    @GetMapping("/getIntrantsByPaysAndCategorieLibelleCategorieWithPagination")
+    public Page<Intrant> getAllIntrantsPageableByPaysAndCategorieLibelleCategorie(@RequestParam String libelle, @RequestParam String niveau3PaysActeur,  Pageable pageable) {
+        return intrantService.getAllIntrantPageableByPaysByLibelleCategorie(libelle, niveau3PaysActeur, pageable);
+    }
+
+
+      @GetMapping("/getAllIntrantsByPaysWithPagination")
+        public ResponseEntity<Page<Intrant>> getAllIntrantPageableByPays(
+                @RequestParam String niveau3PaysActeur,
+                @RequestParam int page,
+                @RequestParam int size) {
+    
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Intrant> intrants = intrantService.getAllIntrantPageableByPays(niveau3PaysActeur, pageable);
+    
+            return ResponseEntity.ok(intrants);
+        }
+
        @GetMapping("/getAllIntrantsByActeurWithPagination")
     public ResponseEntity<Page<Intrant>> getIntrantsByActeur(
         @RequestParam() String idActeur,
@@ -155,6 +191,12 @@ public class IntrantController {
         Page<Intrant> intrants = intrantService.getIntrantByActeurWithPagination(idActeur,pageable);
         return ResponseEntity.ok().body(intrants);
     }
+
+    @PutMapping("/update-pays")
+        public String updatePaysForIntrants() {
+        intrantService.updatePaysForIntrant();
+            return "Mise à jour de la colonne pays pour tous les intrants réussie";
+        }
 
     @GetMapping("/getAllIntrantsByCategorieWithPagination")
     public ResponseEntity<Page<Intrant>> getIntrantsByCategorieWithPagination(

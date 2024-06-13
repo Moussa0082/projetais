@@ -13,9 +13,12 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
+
 
 
 import javax.imageio.ImageIO;
@@ -254,19 +257,110 @@ private String generateQRCodeImage(String qrCodeData) {
     //     return stockRepository.findAllByStatutSotckAndActeurStatutActeur(true, true,pageable);
     // }
 
-    public Page<Stock> getAllStocksPageableByPays(String niveau3PaysActeur, Pageable pageable) {
-        Page<Stock> stocksByPays = stockRepository.findAllByStatutSotckTrueAndActeurStatutActeurTrueAndActeurNiveau3PaysActeur(niveau3PaysActeur, pageable);
 
-        // If no stocks found for the given country, fetch stocks not from the given country
-        if (!stocksByPays.hasContent()) {
-            System.out.println("Pas d'autres stocks à fetch pour le pays " + niveau3PaysActeur);
-            return stockRepository.findAllByStatutSotckAndActeurStatutActeur(true,true, pageable);
+       @Transactional
+    public Page<Stock> getAllStockPageableByPaysByCategorie(CategorieProduit categorie, String niveau3PaysActeur, Pageable pageable) {
+        // Fetch stock from the specified country
+        Page<Stock> stocksByPays = stockRepository.findBySpeculation_CategorieProduitAndPaysAndStatutSotckAndActeurStatutActeur(
+            categorie,  niveau3PaysActeur.trim().toLowerCase(), true, true,  pageable);
+
+        List<Stock> stocksList = new ArrayList<>(stocksByPays.getContent());
+
+        // Fetch stocks from other countries if needed
+        if (stocksList.size() < pageable.getPageSize()) {
+            Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - stocksList.size());
+            Page<Stock> stocksComplement = stockRepository.findBySpeculation_CategorieProduitAndPaysNotAndStatutSotckAndActeurStatutActeur(
+                categorie, niveau3PaysActeur.trim().toLowerCase(), true, true, complementPageable);
+            stocksList.addAll(stocksComplement.getContent());
         }
 
-        System.out.println("Stocks  fetch pour le pays " + niveau3PaysActeur);
+        return new PageImpl<>(stocksList, pageable, stocksByPays.getTotalElements() + stocksList.size());
+    }
 
+       @Transactional
+    public Page<Stock> getAllStockPageableByPaysByMagasinAndCategorie(String idCategorieProduit, String idMagasin, String niveau3PaysActeur, Pageable pageable) {
+        // Fetch stock by cat , pays and store from the specified country
+        Page<Stock> stocksByPays = stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndPaysAndStatutSotckAndActeurStatutActeur(
+            idCategorieProduit, idMagasin, niveau3PaysActeur.trim().toLowerCase(), true, true,  pageable);
 
-        return stocksByPays;
+        List<Stock> stocksList = new ArrayList<>(stocksByPays.getContent());
+
+        // Fetch stocks by  magasin et pays from other countries if needed
+        if (stocksList.size() < pageable.getPageSize()) {
+            Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - stocksList.size());
+            Page<Stock> stocksComplement = stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndPaysNotAndStatutSotckAndActeurStatutActeur(
+                idCategorieProduit, idMagasin, niveau3PaysActeur.trim().toLowerCase(), true, true, complementPageable);
+            stocksList.addAll(stocksComplement.getContent());
+        }
+
+        return new PageImpl<>(stocksList, pageable, stocksByPays.getTotalElements() + stocksList.size());
+    }
+
+       @Transactional
+    public Page<Stock> getAllStockPageableByPaysByMagasin(String idMagasin, String niveau3PaysActeur, Pageable pageable) {
+        // Fetch stock by  pays and store from the specified country
+        Page<Stock> stocksByPays = stockRepository.findByMagasin_IdMagasinAndPaysAndStatutSotckAndActeurStatutActeur(
+     niveau3PaysActeur.trim().toLowerCase() , idMagasin, true, true,  pageable);
+
+        List<Stock> stocksList = new ArrayList<>(stocksByPays.getContent());
+
+        // Fetch stocks by magasin et pays from other countries if needed
+        if (stocksList.size() < pageable.getPageSize()) {
+            Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - stocksList.size());
+            Page<Stock> stocksComplement = stockRepository.findByMagasin_IdMagasinAndPaysNotAndStatutSotckAndActeurStatutActeur(
+                 niveau3PaysActeur.trim().toLowerCase(), idMagasin, true, true, complementPageable);
+            stocksList.addAll(stocksComplement.getContent());
+        }
+
+        return new PageImpl<>(stocksList, pageable, stocksByPays.getTotalElements() + stocksList.size());
+    }
+
+    
+    public Page<Stock> getAllStocksPageableByPays(String niveau3PaysActeur, Pageable pageable) {
+        Page<Stock> stocksByPays = stockRepository.findAllByStatutSotckTrueAndPaysAndActeurStatutActeurTrue(niveau3PaysActeur.trim().toLowerCase(), pageable);
+        
+        if (!stocksByPays.hasContent()) {
+            System.out.println("Pas d'autres stock à fetch pour le pays " + niveau3PaysActeur);
+            return stockRepository.findAllByStatutSotckAndActeurStatutActeur(true, true, pageable);
+        } else {
+            System.out.println("stock fetch pour le pays " + niveau3PaysActeur);
+            List<Stock> stocksList = new ArrayList<>(stocksByPays.getContent());
+
+            // Si le nombre de stocks est inférieur au nombre requis, compléter avec des stocks d'autres pays
+            if (stocksList.size() < pageable.getPageSize()) {
+                Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - stocksList.size());
+                Page<Stock> stocksComplement = stockRepository.findAllByStatutSotckTrueAndActeurStatutActeurTrueAndPaysNot(niveau3PaysActeur.trim().toLowerCase(), complementPageable);
+                stocksList.addAll(stocksComplement.getContent());
+            }
+
+            return new PageImpl<>(stocksList, pageable, stocksByPays.getTotalElements() + stocksList.size());
+        }
+    }
+
+    @Transactional
+    public void updatePaysForStocks() {
+        // Récupérer tous les stocks
+        List<Stock> stocks = stockRepository.findAll();
+
+        // Parcourir chaque stock
+        for (Stock stock : stocks) {
+            // Récupérer l'acteur lié au stock
+            Acteur acteur = stock.getActeur();
+
+            if (acteur != null) {
+                // Récupérer le niveau3Pays de l'acteur lié au stock
+                String niveau3Pays = acteur.getNiveau3PaysActeur();
+
+                // Mettre à jour la colonne pays du stock
+                stock.setPays(niveau3Pays);
+            } else {
+                // Gérer le cas où l'acteur est null
+                System.out.println("L'acteur lié au stock ID " + stock.getIdStock() + " est null.");
+            }
+        }
+
+        // Sauvegarder les modifications
+        stockRepository.saveAll(stocks);
     }
 
     public Page<Stock> getAllStocksPageable(Pageable pageable) {

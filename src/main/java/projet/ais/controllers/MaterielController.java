@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import projet.ais.models.Conseil;
+import projet.ais.models.Intrant;
 import projet.ais.models.Materiel;
 import projet.ais.repository.MaterielRepository;
 import projet.ais.services.FileUploade;
@@ -138,6 +139,18 @@ private MediaType detectContentType(String imageName) {
         Page<Materiel> materiels = materielService.getMaterielByActeurWithPagination(idActeur,pageable);
         return ResponseEntity.ok().body(materiels);
     }
+
+
+        @GetMapping("/getMaterielsByPaysWithPagination")
+    public Page<Materiel> getAllMaterielsPageableByPays(@RequestParam String niveau3PaysActeur, Pageable pageable) {
+        return materielService.getAllMaterielPageableByPays(niveau3PaysActeur, pageable);
+    }
+
+    @GetMapping("/getMaterielsByPaysAndCategorieWithPagination")
+    public Page<Materiel> getAllMaterielsPageableByPaysAndCategorie(@RequestParam String idTypeMateriel, @RequestParam String niveau3PaysActeur,  Pageable pageable) {
+        return materielService.getAllMaterielPageableByPaysByCategorie(idTypeMateriel, niveau3PaysActeur , pageable);
+    }
+
     
     @PutMapping("/update/{id}")
     @Operation(summary = "Modification du materiel")

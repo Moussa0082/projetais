@@ -38,6 +38,7 @@ import projet.ais.models.CategorieProduit;
 import projet.ais.models.Intrant;
 import projet.ais.models.Speculation;
 import projet.ais.models.Stock;
+import projet.ais.models.Vehicule;
 import projet.ais.repository.StockRepository;
 import projet.ais.services.FileUploade;
 import projet.ais.services.StockService;
@@ -222,6 +223,7 @@ private MediaType detectContentType(String imageName) {
 
         return ResponseEntity.ok().body(stocks);
     }
+
     @GetMapping("/getAllStocksByMagasinAndActeurWithPagination")
     public ResponseEntity<Page<Stock>> getStocksByMagasinAndActeurWithPagination(
             @RequestParam String idMagasin,
@@ -247,7 +249,7 @@ private MediaType detectContentType(String imageName) {
     }
 
     @GetMapping("/getAllStocksByMagasinWithPagination")
-    public ResponseEntity<Page<Stock>> getStocksByCMagasinWithPagination(
+    public ResponseEntity<Page<Stock>> getStocksByMagasinWithPagination(
             @RequestParam String idMagasin,
             @RequestParam int page,
             @RequestParam int size) {
@@ -259,16 +261,46 @@ private MediaType detectContentType(String imageName) {
     }
 
                                     
-        @GetMapping("/getAllStocksByPaysWithPagination")
-        public ResponseEntity<Page<Stock>> getAllStocksPageableByPays(
+       
+
+        @GetMapping("/getStocksByPaysWithPagination")
+        public Page<Stock> getAllStocksPageableByPays(@RequestParam String niveau3PaysActeur, Pageable pageable) {
+            return stockService.getAllStocksPageableByPays(niveau3PaysActeur, pageable);
+        }
+
+        @GetMapping("/getStocksByPaysAndMagasinWithPagination")
+        public Page<Stock> getAllStocksPageableByPaysAndMagasin(@RequestParam String idMagasin, @RequestParam String niveau3PaysActeur, Pageable pageable) {
+            return stockService.getAllStockPageableByPaysByMagasin(idMagasin, niveau3PaysActeur, pageable);
+        }
+
+        @GetMapping("/getStocksByPaysAndMagasinAndCategorieProduitWithPagination")
+        public Page<Stock> getAllStocksPageableByPaysAndMagasin(@RequestParam String idCategorieProduit, @RequestParam String idMagasin, @RequestParam String niveau3PaysActeur, Pageable pageable) {
+            return stockService.getAllStockPageableByPaysByMagasinAndCategorie(idCategorieProduit, idMagasin, niveau3PaysActeur, pageable);
+        }
+
+        @GetMapping("/getAllStocksByCategorieAndPaysWithPagination")
+        public ResponseEntity<Page<Stock>> listeStockByCategorieProduitAndPaysWithPagination(
+                @RequestParam String idCategorie,
                 @RequestParam String pays,
                 @RequestParam int page,
                 @RequestParam int size) {
     
-            Pageable pageable = PageRequest.of(page, size);
-            Page<Stock> stocks = stockService.getAllStocksPageableByPays(pays, pageable);
+            CategorieProduit categorie = new CategorieProduit();
+            categorie.setIdCategorieProduit(idCategorie);
     
-            return ResponseEntity.ok(stocks);
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Stock> stocks = stockService.getAllStockPageableByPaysByCategorie(categorie, pays,pageable);
+    
+            return ResponseEntity.ok().body(stocks);
+        }
+    
+
+
+
+        @PutMapping("/update-pays")
+        public String updatePaysForStocks() {
+            stockService.updatePaysForStocks();
+            return "Mise à jour de la colonne pays pour tous les stocks réussie";
         }
 
         @GetMapping("/getAllStocksWithPagination")

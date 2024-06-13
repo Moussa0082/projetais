@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import projet.ais.models.Intrant;
 import projet.ais.models.Magasin;
 import projet.ais.models.Materiel;
 import projet.ais.models.Vehicule;
@@ -25,4 +26,17 @@ public interface MaterielRepository  extends JpaRepository<Materiel , String>{
     Page<Materiel> findByActeur_IdActeur(String idActeur, Pageable pageable);
 
     Page<Materiel> findAllByStatutAndActeurStatutActeur(boolean statut, boolean statutActeur, Pageable pageable);
+
+        Page<Materiel> findAllByStatutTrueAndPaysAndActeurStatutActeurTrue(String pays, Pageable pageable);
+
+        Page<Materiel> findAllByStatutTrueAndActeurStatutActeurTrueAndPaysNot(String pays, Pageable pageable);
+
+        Page<Materiel> findAllByTypeMaterielIdTypeMaterielAndStatutTrueAndPaysAndActeurStatutActeurTrue(String idTypeMateriel,
+                String pays, Pageable pageable);
+
+        Page<Materiel> findAllByTypeMateriel_IdTypeMaterielAndStatutTrueAndActeurStatutActeurTrueAndPaysNot(
+                        String idTypeMateriel, String pays, Pageable complementPageable);
+
+
+
 }
