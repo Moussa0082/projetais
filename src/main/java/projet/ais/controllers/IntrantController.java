@@ -186,7 +186,7 @@ public class IntrantController {
     public ResponseEntity<Page<Intrant>> getIntrantsByActeur(
         @RequestParam() String idActeur,
         @RequestParam() int page,
-                                                  @RequestParam() int size) {
+        @RequestParam() int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Intrant> intrants = intrantService.getIntrantByActeurWithPagination(idActeur,pageable);
         return ResponseEntity.ok().body(intrants);

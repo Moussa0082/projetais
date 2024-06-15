@@ -29,7 +29,9 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
+import projet.ais.models.Acteur;
 import projet.ais.models.Intrant;
+import projet.ais.models.Materiel;
 import projet.ais.models.Stock;
 import projet.ais.models.TypeMateriel;
 import projet.ais.models.Vehicule;
@@ -239,6 +241,30 @@ public class VehiculeService {
             }
 
             return new PageImpl<>(vehiculesList, pageable, vehiculeByPays.getTotalElements() + vehiculesList.size());
+        }
+    }
+
+
+     @Transactional
+    public void updatePaysForVehicule() {
+        // Récupérer tous les vehicules
+        List<Vehicule> vehicules = vehiculeRepository.findAll();
+
+        // Parcourir chaque vehicule
+        for (Vehicule vehicule : vehicules) {
+            // Récupérer l'acteur lié au vehicules
+            Acteur acteur = vehicule.getActeur();
+
+            if (acteur != null) {
+                // Récupérer le niveau3Pays de l'acteur lié au stock
+                String niveau3Pays = acteur.getNiveau3PaysActeur();
+
+                // Mettre à jour la colonne pays du stock
+                vehicule.setPays(niveau3Pays);
+            } else {
+                // Gérer le cas où l'acteur est null
+                System.out.println("L'acteur lié au vehicule ID " + vehicule.getIdVehicule() + " est null.");
+            }
         }
     }
 

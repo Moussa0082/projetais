@@ -1081,6 +1081,24 @@ public String sendOtpCodeEmail(String email) throws Exception {
             
             return acteur;
         }
+
+        //Se connecter avec  code pin
+        public Acteur connexionActeurWithCodeAndNomActeur(String codeActeur,String nomActeur){
+            Acteur acteur = acteurRepository.findByCodeActeurAndNomActeur(codeActeur,nomActeur);
+          
+            
+            // Comparer les mots de passe hachés
+            if (acteur == null) {
+                throw new EntityNotFoundException("Acteur non existant");
+            }
+            
+            if (!acteur.getStatutActeur()) {
+                throw new NoContentException("Connexion échouée : votre compte est désactivé. Veuillez contacter l'administrateur pour la procédure d'activation de votre compte !");
+            }
+            
+            return acteur;
+        }
+        
         
    
        
