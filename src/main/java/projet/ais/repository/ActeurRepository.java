@@ -51,5 +51,7 @@ public interface ActeurRepository extends JpaRepository<Acteur, String>{
     Acteur findByEmailActeurAndResetToken(String emailActeur, String resetToken);
 
     Acteur findByCodeActeur(String codeActeur);
+
+    Acteur findByCodeActeurAndNomActeur(String codeActeur, String nomActeur);
     
 }

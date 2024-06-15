@@ -278,10 +278,14 @@ private MediaType detectContentType(String imageName) {
             return stockService.getAllStockPageableByPaysByMagasinAndCategorie(idCategorieProduit, idMagasin, niveau3PaysActeur, pageable);
         }
 
+
+      
+
+
         @GetMapping("/getAllStocksByCategorieAndPaysWithPagination")
         public ResponseEntity<Page<Stock>> listeStockByCategorieProduitAndPaysWithPagination(
                 @RequestParam String idCategorie,
-                @RequestParam String pays,
+                @RequestParam String niveau3PaysActeur,
                 @RequestParam int page,
                 @RequestParam int size) {
     
@@ -289,7 +293,7 @@ private MediaType detectContentType(String imageName) {
             categorie.setIdCategorieProduit(idCategorie);
     
             Pageable pageable = PageRequest.of(page, size);
-            Page<Stock> stocks = stockService.getAllStockPageableByPaysByCategorie(categorie, pays,pageable);
+            Page<Stock> stocks = stockService.getAllStockPageableByPaysByCategorie(categorie, niveau3PaysActeur,pageable);
     
             return ResponseEntity.ok().body(stocks);
         }

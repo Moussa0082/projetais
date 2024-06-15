@@ -544,5 +544,14 @@ public class ActeurController {
     return acteurService.connexionActeurWithPin(codeActeur,password);
     }
 
+    @GetMapping("/codeAndNomActeurLogin")
+    @Operation(summary = "Connexion d'un Acteur via code et nomActeur")
+    public Acteur connexionActeurWithCodeAndNomAceur(
+        @RequestParam("codeActeur")  String codeActeur,
+        @RequestParam("nomActeur")  String nomActeur
+    ) {
+    return acteurService.connexionActeurWithCodeAndNomActeur(codeActeur,nomActeur);
+    }
+
     
 }

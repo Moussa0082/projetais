@@ -176,6 +176,28 @@ public class MaterielService {
 
 
     
+    @Transactional
+    public void updatePaysForMateriel() {
+        // Récupérer tous les stocks
+        List<Materiel> materiels = materielRepository.findAll();
+
+        // Parcourir chaque materiel
+        for (Materiel materiel : materiels) {
+            // Récupérer l'acteur lié au intrant
+            Acteur acteur = materiel.getActeur();
+
+            if (acteur != null) {
+                // Récupérer le niveau3Pays de l'acteur lié au stock
+                String niveau3Pays = acteur.getNiveau3PaysActeur();
+
+                // Mettre à jour la colonne pays du stock
+                materiel.setPays(niveau3Pays);
+            } else {
+                // Gérer le cas où l'acteur est null
+                System.out.println("L'acteur lié au materiel ID " + materiel.getIdMateriel() + " est null.");
+            }
+        }
+    }
 
 
 

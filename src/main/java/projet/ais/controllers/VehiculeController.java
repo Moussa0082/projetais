@@ -142,11 +142,17 @@ private MediaType detectContentType(String imageName) {
         return vehiculeService.getAllVehiculePageableByPays(niveau3PaysActeur, pageable);
     }
 
-    @GetMapping("/getVehiculesByPaysAndCategorieWithPagination")
+    @GetMapping("/getVehiculesByPaysAndTypeVoitureWithPagination")
     public Page<Vehicule> getAllVehiculesPageableByPaysAndCategorie(@RequestParam String idTypeVoiture, @RequestParam String niveau3PaysActeur,  Pageable pageable) {
         return vehiculeService.getAllVehiculePageableByPaysByCategorie(idTypeVoiture, niveau3PaysActeur , pageable);
     }
 
+
+    @PutMapping("/update-pays")
+    public String updatePaysForVehicules() {
+    vehiculeService.updatePaysForVehicule();
+        return "Mise à jour de la colonne pays pour tous les vehicules réussie";
+    }
 
 
        @GetMapping("/getAllVehiculesWithPagination")

@@ -146,9 +146,16 @@ private MediaType detectContentType(String imageName) {
         return materielService.getAllMaterielPageableByPays(niveau3PaysActeur, pageable);
     }
 
-    @GetMapping("/getMaterielsByPaysAndCategorieWithPagination")
+    @GetMapping("/getMaterielsByPaysAndTypeMaterielWithPagination")
     public Page<Materiel> getAllMaterielsPageableByPaysAndCategorie(@RequestParam String idTypeMateriel, @RequestParam String niveau3PaysActeur,  Pageable pageable) {
         return materielService.getAllMaterielPageableByPaysByCategorie(idTypeMateriel, niveau3PaysActeur , pageable);
+    }
+
+
+    @PutMapping("/update-pays")
+    public String updatePaysForMateriel() {
+    materielService.updatePaysForMateriel();
+        return "Mise à jour de la colonne pays pour tous les materiels réussie";
     }
 
     
