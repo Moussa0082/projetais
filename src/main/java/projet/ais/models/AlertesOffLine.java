@@ -42,7 +42,6 @@ public class AlertesOffLine {
     @Column(nullable = true)
     private String audioAlerteOffLine;
     
-    
     @Column
     private boolean statutAlerteOffLine = true;
 
