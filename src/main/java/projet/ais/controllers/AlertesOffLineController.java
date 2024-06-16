@@ -34,6 +34,7 @@ import projet.ais.services.FileUploade;
 
 @RestController
 @RequestMapping("/alertesOffLine")
+// @RequestMapping("/api-koumi/alertesOffLine")
 public class AlertesOffLineController {
 
     
@@ -209,7 +210,12 @@ public class AlertesOffLineController {
         return alertesOffLineService.getAlertesOffLineByPays(pays, page, size);
     }
 
-
+              // Get Liste des  alerte OffLine
+              @GetMapping("/read")
+              @Operation(summary = "Liste globale des alertes offline")
+            public ResponseEntity<List<AlertesOffLine>> getAllAlertesOffLine() {
+                return new ResponseEntity<>(alertesOffLineService.getAllAlertesOffLine(), HttpStatus.OK);
+            }
     
 
     

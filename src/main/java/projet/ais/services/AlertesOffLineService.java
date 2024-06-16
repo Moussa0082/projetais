@@ -311,6 +311,17 @@ public class AlertesOffLineService {
    
     }
   
+
+     //Liste des Alertess offline
+     public List<AlertesOffLine> getAllAlertesOffLine(){
+        List<AlertesOffLine> AlertesList = alertesOffLineRepository.findAll();
+
+        AlertesList = AlertesList
+        .stream().sorted((v1,v2) -> v2.getDateAjout().compareTo(v1.getDateAjout()))
+        .collect(Collectors.toList());
+
+        return AlertesList;
+    }
       
 
     public String deleteAlertesOffLine(String id){
