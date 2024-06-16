@@ -33,8 +33,7 @@ import projet.ais.services.AlertesOffLineService;
 import projet.ais.services.FileUploade;
 
 @RestController
-@RequestMapping("/alertesOffLine")
-// @RequestMapping("/api-koumi/alertesOffLine")
+@RequestMapping("/api-koumi/alertesOffLine")
 public class AlertesOffLineController {
 
     
