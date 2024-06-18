@@ -227,6 +227,23 @@ public class AlertesController {
     //     return  new ResponseEntity<>(alertesService.getAllalerteByActeur(id), HttpStatus.OK);
     // }
 
+
+    @GetMapping("/getAlertesByPaysAndNotWithPagination")
+    public Page<Alertes> getAllAlertesPageableByPaysAndNot(@RequestParam String niveau3PaysActeur, Pageable pageable) {
+        return alertesService.getAllAlertesPageableByPays(niveau3PaysActeur, pageable);
+    }
+
+    @GetMapping("/getAlertesByPaysWithPagination")
+    public Page<Alertes> getAllAlertesPageableByPays(@RequestParam String niveau3PaysActeur,
+    @RequestParam() int page,
+    @RequestParam() int size
+    ) {
+       
+       return (alertesService.getAlertesByPays(niveau3PaysActeur,page,size));
+    }
+    
+
+
                  // Get Liste des  alerte
       @GetMapping("/read")
       @Operation(summary = "Liste globale des alertes")
