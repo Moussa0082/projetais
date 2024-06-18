@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -356,6 +357,26 @@ public class AlertesService {
             throw new Exception("Erreur lors de la desactivation du Alertes : " + e.getMessage());
         }
         return AlertesRepository.save(alertes);
+    }
+
+
+           @Transactional
+    public Page<Alertes> getAllAlertesPageableByPays(String niveau3PaysActeur, Pageable pageable) {
+        // Fetch alertes  from the specified country
+        Page<Alertes> alertesByPays = AlertesRepository.findByPhotoAlerteIsNotNullAndStatutAlerteTrueAndPays( 
+            niveau3PaysActeur.trim().toLowerCase(), pageable);
+
+        List<Alertes> alertesList = new ArrayList<>(alertesByPays.getContent());
+
+        // Fetch alertes from other countries if needed
+        if (alertesList.size() < pageable.getPageSize()) {
+            Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - alertesList.size());
+            Page<Alertes> alertesComplement = AlertesRepository.findByPhotoAlerteIsNotNullAndStatutAlerteTrueAndPaysNot(
+                 niveau3PaysActeur.trim().toLowerCase(), complementPageable);
+            alertesList.addAll(alertesComplement.getContent());
+        }
+
+        return new PageImpl<>(alertesList, pageable, alertesByPays.getTotalElements() + alertesList.size());
     }
     
     

@@ -13,8 +13,11 @@ public interface AlertesOffLineRepository  extends JpaRepository <AlertesOffLine
     
     AlertesOffLine findByIdAlerteOffLine(String idAlerteOffLine);
       Page<AlertesOffLine> findByPhotoAlerteOffLineIsNotNullAndStatutAlerteOffLine(boolean statutAlerteOffLine,Pageable pageable);
-    Page<AlertesOffLine> findByPhotoAlerteOffLineIsNotNullAndStatutAlerteOffLineAndPays(boolean statutAlerteOffLine, String niveau3PaysNom,
+    Page<AlertesOffLine> findByPhotoAlerteOffLineIsNotNullAndStatutAlerteOffLineAndPays(boolean statutAlerteOffLine, String niveau3PaysActeur,
             Pageable pageable);
     AlertesOffLine findByPays(String pays);
+    Page<AlertesOffLine> findByPhotoAlerteOffLineIsNotNullAndStatutAlerteOffLineTrueAndPays(String pays, Pageable pageable);
+    Page<AlertesOffLine> findByPhotoAlerteOffLineIsNotNullAndStatutAlerteOffLineTrueAndPaysNot(String pays,
+            Pageable pageable);
 
 }

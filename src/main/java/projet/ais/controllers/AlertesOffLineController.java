@@ -200,6 +200,25 @@ public class AlertesOffLineController {
         return ResponseEntity.ok().body(alertes);
     }
 
+
+
+    //Par pays et autres pays si le nombre d'alerte n'est pas suffisant pour le pays specifier dans lurl
+    @GetMapping("/getAlertesOffLineByPaysAndNotWithPagination")
+    public Page<AlertesOffLine> getAllAlertesOffLinePageableByPaysAndNot(@RequestParam String niveau3PaysActeur, Pageable pageable) {
+        return alertesOffLineService.getAllAlertesOffLinePageableByPays(niveau3PaysActeur, pageable);
+    }
+
+
+    @GetMapping("/getAlertesOffLineByPaysWithPagination")
+    public Page<AlertesOffLine> getAllAlertesOffLinePageableByPays(@RequestParam String niveau3PaysActeur,
+    @RequestParam() int page,
+    @RequestParam() int size
+    ) {
+       
+       return (alertesOffLineService.getAlertesOffLineByPays(niveau3PaysActeur,page,size));
+    }
+
+
     //recuperer les alertes OffLine par pays de lacteur connecté
     @GetMapping("/alertesOffLineByPays")
     public Page<AlertesOffLine> getAlertesByPaysForActeur(

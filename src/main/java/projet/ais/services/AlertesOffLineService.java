@@ -7,17 +7,20 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import projet.ais.CodeGenerator;
@@ -25,6 +28,7 @@ import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alertes;
 import projet.ais.models.AlertesOffLine;
+import projet.ais.models.Intrant;
 import projet.ais.models.Pays;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.AlertesOffLineRepository;
@@ -311,6 +315,26 @@ public class AlertesOffLineService {
    
     }
   
+
+         @Transactional
+    public Page<AlertesOffLine> getAllAlertesOffLinePageableByPays(String niveau3PaysActeur, Pageable pageable) {
+        // Fetch alertes offLine from the specified country
+        Page<AlertesOffLine> alertesOffLineByPays = alertesOffLineRepository.findByPhotoAlerteOffLineIsNotNullAndStatutAlerteOffLineTrueAndPays( 
+            niveau3PaysActeur.trim().toLowerCase(), pageable);
+
+        List<AlertesOffLine> alertesOffLinesList = new ArrayList<>(alertesOffLineByPays.getContent());
+
+        // Fetch alertesOffLine from other countries if needed
+        if (alertesOffLinesList.size() < pageable.getPageSize()) {
+            Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - alertesOffLinesList.size());
+            Page<AlertesOffLine> alertesOffLineComplement = alertesOffLineRepository.findByPhotoAlerteOffLineIsNotNullAndStatutAlerteOffLineTrueAndPaysNot(
+                 niveau3PaysActeur.trim().toLowerCase(), complementPageable);
+            alertesOffLinesList.addAll(alertesOffLineComplement.getContent());
+        }
+
+        return new PageImpl<>(alertesOffLinesList, pageable, alertesOffLineByPays.getTotalElements() + alertesOffLinesList.size());
+    }
+
 
      //Liste des Alertess offline
      public List<AlertesOffLine> getAllAlertesOffLine(){
