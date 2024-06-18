@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Sort;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
+import projet.ais.Exception.NoAlertsFoundException;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alertes;
 import projet.ais.models.AlertesOffLine;
@@ -202,12 +204,15 @@ public class AlertesOffLineService {
         return alertesOffLineRepository.findByPhotoAlerteOffLineIsNotNullAndStatutAlerteOffLineAndPays(true, niveau3PaysNom, pageable);
     }
 
-    public Page<AlertesOffLine> getAlertesOffLineByPays(String pays, int page, int size) {
-        AlertesOffLine al = alertesOffLineRepository.findByPays(pays);
+    public Page<AlertesOffLine> getAlertesOffLineByPaysSortedByDate(String pays, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "dateAjout"));
+        Page<AlertesOffLine> alertesPage = alertesOffLineRepository.findByPhotoAlerteOffLineIsNotNullAndStatutAlerteOffLineAndPays(true, pays, pageable);
 
-        Pageable pageable = PageRequest.of(page, size);
-        // Retrieve alerts where the country matches the actor's country, photo is not null, and status matches
-        return alertesOffLineRepository.findByPhotoAlerteOffLineIsNotNullAndStatutAlerteOffLineAndPays(true, al.getPays(), pageable);
+        if (alertesPage.isEmpty()) {
+            throw new NoAlertsFoundException("Aucune alerte offLine trouvée pour le pays: " + pays);
+        }
+
+        return alertesPage;
     }
 
 

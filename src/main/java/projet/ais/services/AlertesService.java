@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.*;
+import org.springframework.data.domain.Sort;
 import java.util.stream.Collectors;
 import java.time.format.DateTimeFormatter;
 
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
+import projet.ais.Exception.NoAlertsFoundException;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alertes;
 import projet.ais.models.AlertesOffLine;
@@ -311,12 +313,15 @@ public class AlertesService {
    
     }
 
-     public Page<Alertes> getAlertesByPays(String pays, int page, int size) {
-        Alertes al = AlertesRepository.findByPays(pays);
+     public Page<Alertes> getAlertesByPaysSortedByDate(String pays, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "dateAjout"));
+        Page<Alertes> alertesPage = AlertesRepository.findByPhotoAlerteIsNotNullAndStatutAlerteAndPays(true, pays, pageable);
 
-        Pageable pageable = PageRequest.of(page, size);
-        // Retrieve alerts where the country matches the actor's country, photo is not null, and status matches
-        return AlertesRepository.findByPhotoAlerteIsNotNullAndStatutAlerteAndPays(true, al.getPays().toLowerCase(), pageable);
+        if (alertesPage.isEmpty()) {
+            throw new NoAlertsFoundException("Aucune alerte trouvée pour le pays: " + pays);
+        }
+
+        return alertesPage;
     }
   
       //Liste des Alertess

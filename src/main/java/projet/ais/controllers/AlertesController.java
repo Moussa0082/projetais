@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import projet.ais.Exception.NoAlertsFoundException;
 import projet.ais.models.Alertes;
 import projet.ais.models.AlertesOffLine;
 import projet.ais.models.Stock;
@@ -121,13 +122,7 @@ public class AlertesController {
     }
 
         //recuperer les alertes OffLine par pays de lacteur connecté
-    @GetMapping("/alertesByPays")
-    public Page<Alertes> getAlertesByPays(
-            @RequestParam String pays,
-            @RequestParam int page,
-            @RequestParam int size) {
-        return alertesService.getAlertesByPays(pays, page, size);
-    }
+    
 
             @GetMapping("/{alerteId}/image")
             public ResponseEntity<byte[]> getImage(@PathVariable String alerteId) {
@@ -232,15 +227,22 @@ public class AlertesController {
     public Page<Alertes> getAllAlertesPageableByPaysAndNot(@RequestParam String niveau3PaysActeur, Pageable pageable) {
         return alertesService.getAllAlertesPageableByPays(niveau3PaysActeur, pageable);
     }
+    
 
-    @GetMapping("/getAlertesByPaysWithPagination")
-    public Page<Alertes> getAllAlertesPageableByPays(@RequestParam String niveau3PaysActeur,
-    @RequestParam() int page,
-    @RequestParam() int size
-    ) {
-       
-       return (alertesService.getAlertesByPays(niveau3PaysActeur,page,size));
+    @GetMapping("/getAlertesByPaysSortedByDate")
+    public ResponseEntity<?> getAlertesByPaysSortedByDate(
+        @RequestParam String niveau3PaysActeur,
+        @RequestParam int page,
+        @RequestParam int size) {
+
+        try {
+            Page<Alertes> alertes = alertesService.getAlertesByPaysSortedByDate(niveau3PaysActeur, page, size);
+            return ResponseEntity.ok(alertes);
+        } catch (NoAlertsFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
+
     
 
 
