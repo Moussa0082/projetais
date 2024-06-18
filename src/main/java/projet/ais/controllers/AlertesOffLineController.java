@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import projet.ais.Exception.NoAlertsFoundException;
 import projet.ais.models.Alertes;
 import projet.ais.models.AlertesOffLine;
 import projet.ais.repository.AlertesOffLineRepository;
@@ -209,24 +210,23 @@ public class AlertesOffLineController {
     }
 
 
-    @GetMapping("/getAlertesOffLineByPaysWithPagination")
-    public Page<AlertesOffLine> getAllAlertesOffLinePageableByPays(@RequestParam String niveau3PaysActeur,
-    @RequestParam() int page,
-    @RequestParam() int size
-    ) {
-       
-       return (alertesOffLineService.getAlertesOffLineByPays(niveau3PaysActeur,page,size));
+    
+    
+    @GetMapping("/getAlertesOffLineByPaysSortedByDate")
+    public ResponseEntity<?> getAlertesOffLineByPaysSortedByDate(
+        @RequestParam String niveau3PaysActeur,
+        @RequestParam int page,
+        @RequestParam int size) {
+
+        try {
+            Page<AlertesOffLine> alertes = alertesOffLineService.getAlertesOffLineByPaysSortedByDate(niveau3PaysActeur, page, size);
+            return ResponseEntity.ok(alertes);
+        } catch (NoAlertsFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
 
-    //recuperer les alertes OffLine par pays de lacteur connecté
-    @GetMapping("/alertesOffLineByPays")
-    public Page<AlertesOffLine> getAlertesByPaysForActeur(
-            @RequestParam String pays,
-            @RequestParam int page,
-            @RequestParam int size) {
-        return alertesOffLineService.getAlertesOffLineByPays(pays, page, size);
-    }
 
               // Get Liste des  alerte OffLine
               @GetMapping("/read")
