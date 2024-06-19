@@ -202,7 +202,7 @@ public class IntrantService {
     //     return intrantRepository.findAllByCategorieProduit_libelleCategorie(libelle, pageable);
     // }
 
-     // recuperer les intrants par  libelle categorie
+     // recuperer les intrants par  libelle filiere
     public Page<Intrant> getAllIntrantByLibelleCategorie(String libelle,Pageable pageable) {
         return intrantRepository.findAllByCategorieProduit_filiere_libelleFiliere(libelle, pageable);
     }
