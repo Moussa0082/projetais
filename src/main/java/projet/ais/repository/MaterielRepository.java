@@ -37,6 +37,9 @@ public interface MaterielRepository  extends JpaRepository<Materiel , String>{
         Page<Materiel> findAllByTypeMateriel_IdTypeMaterielAndStatutTrueAndActeurStatutActeurTrueAndPaysNot(
                         String idTypeMateriel, String pays, Pageable complementPageable);
 
+        Page<Materiel> findAllByTypeMateriel_IdTypeMaterielAndStatutTrueAndActeurStatutActeurTrue(String idTypeMateriel,
+                Pageable pageable);
+
 
 
 }

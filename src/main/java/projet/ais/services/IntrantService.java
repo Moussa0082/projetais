@@ -203,8 +203,18 @@ public class IntrantService {
     // }
 
      // recuperer les intrants par  libelle categorie
-    public Page<Intrant> getAllIntrantByLibelleCategorie(String libelle,Pageable pageable) {
-        return intrantRepository.findAllByCategorieProduit_filiere_libelleFiliere(libelle, pageable);
+    // public Page<Intrant> getAllIntrantByLibelleCategorie(String libelle,Pageable pageable) {
+    //     return intrantRepository.findAllByCategorieProduit_filiere_libelleFiliere(libelle, pageable);
+    // }
+    public Page<Intrant> getAllIntrantByLibelleCategorie(String libelle, Pageable pageable) {
+        Page<Intrant> intrants = intrantRepository.findAllByCategorieProduit_filiere_libelleFiliere(libelle, pageable);
+
+        // If no intrants are found, return an empty page
+        if (intrants.isEmpty()) {
+            return Page.empty(pageable);
+        }
+
+        return intrants;
     }
 
 
@@ -260,6 +270,24 @@ public class IntrantService {
     // }
 
 
+    // @Transactional
+    // public Page<Intrant> getAllIntrantPageableByPaysByCategorie(String idCategorieProduit, String niveau3PaysActeur, Pageable pageable) {
+    //     // Fetch intrants from the specified country
+    //     Page<Intrant> intrantByPays = intrantRepository.findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndPaysAndActeurStatutActeurTrue(
+    //         idCategorieProduit, niveau3PaysActeur.trim().toLowerCase(), pageable);
+
+    //     List<Intrant> intrantsList = new ArrayList<>(intrantByPays.getContent());
+
+    //     // Fetch intrants from other countries if needed
+    //     if (intrantsList.size() < pageable.getPageSize()) {
+    //         Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - intrantsList.size());
+    //         Page<Intrant> intrantComplement = intrantRepository.findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndActeurStatutActeurTrueAndPaysNot(
+    //             idCategorieProduit, niveau3PaysActeur.trim().toLowerCase(), complementPageable);
+    //         intrantsList.addAll(intrantComplement.getContent());
+    //     }
+
+    //     return new PageImpl<>(intrantsList, pageable, intrantByPays.getTotalElements() + intrantsList.size());
+    // }
     @Transactional
     public Page<Intrant> getAllIntrantPageableByPaysByCategorie(String idCategorieProduit, String niveau3PaysActeur, Pageable pageable) {
         // Fetch intrants from the specified country
@@ -268,7 +296,15 @@ public class IntrantService {
 
         List<Intrant> intrantsList = new ArrayList<>(intrantByPays.getContent());
 
-        // Fetch intrants from other countries if needed
+        // If no intrants are found for the specified country, fetch intrants from other countries
+        if (intrantsList.isEmpty()) {
+            Page<Intrant> intrantFromOtherCountries = intrantRepository.findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndActeurStatutActeurTrue(
+                idCategorieProduit, pageable);
+
+            return new PageImpl<>(intrantFromOtherCountries.getContent(), pageable, intrantFromOtherCountries.getTotalElements());
+        }
+
+        // Fetch intrants from other countries if needed to fill the page
         if (intrantsList.size() < pageable.getPageSize()) {
             Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - intrantsList.size());
             Page<Intrant> intrantComplement = intrantRepository.findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndActeurStatutActeurTrueAndPaysNot(

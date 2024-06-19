@@ -67,6 +67,9 @@ public interface IntrantRepository extends JpaRepository<Intrant , String> {
 //                                                                        Pageable pageable);
    Page<Intrant> findAllByStatutIntrantTrueAndActeurStatutActeurTrueAndPaysNot(String pays, Pageable pageable);
 
+    Page<Intrant> findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndActeurStatutActeurTrue(
+        String idCategorieProduit, Pageable pageable);
+
 
     // Page<Intrant> findAllByStatutIntrantTrueAndPaysAndActeurStatutActeurTrue(String pays, Pageable pageable);
 }
