@@ -38,7 +38,11 @@ public interface IntrantRepository extends JpaRepository<Intrant , String> {
 
     //Intrant par libelle categorie
     Page<Intrant> findAllByCategorieProduit_filiere_libelleFiliere(String libelle , Pageable pageable);
+   
+    // Page<Intrant> findAllByCategorieProduit_filiere_libelleFiliereAndPays(String libelle , Pageable pageable);
     
+    Page<Intrant> findAllByCategorieProduit_filiere_LibelleFiliereAndPays(String libelleFiliere, String pays, Pageable pageable);
+
     //Intrant par libelle categorie et  par pays
     Page<Intrant> findAllByCategorieProduit_filiere_libelleFiliereAndPaysAndStatutIntrantTrueAndActeurStatutActeurTrue(String pays , String libelle , Pageable pageable);
     
@@ -66,6 +70,9 @@ public interface IntrantRepository extends JpaRepository<Intrant , String> {
 //                                                                        @Param("pays") String pays,
 //                                                                        Pageable pageable);
    Page<Intrant> findAllByStatutIntrantTrueAndActeurStatutActeurTrueAndPaysNot(String pays, Pageable pageable);
+
+    Page<Intrant> findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndActeurStatutActeurTrue(
+        String idCategorieProduit, Pageable pageable);
 
 
     // Page<Intrant> findAllByStatutIntrantTrueAndPaysAndActeurStatutActeurTrue(String pays, Pageable pageable);
