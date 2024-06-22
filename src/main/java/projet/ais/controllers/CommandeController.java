@@ -128,26 +128,26 @@ return ResponseEntity.status(HttpStatus.OK).body("Commande passer avec succes");
     }
 
 
-    @PostMapping("/confirmerLivraison/{id}")
-    @Operation(summary="Confirmation de livraison  materiel")
-    public ResponseEntity<String> livraison(@PathVariable String idCommande) {
-        try {
-            commandeService.confirmerLivraison(idCommande);
-            return ResponseEntity.ok("Livraison Confirmer panier avec succès");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'ajout au panier : " + e.getMessage());
-        }
-    }
+    // @PostMapping("/confirmerLivraison/{id}")
+    // @Operation(summary="Confirmation de livraison  materiel")
+    // public ResponseEntity<String> livraison(@PathVariable String idCommande) {
+    //     try {
+    //         commandeService.confirmerLivraison(idCommande);
+    //         return ResponseEntity.ok("Livraison Confirmer panier avec succès");
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'ajout au panier : " + e.getMessage());
+    //     }
+    // }
 
-     @PutMapping("/confirmerLivraisonVendeur")
-    public ResponseEntity<String> confirmerLivraisonVendeur(@RequestParam String id, @RequestParam Map<String, Double> quantitesLivre) throws Exception {
-        try {
-            commandeService.confirmerLivraisonVendeur(id,quantitesLivre);
-            return ResponseEntity.ok("Livraison Confirmer avec succès");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la confirmation de la livraison des produits : " + e.getMessage());
-        }
-    }
+    //  @PutMapping("/confirmerLivraisonVendeur")
+    // public ResponseEntity<String> confirmerLivraisonVendeur(@RequestParam String id, @RequestParam Map<String, Double> quantitesLivre) throws Exception {
+    //     try {
+    //         commandeService.confirmerLivraisonVendeur(id,quantitesLivre);
+    //         return ResponseEntity.ok("Livraison Confirmer avec succès");
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la confirmation de la livraison des produits : " + e.getMessage());
+    //     }
+    // }
 
 
     @PutMapping("/confirmerLivraison/{idDetailCommande}/{quantiteLivree}")
@@ -161,16 +161,16 @@ return ResponseEntity.status(HttpStatus.OK).body("Commande passer avec succes");
 }
      
 
-    @PostMapping("/confirmerCommande/{idCommande}")
-    @Operation(summary="Confirmer commande materiel")
-    public ResponseEntity<String> confirmer(@PathVariable String idCommande) {
-        try {
-            commandeService.confirmerCommande(idCommande);
-            return ResponseEntity.ok("Livraison Confirmer  avec succès");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'ajout au panier : " + e.getMessage());
-        }
-    }
+    // @PostMapping("/confirmerCommande/{idCommande}")
+    // @Operation(summary="Confirmer commande materiel")
+    // public ResponseEntity<String> confirmer(@PathVariable String idCommande) {
+    //     try {
+    //         commandeService.confirmerCommande(idCommande);
+    //         return ResponseEntity.ok("Livraison Confirmer  avec succès");
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'ajout au panier : " + e.getMessage());
+    //     }
+    // }
 
     @GetMapping("/getAllCommandeByActeur/{idActeur}")
     @Operation(summary="Liste des commandes d'un acteur celui qui a commandé")

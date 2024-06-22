@@ -19,7 +19,7 @@ public interface StockRepository extends JpaRepository<Stock, String>{
     
     // Stock findByIdStock(String id);
     
-    Page<Stock> findAll(Pageable pageable);
+    Optional<Stock> findByNomProduit(String nomProduit);
     List<Stock> findByActeurIdActeur(String id);
     List<Stock> findBySpeculationIdSpeculation(String id);
     List<Stock> findByMagasinIdMagasin(String id);
@@ -42,7 +42,7 @@ Page<Stock> findBySpeculation_CategorieProduit_filiere_libelleFiliereAndPays(Str
     // List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduit(String idCategorie);
     List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasinAndActeurIdActeur(
             String idCategorieProduit, String idMagasin,String idActeur);
-    Collection<Stock> findByNomProduit(String nomProduit);
+//     Collection<Stock> findByNomProduit(String nomProduit);
     List<Stock> findByCommande_IdCommande(String id);
     List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduitAndActeur_IdActeur(String idCategorieProduit,
             String idActeur);
