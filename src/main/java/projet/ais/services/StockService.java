@@ -612,7 +612,7 @@ private String generateQRCodeImage(String qrCodeData) {
         return stockList;
     }
 
-     public List<Stock> getLastTenStocks() {
+    public List<Stock> getLastTenStocks() {
     // Création d'un objet Pageable pour récupérer les 10 premiers éléments, triés par date d'ajout décroissante
     Pageable pageable = PageRequest.of(0, 10, Sort.by("dateAjout").descending());
     
@@ -683,10 +683,11 @@ private String generateQRCodeImage(String qrCodeData) {
     }
 
      // recuperer les intrants par  libelle categorie
-    public Page<Stock> getAllStockByLibelleCategorie(String libelle,Pageable pageable) {
-        return stockRepository.findBySpeculation_CategorieProduit_filiere_libelleFiliere(libelle, pageable);
+    public Page<Stock> getAllStockByLibelleCategorie(String libelleFiliere,String pays, Pageable pageable) {
+        return stockRepository.findBySpeculation_CategorieProduit_filiere_libelleFiliereAndPays(libelleFiliere,pays, pageable);
     }
     
+
     // recuperer les stock par  acteur avec pagination
     public Page<Stock> getStocksByActeurWithPagination(String idActeur,Pageable pageable) {
         return stockRepository.findByActeur_IdActeur(idActeur, pageable);

@@ -206,17 +206,21 @@ public class IntrantService {
     // public Page<Intrant> getAllIntrantByLibelleCategorie(String libelle,Pageable pageable) {
     //     return intrantRepository.findAllByCategorieProduit_filiere_libelleFiliere(libelle, pageable);
     // }
-    public Page<Intrant> getAllIntrantByLibelleCategorie(String libelle, Pageable pageable) {
-        Page<Intrant> intrants = intrantRepository.findAllByCategorieProduit_filiere_libelleFiliere(libelle, pageable);
 
-        // If no intrants are found, return an empty page
-        if (intrants.isEmpty()) {
-            return Page.empty(pageable);
-        }
+    // public Page<Intrant> getAllIntrantByLibelleCategorie(String libelle, Pageable pageable) {
+    //     Page<Intrant> intrants = intrantRepository.findAllByCategorieProduit_filiere_libelleFiliere(libelle, pageable);
 
-        return intrants;
+    //     // If no intrants are found, return an empty page
+    //     if (intrants.isEmpty()) {
+    //         return Page.empty(pageable);
+    //     }
+
+    //     return intrants;
+    // }
+
+    public Page<Intrant> getAllIntrantByLibelleCategorie(String libelleFiliere, String pays, Pageable pageable) {
+        return intrantRepository.findAllByCategorieProduit_filiere_LibelleFiliereAndPays(libelleFiliere, pays, pageable);
     }
-
 
     public Page<Intrant> getAllIntrantPageable(Pageable pageable) {
         return intrantRepository.findAllByStatutIntrantAndActeurStatutActeur(true,true,pageable);

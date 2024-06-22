@@ -241,10 +241,11 @@ private MediaType detectContentType(String imageName) {
     @GetMapping("/listeStockByLibelleCategorie")
     public ResponseEntity<Page<Stock>> getStocksByLibelleCategorie(
         @RequestParam() String libelle,
+        @RequestParam() String pays,
         @RequestParam() int page,
         @RequestParam() int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Stock> stocks = stockService.getAllStockByLibelleCategorie(libelle, pageable);
+        Page<Stock> stocks = stockService.getAllStockByLibelleCategorie(libelle, pays, pageable);
         return ResponseEntity.ok().body(stocks);
     }
 
