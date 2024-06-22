@@ -4,6 +4,7 @@ package projet.ais.repository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,9 @@ import projet.ais.models.Superficie;
 public interface IntrantRepository extends JpaRepository<Intrant , String> {
 
     Intrant findByIdIntrant(String idIntrant);
+    
+    Optional<Intrant> findByNomIntrant(String nomIntrant);
+
 
     List<Intrant> findByIdIntrantIn(List<String> idIntrants);
 
@@ -45,7 +49,7 @@ public interface IntrantRepository extends JpaRepository<Intrant , String> {
     //Intrant par libelle categorie et non par pays
     Page<Intrant> findAllByCategorieProduit_filiere_libelleFiliereAndStatutIntrantTrueAndActeurStatutActeurTrueAndPaysNot(String pays , String libelle , Pageable pageable);
     
-    Collection<Intrant> findByNomIntrant(String nomIntrant);
+    // Collection<Intrant> findByNomIntrant(String nomIntrant);
          
          //ancien
          Page<Intrant> findByCategorieProduit_IdCategorieProduitAndStatutIntrantAndActeurStatutActeur(String idCategorieProduit, boolean statutIntrant,

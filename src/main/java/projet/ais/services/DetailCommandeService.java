@@ -1,15 +1,21 @@
 package projet.ais.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import projet.ais.models.DetailCommande;
+import projet.ais.models.Intrant;
 import projet.ais.models.Magasin;
+import projet.ais.models.Stock;
 import projet.ais.repository.CommandeRepository;
 import projet.ais.repository.DetailCommandeRepository;
+import projet.ais.repository.IntrantRepository;
+import projet.ais.repository.StockRepository;
 
 @Service
 public class DetailCommandeService {
@@ -20,6 +26,10 @@ public class DetailCommandeService {
 
     @Autowired
     CommandeRepository commandeRepository;
+    @Autowired
+    IntrantRepository intrantRepository;
+    @Autowired
+    StockRepository stockRepository;
 
 
      public List<DetailCommande> getAllDetailCommandeByIdCommande(String idCommande) {
@@ -34,5 +44,39 @@ public class DetailCommandeService {
 
         return detailCommandeList;
     }
+
+
+
+    @Transactional
+    public void updateDetailCommandes() {
+        List<DetailCommande> detailCommandes = detailCommandeRepository.findAll();
+
+        for (DetailCommande detailCommande : detailCommandes) {
+            String nomProduit = detailCommande.getNomProduit();
+
+            if (nomProduit != null) {
+                Optional<Stock> optionalStock = stockRepository.findByNomProduit(nomProduit);
+                if (optionalStock.isPresent()) {
+                    Stock stock = optionalStock.get();
+                    detailCommande.setStock(stock);
+                    detailCommande.setIsStock(true);
+                } else {
+                    Optional<Intrant> optionalIntrant = intrantRepository.findByNomIntrant(nomProduit);
+                    if (optionalIntrant.isPresent()) {
+                        Intrant intrant = optionalIntrant.get();
+                        detailCommande.setIntrant(intrant);
+                        detailCommande.setIsStock(false);
+                    } else {
+                        // If neither stock nor intrant found, set isStock to null
+                        detailCommande.setIsStock(null);
+                    }
+                }
+
+                detailCommandeRepository.save(detailCommande);
+            }
+        }
+
     
+}
+
 }

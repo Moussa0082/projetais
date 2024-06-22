@@ -33,6 +33,8 @@ public class DetailCommande {
     private String nomProduit;
 
     private String dateAjout;
+
+    private Boolean isStock;
     
 
     // @Column(columnDefinition = "TIMESTAMP")

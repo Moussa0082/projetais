@@ -87,8 +87,8 @@ public class CommandeService {
         Commande commande = new Commande();
 
     // Extraire les listes des Optionals
-    List<Stock> stockss = stocks.orElse(Collections.emptyList());
-    List<Intrant> intrantss = intrants.orElse(Collections.emptyList());
+    // List<Stock> stockss = stocks.orElse(Collections.emptyList());
+    // List<Intrant> intrantss = intrants.orElse(Collections.emptyList());
 
     // Récupération des stocks correspondant aux identifiants fournis
     List<Stock> stocksFound = stockRepository.findByIdStockIn(
@@ -165,6 +165,8 @@ public class CommandeService {
         detailCommande.setDateAjout(formattedDateTime);
         detailCommande.setCommande(savedCommande);
         detailCommande.setStock(stock);
+        detailCommande.setIsStock(true);
+
 
         // Enregistrement du détail de la commande
          detailCommandeRepository.save(detailCommande);
@@ -194,6 +196,7 @@ public class CommandeService {
         detailCommande.setDateAjout(formattedDateTime);
         detailCommande.setCommande(savedCommande);
         detailCommande.setIntrant(intrant);
+        detailCommande.setIsStock(false);
 
         // Enregistrement du détail de la commande
        detailCommandeRepository.save(detailCommande);
