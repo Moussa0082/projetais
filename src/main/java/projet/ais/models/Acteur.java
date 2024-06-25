@@ -90,7 +90,7 @@ public class Acteur {
     @Column(nullable = true)
     private String emailActeur;
 
-    private Boolean statutActeur  ;
+    private Boolean statutActeur = false ;
 
     private Boolean isConnected  ;
 
