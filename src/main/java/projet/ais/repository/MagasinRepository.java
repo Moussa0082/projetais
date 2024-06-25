@@ -31,11 +31,22 @@ public interface MagasinRepository  extends JpaRepository<Magasin, String>{
     //                                          @Param("idActeur") String idActeur);
     List<Magasin> findAllByActeurIdActeurAndNiveau1PaysIdNiveau1Pays(String idActeur,String idNiveau1Pays);
 
-    Page<Magasin> findByNiveau1Pays_IdNiveau1PaysAndStatutMagasin(String idNiveau1Pays, boolean statutMagasin, Pageable pageable);
+    Page<Magasin> findByNiveau1Pays_IdNiveau1PaysAndPaysAndStatutMagasinAndActeurStatutActeurTrue(String idNiveau1Pays, String niveau3PaysActeur, boolean statutMagasin, Pageable pageable);
 
     Page<Magasin> findByActeur_IdActeur(String idActeur, Pageable pageable);
 
     Page<Magasin> findAllByStatutMagasin(boolean statutMagsin, Pageable pageable);
+
+    Page<Magasin> findAllByStatutMagasinTrueAndActeurStatutActeurTrue(Pageable pageable);
+
+    Page<Magasin> findAllByStatutMagasinAndPaysAndActeurStatutActeurTrue(boolean statutMagasin, String pays,
+            Pageable pageable);
+
+    Page<Magasin> findAllByStatutMagasinAndPaysNotAndActeurStatutActeurTrue(boolean statutMagasin, String pays, boolean statutActeur,
+            Pageable complementPageable);
+
+    Page<Magasin> findByNiveau1Pays_IdNiveau1PaysAndPaysNotAndStatutMagasinTrueAndActeurStatutActeurTrue(
+            String pays, String idNiveau1Pays, Pageable complementPageable);
 
     // List<Magasin> findByNiveau1PaysAndActeur(String idNiveau1Pays, String idActeur);
 }

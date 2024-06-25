@@ -56,6 +56,9 @@ public class Magasin {
 
     @Column(nullable = true)
     private String photo;
+    
+    @Column(nullable = true)
+    private String pays;
 
     @ManyToOne
     @JoinColumn( name = "idActeur")
