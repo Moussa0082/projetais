@@ -92,7 +92,7 @@ public class Acteur {
 
     private Boolean statutActeur = false ;
 
-    private Boolean isConnected  ;
+    private Boolean isConnected;
 
     // @OneToOne
     @ManyToOne

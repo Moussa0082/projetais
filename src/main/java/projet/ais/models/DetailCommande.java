@@ -27,6 +27,9 @@ public class DetailCommande {
     private Double quantiteLivree;
 
     @Column(nullable = true)
+     private String description;
+
+    @Column(nullable = true)
     private Double quantiteNonLivree; // Utiliser la classe d'enveloppe Double au lieu du type primitif double
 
     @Column(nullable = true)

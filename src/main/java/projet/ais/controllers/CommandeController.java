@@ -159,6 +159,16 @@ return ResponseEntity.status(HttpStatus.OK).body("Commande passer avec succes");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la confirmation de la commande pour le produit : " + e.getMessage());
     }
 }
+
+    @PutMapping("annulerLivraison/{idDetailCommande}/{description}")
+    public ResponseEntity<?> annulerLivrasonProduit(@PathVariable String idDetailCommande , @PathVariable(required = false) String description) {
+    try {
+        commandeService.annulerCommandeParProduit(idDetailCommande, description);
+        return ResponseEntity.ok("Commande annulée avec succès pour le produit : " + idDetailCommande);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'annulation de la commande pour le produit : " + e.getMessage());
+    }
+}
      
 
     // @PostMapping("/confirmerCommande/{idCommande}")

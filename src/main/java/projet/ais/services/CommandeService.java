@@ -87,8 +87,8 @@ public class CommandeService {
         Commande commande = new Commande();
 
     // Extraire les listes des Optionals
-    // List<Stock> stockss = stocks.orElse(Collections.emptyList());
-    // List<Intrant> intrantss = intrants.orElse(Collections.emptyList());
+    List<Stock> stockss = stocks.orElse(Collections.emptyList());
+    List<Intrant> intrantss = intrants.orElse(Collections.emptyList());
 
     // Récupération des stocks correspondant aux identifiants fournis
     List<Stock> stocksFound = stockRepository.findByIdStockIn(
@@ -294,6 +294,47 @@ public class CommandeService {
             messageService.sendMessageAndSave(optionalDetailCommande.get().getCommande().getActeur().getWhatsAppActeur(), msgg, optionalDetailCommande.get().getCommande().getActeur());
 
         }
+    } else {
+        // Lever une exception si le détail de la commande n'est pas trouvé
+        throw new Exception("Détail de la commande non trouvé");
+    }
+}
+
+   //Annuler
+   public void annulerCommandeParProduit(String idDetailCommande, String description) throws Exception {
+    // Rechercher le détail de la commande par l'ID
+    Optional<DetailCommande> optionalDetailCommande = detailCommandeRepository.findById(idDetailCommande);
+
+    if (optionalDetailCommande.isPresent()) {
+        DetailCommande detailCommande = optionalDetailCommande.get();
+
+        // Mettre à jour la quantité livrée
+        
+
+        detailCommande.setDescription(description);
+        detailCommande.setQuantiteLivree(0.0);
+
+        String msg = "La livraison de votre commande de " + optionalDetailCommande.get().getNomProduit().toUpperCase() + " passé le " + optionalDetailCommande.get().getCommande().getDateCommande()  + " a été annulée  par le proprietaire  vous pouvez le contacter à son numéro " + optionalDetailCommande.get().getCommande().getActeurProprietaire().getWhatsAppActeur() ;
+        // Enregistrer les modifications dans la base de données
+        detailCommandeRepository.save(detailCommande);
+        messageService.sendMessageAndSave(optionalDetailCommande.get().getCommande().getActeur().getWhatsAppActeur(), msg, optionalDetailCommande.get().getCommande().getActeur());
+
+        // Récupérer tous les détails de commande liés à la même commande
+        // List<DetailCommande> allDetailsForCommande = detailCommandeRepository.findByCommandeIdCommande(detailCommande.getCommande().getIdCommande());
+
+        // Vérifier si la somme des quantités livrées pour tous les détails de commande est égale à la quantité demandée
+        // double quantiteTotaleLivree = allDetailsForCommande.stream().mapToDouble(DetailCommande::getQuantiteLivree).sum();
+        // double quantiteDemandee = allDetailsForCommande.stream().mapToDouble(DetailCommande::getQuantiteDemande).sum();
+
+        // if (quantiteTotaleLivree == quantiteDemandee) {
+        //     // Mettre à jour le statut de la commande à "annulé"
+        //     Commande commande = detailCommande.getCommande();
+        //     commande.setStatutCommandeLivrer(true);
+        //     commandeRepository.save(commande);
+        //     String msgg = "L'annulation de la livraison de tous les produits de votre commande avec le code " + optionalDetailCommande.get().getCommande().getCodeCommande() + " a été confirmé par " + "  proprietaire vous pouvez le contacter à son numéro " + optionalDetailCommande.get().getCommande().getActeurProprietaire().getWhatsAppActeur() ;
+        //     messageService.sendMessageAndSave(optionalDetailCommande.get().getCommande().getActeur().getWhatsAppActeur(), msgg, optionalDetailCommande.get().getCommande().getActeur());
+
+        // }
     } else {
         // Lever une exception si le détail de la commande n'est pas trouvé
         throw new Exception("Détail de la commande non trouvé");

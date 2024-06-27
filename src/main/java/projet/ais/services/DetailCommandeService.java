@@ -53,15 +53,15 @@ public class DetailCommandeService {
 
         for (DetailCommande detailCommande : detailCommandes) {
             String nomProduit = detailCommande.getNomProduit();
-
+            
             if (nomProduit != null) {
+                Optional<Intrant> optionalIntrant = intrantRepository.findByNomIntrant(nomProduit);
                 Optional<Stock> optionalStock = stockRepository.findByNomProduit(nomProduit);
                 if (optionalStock.isPresent()) {
                     Stock stock = optionalStock.get();
                     detailCommande.setStock(stock);
                     detailCommande.setIsStock(true);
                 } else {
-                    Optional<Intrant> optionalIntrant = intrantRepository.findByNomIntrant(nomProduit);
                     if (optionalIntrant.isPresent()) {
                         Intrant intrant = optionalIntrant.get();
                         detailCommande.setIntrant(intrant);
