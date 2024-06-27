@@ -50,6 +50,11 @@ public class Speculation {
     (mappedBy = "speculation")
     @JsonIgnore
     private List<Stock> stockList;
+    
+    @OneToMany
+    (mappedBy = "speculation")
+    @JsonIgnore
+    private List<Materiel> materielList;
 
     // @OneToMany
     // (mappedBy = "speculation")

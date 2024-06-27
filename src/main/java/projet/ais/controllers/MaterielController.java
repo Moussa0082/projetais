@@ -141,9 +141,33 @@ private MediaType detectContentType(String imageName) {
     }
 
 
-        @GetMapping("/getMaterielsByPaysWithPagination")
+    @GetMapping("/getMaterielsByFiliereWithPagination")
+    public ResponseEntity<Page<Materiel>> getAllMaterielsByFiliere(
+
+        @RequestParam String libelleFiliere,
+        @RequestParam String pays,
+        @RequestParam() int page,
+        @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Materiel> materiels = materielService.getAllMaterielByLibelleFiliere(libelleFiliere, pays, pageable);
+        return ResponseEntity.ok().body(materiels);
+    }
+    
+    @GetMapping("/getMaterielsByPaysWithPagination")
     public Page<Materiel> getAllMaterielsPageableByPays(@RequestParam String niveau3PaysActeur, Pageable pageable) {
         return materielService.getAllMaterielPageableByPays(niveau3PaysActeur, pageable);
+    }
+
+    @GetMapping("/getMaterielsByIdTypeAndFiliere")
+    public Page<Materiel> getMaterielByTypeFiliereAndPays(
+        @RequestParam String idTypeMateriel,
+        @RequestParam String libelleFiliere,
+        @RequestParam String pays,
+        @RequestParam() int page,
+        @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        
+        return materielService.getAllMaterielByIdTypeMaterielAndFiliere(idTypeMateriel, libelleFiliere, pays, pageable);
     }
 
     @GetMapping("/getMaterielsByPaysAndTypeMaterielWithPagination")

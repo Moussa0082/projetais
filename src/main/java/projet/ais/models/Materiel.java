@@ -89,4 +89,8 @@ public class Materiel {
     @ManyToOne
     @JoinColumn( name = "idMonnaie")
     private  Monnaie monnaie;
+
+    @ManyToOne
+    @JoinColumn(name = "idSpeculation")
+    private Speculation speculation;
 }

@@ -676,15 +676,40 @@ private String generateQRCodeImage(String qrCodeData) {
     public List<Stock> getStocksByCategorieAndMagasin(String idCategorieProduit, String idMagasin) {
         return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasin(idCategorieProduit, idMagasin);
     }
-
+    
     // recuperer les stock par  magasin avec pagination
     public Page<Stock> getStocksByMagasinWithPagination(String idMagasin,Pageable pageable) {
         return stockRepository.findByMagasin_IdMagasinAndStatutSotckAndActeurStatutActeur(idMagasin,true, true,pageable);
     }
 
      // recuperer les intrants par  libelle categorie
-    public Page<Stock> getAllStockByLibelleCategorie(String libelleFiliere,String pays, Pageable pageable) {
-        return stockRepository.findBySpeculation_CategorieProduit_filiere_libelleFiliereAndPays(libelleFiliere,pays, pageable);
+    // public Page<Stock> getAllStockByLibelleCategorie(String libelleFiliere, Pageable pageable) {
+    //     return stockRepository.findBySpeculation_CategorieProduit_filiere_libelleFiliere(libelleFiliere, pageable);
+    // }
+    public Page<Stock> getAllStockByLibelleCategorie(String libelleFiliere, String pays, Pageable pageable) {
+        // Première requête pour récupérer les matériels pour le pays spécifique
+        Page<Stock> stockByPays = stockRepository.findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndPays(
+            libelleFiliere, pays.trim().toLowerCase(), pageable);
+    
+        // Si aucun matériel trouvé pour le pays spécifique
+        if (!stockByPays.hasContent()) {
+            System.out.println("Pas d'autres stock à fetch pour le pays " + pays);
+            // Récupérer les matériels pour d'autres pays
+            return stockRepository.findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndPaysNot(
+                libelleFiliere, pays.trim().toLowerCase(), pageable);
+        } else {
+            System.out.println("Materiels fetch pour le pays " + pays);
+            List<Stock> stockList = new ArrayList<>(stockByPays.getContent());
+    
+            // Si le nombre d' intrant est inférieur au nombre requis, compléter avec des intrants d'autres pays
+            if (stockList.size() < pageable.getPageSize()) {
+                Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - stockList.size());
+                Page<Stock> intrantComplement =  stockRepository.findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndPaysNot(
+                    libelleFiliere, pays.trim().toLowerCase(), complementPageable);
+                    stockList.addAll(intrantComplement.getContent());
+            }
+            return new PageImpl<>(stockList, pageable, stockByPays.getTotalElements() + stockList.size());
+        }
     }
     
 

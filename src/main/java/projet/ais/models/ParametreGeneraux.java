@@ -52,14 +52,14 @@ public class ParametreGeneraux {
     @Column(nullable = true)
     private String whattsAppStructure;
 
-    @Column(nullable = true)
-    private String libelleNiveau1Pays;
+    // @Column(nullable = true)
+    // private String libelleNiveau1Pays;
 
-    @Column(nullable = true)
-    private String libelleNiveau2Pays;
+    // @Column(nullable = true)
+    // private String libelleNiveau2Pays;
 
-    @Column(nullable = true)
-    private String libelleNiveau3Pays;
+    // @Column(nullable = true)
+    // private String libelleNiveau3Pays;
 
     @Column(nullable = false)
     private String codeNiveauStructure;
@@ -67,14 +67,14 @@ public class ParametreGeneraux {
     @Column(nullable = false)
     private String localiteStructure;
 
-    @Column(nullable = true)
-    private String monnaie;
+    // @Column(nullable = true)
+    // private String monnaie;
 
-    @Column(nullable = true)
-    private String tauxDollar;
+    // @Column(nullable = true)
+    // private String tauxDollar;
 
-    @Column(nullable = true)
-    private String tauxYuan;
+    // @Column(nullable = true)
+    // private String tauxYuan;
 
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateAjout;
