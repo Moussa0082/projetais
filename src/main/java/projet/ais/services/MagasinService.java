@@ -146,6 +146,15 @@ public class MagasinService {
         return magasinList;
     }
 
+    public Magasin getMagasinById(String id) {
+        Magasin magasinList = magasinRepository.findByIdMagasin(id);
+
+        if(magasinList == null)
+            throw new IllegalStateException("Aucun magasin trouvé");
+
+        return magasinList;
+    }
+
 
 
 

@@ -126,18 +126,18 @@ private MediaType detectContentType(String imageName) {
               return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
           }
 
-          try {
+    try {
             Vehicule vehiculeMisAjour = vehiculeService.updateVehicule(vehicule, imageFile, id);
             return new ResponseEntity<>(vehiculeMisAjour, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
   
-      }
+    }
 
 
 
-          @GetMapping("/getVehiculesByPaysWithPagination")
+    @GetMapping("/getVehiculesByPaysWithPagination")
     public Page<Vehicule> getAllVehiculesPageableByPays(@RequestParam String niveau3PaysActeur, Pageable pageable) {
         return vehiculeService.getAllVehiculePageableByPays(niveau3PaysActeur, pageable);
     }

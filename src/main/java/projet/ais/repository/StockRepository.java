@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import projet.ais.models.Acteur;
 import projet.ais.models.CategorieProduit;
+import projet.ais.models.Intrant;
 import projet.ais.models.Magasin;
 import projet.ais.models.Stock;
 import org.springframework.data.domain.Page;
@@ -34,9 +35,14 @@ public interface StockRepository extends JpaRepository<Stock, String>{
     // List<Stock> findByIdStock(List<String> idStock);
     //Recuperer les stocks par categorie produit    
     List<Stock> findBySpeculation_CategorieProduit(CategorieProduit categorie);
+   
     //Recuperer les stocks par libelle categorie produit
-Page<Stock> findBySpeculation_CategorieProduit_libelleCategorie(String libelle , Pageable pageable);
-Page<Stock> findBySpeculation_CategorieProduit_filiere_libelleFiliereAndPays(String libelleFiliere ,String pays, Pageable pageable);
+        Page<Stock> findBySpeculation_CategorieProduit_libelleCategorie(String libelle , Pageable pageable);
+        // Page<Stock> findBySpeculation_CategorieProduit_filiere_libelleFiliere(String libelleFiliere, Pageable pageable);
+
+ Page<Stock> findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndPays(String libelleFiliere, String pays, Pageable pageable);
+    Page<Stock> findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndPaysNot(String libelleFiliere, String pays, Pageable pageable);
+        // Page<Stock> findBySpeculation_CategorieProduit_filiere_libelleFiliereAndPays(String libelleFiliere ,String pays, Pageable pageable);
     //Recuperer les stock par magasin et par categorieProduit
     List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasin(String idCategorie, String idMagasin);
     // List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduit(String idCategorie);

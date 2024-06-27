@@ -150,13 +150,14 @@ public class ParametreGenerauxService {
             parametreGenerauxExistant.setEmailStructure(parametreGeneraux.getEmailStructure());
             parametreGenerauxExistant.setTelephoneStructure(parametreGeneraux.getTelephoneStructure());
             parametreGenerauxExistant.setWhattsAppStructure(parametreGeneraux.getWhattsAppStructure());
-            parametreGenerauxExistant.setLibelleNiveau1Pays(parametreGeneraux.getLibelleNiveau1Pays());
-            parametreGenerauxExistant.setLibelleNiveau2Pays(parametreGeneraux.getLibelleNiveau2Pays());
-            parametreGenerauxExistant.setLibelleNiveau3Pays(parametreGeneraux.getLibelleNiveau3Pays());
+            parametreGenerauxExistant.setDescriptionSysteme(parametreGeneraux.getDescriptionSysteme());
+            // parametreGenerauxExistant.setLibelleNiveau1Pays(parametreGeneraux.getLibelleNiveau1Pays());
+            // parametreGenerauxExistant.setLibelleNiveau2Pays(parametreGeneraux.getLibelleNiveau2Pays());
+            // parametreGenerauxExistant.setLibelleNiveau3Pays(parametreGeneraux.getLibelleNiveau3Pays());
             parametreGenerauxExistant.setLocaliteStructure(parametreGeneraux.getLocaliteStructure());
-            parametreGenerauxExistant.setTauxDollar(parametreGeneraux.getTauxDollar());
-            parametreGenerauxExistant.setTauxYuan(parametreGeneraux.getTauxYuan());
-            parametreGenerauxExistant.setMonnaie(parametreGeneraux.getMonnaie());
+            // parametreGenerauxExistant.setTauxDollar(parametreGeneraux.getTauxDollar());
+            // parametreGenerauxExistant.setTauxYuan(parametreGeneraux.getTauxYuan());
+            // parametreGenerauxExistant.setMonnaie(parametreGeneraux.getMonnaie());
     
             // Log successful parameter update
             System.out.println("Mise à jour des paramètres réussie pour l'ID: " + id);
@@ -202,13 +203,14 @@ public class ParametreGenerauxService {
          parametreGenerauxExistant.setEmailStructure(parametreGeneraux.getEmailStructure());
          parametreGenerauxExistant.setTelephoneStructure(parametreGeneraux.getTelephoneStructure());
          parametreGenerauxExistant.setWhattsAppStructure(parametreGeneraux.getWhattsAppStructure());
-         parametreGenerauxExistant.setLibelleNiveau1Pays(parametreGeneraux.getLibelleNiveau1Pays());
-         parametreGenerauxExistant.setLibelleNiveau2Pays(parametreGeneraux.getLibelleNiveau2Pays());
-         parametreGenerauxExistant.setLibelleNiveau3Pays(parametreGeneraux.getLibelleNiveau3Pays());
+         parametreGenerauxExistant.setDescriptionSysteme(parametreGeneraux.getDescriptionSysteme());
+         //  parametreGenerauxExistant.setLibelleNiveau1Pays(parametreGeneraux.getLibelleNiveau1Pays());
+        //  parametreGenerauxExistant.setLibelleNiveau2Pays(parametreGeneraux.getLibelleNiveau2Pays());
+        //  parametreGenerauxExistant.setLibelleNiveau3Pays(parametreGeneraux.getLibelleNiveau3Pays());
          parametreGenerauxExistant.setLocaliteStructure(parametreGeneraux.getLocaliteStructure());
-         parametreGenerauxExistant.setTauxDollar(parametreGeneraux.getTauxDollar());
-         parametreGenerauxExistant.setTauxYuan(parametreGeneraux.getTauxYuan());
-         parametreGenerauxExistant.setMonnaie(parametreGeneraux.getMonnaie());
+        //  parametreGenerauxExistant.setTauxDollar(parametreGeneraux.getTauxDollar());
+        //  parametreGenerauxExistant.setTauxYuan(parametreGeneraux.getTauxYuan());
+        //  parametreGenerauxExistant.setMonnaie(parametreGeneraux.getMonnaie());
 
         return parametreGenerauxRepository.save(parametreGenerauxExistant);
       }
@@ -239,9 +241,7 @@ public class ParametreGenerauxService {
 
     return ResponseEntity.ok(parametreGeneraux.get());     
    }
-        
-    
-    
+
         //  Supprimer parametre généraux
           public String deleteByIdParametreGeneraux(String id){
             ParametreGeneraux parametreGeneraux = parametreGenerauxRepository.findByIdParametreGeneraux(id);

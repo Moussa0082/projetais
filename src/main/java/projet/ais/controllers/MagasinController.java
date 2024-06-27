@@ -160,6 +160,11 @@ public class MagasinController {
         return new ResponseEntity<>(magasinService.getMagasin(), HttpStatus.OK);
     }
 
+    @GetMapping("/getMagasinByIdMagasin/{id}")
+    public ResponseEntity<Magasin> listeMagasinById(@PathVariable String id){
+        return new ResponseEntity<>(magasinService.getMagasinById(id), HttpStatus.OK);
+    }
+
     @GetMapping("/getAllMagasinByActeur/{id}")
     @Operation(summary = "Liste des magasins par acteur")
     public ResponseEntity<List<Magasin>> listeMagasinByActeur(@PathVariable String id){
