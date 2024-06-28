@@ -150,23 +150,49 @@ return ResponseEntity.status(HttpStatus.OK).body("Commande passer avec succes");
     // }
 
 
-    @PutMapping("/confirmerLivraison/{idDetailCommande}/{quantiteLivree}")
-    public ResponseEntity<?> confirmerLivrasonProduit(@PathVariable String idDetailCommande, @PathVariable double quantiteLivree) {
+//     @PutMapping("/confirmerLivraison/{idDetailCommande}/{quantiteLivree}")
+//     public ResponseEntity<?> confirmerLivrasonProduit(@PathVariable String idDetailCommande, @PathVariable double quantiteLivree) {
+//     try {
+//         commandeService.confirmerCommande(idDetailCommande, quantiteLivree);
+//         return ResponseEntity.ok("Commande confirmée avec succès pour le produit : " + idDetailCommande);
+//     } catch (Exception e) {
+//         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la confirmation de la commande pour le produit : " + e.getMessage());
+//     }
+// }
+@PutMapping("/confirmerLivraison/{idDetailCommande}/{quantiteLivree}")
+public ResponseEntity<Map<String, String>> confirmerLivrasonProduit(@PathVariable String idDetailCommande, @PathVariable double quantiteLivree) {
+    Map<String, String> response = new HashMap<>();
     try {
         commandeService.confirmerCommande(idDetailCommande, quantiteLivree);
-        return ResponseEntity.ok("Commande confirmée avec succès pour le produit : " + idDetailCommande);
+        response.put("message", "Commande confirmée avec succès pour le produit : " + idDetailCommande);
+        return ResponseEntity.ok(response);
     } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la confirmation de la commande pour le produit : " + e.getMessage());
+        response.put("error", "Erreur lors de la confirmation de la commande pour le produit : " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 }
 
-    @PutMapping("annulerLivraison/{idDetailCommande}/{description}")
-    public ResponseEntity<?> annulerLivrasonProduit(@PathVariable String idDetailCommande , @PathVariable(required = false) String description) {
+
+//     @PutMapping("annulerLivraison/{idDetailCommande}")
+//     public ResponseEntity<?> annulerLivrasonProduit(@PathVariable String idDetailCommande , @RequestBody(required = false) String description) {
+//     try {
+//         commandeService.annulerCommandeParProduit(idDetailCommande, description);
+//         return ResponseEntity.ok("Commande annulée avec succès pour le produit : " + idDetailCommande);
+//     } catch (Exception e) {
+//         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'annulation de la commande pour le produit : " + e.getMessage());
+//     }
+// }
+@PutMapping("annulerLivraison/{idDetailCommande}")
+public ResponseEntity<Map<String, String>> annulerLivrasonProduit(@PathVariable String idDetailCommande, @RequestBody(required = false) Map<String, String> description) {
+    Map<String, String> response = new HashMap<>();
     try {
-        commandeService.annulerCommandeParProduit(idDetailCommande, description);
-        return ResponseEntity.ok("Commande annulée avec succès pour le produit : " + idDetailCommande);
+        String desc = description != null ? description.get("description") : null;
+        commandeService.annulerCommandeParProduit(idDetailCommande, desc);
+        response.put("message", "Commande annulée avec succès pour le produit : " + idDetailCommande);
+        return ResponseEntity.ok(response);
     } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'annulation de la commande pour le produit : " + e.getMessage());
+        response.put("error", "Erreur lors de l'annulation de la commande pour le produit : " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 }
      

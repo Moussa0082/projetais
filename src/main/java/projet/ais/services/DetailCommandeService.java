@@ -75,8 +75,25 @@ public class DetailCommandeService {
                 detailCommandeRepository.save(detailCommande);
             }
         }
-
-    
 }
+
+
+   public void updateDetailStatut(){
+    List<DetailCommande> details = detailCommandeRepository.findAll();
+
+     for(DetailCommande detail : details){
+        double quantiteDemande = detail.getQuantiteDemande();
+        double quantiteLivree = detail.getQuantiteLivree();
+
+        // Utilisation d'une tolérance pour la comparaison des doubles
+        if (Math.abs(quantiteDemande - quantiteLivree) < 0.0001) {
+            detail.setIsDelivered(true);
+            System.out.println("id true : " + detail.getIdDetailCommande());
+        } else {
+            detail.setIsDelivered(false);
+            System.out.println("id false : " + detail.getIdDetailCommande());
+        }
+    }
+   }
 
 }
