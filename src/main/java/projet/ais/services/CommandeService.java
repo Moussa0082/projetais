@@ -276,7 +276,7 @@ public class CommandeService {
         String msg = "La livraison de votre commande de " + optionalDetailCommande.get().getNomProduit().toUpperCase() + " passé le " + optionalDetailCommande.get().getCommande().getDateCommande()  + " a été confirmer avec succès par le proprietaire en cas de retard de livraison vous pouvez le contacter à son numéro " + optionalDetailCommande.get().getCommande().getActeurProprietaire().getWhatsAppActeur() ;
         // Enregistrer les modifications dans la base de données
         detailCommandeRepository.save(detailCommande);
-        messageService.sendMessageAndSave(optionalDetailCommande.get().getCommande().getActeur().getWhatsAppActeur(), msg, optionalDetailCommande.get().getCommande().getActeur());
+        // messageService.sendMessageAndSave(optionalDetailCommande.get().getCommande().getActeur().getWhatsAppActeur(), msg, optionalDetailCommande.get().getCommande().getActeur());
 
         // Récupérer tous les détails de commande liés à la même commande
         List<DetailCommande> allDetailsForCommande = detailCommandeRepository.findByCommandeIdCommande(detailCommande.getCommande().getIdCommande());
@@ -317,7 +317,7 @@ public class CommandeService {
         String msg = "La livraison de votre commande de " + optionalDetailCommande.get().getNomProduit().toUpperCase() + " passé le " + optionalDetailCommande.get().getCommande().getDateCommande()  + " a été annulée  par le proprietaire  vous pouvez le contacter à son numéro " + optionalDetailCommande.get().getCommande().getActeurProprietaire().getWhatsAppActeur() ;
         // Enregistrer les modifications dans la base de données
         detailCommandeRepository.save(detailCommande);
-        messageService.sendMessageAndSave(optionalDetailCommande.get().getCommande().getActeur().getWhatsAppActeur(), msg, optionalDetailCommande.get().getCommande().getActeur());
+        // messageService.sendMessageAndSave(optionalDetailCommande.get().getCommande().getActeur().getWhatsAppActeur(), msg, optionalDetailCommande.get().getCommande().getActeur());
 
         // Récupérer tous les détails de commande liés à la même commande
         // List<DetailCommande> allDetailsForCommande = detailCommandeRepository.findByCommandeIdCommande(detailCommande.getCommande().getIdCommande());
@@ -341,7 +341,7 @@ public class CommandeService {
     }
 }
 
-
+ 
 
 
     
