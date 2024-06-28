@@ -66,7 +66,7 @@ public class Stock {
     private String pays;
     
     @Column(nullable = false)
-    private boolean statutSotck;
+    private boolean statutSotck = true;
 
     @ManyToOne
     @JoinColumn(name = "idSpeculation")
