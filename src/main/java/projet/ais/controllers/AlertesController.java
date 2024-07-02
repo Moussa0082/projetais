@@ -31,6 +31,8 @@ import projet.ais.repository.AlerteRepository;
 import projet.ais.repository.AlertesRepository;
 import projet.ais.services.AlertesService;
 import projet.ais.services.FileUploade;
+import projet.ais.services.UploadeAlerte;
+
 import org.springframework.http.MediaType;
 import java.io.IOException;
 
@@ -41,8 +43,12 @@ public class AlertesController {
     
     @Autowired
     AlertesService alertesService;
+    // @Autowired
+    // FileUploade fileUploade;
+
     @Autowired
-    FileUploade fileUploade;
+    UploadeAlerte uploadeAlerte;
+
     @Autowired
     AlertesRepository alertesRepository;
     
@@ -69,23 +75,46 @@ public class AlertesController {
                 return new ResponseEntity<>(savedalerte, HttpStatus.CREATED);
             }
 
-            @GetMapping("/{alerteId}/video")
+    // @GetMapping("/{alerteId}/video")
+    // public ResponseEntity<byte[]> getVideo(@PathVariable String alerteId) {
+    //     try {
+            
+    //         Alertes alertes = alertesRepository.findByIdAlerte(alerteId);
+    //         if (alertes == null || alertes.getVideoAlerte() == null) {
+    //             return ResponseEntity.notFound().build();
+    //         }
+    //         String videoName = alertes.getVideoAlerte(); // Example video name
+
+    //         // Retrieve the video from the FTP server
+    //         byte[] videoBytes = uploadeAlerte.getVideoByName(videoName);
+
+    //         // Detect the content type of the video based on its extension
+    //         MediaType contentType = MediaType.valueOf("video/mp4");
+
+    //         // Return the video with appropriate content type
+    //         return ResponseEntity.ok()
+    //                 .contentType(contentType)
+    //                 .body(videoBytes);
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    //     }
+    // }
+
+    @GetMapping("/{alerteId}/video")
     public ResponseEntity<byte[]> getVideo(@PathVariable String alerteId) {
         try {
-            
             Alertes alertes = alertesRepository.findByIdAlerte(alerteId);
             if (alertes == null || alertes.getVideoAlerte() == null) {
                 return ResponseEntity.notFound().build();
             }
-            String videoName = alertes.getVideoAlerte(); // Example video name
 
-            // Retrieve the video from the FTP server
-            byte[] videoBytes = fileUploade.getVideoByName(videoName);
+            String videoName = alertes.getVideoAlerte();
+            byte[] videoBytes = uploadeAlerte.getVideoByName(videoName);
 
-            // Detect the content type of the video based on its extension
-            MediaType contentType = MediaType.valueOf("video/mp4");
+            // Determine the content type based on file extension
+            MediaType contentType = determineContentType(videoName);
 
-            // Return the video with appropriate content type
             return ResponseEntity.ok()
                     .contentType(contentType)
                     .body(videoBytes);
@@ -95,31 +124,80 @@ public class AlertesController {
         }
     }
 
-    @GetMapping("/{alerteId}/audio")
-    public ResponseEntity<byte[]> getAudio(@PathVariable String alerteId) {
-        try {
-            
-            Alertes alertes = alertesRepository.findByIdAlerte(alerteId);
-            if (alertes == null || alertes.getAudioAlerte() == null) {
-                return ResponseEntity.notFound().build();
-            }
-            String audioName =  alertes.getAudioAlerte(); // Example video name
-
-            // Retrieve the video from the FTP server
-            byte[] audioBytes = fileUploade.getAudioByName(audioName);
-
-            // Detect the content type of the video based on its extension
-            MediaType contentType = MediaType.valueOf("audio/mpeg");
-
-            // Return the video with appropriate content type
-            return ResponseEntity.ok()
-                    .contentType(contentType)
-                    .body(audioBytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    private MediaType determineContentType(String fileName) {
+        String lowerCaseFileName = fileName.toLowerCase();
+        if (lowerCaseFileName.endsWith(".mp4")) {
+            return MediaType.valueOf("video/mp4");
+        } else if (lowerCaseFileName.endsWith(".avi")) {
+            return MediaType.valueOf("video/x-msvideo");
+        } else if (lowerCaseFileName.endsWith(".mkv")) {
+            return MediaType.valueOf("video/x-matroska");
         }
+        // Add other video formats if needed
+        return MediaType.APPLICATION_OCTET_STREAM;
     }
+
+    @GetMapping("/{alerteId}/audio")
+public ResponseEntity<byte[]> getAudio(@PathVariable String alerteId) {
+    try {
+        Alertes alertes = alertesRepository.findByIdAlerte(alerteId);
+        if (alertes == null || alertes.getAudioAlerte() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String audioName = alertes.getAudioAlerte();
+        byte[] audioBytes = uploadeAlerte.getAudioByName(audioName);
+
+        // Determine the content type based on file extension
+        MediaType contentType = determineContentTypeAudio(audioName);
+
+        return ResponseEntity.ok()
+                .contentType(contentType)
+                .body(audioBytes);
+    } catch (IOException e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+}
+
+private MediaType determineContentTypeAudio(String fileName) {
+    String lowerCaseFileName = fileName.toLowerCase();
+    if (lowerCaseFileName.endsWith(".mp3")) {
+        return MediaType.valueOf("audio/mpeg");
+    } else if (lowerCaseFileName.endsWith(".wav")) {
+        return MediaType.valueOf("audio/wav");
+    } else if (lowerCaseFileName.endsWith(".ogg")) {
+        return MediaType.valueOf("audio/ogg");
+    }
+    // Add other audio formats if needed
+    return MediaType.APPLICATION_OCTET_STREAM;
+}
+
+    // @GetMapping("/{alerteId}/audio")
+    // public ResponseEntity<byte[]> getAudio(@PathVariable String alerteId) {
+    //     try {
+            
+    //         Alertes alertes = alertesRepository.findByIdAlerte(alerteId);
+    //         if (alertes == null || alertes.getAudioAlerte() == null) {
+    //             return ResponseEntity.notFound().build();
+    //         }
+    //         String audioName =  alertes.getAudioAlerte(); // Example video name
+
+    //         // Retrieve the video from the FTP server
+    //         byte[] audioBytes = uploadeAlerte.getAudioByName(audioName);
+
+    //         // Detect the content type of the video based on its extension
+    //         MediaType contentType = MediaType.valueOf("audio/mpeg");
+
+    //         // Return the video with appropriate content type
+    //         return ResponseEntity.ok()
+    //                 .contentType(contentType)
+    //                 .body(audioBytes);
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    //     }
+    // }
 
         //recuperer les alertes OffLine par pays de lacteur connecté
     
@@ -136,7 +214,7 @@ public class AlertesController {
                     String imageName = alertes.getPhotoAlerte();
             
                     // Récupérer l'image à partir du serveur FTP
-                    byte[] imageBytes = fileUploade.getImageByName(imageName);
+                    byte[] imageBytes = uploadeAlerte.getImageByName(imageName);
             
                     // Détecter le type de contenu de l'image en fonction de son extension
                 MediaType contentType = detectContentType(imageName);

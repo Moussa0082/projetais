@@ -274,24 +274,38 @@ private MediaType detectContentType(String imageName) {
                                     
        
 
+        // @GetMapping("/getStocksByPaysWithPagination")
+        // public Page<Stock> getAllStocksPageableByPays(@RequestParam String niveau3PaysActeur, Pageable pageable) {
+        //     return stockService.getAllStocksPageableByPays(niveau3PaysActeur, pageable);
+        // }
+
         @GetMapping("/getStocksByPaysWithPagination")
-        public Page<Stock> getAllStocksPageableByPays(@RequestParam String niveau3PaysActeur, Pageable pageable) {
-            return stockService.getAllStocksPageableByPays(niveau3PaysActeur, pageable);
+        public ResponseEntity<Page<Stock>> getAllStocksPageableByPays(
+                @RequestParam String niveau3PaysActeur,
+                @RequestParam int page,
+                @RequestParam int size) {
+    
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Stock> stocks = stockService.getAllStocksPageableByPays(niveau3PaysActeur, pageable);
+    
+            return ResponseEntity.ok(stocks);
         }
 
         @GetMapping("/getStocksByPaysAndMagasinWithPagination")
-        public Page<Stock> getAllStocksPageableByPaysAndMagasin(@RequestParam String idMagasin, @RequestParam String niveau3PaysActeur, Pageable pageable) {
-            return stockService.getAllStockPageableByPaysByMagasin(idMagasin, niveau3PaysActeur, pageable);
+        public Page<Stock> getAllStocksPageableByPaysAndMagasin(@RequestParam String idMagasin, Pageable pageable) {
+            return stockService.getAllStockPageableByPaysByMagasin(idMagasin, pageable);
         }
+
 
         @GetMapping("/getStocksByPaysAndMagasinAndCategorieProduitWithPagination")
-        public Page<Stock> getAllStocksPageableByPaysAndMagasin(@RequestParam String idCategorieProduit, @RequestParam String idMagasin, @RequestParam String niveau3PaysActeur, Pageable pageable) {
-            return stockService.getAllStockPageableByPaysByMagasinAndCategorie(idCategorieProduit, idMagasin, niveau3PaysActeur, pageable);
+        public Page<Stock> getAllStocksPageableByPaysAndMagasins(@RequestParam String idCategorieProduit, @RequestParam String idMagasin, Pageable pageable) {
+            return stockService.getAllStockPageableByPaysByMagasinAndCategorie(idCategorieProduit, idMagasin, pageable);
         }
 
-
-      
-
+        // @GetMapping("/getStocksByPaysAndMagasinAndCategorieProduitWithPagination")
+        // public Page<Stock> getAllStocksPageableByPaysAndMagasin(@RequestParam String idCategorieProduit, @RequestParam String idMagasin,  Pageable pageable) {
+        //     return stockService.getAllStockPageableByPaysByMagasinAndCategorie(idCategorieProduit, idMagasin, pageable);
+        // }
 
         @GetMapping("/getAllStocksByCategorieAndPaysWithPagination")
         public ResponseEntity<Page<Stock>> listeStockByCategorieProduitAndPaysWithPagination(
@@ -329,6 +343,29 @@ private MediaType detectContentType(String imageName) {
             return ResponseEntity.ok(stocks);
         }
 
+        @GetMapping("/getAllStockAndStatutsWithPagination")
+        public ResponseEntity<Page<Stock>> getAllStocksPageableAndStock(
+                @RequestParam int page,
+                @RequestParam int size) {
+    
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Stock> stocks = stockService.getAllStocksPageableAndStatut(pageable);
+    
+            return ResponseEntity.ok(stocks);
+        }
+
+        @GetMapping("/getAllStockByPaysWithPagination")
+        public ResponseEntity<Page<Stock>> getAllStocksPageableByPaysAndStatut(
+                @RequestParam String niveau3PaysActeur,
+                @RequestParam int page,
+                @RequestParam int size) {
+    
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Stock> stocks = stockService.getAllStockPageableByPaysAndStatut(niveau3PaysActeur, pageable);
+    
+            return ResponseEntity.ok(stocks);
+        }
+        
     // @GetMapping("all")
     // public List<Stock> allUsers(@RequestParam(name = "page",defaultValue = "0") Integer page) {
       
@@ -372,7 +409,7 @@ private MediaType detectContentType(String imageName) {
         return stockService.getStocksByCategorie(categorie);
     }
 
-        @GetMapping("/getAllStocksByIdMagasin/{id}")
+        @GetMapping("/getAllStocksByidMagasin/{id}")
         @Operation(summary = "Liste des stocks par d'un magasin ")
         public ResponseEntity<List<Stock>> listeStockParMagasin(@PathVariable String id){
             return new ResponseEntity<>(stockService.getAllStockByMagasin(id), HttpStatus.OK);

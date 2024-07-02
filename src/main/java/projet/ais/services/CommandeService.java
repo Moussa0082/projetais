@@ -77,11 +77,6 @@ public class CommandeService {
     DetailCommandeRepository detailCommandeRepository;
 
   
-
-    
-   
-
-
     public Commande ajouterStocksACommande(Acteur acteur, Optional<List<Stock>> stocks, Optional<List<Intrant>> intrants, Optional<List<Double>>  quantitesDemandees, Optional<List<Double>>  quantitesIntrants) throws Exception {
     
         Commande commande = new Commande();
@@ -341,12 +336,6 @@ public class CommandeService {
     }
 }
 
- 
-
-
-    
-    
-   
    // validé une commande en tant qu'acheteur
     public ResponseEntity<String> enableCommande(String id) throws Exception {
     Commande commande = commandeRepository.findByIdCommande(id);

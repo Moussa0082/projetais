@@ -143,8 +143,8 @@ private MediaType detectContentType(String imageName) {
     }
 
     @GetMapping("/getVehiculesByPaysAndTypeVoitureWithPagination")
-    public Page<Vehicule> getAllVehiculesPageableByPaysAndCategorie(@RequestParam String idTypeVoiture, @RequestParam String niveau3PaysActeur,  Pageable pageable) {
-        return vehiculeService.getAllVehiculePageableByPaysByCategorie(idTypeVoiture, niveau3PaysActeur , pageable);
+    public Page<Vehicule> getAllVehiculesPageableByPaysAndCategorie(@RequestParam String idTypeVoiture,  Pageable pageable) {
+        return vehiculeService.getAllVehiculePageableByPaysByCategorie(idTypeVoiture,  pageable);
     }
 
 
@@ -177,7 +177,7 @@ private MediaType detectContentType(String imageName) {
     public ResponseEntity<Page<Vehicule>> getVehiculeByActeurWithPagination(
         @RequestParam() String  idActeur,
         @RequestParam() int page,
-                                                  @RequestParam() int size) {
+        @RequestParam() int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Vehicule> vehicules = vehiculeService.getVehiculeByActeurWithPagination(idActeur,pageable);
         return ResponseEntity.ok().body(vehicules);

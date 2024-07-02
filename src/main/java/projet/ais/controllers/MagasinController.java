@@ -179,13 +179,21 @@ public class MagasinController {
 
      @GetMapping("/getAllMagasinWithPagination")
     public ResponseEntity<Page<Magasin>> getMagasins(
-        @RequestParam() String niveau3PaysActeur,
         @RequestParam() int page,
-                                                  @RequestParam() int size) {
+        @RequestParam() int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Magasin> magasins = magasinService.getAllMagasinPageableByPays(niveau3PaysActeur,pageable);
+        Page<Magasin> magasins = magasinService.getAllMagasinPageable(pageable);
         return ResponseEntity.ok().body(magasins);
     }
+    //  @GetMapping("/getAllMagasinWithPagination")
+    // public ResponseEntity<Page<Magasin>> getMagasins(
+    //     @RequestParam() String niveau3PaysActeur,
+    //     @RequestParam() int page,
+    //                                               @RequestParam() int size) {
+    //     Pageable pageable = PageRequest.of(page, size);
+    //     Page<Magasin> magasins = magasinService.getAllMagasinPageableByPays(niveau3PaysActeur,pageable);
+    //     return ResponseEntity.ok().body(magasins);
+    // }
 
 
 
@@ -195,19 +203,26 @@ public class MagasinController {
         return "Mise à jour de la colonne pays pour tous les magasins réussie";
     }
 
-
-
-
-     @GetMapping("/getAllMagasinByNiveau1PaysWithPagination")
+    @GetMapping("/getAllMagasinByNiveau1PaysWithPagination")
     public ResponseEntity<Page<Magasin>> getMagasinsByNiveau1Pays(
-        @RequestParam() String niveau3PaysActeur,
         @RequestParam() String idNiveau1Pays,
         @RequestParam() int page,
-                                                  @RequestParam() int size) {
+        @RequestParam() int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Magasin> magasins = magasinService.getMagasinByNiveau1PaysWithPagination(niveau3PaysActeur,idNiveau1Pays,pageable);
+        Page<Magasin> magasins = magasinService.getMagasinByNiveau1PaysWithPagination(idNiveau1Pays,pageable);
         return ResponseEntity.ok().body(magasins);
     }
+
+    //  @GetMapping("/getAllMagasinByNiveau1PaysWithPagination")
+    // public ResponseEntity<Page<Magasin>> getMagasinsByNiveau1Pays(
+    //     @RequestParam() String niveau3PaysActeur,
+    //     @RequestParam() String idNiveau1Pays,
+    //     @RequestParam() int page,
+    //                                               @RequestParam() int size) {
+    //     Pageable pageable = PageRequest.of(page, size);
+    //     Page<Magasin> magasins = magasinService.getMagasinByNiveau1PaysWithPagination(niveau3PaysActeur,idNiveau1Pays,pageable);
+    //     return ResponseEntity.ok().body(magasins);
+    // }
 
      @GetMapping("/getAllMagasinsByActeurWithPagination")
     public ResponseEntity<Page<Magasin>> getMagasinsByActeur(

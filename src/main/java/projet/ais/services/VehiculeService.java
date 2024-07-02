@@ -31,8 +31,10 @@ import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Intrant;
+import projet.ais.models.Magasin;
 import projet.ais.models.Materiel;
 import projet.ais.models.Stock;
+import projet.ais.models.Vehicule;
 import projet.ais.models.TypeMateriel;
 import projet.ais.models.Vehicule;
 import projet.ais.repository.VehiculeRepository;
@@ -151,7 +153,7 @@ public class VehiculeService {
     }
       // Méthode pour récupérer une image à partir de son nom
       public byte[] getImageByName(String imageName) throws IOException {
-        // Chemin où les images sont stockées sur le serveur FTP
+        // Chemin où les images sont Vehiculeées sur le serveur FTP
         String imagePath = "/web/koumi-server/images/";
     
         // Télécharger l'image à partir du serveur FTP en utilisant son nom
@@ -221,33 +223,37 @@ public class VehiculeService {
     //     return new PageImpl<>(vehiculesList, pageable, vehiculesByPays.getTotalElements() + vehiculesList.size());
     // }
 
+ public Page<Vehicule> getAllVehiculePageableByPaysByCategorie(String idTypeVoiture,Pageable pageable) {
+    return vehiculeRepository.findAllByTypeVoiture_IdTypeVoiture(
+        idTypeVoiture,  pageable);
+}
 
-    @Transactional
-    public Page<Vehicule> getAllVehiculePageableByPaysByCategorie(String idTypeVoiture, String niveau3PaysActeur, Pageable pageable) {
-        // Fetch vehicules from the specified country
-        Page<Vehicule> vehiculesByPays = vehiculeRepository.findAllByTypeVoiture_IdTypeVoitureAndPays(
-            idTypeVoiture, niveau3PaysActeur.trim().toLowerCase(), pageable);
+    // @Transactional
+    // public Page<Vehicule> getAllVehiculePageableByPaysByCategorie(String idTypeVoiture, String niveau3PaysActeur, Pageable pageable) {
+    //     // Fetch vehicules from the specified country
+    //     Page<Vehicule> vehiculesByPays = vehiculeRepository.findAllByTypeVoiture_IdTypeVoiture(
+    //         idTypeVoiture,  pageable);
 
-        List<Vehicule> vehiculesList = new ArrayList<>(vehiculesByPays.getContent());
+    //     List<Vehicule> vehiculesList = new ArrayList<>(vehiculesByPays.getContent());
 
-        // If no vehicules are found for the specified country, fetch vehicules from other countries
-        if (vehiculesList.isEmpty()) {
-            Page<Vehicule> vehiculeFromOtherCountries = vehiculeRepository.findAllByTypeVoiture_IdTypeVoitureAndStatutVehiculeTrueAndActeurStatutActeurTrue(
-                idTypeVoiture, pageable);
+    //     // If no vehicules are found for the specified country, fetch vehicules from other countries
+    //     if (vehiculesList.isEmpty()) {
+    //         Page<Vehicule> vehiculeFromOtherCountries = vehiculeRepository.findAllByTypeVoiture_IdTypeVoitureAndStatutVehiculeTrueAndActeurStatutActeurTrue(
+    //             idTypeVoiture, pageable);
 
-            return new PageImpl<>(vehiculeFromOtherCountries.getContent(), pageable, vehiculeFromOtherCountries.getTotalElements());
-        }
+    //         return new PageImpl<>(vehiculeFromOtherCountries.getContent(), pageable, vehiculeFromOtherCountries.getTotalElements());
+    //     }
 
-        // Fetch vehicules from other countries if needed to fill the page
-        if (vehiculesList.size() < pageable.getPageSize()) {
-            Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - vehiculesList.size());
-            Page<Vehicule> vehiculeComplement = vehiculeRepository.findAllByTypeVoiture_IdTypeVoitureAndStatutVehiculeTrueAndActeurStatutActeurTrueAndPaysNot(
-                idTypeVoiture, niveau3PaysActeur.trim().toLowerCase(), complementPageable);
-            vehiculesList.addAll(vehiculeComplement.getContent());
-        }
+    //     // Fetch vehicules from other countries if needed to fill the page
+    //     if (vehiculesList.size() < pageable.getPageSize()) {
+    //         Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - vehiculesList.size());
+    //         Page<Vehicule> vehiculeComplement = vehiculeRepository.findAllByTypeVoiture_IdTypeVoitureAndStatutVehiculeTrueAndActeurStatutActeurTrueAndPaysNot(
+    //             idTypeVoiture, niveau3PaysActeur.trim().toLowerCase(), complementPageable);
+    //         vehiculesList.addAll(vehiculeComplement.getContent());
+    //     }
 
-        return new PageImpl<>(vehiculesList, pageable, vehiculesByPays.getTotalElements() + vehiculesList.size());
-    }
+    //     return new PageImpl<>(vehiculesList, pageable, vehiculesByPays.getTotalElements() + vehiculesList.size());
+    // }
     // @Transactional
     // public Page<Vehicule> getAllVehiculePageableByPaysByCategorie(String idTypeVoiture, String niveau3PaysActeur, Pageable pageable) {
     //     // Fetch vehicules from the specified country
@@ -275,28 +281,50 @@ public class VehiculeService {
     //     return new PageImpl<>(vehiculesList, pageable, vehiculesByPays.getTotalElements() + vehiculesList.size());
     // }
 
+    ///get vehicule 
+
+    public Page<Vehicule> getAllVehiculePageableByPays(String pays, Pageable pageable) {
     
-
-        public Page<Vehicule> getAllVehiculePageableByPays(String niveau3PaysActeur, Pageable pageable) {
-        Page<Vehicule> vehiculeByPays = vehiculeRepository.findAllByStatutVehiculeTrueAndPaysAndActeurStatutActeurTrue(niveau3PaysActeur.trim().toLowerCase(), pageable);
+        String paysNormalise = pays.trim().toLowerCase();
         
-        if (!vehiculeByPays.hasContent()) {
-            System.out.println("Pas d'autres vehicule à fetch pour le pays " + niveau3PaysActeur);
-            return vehiculeRepository.findAllByStatutVehiculeAndActeurStatutActeur(true, true, pageable);
-        } else {
-            System.out.println("Vehicules fetch pour le pays " + niveau3PaysActeur);
-            List<Vehicule> vehiculesList = new ArrayList<>(vehiculeByPays.getContent());
-
-            // Si le nombre de vehicule est inférieur au nombre requis, compléter avec des vehicules d'autres pays
-            if (vehiculesList.size() < pageable.getPageSize()) {
-                Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - vehiculesList.size());
-                Page<Vehicule> vehiculeComplement = vehiculeRepository.findAllByStatutVehiculeTrueAndActeurStatutActeurTrueAndPaysNot(niveau3PaysActeur.trim().toLowerCase(), complementPageable);
-                vehiculesList.addAll(vehiculeComplement.getContent());
-            }
-
-            return new PageImpl<>(vehiculesList, pageable, vehiculeByPays.getTotalElements() + vehiculesList.size());
+        // Récupérer les stocks pour le pays spécifié
+        Page<Vehicule> vehiculeByPays = vehiculeRepository.findAllByStatutVehiculeTrueAndPaysAndActeurStatutActeurTrue(paysNormalise, pageable);
+        
+        List<Vehicule> vehiculeList = new ArrayList<>(vehiculeByPays.getContent());
+        long totalElements = vehiculeByPays.getTotalElements();
+    
+        // Si le nombre de stocks est inférieur à la taille de la page, compléter avec des stocks d'autres pays
+        if (vehiculeList.size() < pageable.getPageSize()) {
+            Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - vehiculeList.size());
+            Page<Vehicule> vehiculeComplement = vehiculeRepository.findAllByStatutVehiculeTrueAndActeurStatutActeurTrueAndPaysNot(paysNormalise, complementPageable);
+            vehiculeList.addAll(vehiculeComplement.getContent());
+            totalElements += vehiculeComplement.getTotalElements();
         }
+    
+        // Créer et retourner une nouvelle page avec la liste complète des stocks et le pageable original
+        return new PageImpl<>(vehiculeList, pageable, totalElements);
     }
+
+    //     public Page<Vehicule> getAllVehiculePageableByPays(String niveau3PaysActeur, Pageable pageable) {
+    //     Page<Vehicule> vehiculeByPays = vehiculeRepository.findAllByStatutVehiculeTrueAndPaysAndActeurStatutActeurTrue(niveau3PaysActeur.trim().toLowerCase(), pageable);
+        
+    //     if (!vehiculeByPays.hasContent()) {
+    //         System.out.println("Pas d'autres vehicule à fetch pour le pays " + niveau3PaysActeur);
+    //         return vehiculeRepository.findAllByStatutVehiculeAndActeurStatutActeur(true, true, pageable);
+    //     } else {
+    //         System.out.println("Vehicules fetch pour le pays " + niveau3PaysActeur);
+    //         List<Vehicule> vehiculesList = new ArrayList<>(vehiculeByPays.getContent());
+
+    //         // Si le nombre de vehicule est inférieur au nombre requis, compléter avec des vehicules d'autres pays
+    //         if (vehiculesList.size() < pageable.getPageSize()) {
+    //             Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - vehiculesList.size());
+    //             Page<Vehicule> vehiculeComplement = vehiculeRepository.findAllByStatutVehiculeTrueAndActeurStatutActeurTrueAndPaysNot(niveau3PaysActeur.trim().toLowerCase(), complementPageable);
+    //             vehiculesList.addAll(vehiculeComplement.getContent());
+    //         }
+
+    //         return new PageImpl<>(vehiculesList, pageable, vehiculeByPays.getTotalElements() + vehiculesList.size());
+    //     }
+    // }
 
 
      @Transactional
@@ -310,10 +338,10 @@ public class VehiculeService {
             Acteur acteur = vehicule.getActeur();
 
             if (acteur != null) {
-                // Récupérer le niveau3Pays de l'acteur lié au stock
+                // Récupérer le niveau3Pays de l'acteur lié au Vehicule
                 String niveau3Pays = acteur.getNiveau3PaysActeur();
 
-                // Mettre à jour la colonne pays du stock
+                // Mettre à jour la colonne pays du Vehicule
                 vehicule.setPays(niveau3Pays);
             } else {
                 // Gérer le cas où l'acteur est null
@@ -377,7 +405,7 @@ public class VehiculeService {
 
     //     // Traitement du fichier image
     //     if (imageFile != null && !imageFile.isEmpty()) {
-    //         // Chemin où les images seront stockées sur le serveur distant
+    //         // Chemin où les images seront Vehiculeées sur le serveur distant
     //         String imagePath = "/images";
 
     //         // Connexion au serveur FTP
@@ -399,7 +427,7 @@ public class VehiculeService {
     //                 throw new Exception("Échec du téléversement de l'image sur le serveur FTP.");
     //             }
 
-    //             // Stockage du chemin  complet dans l'objet vehicule
+    //             // Vehiculeage du chemin  complet dans l'objet vehicule
     //             vehicule.setPhotoVehicule(remoteFilePath);
     //         } catch (IOException ex) {
     //             throw new Exception("Erreur lors du téléversement de l'image sur le serveur FTP : " + ex.getMessage());

@@ -39,13 +39,15 @@ public class ConseilService {
     private IdGenerator idGenerator;
     @Autowired
     CodeGenerator codeGenerator;
-    @Autowired
-    FileUploade fileUploade;
+    // @Autowired
+    // FileUploade fileUploade;
     @Autowired
     ActeurRepository acteurRepository;
     @Autowired
     MessageService messageService;
 
+    @Autowired
+    UploadeAlerte uploadeAlerte;
 
      //Ajouter un conseil
       public Conseil createConseil(Conseil conseil, MultipartFile imageFile, MultipartFile audio, MultipartFile video) throws Exception {
@@ -68,7 +70,7 @@ public class ConseilService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+                    String onlineImagePath =uploadeAlerte.uploadImageToFTP(imagePath, imageName);
 
                     conseil.setPhotoConseil(imageName );
                 } catch (IOException e) {
@@ -88,7 +90,7 @@ public class ConseilService {
                     String audioName = UUID.randomUUID().toString() + "_" + audio.getOriginalFilename();
                     Path audioPath = audioRootLocation.resolve(audioName);
                     Files.copy(audio.getInputStream(), audioPath, StandardCopyOption.REPLACE_EXISTING);
-                    String onlineAudioPath =fileUploade.uploadAudioToFTP(audioPath, audioName);
+                    String onlineAudioPath =uploadeAlerte.uploadAudioToFTP(audioPath, audioName);
 
                     conseil.setAudioConseil(audioName);
                 } catch (IOException e) {
@@ -108,7 +110,7 @@ public class ConseilService {
                     String videoName = UUID.randomUUID().toString() + "_" + video.getOriginalFilename();
                     Path videoPath = videoRootLocation.resolve(videoName);
                     Files.copy(video.getInputStream(), videoPath, StandardCopyOption.REPLACE_EXISTING);
-                    String onlineVideoPath =fileUploade.uploadVideoToFTP(videoPath, videoName);
+                    String onlineVideoPath =uploadeAlerte.uploadVideoToFTP(videoPath, videoName);
 
                     conseil.setVideoConseil(videoName );
                 } catch (IOException e) {
@@ -196,7 +198,7 @@ public class ConseilService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+                    String onlineImagePath =uploadeAlerte.uploadImageToFTP(imagePath, imageName);
 
                     c.setPhotoConseil(imageName );
                 } catch (IOException e) {
@@ -216,7 +218,7 @@ public class ConseilService {
                     String audioName = UUID.randomUUID().toString() + "_" + audio.getOriginalFilename();
                     Path audioPath = audioRootLocation.resolve(audioName);
                     Files.copy(audio.getInputStream(), audioPath, StandardCopyOption.REPLACE_EXISTING);
-                    String onlineAudioPath =fileUploade.uploadAudioToFTP(audioPath, audioName);
+                    String onlineAudioPath =uploadeAlerte.uploadAudioToFTP(audioPath, audioName);
 
                     c.setAudioConseil(audioName );
                 } catch (IOException e) {
@@ -236,7 +238,7 @@ public class ConseilService {
                     String videoName = UUID.randomUUID().toString() + "_" + video.getOriginalFilename();
                     Path videoPath = videoRootLocation.resolve(videoName);
                     Files.copy(video.getInputStream(), videoPath, StandardCopyOption.REPLACE_EXISTING);
-                    String onlineVideoPath =fileUploade.uploadVideoToFTP(videoPath, videoName);
+                    String onlineVideoPath =uploadeAlerte.uploadVideoToFTP(videoPath, videoName);
 
                     c.setVideoConseil(videoName );
                 } catch (IOException e) {

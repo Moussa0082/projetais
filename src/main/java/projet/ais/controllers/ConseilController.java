@@ -23,11 +23,13 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+// import projet.ais.models.conseil;
 import projet.ais.models.Commande;
 import projet.ais.models.Conseil;
 import projet.ais.repository.ConseilRepository;
 import projet.ais.services.ConseilService;
 import projet.ais.services.FileUploade;
+import projet.ais.services.UploadeAlerte;
 
 import org.springframework.http.MediaType;
 import java.io.IOException;
@@ -40,8 +42,10 @@ public class ConseilController {
 
     @Autowired
     private ConseilService conseilService;
-    @Autowired
-    FileUploade fileUploade;
+    // @Autowired
+    // FileUploade fileUploade;
+     @Autowired
+    UploadeAlerte uploadeAlerte;
     @Autowired
     ConseilRepository conseilRepository;
 
@@ -68,23 +72,46 @@ public class ConseilController {
                 return new ResponseEntity<>(savedConseil, HttpStatus.CREATED);
             }
 
+            // @GetMapping("/{conseilId}/video")
+            // public ResponseEntity<byte[]> getVideo(@PathVariable String conseilId) {
+            //     try {
+                    
+            //         Conseil conseil = conseilRepository.findByIdConseil(conseilId);
+            //         if (conseil == null || conseil.getVideoConseil() == null) {
+            //             return ResponseEntity.notFound().build();
+            //         }
+            //         String videoName = conseil.getVideoConseil(); // Example video name
+        
+            //         // Retrieve the video from the FTP server
+            //         byte[] videoBytes = fileUploade.getVideoByName(videoName);
+        
+            //         // Detect the content type of the video based on its extension
+            //         MediaType contentType = MediaType.valueOf("video/mp4");
+        
+            //         // Return the video with appropriate content type
+            //         return ResponseEntity.ok()
+            //                 .contentType(contentType)
+            //                 .body(videoBytes);
+            //     } catch (IOException e) {
+            //         e.printStackTrace();
+            //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            //     }
+            // }
+
             @GetMapping("/{conseilId}/video")
             public ResponseEntity<byte[]> getVideo(@PathVariable String conseilId) {
                 try {
-                    
                     Conseil conseil = conseilRepository.findByIdConseil(conseilId);
                     if (conseil == null || conseil.getVideoConseil() == null) {
                         return ResponseEntity.notFound().build();
                     }
-                    String videoName = conseil.getVideoConseil(); // Example video name
         
-                    // Retrieve the video from the FTP server
-                    byte[] videoBytes = fileUploade.getVideoByName(videoName);
+                    String videoName = conseil.getVideoConseil();
+                    byte[] videoBytes = uploadeAlerte.getVideoByName(videoName);
         
-                    // Detect the content type of the video based on its extension
-                    MediaType contentType = MediaType.valueOf("video/mp4");
+                    // Determine the content type based on file extension
+                    MediaType contentType = determineContentType(videoName);
         
-                    // Return the video with appropriate content type
                     return ResponseEntity.ok()
                             .contentType(contentType)
                             .body(videoBytes);
@@ -94,34 +121,83 @@ public class ConseilController {
                 }
             }
         
-            @GetMapping("/{conseilId}/audio")
-            public ResponseEntity<byte[]> getAudio(@PathVariable String conseilId) {
-                try {
-                    
-                    
-                    Conseil conseil = conseilRepository.findByIdConseil(conseilId);
-                    if (conseil == null || conseil.getAudioConseil() == null) {
-                        return ResponseEntity.notFound().build();
-                    }
-
-                    String audioName =  conseil.getAudioConseil(); // Example video name
-        
-                    // Retrieve the video from the FTP server
-                    byte[] audioBytes = fileUploade.getAudioByName(audioName);
-        
-                    // Detect the content type of the video based on its extension
-                    MediaType contentType = MediaType.valueOf("audio/mpeg");
-        
-                    // Return the video with appropriate content type
-                    return ResponseEntity.ok()
-                            .contentType(contentType)
-                            .body(audioBytes);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            private MediaType determineContentType(String fileName) {
+                String lowerCaseFileName = fileName.toLowerCase();
+                if (lowerCaseFileName.endsWith(".mp4")) {
+                    return MediaType.valueOf("video/mp4");
+                } else if (lowerCaseFileName.endsWith(".avi")) {
+                    return MediaType.valueOf("video/x-msvideo");
+                } else if (lowerCaseFileName.endsWith(".mkv")) {
+                    return MediaType.valueOf("video/x-matroska");
                 }
+                // Add other video formats if needed
+                return MediaType.APPLICATION_OCTET_STREAM;
             }
         
+            
+            // @GetMapping("/{conseilId}/audio")
+            // public ResponseEntity<byte[]> getAudio(@PathVariable String conseilId) {
+            //     try {
+                    
+                    
+            //         Conseil conseil = conseilRepository.findByIdConseil(conseilId);
+            //         if (conseil == null || conseil.getAudioConseil() == null) {
+            //             return ResponseEntity.notFound().build();
+            //         }
+
+            //         String audioName =  conseil.getAudioConseil(); // Example video name
+        
+            //         // Retrieve the video from the FTP server
+            //         byte[] audioBytes = fileUploade.getAudioByName(audioName);
+        
+            //         // Detect the content type of the video based on its extension
+            //         MediaType contentType = MediaType.valueOf("audio/mpeg");
+        
+            //         // Return the video with appropriate content type
+            //         return ResponseEntity.ok()
+            //                 .contentType(contentType)
+            //                 .body(audioBytes);
+            //     } catch (IOException e) {
+            //         e.printStackTrace();
+            //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            //     }
+            // }
+        
+              @GetMapping("/{conseilId}/audio")
+public ResponseEntity<byte[]> getAudio(@PathVariable String conseilId) {
+    try {
+        Conseil conseil = conseilRepository.findByIdConseil(conseilId);
+        if (conseil == null || conseil.getAudioConseil() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String audioName = conseil.getAudioConseil();
+        byte[] audioBytes = uploadeAlerte.getAudioByName(audioName);
+
+        // Determine the content type based on file extension
+        MediaType contentType = determineContentTypeAudio(audioName);
+
+        return ResponseEntity.ok()
+                .contentType(contentType)
+                .body(audioBytes);
+    } catch (IOException e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+}
+
+private MediaType determineContentTypeAudio(String fileName) {
+    String lowerCaseFileName = fileName.toLowerCase();
+    if (lowerCaseFileName.endsWith(".mp3")) {
+        return MediaType.valueOf("audio/mpeg");
+    } else if (lowerCaseFileName.endsWith(".wav")) {
+        return MediaType.valueOf("audio/wav");
+    } else if (lowerCaseFileName.endsWith(".ogg")) {
+        return MediaType.valueOf("audio/ogg");
+    }
+    // Add other audio formats if needed
+    return MediaType.APPLICATION_OCTET_STREAM;
+}
                     @GetMapping("/{conseilId}/image")
                     public ResponseEntity<byte[]> getImage(@PathVariable String conseilId) {
                         try {
@@ -133,7 +209,7 @@ public class ConseilController {
                             String imageName = conseil.getPhotoConseil() ;
                     
                             // Récupérer l'image à partir du serveur FTP
-                            byte[] imageBytes = fileUploade.getImageByName(imageName);
+                            byte[] imageBytes = uploadeAlerte.getImageByName(imageName);
                     
                             // Détecter le type de contenu de l'image en fonction de son extension
                         MediaType contentType = detectContentType(imageName);
