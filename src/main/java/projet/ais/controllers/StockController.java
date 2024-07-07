@@ -74,7 +74,7 @@ public class StockController {
             return new ResponseEntity<>(saveStock, HttpStatus.CREATED);
         }
 
-        @PutMapping("/updateStock/{idStock}")
+    @PutMapping("/updateStock/{idStock}")
     @Operation(summary = "Modification de stock")
     public ResponseEntity<Stock> updatedStock(
         @Valid @RequestParam("stock")  String addstocks,
@@ -156,23 +156,28 @@ private MediaType detectContentType(String imageName) {
     // Par défaut, retourner MediaType.APPLICATION_OCTET_STREAM
     return MediaType.APPLICATION_OCTET_STREAM;
 }
-        @PutMapping("/updateQuantiteStock/{id}")
+  
+    @PutMapping("/updateQuantiteStock/{idStock}")
     @Operation(summary = "Modification de stock")
-    public ResponseEntity<Stock> updatedQuantiteStock(
-        @Valid @RequestParam("stock")  String updateQuantiteStocks,
-        @PathVariable String id
-        ) throws Exception{
-            Stock stock = new Stock();
+    public ResponseEntity<Stock> updatedQuantiteStock( @RequestBody Stock stock ,@PathVariable String idStock) throws Exception {
+        // System.out.println("stock id "+idStock);
+        return new ResponseEntity<>(stockService.updateQteStock(stock, idStock), HttpStatus.OK);
+    }
+    // public ResponseEntity<Stock> updatedQuantiteStock(
+    //     @Valid @RequestParam("stock")  String updateQuantiteStocks,
+    //     @PathVariable String id
+    //     ) throws Exception{
+    //         Stock stock = new Stock();
 
-            try {
-                stock = new JsonMapper().readValue(updateQuantiteStocks, Stock.class);
-            } catch (JsonProcessingException e) {
-                throw new Exception(e.getMessage());
-            }
+    //         try {
+    //             stock = new JsonMapper().readValue(updateQuantiteStocks, Stock.class);
+    //         } catch (JsonProcessingException e) {
+    //             throw new Exception(e.getMessage());
+    //         }
 
-            Stock saveStock = stockService.updateQuantiteStock(stock,id);
-            return new ResponseEntity<>(saveStock, HttpStatus.OK);
-        }
+    //         Stock saveStock = stockService.updateQuantiteStock(stock,id);
+    //         return new ResponseEntity<>(saveStock, HttpStatus.OK);
+    //     }
 
         @GetMapping("/getAllStocks")
         @Operation(summary = "Liste des stocks")
@@ -319,6 +324,24 @@ private MediaType detectContentType(String imageName) {
     
             Pageable pageable = PageRequest.of(page, size);
             Page<Stock> stocks = stockService.getAllStockPageableByPaysByCategorie(categorie, niveau3PaysActeur,pageable);
+    
+            return ResponseEntity.ok().body(stocks);
+        }
+
+
+        @GetMapping("/getAllStocksByCategorieAndFiliere")
+        public ResponseEntity<Page<Stock>> listeStockByCategorieAndLibelleFiliere(
+                @RequestParam String idCategorie,
+                @RequestParam String libelleFiliere,
+                @RequestParam String niveau3PaysActeur,
+                @RequestParam int page,
+                @RequestParam int size) {
+    
+            CategorieProduit categorie = new CategorieProduit();
+            categorie.setIdCategorieProduit(idCategorie);
+    
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Stock> stocks = stockService.getAllStockPageableByPaysByCategorieAndFiliere(idCategorie, libelleFiliere, niveau3PaysActeur,pageable);
     
             return ResponseEntity.ok().body(stocks);
         }

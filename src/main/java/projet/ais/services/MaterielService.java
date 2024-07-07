@@ -211,7 +211,7 @@ public class MaterielService {
 //     }
 // }
 
-    
+    //get materiel par filiere    
 public Page<Materiel> getAllMaterielByLibelleFiliere(String libelleFiliere,String pays, Pageable pageable) {
        
     String paysNormalise = pays.trim().toLowerCase();

@@ -100,8 +100,14 @@ public class CommandeController {
             }
         }
 
+        //confirmation commande
+        @PutMapping("/confirmer/{id}")
+        public Commande confCommandes(@PathVariable String id) {
+            return commandeService.confirmationCommande(id);
+        }
 
-          
+
+    
     @GetMapping("/{commandeId}/details")
     public ResponseEntity<List<DetailCommande>> getDetailsByCommandeId(@PathVariable String commandeId) {
         List<DetailCommande> details = commandeService.getDetailsByCommandeId(commandeId);

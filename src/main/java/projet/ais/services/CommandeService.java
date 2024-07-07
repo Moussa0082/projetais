@@ -284,6 +284,7 @@ public class CommandeService {
             // Mettre à jour le statut de la commande à "confirmé"
             Commande commande = detailCommande.getCommande();
             commande.setStatutCommandeLivrer(true);
+            commande.setStatutConfirmation(true);
             commandeRepository.save(commande);
             String msgg = "La livraison de tous les produits de votre commande avec le code " + optionalDetailCommande.get().getCommande().getCodeCommande() + " a été confirmé par " + "  proprietaire en cas de retard de livraison vous pouvez le contacter à son numéro " + optionalDetailCommande.get().getCommande().getActeurProprietaire().getWhatsAppActeur() ;
             messageService.sendMessageAndSave(optionalDetailCommande.get().getCommande().getActeur().getWhatsAppActeur(), msgg, optionalDetailCommande.get().getCommande().getActeur());
@@ -581,6 +582,16 @@ public ResponseEntity<String> confirmerLivraisonVendeur(String id, Map<String, D
         Commande commande = commandeRepository.findByIdCommande(id);
 
         commande.setStatutCommandeLivrer(true);
+
+        return commandeRepository.save(commande);
+        
+    }
+
+    //confirmer commande 
+    public Commande confirmationCommande(String id){
+        Commande commande = commandeRepository.findByIdCommande(id);
+
+        commande.setStatutConfirmation(true);
 
         return commandeRepository.save(commande);
         

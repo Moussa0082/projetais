@@ -97,10 +97,17 @@ public class ActeurService {
         }
         
         // Vérifier si l'acteur a le même mail et le même type
-        Acteur existingActeurAvecMemeType = acteurRepository.findByEmailActeurAndTypeActeurIn(acteur.getEmailActeur(), acteur.getTypeActeur());
+        // Acteur existingActeurAvecMemeType = acteurRepository.findByEmailActeurAndTypeActeurIn(acteur.getEmailActeur(), acteur.getTypeActeur());
+        Acteur existingActeurAvecMemeType = acteurRepository.findByEmailActeur(acteur.getEmailActeur());
         if (existingActeurAvecMemeType != null) {
             // Si un acteur avec le même email et type existe déjà
-            throw new IllegalArgumentException("Un acteur avec le même email et type existe déjà");
+            throw new IllegalArgumentException("Un compte avec le même email existe déjà");
+        }
+
+        Acteur existingActeur = acteurRepository.findByWhatsAppActeurAndTelephoneActeur(acteur.getWhatsAppActeur(), acteur.getTelephoneActeur());
+        if (existingActeur != null) {
+            // Si un acteur avec le même email et type existe déjà
+            throw new IllegalArgumentException("Un compte avec le même numero de téléphone existe déjà");
         }
          
     // if (acteurRepository.findByEmailActeur(acteur.getEmailActeur()) == null) {
@@ -195,7 +202,7 @@ public class ActeurService {
             // if (acteur.getTypeActeur() != null) {
             //     for (TypeActeur typeActeur : acteur.getTypeActeur()) {
             //         if (typeActeur != null && typeActeur.getLibelle() != null && typeActeur.getLibelle() == "Admin") {
-                        acteur.setStatutActeur(true);
+                        // acteur.setStatutActeur(true);
             //             break; // Sortie de la boucle dès que "Admin" est trouvé
             //         }else{
             //             acteur.setStatutActeur(false);
@@ -237,7 +244,7 @@ public class ActeurService {
                     for (TypeActeur typeActeur : typeActeurs) {
                         if (typeActeur.getLibelle().equals("Admin")) {
                             // Si l'administrateur a le type "Admin", envoyez un e-mail
-                            String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez le contacter à son numero "+ savedActeur.getWhatsAppActeur()+"pour proceder à l'activation de son compte dans les plus brefs délais !";
+                            String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez le contacter à son numero "+ savedActeur.getWhatsAppActeur()+" pour proceder à l'activation de son compte dans les plus brefs délais !";
                             Alerte alerte = new Alerte(admin.getEmailActeur(), msg, "Création d'un nouveau compte");
                             alerte.setId(idGenerator.genererCode());
                             alerteRepository.save(alerte);
@@ -252,7 +259,7 @@ public class ActeurService {
                 System.out.println("Aucun administrateur trouvé");
             }
             
-            sendMessageToAdmin(savedActeur);
+            // sendMessageToAdmin(savedActeur);
 
             System.out.println("Acteur :" + savedActeur.toString());
                      
@@ -651,7 +658,7 @@ public class ActeurService {
     }
     
     //créer un user
-      public Acteur updateActeur(Acteur acteur, String id, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
+    public Acteur updateActeur(Acteur acteur, String id, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
         // TypeActeur typeActeur = typeActeurRepository.findByIdTypeActeur(acteur.getTypeActeur());
         Acteur ac = acteurRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Acteur non trouver avec l'id " + id));
         
@@ -704,13 +711,15 @@ public class ActeurService {
         ac.setWhatsAppActeur(acteur.getWhatsAppActeur());
         ac.setLocaliteActeur(acteur.getLocaliteActeur());
         ac.setEmailActeur(acteur.getEmailActeur());
-        // ac.setMaillonActeur(acteur.getMaillonActeur());
-        // ac.setFiliereActeur(acteur.getFiliereActeur());
+    
         ac.setTypeActeur(acteur.getTypeActeur());
 
-                       
+        if(acteur.getSpeculations() != null){
+            ac.setSpeculations(acteur.getSpeculations());
+        }
+
     // Mettez à jour le mot de passe si un nouveau mot de passe est fourni
-    if (acteur.getPassword() != null && !acteur.getPassword().isEmpty()) {
+    if (acteur.getPassword() != null) {
         String hashedPassword = passwordEncoder.encode(acteur.getPassword());
         ac.setPassword(hashedPassword);
     }
@@ -824,7 +833,7 @@ public String sendOtpCodeEmail(String email) throws Exception {
     
     // Enregistrez le code et son horodatage dans la base de données
     userVerif.setResetToken(code);
-    userVerif.setTokenCreationDate(LocalDateTime.now().plusMinutes(2)); // Code expirera après 2 minute (à adapter selon vos besoins)
+    userVerif.setTokenCreationDate(LocalDateTime.now().plusMinutes(2).toString());
     acteurRepository.save(userVerif);
     
     // Envoyez le code par e-mail
@@ -841,7 +850,11 @@ public String sendOtpCodeEmail(String email) throws Exception {
         throw new Exception("Ce numero n'existe pas, verifier  le numéro saisi");
          // Stockez temporairement le code dans le champ resetToken de l'utilisateur
         userVerif.setResetToken(code);
-        userVerif.setTokenCreationDate(LocalDateTime.now().plusMinutes(2)); // Code expirera après 2 minutes
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now().plusMinutes(2);
+        String formattedDateTime = now.format(formatter);
+        userVerif.setTokenCreationDate(formattedDateTime); // Code expirera après 2 minutes
         acteurRepository.save(userVerif);
           String msg = "Votre code de verification temporaire est " + code + " veuillez garder ce code pour vous uniquement si vous n'avez pas demander à changer de mot de passe veuiilez ignorer ce message";
             messageService.sendMessageAndSave(whatsAppActeur, msg, userVerif);
@@ -856,8 +869,8 @@ public String sendOtpCodeEmail(String email) throws Exception {
     }
     
     // Vérifiez si le code est expiré
-    LocalDateTime tokenCreationDate = userVerif.getTokenCreationDate();
-    if (tokenCreationDate == null || tokenCreationDate.isBefore(LocalDateTime.now().minusMinutes(1))) {
+    String tokenCreationDate = userVerif.getTokenCreationDate();
+    if (tokenCreationDate == null) {
         // Code expiré
         throw new RuntimeException("Code expiré");
     }
@@ -877,8 +890,16 @@ public String sendOtpCodeEmail(String email) throws Exception {
     }
     
     // Vérifiez si le code est expiré
-    LocalDateTime tokenCreationDate = userVerif.getTokenCreationDate();
-    if (tokenCreationDate == null || tokenCreationDate.isBefore(LocalDateTime.now().minusMinutes(2))) {
+    String pattern = "yyyy-MM-dd HH:mm";
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+    LocalDateTime now = LocalDateTime.now().minusMinutes(2);
+    String formattedDateTime = now.format(formatter);
+
+    // LocalDateTime tokenCreationDate = userVerif.getTokenCreationDate();
+    String tokenCreationDate = userVerif.getTokenCreationDate();
+    // String beforeDate = LocalDateTime.now().minusMinutes(2);
+    
+    if (tokenCreationDate == null) {
         // Code expiré
         throw new RuntimeException("Code expiré");
     }
@@ -904,7 +925,7 @@ public String sendOtpCodeEmail(String email) throws Exception {
     
         // Stockez temporairement le code dans le champ resetToken de l'utilisateur
         userVerif.setResetToken(code);
-        userVerif.setTokenCreationDate(LocalDateTime.now().plusMinutes(2)); // Code expirera après 2 minutes
+        userVerif.setTokenCreationDate(LocalDateTime.now().plusMinutes(2).toString()); // Code expirera après 2 minutes
         acteurRepository.save(userVerif);
     
         return true; // Code vérifié avec succès

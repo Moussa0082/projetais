@@ -36,8 +36,11 @@ public class Acteur {
     @Column(name = "reset_token", nullable = true)
 	private String resetToken;
 
-    @Column(columnDefinition = "TIMESTAMP", nullable = true)
-    private LocalDateTime tokenCreationDate;
+    // @Column(columnDefinition = "TIMESTAMP", nullable = true)
+    // private LocalDateTime tokenCreationDate;
+
+    @Column(nullable = true)
+    private String tokenCreationDate;
 
     @Column(nullable = true)
     private String codeActeur;

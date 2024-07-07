@@ -42,6 +42,9 @@ public interface StockRepository extends JpaRepository<Stock, String>{
 
  Page<Stock> findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPays(String libelleFiliere, boolean statutSotck, boolean statutActeur ,String pays, Pageable pageable);
     Page<Stock> findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNot(String libelleFiliere, boolean statutSotck, boolean statutActeur , String pays, Pageable pageable);
+
+    Page<Stock> findAllBySpeculation_CategorieProduit_idCategorieProduitAndSpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPays(String idCategorie , String libelleFiliere, boolean statutSotck, boolean statutActeur ,String pays, Pageable pageable);
+    Page<Stock> findAllBySpeculation_CategorieProduit_idCategorieProduitAndSpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNot(String idCategorie , String libelleFiliere, boolean statutSotck, boolean statutActeur , String pays, Pageable pageable);
         // Page<Stock> findBySpeculation_CategorieProduit_filiere_libelleFiliereAndPays(String libelleFiliere ,String pays, Pageable pageable);
     //Recuperer les stock par magasin et par categorieProduit
     List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasin(String idCategorie, String idMagasin);
