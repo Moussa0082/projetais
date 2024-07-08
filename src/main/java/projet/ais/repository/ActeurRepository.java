@@ -18,6 +18,7 @@ public interface ActeurRepository extends JpaRepository<Acteur, String>{
      Acteur findByEmailActeur(String emailActeur);
      
      Acteur findByWhatsAppActeur(String whatsAppActeur);
+    // List<Acteur> findByWhatsAppActeur(String whatsAppActeur);
 
     //  Recuperer la liste des mails acteurs existants dans la base de donnés 
      List<Acteur> findAllByEmailActeur(String emailActeur);

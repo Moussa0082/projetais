@@ -114,6 +114,8 @@ Page<Stock> findByMagasin_IdMagasinAndActeur_IdActeur(String idMagasin, String i
                         String idCategorieProduit, String idMagasin, String pays, boolean statutSotck, boolean statutActeur,Pageable pageable);
                         Page<Stock> findByMagasin_IdMagasinAndPaysAndStatutSotckAndActeurStatutActeur(String pays, String idMagasin, boolean statutSotck, boolean statutActeur,Pageable pageable);
                         Page<Stock> findByMagasin_IdMagasinAndPaysNotAndStatutSotckAndActeurStatutActeur(String pays, String idMagasin, boolean statutSotck, boolean statutActeur,Pageable pageable);
+                        Page<Stock> findAllByStatutSotckTrueAndPaysNotAndActeurStatutActeurTrue(String pays,
+                                Pageable complementPageable);
 
 
 }

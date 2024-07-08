@@ -326,7 +326,7 @@ public class ActeurController {
     }
 
     @GetMapping("/verifierOtpCodeEmail")
-    public ResponseEntity<String> verifyOtpCodeEmail(@RequestParam("emailActeur") String emailActeur, @RequestParam("resetToken") String resetToken) {
+    public ResponseEntity<String> verifyOtpCodeEmail(@RequestParam("emailActeur") String emailActeur, @RequestParam(required = false) String resetToken) {
         try {
             boolean isVerified = acteurService.verifyOtpCodeEmail(emailActeur,resetToken);
             if (isVerified) {

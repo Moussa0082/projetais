@@ -824,8 +824,11 @@ public String sendOtpCodeEmail(String email) throws Exception {
     
     // Enregistrez le code et son horodatage dans la base de données
     userVerif.setResetToken(code);
-    userVerif.setTokenCreationDate(LocalDateTime.now().plusMinutes(2)); // Code expirera après 2 minute (à adapter selon vos besoins)
-    acteurRepository.save(userVerif);
+    // Définir la date d'expiration du token (après 2 minutes)
+    LocalDateTime tokenExpiryDate = LocalDateTime.now().plusMinutes(2);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    String formattedDate = tokenExpiryDate.format(formatter);
+    userVerif.setTokenCreationDate(formattedDate);    acteurRepository.save(userVerif);
     
     // Envoyez le code par e-mail
     sendMail(userVerif, code);
@@ -841,8 +844,11 @@ public String sendOtpCodeEmail(String email) throws Exception {
         throw new Exception("Ce numero n'existe pas, verifier  le numéro saisi");
          // Stockez temporairement le code dans le champ resetToken de l'utilisateur
         userVerif.setResetToken(code);
-        userVerif.setTokenCreationDate(LocalDateTime.now().plusMinutes(2)); // Code expirera après 2 minutes
-        acteurRepository.save(userVerif);
+    // Définir la date d'expiration du token (après 2 minutes)
+    LocalDateTime tokenExpiryDate = LocalDateTime.now().plusMinutes(2);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    String formattedDate = tokenExpiryDate.format(formatter);
+    userVerif.setTokenCreationDate(formattedDate);        acteurRepository.save(userVerif);
           String msg = "Votre code de verification temporaire est " + code + " veuillez garder ce code pour vous uniquement si vous n'avez pas demander à changer de mot de passe veuiilez ignorer ce message";
             messageService.sendMessageAndSave(whatsAppActeur, msg, userVerif);
         return code;
@@ -856,11 +862,20 @@ public String sendOtpCodeEmail(String email) throws Exception {
     }
     
     // Vérifiez si le code est expiré
-    LocalDateTime tokenCreationDate = userVerif.getTokenCreationDate();
-    if (tokenCreationDate == null || tokenCreationDate.isBefore(LocalDateTime.now().minusMinutes(1))) {
+    // Convertir la date de création du token en LocalDateTime pour la vérification
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    LocalDateTime tokenCreationDate = LocalDateTime.parse(userVerif.getTokenCreationDate(), formatter);
+
+    if (tokenCreationDate == null || tokenCreationDate.isBefore(LocalDateTime.now().minusMinutes(2))) {
         // Code expiré
         throw new RuntimeException("Code expiré");
     }
+
+    // Vérifier si le code correspond
+    if (!userVerif.getResetToken().equals(code)) {
+        throw new RuntimeException("Code incorrect");
+    }
+
     
     // Réinitialisez le token et la date de création
     userVerif.setResetToken(null);
@@ -877,11 +892,20 @@ public String sendOtpCodeEmail(String email) throws Exception {
     }
     
     // Vérifiez si le code est expiré
-    LocalDateTime tokenCreationDate = userVerif.getTokenCreationDate();
-    if (tokenCreationDate == null || tokenCreationDate.isBefore(LocalDateTime.now().minusMinutes(2))) {
-        // Code expiré
-        throw new RuntimeException("Code expiré");
-    }
+   // Convertir la date de création du token en LocalDateTime pour la vérification
+   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+   LocalDateTime tokenCreationDate = LocalDateTime.parse(userVerif.getTokenCreationDate(), formatter);
+
+   if (tokenCreationDate == null || tokenCreationDate.isBefore(LocalDateTime.now().minusMinutes(2))) {
+       // Code expiré
+       throw new RuntimeException("Code expiré");
+   }
+
+   // Vérifier si le code correspond
+   if (!userVerif.getResetToken().equals(code)) {
+       throw new RuntimeException("Code incorrect");
+   }
+
     
     // Réinitialisez le token et la date de création
     userVerif.setResetToken(null);
@@ -904,8 +928,11 @@ public String sendOtpCodeEmail(String email) throws Exception {
     
         // Stockez temporairement le code dans le champ resetToken de l'utilisateur
         userVerif.setResetToken(code);
-        userVerif.setTokenCreationDate(LocalDateTime.now().plusMinutes(2)); // Code expirera après 2 minutes
-        acteurRepository.save(userVerif);
+    // Définir la date d'expiration du token (après 2 minutes)
+    LocalDateTime tokenExpiryDate = LocalDateTime.now().plusMinutes(2);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    String formattedDate = tokenExpiryDate.format(formatter);
+    userVerif.setTokenCreationDate(formattedDate);        acteurRepository.save(userVerif);
     
         return true; // Code vérifié avec succès
     }
