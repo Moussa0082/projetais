@@ -190,32 +190,36 @@ public class MagasinService {
         return new PageImpl<>(magasinList, pageable, magasinsByPays.getTotalElements() + magasinList.size());
     }
 
+ // recuperer les magasins par  acteur avec pagination
+ public Page<Magasin> getMagasinByNiveau1PaysWithPagination(String idNiveau1Pays,Pageable pageable) {
+    return magasinRepository.findByNiveau1Pays_IdNiveau1PaysAndStatutMagasinAndActeurStatutActeurTrue(idNiveau1Pays, true, pageable);
+}
 
 
-    @Transactional
-    public Page<Magasin> getMagasinByNiveau1PaysWithPagination(String niveau3PaysActeur, String idNiveau1Pays, Pageable pageable) {
-        // Fetch magasins from the specified country and niveau1Pays
-        Page<Magasin> magasinsByPaysAndNiveau1 = magasinRepository.findByNiveau1Pays_IdNiveau1PaysAndPaysAndStatutMagasinAndActeurStatutActeurTrue(idNiveau1Pays, niveau3PaysActeur, true, pageable);
+    // @Transactional
+    // public Page<Magasin> getMagasinByNiveau1PaysWithPagination(String niveau3PaysActeur, String idNiveau1Pays, Pageable pageable) {
+    //     // Fetch magasins from the specified country and niveau1Pays
+    //     Page<Magasin> magasinsByPaysAndNiveau1 = magasinRepository.findByNiveau1Pays_IdNiveau1PaysAndPaysAndStatutMagasinAndActeurStatutActeurTrue(idNiveau1Pays, niveau3PaysActeur, true, pageable);
 
-        List<Magasin> magasinList = new ArrayList<>(magasinsByPaysAndNiveau1.getContent());
+    //     List<Magasin> magasinList = new ArrayList<>(magasinsByPaysAndNiveau1.getContent());
 
-        // If no magasins are found for the specified country and niveau1Pays, fetch magasins from other countries
-        if (magasinList.isEmpty()) {
-            Page<Magasin> magasinsFromOtherCountries = magasinRepository.findAllByStatutMagasinTrueAndActeurStatutActeurTrue(pageable);
+    //     // If no magasins are found for the specified country and niveau1Pays, fetch magasins from other countries
+    //     if (magasinList.isEmpty()) {
+    //         Page<Magasin> magasinsFromOtherCountries = magasinRepository.findAllByStatutMagasinTrueAndActeurStatutActeurTrue(pageable);
 
-            return new PageImpl<>(magasinsFromOtherCountries.getContent(), pageable, magasinsFromOtherCountries.getTotalElements());
-        }
+    //         return new PageImpl<>(magasinsFromOtherCountries.getContent(), pageable, magasinsFromOtherCountries.getTotalElements());
+    //     }
 
-        // Fetch magasins from other countries if needed to fill the page
-        if (magasinList.size() < pageable.getPageSize()) {
-            Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - magasinList.size());
-            Page<Magasin> magasinsComplement = magasinRepository.findByNiveau1Pays_IdNiveau1PaysAndPaysNotAndStatutMagasinTrueAndActeurStatutActeurTrue(
-                 niveau3PaysActeur.trim().toLowerCase(), idNiveau1Pays,  complementPageable);
-            magasinList.addAll(magasinsComplement.getContent());
-        }
+    //     // Fetch magasins from other countries if needed to fill the page
+    //     if (magasinList.size() < pageable.getPageSize()) {
+    //         Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - magasinList.size());
+    //         Page<Magasin> magasinsComplement = magasinRepository.findByNiveau1Pays_IdNiveau1PaysAndPaysNotAndStatutMagasinTrueAndActeurStatutActeurTrue(
+    //              niveau3PaysActeur.trim().toLowerCase(), idNiveau1Pays,  complementPageable);
+    //         magasinList.addAll(magasinsComplement.getContent());
+    //     }
 
-        return new PageImpl<>(magasinList, pageable, magasinsByPaysAndNiveau1.getTotalElements() + magasinList.size());
-    }
+    //     return new PageImpl<>(magasinList, pageable, magasinsByPaysAndNiveau1.getTotalElements() + magasinList.size());
+    // }
 
 
     @Transactional

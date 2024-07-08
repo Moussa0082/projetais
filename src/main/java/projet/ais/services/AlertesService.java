@@ -43,15 +43,19 @@ import projet.ais.repository.PaysRepository;
 @Service
 public class AlertesService {
     
-      @Autowired
+    @Autowired
     private AlertesRepository AlertesRepository;
 
-     @Autowired
-    private IdGenerator idGenerator;
-     @Autowired
-    CodeGenerator codeGenerator;
     @Autowired
-    FileUploade fileUploade;
+    private IdGenerator idGenerator;
+    @Autowired
+    CodeGenerator codeGenerator;
+    // @Autowired
+    // FileUploade fileUploade;
+
+    @Autowired
+    UploadeAlerte uploadeAlerte;
+
     @Autowired
     ActeurRepository acteurRepository;
     @Autowired
@@ -76,7 +80,7 @@ public class AlertesService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+                    String onlineImagePath =uploadeAlerte.uploadImageToFTP(imagePath, imageName);
 
                     alertes.setPhotoAlerte(imageName);
                 } catch (IOException e) {
@@ -96,7 +100,7 @@ public class AlertesService {
                     String audioName = UUID.randomUUID().toString() + "_" + audio.getOriginalFilename();
                     Path audioPath = audioRootLocation.resolve(audioName);
                     Files.copy(audio.getInputStream(), audioPath, StandardCopyOption.REPLACE_EXISTING);
-                    String onlineAudioPath =fileUploade.uploadAudioToFTP(audioPath, audioName);
+                    String onlineAudioPath =uploadeAlerte.uploadAudioToFTP(audioPath, audioName);
 
                     alertes.setAudioAlerte(audioName);
                 } catch (IOException e) {
@@ -116,7 +120,7 @@ public class AlertesService {
                     String videoName = UUID.randomUUID().toString() + "_" + video.getOriginalFilename();
                     Path videoPath = videoRootLocation.resolve(videoName);
                     Files.copy(video.getInputStream(), videoPath, StandardCopyOption.REPLACE_EXISTING);
-                    String onlineVideoPath =fileUploade.uploadVideoToFTP(videoPath, videoName);
+                    String onlineVideoPath =uploadeAlerte.uploadVideoToFTP(videoPath, videoName);
 
                     alertes.setVideoAlerte(videoName);
                 } catch (IOException e) {
@@ -249,7 +253,7 @@ public class AlertesService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+                    String onlineImagePath =uploadeAlerte.uploadImageToFTP(imagePath, imageName);
 
                     c.setPhotoAlerte(imageName);
                 } catch (IOException e) {
@@ -269,7 +273,7 @@ public class AlertesService {
                     String audioName = UUID.randomUUID().toString() + "_" + audio.getOriginalFilename();
                     Path audioPath = audioRootLocation.resolve(audioName);
                     Files.copy(audio.getInputStream(), audioPath, StandardCopyOption.REPLACE_EXISTING);
-                    String onlineAudioPath =fileUploade.uploadAudioToFTP(audioPath, audioName);
+                    String onlineAudioPath =uploadeAlerte.uploadAudioToFTP(audioPath, audioName);
 
                     c.setAudioAlerte(audioName);
                 } catch (IOException e) {
@@ -289,7 +293,7 @@ public class AlertesService {
                     String videoName = UUID.randomUUID().toString() + "_" + video.getOriginalFilename();
                     Path videoPath = videoRootLocation.resolve(videoName);
                     Files.copy(video.getInputStream(), videoPath, StandardCopyOption.REPLACE_EXISTING);
-                    String onlineVideoPath =fileUploade.uploadVideoToFTP(videoPath, videoName);
+                    String onlineVideoPath =uploadeAlerte.uploadVideoToFTP(videoPath, videoName);
 
                     c.setVideoAlerte(videoName);
                 } catch (IOException e) {

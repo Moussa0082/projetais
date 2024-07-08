@@ -134,6 +134,19 @@ public class CategorieService {
         return categorieProduitList;
     }
 
+
+    public List<CategorieProduit> getAllCategorieByLibelle(String libelle){
+        List<CategorieProduit> categorieProduitList = categorieProduitRepository.findByFiliereLibelleFiliere(libelle);
+
+        if(categorieProduitList.isEmpty())
+            throw new EntityNotFoundException("Aucun categorie  trouvé");
+
+            categorieProduitList = categorieProduitList
+                .stream().sorted((d1, d2) -> d2.getLibelleCategorie().compareTo(d1.getLibelleCategorie()))
+                .collect(Collectors.toList());
+        return categorieProduitList;
+    }
+
     public String deleteCategorie(String id){
         CategorieProduit categorieProduit = categorieProduitRepository.findById(id).orElseThrow(null);
 

@@ -77,6 +77,12 @@ public class CategorieController {
         return new ResponseEntity<>(categorieService.getAllCategorieByIdFiliere(id), HttpStatus.OK);
     }
 
+    @GetMapping("/allCategorieByLibelleFiliere/{libelle}")
+    @Operation(summary="Récuperation de tout les catégories de categorie de produit en fonction du libelle de filiere")
+    public ResponseEntity<List<CategorieProduit>> getAllCategorieByLibFiliere(@PathVariable String libelle) {
+        return new ResponseEntity<>(categorieService.getAllCategorieByLibelle(libelle), HttpStatus.OK);
+    }
+
     // @GetMapping("/allCategorieByMagasin/{id}")
     // @Operation(summary="Récuperation de tout les catégories de categorie de produit en fonction de l'id de du magasin")
     // public ResponseEntity<List<CategorieProduit>> getAllCategorieByIdMagasin(@PathVariable String id) {

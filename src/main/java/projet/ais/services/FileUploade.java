@@ -9,6 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.ByteArrayOutputStream;
 
+import org.slf4j.*;
+// import org.slf4j.LoggerFactory;
+
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 
@@ -19,39 +22,43 @@ public class FileUploade {
     private static final int FTP_PORT = 21; // Mise à jour si nécessaire
     private static final String FTP_USER = "default_koumi";
     private static final String FTP_PASSWORD = "H8hd#e3KejJR";
+    int retryCount = 3; 
     // private static final String FTP_IMAGES_DIRECTORY = "/images";
     
     @Async
     public String uploadImageToFTP(Path imagePath, String imageName) throws Exception {
         FTPClient ftpClient = new FTPClient();
-        try {
-            ftpClient.connect(FTP_SERVER, FTP_PORT);
-            ftpClient.login(FTP_USER, FTP_PASSWORD);
-            ftpClient.enterLocalPassiveMode();
-    
-            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-    
-            try (InputStream inputStream = Files.newInputStream(imagePath)) {
-                String remoteFilePath = "/web/koumi-server/images/" + imageName; // Chemin d'acc                                                         ès complet sur le serveur FTP
-                boolean uploadResult = ftpClient.storeFile(remoteFilePath, inputStream);
-                if (uploadResult) {
-                    return "ftp://" + FTP_USER + "@" + FTP_SERVER + remoteFilePath; // Retourne le lien complet de l'image en ligne
-                } else {
-                    throw new Exception("Erreur lors du chargement de l'image sur le serveur FTP.");
-                }
-            }
-        } catch (IOException e) {
-            throw new Exception("Erreur lors de la connexion au serveur FTP : " + e.getMessage());
-        } finally {
+        while (retryCount > 0) {
             try {
-                if (ftpClient.isConnected()) {
-                    ftpClient.logout();
-                    ftpClient.disconnect();
+                ftpClient.connect(FTP_SERVER, FTP_PORT);
+                ftpClient.login(FTP_USER, FTP_PASSWORD);
+                ftpClient.enterLocalPassiveMode();
+        
+                ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+        
+                try (InputStream inputStream = Files.newInputStream(imagePath)) {
+                    String remoteFilePath = "/web/koumi-server/images/" + imageName; // Chemin d'acc                                                         ès complet sur le serveur FTP
+                    boolean uploadResult = ftpClient.storeFile(remoteFilePath, inputStream);
+                    if (uploadResult) {
+                        return "ftp://" + FTP_USER + "@" + FTP_SERVER + remoteFilePath; // Retourne le lien complet de l'image en ligne
+                    } else {
+                        throw new Exception("Erreur lors du chargement de l'image sur le serveur FTP.");
+                    }
                 }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
+            } catch (IOException e) {
+                throw new Exception("Erreur lors de la connexion au serveur FTP : " + e.getMessage());
+            } finally {
+                try {
+                    if (ftpClient.isConnected()) {
+                        ftpClient.logout();
+                        ftpClient.disconnect();
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            } 
+                }
+                throw new Exception("Échec du téléchargement du fichier après plusieurs tentatives.");
     }
       // Méthode pour récupérer une image à partir de son nom
       public byte[] getImageByName(String imageName) throws IOException {
@@ -91,34 +98,37 @@ public class FileUploade {
 
     public String uploadAudioToFTP(Path audioPath, String audioName) throws Exception {
         FTPClient ftpClient = new FTPClient();
-        try {
-            ftpClient.connect(FTP_SERVER, FTP_PORT);
-            ftpClient.login(FTP_USER, FTP_PASSWORD);
-            ftpClient.enterLocalPassiveMode();
-    
-            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-    
-            try (InputStream inputStream = Files.newInputStream(audioPath)) {
-                String remoteFilePath = "/web/koumi-server/audio/" + audioName; // Chemin d'accès complet sur le serveur FTP
-                boolean uploadResult = ftpClient.storeFile(remoteFilePath, inputStream);
-                if (uploadResult) {
-                    return "ftp://" + FTP_USER + "@" + FTP_SERVER + remoteFilePath; // Retourne le lien complet du fichier audio en ligne
-                } else {
-                    throw new Exception("Erreur lors du chargement du fichier audio sur le serveur FTP.");
-                }
-            }
-        } catch (IOException e) {
-            throw new Exception("Erreur lors de la connexion au serveur FTP : " + e.getMessage());
-        } finally {
+        while (retryCount > 0) {
             try {
-                if (ftpClient.isConnected()) {
-                    ftpClient.logout();
-                    ftpClient.disconnect();
+                ftpClient.connect(FTP_SERVER, FTP_PORT);
+                ftpClient.login(FTP_USER, FTP_PASSWORD);
+                ftpClient.enterLocalPassiveMode();
+        
+                ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+        
+                try (InputStream inputStream = Files.newInputStream(audioPath)) {
+                    String remoteFilePath = "/web/koumi-server/audio/" + audioName; // Chemin d'accès complet sur le serveur FTP
+                    boolean uploadResult = ftpClient.storeFile(remoteFilePath, inputStream);
+                    if (uploadResult) {
+                        return "ftp://" + FTP_USER + "@" + FTP_SERVER + remoteFilePath; // Retourne le lien complet du fichier audio en ligne
+                    } else {
+                        throw new Exception("Erreur lors du chargement du fichier audio sur le serveur FTP.");
+                    }
                 }
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            } catch (IOException e) {
+                throw new Exception("Erreur lors de la connexion au serveur FTP : " + e.getMessage());
+            } finally {
+                try {
+                    if (ftpClient.isConnected()) {
+                        ftpClient.logout();
+                        ftpClient.disconnect();
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
-        }
+                }
+                throw new Exception("Échec du téléchargement du fichier après plusieurs tentatives.");
     }
     
     public byte[] getAudioByName(String audioName) throws IOException {
@@ -155,36 +165,43 @@ public class FileUploade {
             }
         }
     }
+    
+    
     public String uploadVideoToFTP(Path videoPath, String videoName) throws Exception {
         FTPClient ftpClient = new FTPClient();
-        try {
-            ftpClient.connect(FTP_SERVER, FTP_PORT);
-            ftpClient.login(FTP_USER, FTP_PASSWORD);
-            ftpClient.enterLocalPassiveMode();
-    
-            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-    
-            try (InputStream inputStream = Files.newInputStream(videoPath)) {
-                String remoteFilePath = "/web/koumi-server/videos/" + videoName; // Chemin d'accès complet sur le serveur FTP
-                boolean uploadResult = ftpClient.storeFile(remoteFilePath, inputStream);
-                if (uploadResult) {
-                    return "ftp://" + FTP_USER + "@" + FTP_SERVER + remoteFilePath; // Retourne le lien complet de la vidéo en ligne
-                } else {
-                    throw new Exception("Erreur lors du chargement de la vidéo sur le serveur FTP.");
-                }
-            }
-        } catch (IOException e) {
-            throw new Exception("Erreur lors de la connexion au serveur FTP : " + e.getMessage());
-        } finally {
+
+        while (retryCount > 0) {
             try {
-                if (ftpClient.isConnected()) {
-                    ftpClient.logout();
-                    ftpClient.disconnect();
+                ftpClient.connect(FTP_SERVER, FTP_PORT);
+                ftpClient.login(FTP_USER, FTP_PASSWORD);
+                ftpClient.enterLocalPassiveMode();
+        
+                ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+        
+                try (InputStream inputStream = Files.newInputStream(videoPath)) {
+                    String remoteFilePath = "/web/koumi-server/videos/" + videoName;
+                    // logger.info("Début du téléchargement de la video : {}", videoName);
+                    boolean uploadResult = ftpClient.storeFile(remoteFilePath, inputStream);
+                    if (uploadResult) {
+                        return "ftp://" + FTP_USER + "@" + FTP_SERVER + remoteFilePath; // Retourne le lien complet de la vidéo en ligne
+                    } else {
+                        throw new Exception("Erreur lors du chargement de la vidéo sur le serveur FTP.");
+                    }
                 }
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            } catch (IOException e) {
+                throw new Exception("Erreur lors de la connexion au serveur FTP : " + e.getMessage());
+            } finally {
+                try {
+                    if (ftpClient.isConnected()) {
+                        ftpClient.logout();
+                        ftpClient.disconnect();
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
-        }
+                }
+                throw new Exception("Échec du téléchargement du fichier après plusieurs tentatives.");
     }
     
     public byte[] getVideoByName(String videoName) throws IOException {

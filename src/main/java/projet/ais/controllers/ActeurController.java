@@ -67,7 +67,7 @@ public class ActeurController {
 
     @PostMapping("/create")
     @Operation(summary = "création d'un acteur")
-     public ResponseEntity<Acteur> createActeur(
+    public ResponseEntity<Acteur> createActeur(
             @Valid @RequestParam("acteur") String acteurString,
             @RequestParam(value = "image1", required = false) MultipartFile imageFile1,
             @RequestParam(value = "image2", required = false) MultipartFile imageFile2)
@@ -246,7 +246,7 @@ public class ActeurController {
             
 
 
-                @GetMapping("/sendOtpCodeEmail")
+    @GetMapping("/sendOtpCodeEmail")
     @Operation(summary = "Verifier l'email de l'utilisateur en lui envoyant un code de verification à son adresse email pour la procedure de changement de son mot de pass")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "L'email exist et le code a été envoyer avec succès", content = {

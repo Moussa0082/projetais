@@ -43,8 +43,11 @@ public interface IntrantRepository extends JpaRepository<Intrant , String> {
     //Intrant par libelle categorie
     Page<Intrant> findAllByCategorieProduit_filiere_libelleFiliere(String libelle , Pageable pageable);
     
-    Page<Intrant> findAllByCategorieProduit_filiere_LibelleFiliereAndPays(String libelleFiliere, String pays, Pageable pageable);
-    Page<Intrant> findAllByCategorieProduit_filiere_LibelleFiliereAndPaysNot(String libelleFiliere, String pays, Pageable pageable);
+    Page<Intrant> findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPays(String libelleFiliere, boolean statutIntrant, boolean statutActeur, String pays, Pageable pageable);
+    Page<Intrant> findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysNot(String libelleFiliere,boolean statutIntrant, boolean statutActeur, String pays, Pageable pageable);
+
+    Page<Intrant> findAllByCategorieProduit_idCategorieProduitAndCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPays(String idCategorie ,String libelleFiliere, boolean statutIntrant, boolean statutActeur, String pays, Pageable pageable);
+    Page<Intrant> findAllByCategorieProduit_idCategorieProduitAndCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysNot(String idCategorie ,String libelleFiliere,boolean statutIntrant, boolean statutActeur, String pays, Pageable pageable);
     // Page<Intrant> findAllByCategorieProduit_filiere_LibelleFiliere(String libelleFiliere, Pageable pageable);
 
     //Intrant par libelle categorie et  par pays
@@ -54,10 +57,10 @@ public interface IntrantRepository extends JpaRepository<Intrant , String> {
     Page<Intrant> findAllByCategorieProduit_filiere_libelleFiliereAndStatutIntrantTrueAndActeurStatutActeurTrueAndPaysNot(String pays , String libelle , Pageable pageable);
     
     // Collection<Intrant> findByNomIntrant(String nomIntrant);
-         
+        
          //ancien
-         Page<Intrant> findByCategorieProduit_IdCategorieProduitAndStatutIntrantAndActeurStatutActeur(String idCategorieProduit, boolean statutIntrant,
-         boolean statutActeur,  Pageable pageable);
+        Page<Intrant> findByCategorieProduit_IdCategorieProduitAndStatutIntrantAndActeurStatutActeur(String idCategorieProduit, boolean statutIntrant,
+        boolean statutActeur,  Pageable pageable);
 
     Page<Intrant> findByCategorieProduit_IdCategorieProduitAndStatutIntrantAndPaysAndActeurStatutActeur(String idCategorieProduit, String pays, boolean statutIntrant,
          boolean statutActeur,  Pageable pageable);

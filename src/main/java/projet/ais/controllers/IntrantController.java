@@ -208,6 +208,17 @@ public class IntrantController {
         return ResponseEntity.ok().body(intrants);
     }
 
+    @GetMapping("/listeIntrantByLibelleFiliereAndIcategorie")
+    public ResponseEntity<Page<Intrant>> getIntrantsByLibelleFiAndCat(
+        @RequestParam() String idCategorie,
+        @RequestParam() String libelle,
+        @RequestParam() String pays,
+        @RequestParam() int page,
+        @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Intrant> intrants = intrantService.getAllIntrantByLibelleFiliereAndIdCategorie(idCategorie,libelle,pays, pageable);
+        return ResponseEntity.ok().body(intrants);
+    }
     @GetMapping("/listeIntrantByLibelleCategorie")
     public ResponseEntity<Page<Intrant>> getIntrantsByLibelleCategorie(
         @RequestParam() String libelle,
@@ -218,16 +229,6 @@ public class IntrantController {
         Page<Intrant> intrants = intrantService.getAllIntrantByLibelleCategorie(libelle,pays, pageable);
         return ResponseEntity.ok().body(intrants);
     }
-    // @GetMapping("/listeIntrantByLibelleCategorie")
-    // public ResponseEntity<Page<Intrant>> getIntrantsByLibelleCategorie(
-    //     @RequestParam() String libelle,
-    //     @RequestParam() String pays,
-    //     @RequestParam() int page,
-    //     @RequestParam() int size) {
-    //     Pageable pageable = PageRequest.of(page, size);
-    //     Page<Intrant> intrants = intrantService.getAllIntrantByLibelleCategorie(libelle,pays, pageable);
-    //     return ResponseEntity.ok().body(intrants);
-    // }
 
       
          //liste intrant pas acteur

@@ -31,6 +31,7 @@ import projet.ais.models.Forme;
 import projet.ais.models.Intrant;
 import projet.ais.models.Magasin;
 import projet.ais.models.Materiel;
+import projet.ais.models.Stock;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.MaterielRepository;
 import java.time.format.DateTimeFormatter;
@@ -138,56 +139,103 @@ public class MaterielService {
     }
 
 
-
-    public Page<Materiel> getAllMaterielPageableByPays(String niveau3PaysActeur, Pageable pageable) {
-        Page<Materiel> materielByPays = materielRepository.findAllByStatutTrueAndPaysAndActeurStatutActeurTrueAndSpeculationIsNull(niveau3PaysActeur.trim().toLowerCase(), pageable);
+    ///////get materiel
+    // public Page<Materiel> getAllMaterielPageableByPays(String niveau3PaysActeur, Pageable pageable) {
+    //     Page<Materiel> materielByPays = materielRepository.findAllByStatutTrueAndPaysAndActeurStatutActeurTrueAndSpeculationIsNull(niveau3PaysActeur.trim().toLowerCase(), pageable);
         
-        if (!materielByPays.hasContent()) {
-            System.out.println("Pas d'autres materiels à fetch pour le pays " + niveau3PaysActeur);
-            return materielRepository.findAllByStatutAndActeurStatutActeurAndSpeculationIsNull(true, true, pageable);
-        } else {
-            System.out.println("Materiels fetch pour le pays " + niveau3PaysActeur);
-            List<Materiel> materielsList = new ArrayList<>(materielByPays.getContent());
+    //     if (!materielByPays.hasContent()) {
+    //         System.out.println("Pas d'autres materiels à fetch pour le pays " + niveau3PaysActeur);
+    //         return materielRepository.findAllByStatutAndActeurStatutActeurAndSpeculationIsNull(true, true, pageable);
+    //     } else {
+    //         System.out.println("Materiels fetch pour le pays " + niveau3PaysActeur);
+    //         List<Materiel> materielsList = new ArrayList<>(materielByPays.getContent());
 
-            // Si le nombre de materiels est inférieur au nombre requis, compléter avec des materiels d'autres pays
-            if (materielsList.size() < pageable.getPageSize()) {
-                Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - materielsList.size());
-                Page<Materiel> materielComplement = materielRepository.findAllByStatutTrueAndActeurStatutActeurTrueAndPaysNotAndSpeculationIsNull(niveau3PaysActeur.trim().toLowerCase(), complementPageable);
-                materielsList.addAll(materielComplement.getContent());
-            }
+    //         // Si le nombre de materiels est inférieur au nombre requis, compléter avec des materiels d'autres pays
+    //         if (materielsList.size() < pageable.getPageSize()) {
+    //             Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - materielsList.size());
+    //             Page<Materiel> materielComplement = materielRepository.findAllByStatutTrueAndActeurStatutActeurTrueAndPaysNotAndSpeculationIsNull(niveau3PaysActeur.trim().toLowerCase(), complementPageable);
+    //             materielsList.addAll(materielComplement.getContent());
+    //         }
 
-            return new PageImpl<>(materielsList, pageable, materielByPays.getTotalElements() + materielsList.size());
+    //         return new PageImpl<>(materielsList, pageable, materielByPays.getTotalElements() + materielsList.size());
+    //     }
+    // }
+
+    public Page<Materiel> getAllMaterielPageableByPays(String pays, Pageable pageable) {
+       
+        String paysNormalise = pays.trim().toLowerCase();
+        
+        // Récupérer les stocks pour le pays spécifié
+        Page<Materiel> materielByPays = materielRepository.findAllByStatutTrueAndPaysAndActeurStatutActeurTrueAndSpeculationIsNull(paysNormalise, pageable);
+        
+        List<Materiel> materielList = new ArrayList<>(materielByPays.getContent());
+        long totalElements = materielByPays.getTotalElements();
+    
+        // Si le nombre de stocks est inférieur à la taille de la page, compléter avec des stocks d'autres pays
+        if (materielList.size() < pageable.getPageSize()) {
+            Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - materielList.size());
+            Page<Materiel> stocksComplement =  materielRepository.findAllByStatutTrueAndActeurStatutActeurTrueAndPaysNotAndSpeculationIsNull(paysNormalise, complementPageable);
+            materielList.addAll(stocksComplement.getContent());
+            totalElements += stocksComplement.getTotalElements();
         }
+    
+        // Créer et retourner une nouvelle page avec la liste complète des stocks et le pageable original
+        return new PageImpl<>(materielList, pageable, totalElements);
     }
+
 /////////materiel par filiere
-public Page<Materiel> getAllMaterielByLibelleFiliere(String libelleFiliere, String pays, Pageable pageable) {
-    // Première requête pour récupérer les matériels pour le pays spécifique
+// public Page<Materiel> getAllMaterielByLibelleFiliere(String libelleFiliere, String pays, Pageable pageable) {
+//     // Première requête pour récupérer les matériels pour le pays spécifique
+//     Page<Materiel> materielByPays = materielRepository.findBySpeculation_CategorieProduit_Filiere_LibelleFiliereAndPays(
+//         libelleFiliere, pays.trim().toLowerCase(), pageable);
+
+//     // Si aucun matériel trouvé pour le pays spécifique
+//     if (!materielByPays.hasContent()) {
+//         System.out.println("Pas d'autres materiels à fetch pour le pays " + pays);
+//         // Récupérer les matériels pour d'autres pays
+//         return materielRepository.findAllBySpeculation_CategorieProduit_Filiere_LibelleFiliereAndPaysNot(
+//             libelleFiliere, pays.trim().toLowerCase(), pageable);
+//     } else {
+//         System.out.println("Materiels fetch pour le pays " + pays);
+//         List<Materiel> materielsList = new ArrayList<>(materielByPays.getContent());
+
+//         // Si le nombre de matériels est inférieur au nombre requis, compléter avec des matériels d'autres pays
+//         if (materielsList.size() < pageable.getPageSize()) {
+//             Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - materielsList.size());
+//             Page<Materiel> materielComplement = materielRepository.findAllBySpeculation_CategorieProduit_Filiere_LibelleFiliereAndPaysNot(
+//                 libelleFiliere, pays.trim().toLowerCase(), complementPageable);
+//             materielsList.addAll(materielComplement.getContent());
+//         }
+
+//         return new PageImpl<>(materielsList, pageable, materielByPays.getTotalElements() + materielsList.size());
+//     }
+// }
+
+    //get materiel par filiere    
+public Page<Materiel> getAllMaterielByLibelleFiliere(String libelleFiliere,String pays, Pageable pageable) {
+       
+    String paysNormalise = pays.trim().toLowerCase();
+    
+    // Récupérer les stocks pour le pays spécifié
     Page<Materiel> materielByPays = materielRepository.findBySpeculation_CategorieProduit_Filiere_LibelleFiliereAndPays(
-        libelleFiliere, pays.trim().toLowerCase(), pageable);
+        libelleFiliere, paysNormalise, pageable);
 
-    // Si aucun matériel trouvé pour le pays spécifique
-    if (!materielByPays.hasContent()) {
-        System.out.println("Pas d'autres materiels à fetch pour le pays " + pays);
-        // Récupérer les matériels pour d'autres pays
-        return materielRepository.findAllBySpeculation_CategorieProduit_Filiere_LibelleFiliereAndPaysNot(
-            libelleFiliere, pays.trim().toLowerCase(), pageable);
-    } else {
-        System.out.println("Materiels fetch pour le pays " + pays);
-        List<Materiel> materielsList = new ArrayList<>(materielByPays.getContent());
+    List<Materiel> materielList = new ArrayList<>(materielByPays.getContent());
+    long totalElements = materielByPays.getTotalElements();
 
-        // Si le nombre de matériels est inférieur au nombre requis, compléter avec des matériels d'autres pays
-        if (materielsList.size() < pageable.getPageSize()) {
-            Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - materielsList.size());
-            Page<Materiel> materielComplement = materielRepository.findAllBySpeculation_CategorieProduit_Filiere_LibelleFiliereAndPaysNot(
-                libelleFiliere, pays.trim().toLowerCase(), complementPageable);
-            materielsList.addAll(materielComplement.getContent());
-        }
-
-        return new PageImpl<>(materielsList, pageable, materielByPays.getTotalElements() + materielsList.size());
+    // Si le nombre de stocks est inférieur à la taille de la page, compléter avec des stocks d'autres pays
+    if (materielList.size() < pageable.getPageSize()) {
+        Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - materielList.size());
+        Page<Materiel> stocksComplement = materielRepository.findAllBySpeculation_CategorieProduit_Filiere_LibelleFiliereAndPaysNot(
+            libelleFiliere, paysNormalise, complementPageable);
+        materielList.addAll(stocksComplement.getContent());
+        totalElements += stocksComplement.getTotalElements();
     }
+
+    // Créer et retourner une nouvelle page avec la liste complète des stocks et le pageable original
+    return new PageImpl<>(materielList, pageable, totalElements);
 }
 
-    
 
     @Transactional
     public Page<Materiel> getAllMaterielPageableByPaysByCategorie(String idTypeMateriel, String niveau3PaysActeur, Pageable pageable) {

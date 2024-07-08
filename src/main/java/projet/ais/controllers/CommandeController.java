@@ -63,7 +63,7 @@ public class CommandeController {
         optionalQuantitesIntrants
     );
           
-return ResponseEntity.status(HttpStatus.OK).body("Commande passer avec succes");
+        return ResponseEntity.status(HttpStatus.OK).body("Commande passer avec succes");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la création des commandes : " + e.getMessage());
         }
@@ -100,8 +100,14 @@ return ResponseEntity.status(HttpStatus.OK).body("Commande passer avec succes");
             }
         }
 
+        //confirmation commande
+        @PutMapping("/confirmer/{id}")
+        public Commande confCommandes(@PathVariable String id) {
+            return commandeService.confirmationCommande(id);
+        }
 
-          
+
+    
     @GetMapping("/{commandeId}/details")
     public ResponseEntity<List<DetailCommande>> getDetailsByCommandeId(@PathVariable String commandeId) {
         List<DetailCommande> details = commandeService.getDetailsByCommandeId(commandeId);

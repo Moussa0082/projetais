@@ -36,6 +36,7 @@ public class Acteur {
     @Column(name = "reset_token", nullable = true)
 	private String resetToken;
 
+
     @Column(nullable = true)
     private String tokenCreationDate;
 
