@@ -106,11 +106,7 @@ public class Acteur {
     private List<Stock> stockList;
     
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "acteur_speculation",
-        joinColumns = @JoinColumn(name = "id_acteur"),
-        inverseJoinColumns = @JoinColumn(name = "id_speculation"))
-    private List<Speculation> speculations;
+   
   
     @OneToMany(mappedBy = "acteur")
     @JsonIgnore
@@ -150,7 +146,11 @@ public class Acteur {
     private List<ZoneProduction> zoneProductions;
 
 
-
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "acteur_speculation",
+        joinColumns = @JoinColumn(name = "id_acteur"),
+        inverseJoinColumns = @JoinColumn(name = "id_speculation"))
+    private List<Speculation> speculation;
   
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "acteur_type_acteur",

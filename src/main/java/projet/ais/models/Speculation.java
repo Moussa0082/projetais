@@ -61,7 +61,7 @@ public class Speculation {
     // @JsonIgnore
     // private List<Intrant> intrants;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "speculation")
     @JsonIgnore
     private List<Acteur> acteur;
 
@@ -70,5 +70,18 @@ public class Speculation {
     (mappedBy = "speculation")
     @JsonIgnore
     private List<Superficie> superficies;
+
+    public  Speculation(){}
+
+    public Speculation(String idSpeculation,String codeSpeculation,String nomSpeculation,String descriptionSpeculation,boolean statutSpeculation, CategorieProduit categorieProduit,String dateAjout, String dateModif,String personneModif){
+        this.idSpeculation = idSpeculation;
+        this.codeSpeculation = codeSpeculation;
+        this.nomSpeculation = nomSpeculation;
+        this.descriptionSpeculation=descriptionSpeculation;
+        this.categorieProduit = categorieProduit;
+        this.statutSpeculation = statutSpeculation;
+        this.dateAjout = dateAjout;
+        this.dateModif = dateModif;
+    }
 }
 

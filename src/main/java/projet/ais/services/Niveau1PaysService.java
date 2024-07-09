@@ -146,7 +146,7 @@ private String genererChaineAleatoire(String source, int longueur) {
                 .stream().sorted((d1, d2) -> d2.getNomN1().compareTo(d1.getNomN1()))
                 .collect(Collectors.toList());
         return niveau1PaysList;
-    } 
+    }
 
       //Liste Niveau1Pays par pays
     public List<Niveau1Pays> getAllNiveau1PaysByIdPays(String idPays){

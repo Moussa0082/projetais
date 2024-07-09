@@ -157,6 +157,12 @@ private MediaType detectContentType(String imageName) {
     return MediaType.APPLICATION_OCTET_STREAM;
 }
   
+
+@PutMapping("/{id}/quantite")
+public ResponseEntity<Stock> updateQteStocks(@PathVariable String id, @RequestBody double newQte) throws Exception {
+    return new ResponseEntity<>(stockService.updateStockQteStocks(id, newQte), HttpStatus.OK);
+}
+
     @PutMapping("/updateQuantiteStock/{idStock}")
     @Operation(summary = "Modification de stock")
     public ResponseEntity<Stock> updatedQuantiteStock( @RequestBody Stock stock ,@PathVariable String idStock) throws Exception {

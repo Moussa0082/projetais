@@ -600,6 +600,21 @@ private String generateQRCodeImage(String qrCodeData) {
             return stockRepository.save(stocks);
     }
 
+    public Stock updateStockQteStocks(String id, double nouvelleQuantite) throws Exception {
+        Stock stock = stockRepository.findById(id).orElseThrow(() -> new Exception("Stock non trouvé pour l'ID : " + id));
+    
+        stock.setQuantiteStock(nouvelleQuantite);
+    
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+    
+        stock.setDateModif(formattedDateTime);
+    
+        return stockRepository.save(stock);
+    }
+    
     public Stock updateQteStock(Stock stock,String id) throws Exception {
         Stock stocks = stockRepository.findById(id).orElseThrow(null);
 

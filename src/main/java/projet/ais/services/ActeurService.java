@@ -10,6 +10,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -261,7 +263,7 @@ public class ActeurService {
             
             // sendMessageToAdmin(savedActeur);
 
-            System.out.println("Acteur :" + savedActeur.toString());
+            // System.out.println("Acteur :" + savedActeur.toString());
                      
             return savedActeur;
                
@@ -658,76 +660,163 @@ public class ActeurService {
     }
     
     //créer un user
-    public Acteur updateActeur(Acteur acteur, String id, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
-        // TypeActeur typeActeur = typeActeurRepository.findByIdTypeActeur(acteur.getTypeActeur());
-        Acteur ac = acteurRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Acteur non trouver avec l'id " + id));
+    // public Acteur updateActeur(Acteur acteur, String id, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
+    //     // TypeActeur typeActeur = typeActeurRepository.findByIdTypeActeur(acteur.getTypeActeur());
+    //     Acteur ac = acteurRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Acteur non trouver avec l'id " + id));
         
-                     // Traitement du fichier image siege acteur
-            if (imageFile1 != null) {
-                String imageLocation = "/ais";
-                try {
-                    Path imageRootLocation = Paths.get(imageLocation);
-                    if (!Files.exists(imageRootLocation)) {
-                        Files.createDirectories(imageRootLocation);
-                    }
+    //                  // Traitement du fichier image siege acteur
+    //         if (imageFile1 != null) {
+    //             String imageLocation = "/ais";
+    //             try {
+    //                 Path imageRootLocation = Paths.get(imageLocation);
+    //                 if (!Files.exists(imageRootLocation)) {
+    //                     Files.createDirectories(imageRootLocation);
+    //                 }
     
-                    String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
-                    Path imagePath = imageRootLocation.resolve(imageName);
-                    Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+    //                 String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
+    //                 Path imagePath = imageRootLocation.resolve(imageName);
+    //                 Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+    //                 String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
 
-                    ac.setPhotoSiegeActeur(imageName);
+    //                 ac.setPhotoSiegeActeur(imageName);
 
-                } catch (IOException e) {
-                    throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
-                }
-            }
-            // image logo acteur 
-            if (imageFile2 != null) {
-                String imageLocation = "/ais";
-                try {
-                    Path imageRootLocation = Paths.get(imageLocation);
-                    if (!Files.exists(imageRootLocation)) {
-                        Files.createDirectories(imageRootLocation);
-                    }
+    //             } catch (IOException e) {
+    //                 throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
+    //             }
+    //         }
+    //         // image logo acteur 
+    //         if (imageFile2 != null) {
+    //             String imageLocation = "/ais";
+    //             try {
+    //                 Path imageRootLocation = Paths.get(imageLocation);
+    //                 if (!Files.exists(imageRootLocation)) {
+    //                     Files.createDirectories(imageRootLocation);
+    //                 }
     
-                    String imageName = UUID.randomUUID().toString() + "_" + imageFile2.getOriginalFilename();
-                    Path imagePath = imageRootLocation.resolve(imageName);
-                    Files.copy(imageFile2.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
-                    ac.setLogoActeur(imageName);
-                } catch (IOException e) {
-                    throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
-                }
-            }
+    //                 String imageName = UUID.randomUUID().toString() + "_" + imageFile2.getOriginalFilename();
+    //                 Path imagePath = imageRootLocation.resolve(imageName);
+    //                 Files.copy(imageFile2.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+    //                 String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
+    //                 ac.setLogoActeur(imageName);
+    //             } catch (IOException e) {
+    //                 throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
+    //             }
+    //         }
             
-                    // Date d = new Date(); 
-                    // SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    //  String dt = sdf.format(d);
-        ac.setDateModif(LocalDateTime.now().toString());
+    //     ac.setAdresseActeur(acteur.getAdresseActeur());
+    //     ac.setNomActeur(acteur.getNomActeur());
+    //     ac.setTelephoneActeur(acteur.getTelephoneActeur());
+    //     ac.setWhatsAppActeur(acteur.getWhatsAppActeur());
+    //     ac.setLocaliteActeur(acteur.getLocaliteActeur());
+    //     ac.setEmailActeur(acteur.getEmailActeur());
+    //     ac.setNiveau3PaysActeur(acteur.getNiveau3PaysActeur());
+    
+    //     String pattern = "yyyy-MM-dd HH:mm";
+    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+    //     LocalDateTime now = LocalDateTime.now();
+    //     String formattedDateTime = now.format(formatter);
+    //     ac.setDateAjout(formattedDateTime);
+
+    //    if(acteur.getTypeActeur() != null){
+    //     ac.setTypeActeur(acteur.getTypeActeur());
+    //    }
+
+    //     if(acteur.getSpeculations() != null){
+    //         ac.setSpeculations(acteur.getSpeculations());
+    //     }
+    // // Mettez à jour le mot de passe si un nouveau mot de passe est fourni
+    //     if (acteur.getPassword() != null) {
+    //     String hashedPassword = passwordEncoder.encode(acteur.getPassword());
+    //     ac.setPassword(hashedPassword);
+    //     }
+
+    //     System.out.println("acteur service : "+ac);
+    //     return acteurRepository.save(ac);
+        
+    // }
+    
+    @Transactional
+    public Acteur updateActeur(Acteur acteur, String id, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
+        Acteur ac = acteurRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Acteur non trouvé avec l'id " + id));
+    
+        // Traitement du fichier image siège acteur
+        if (imageFile1 != null) {
+            String imageLocation = "/ais";
+            try {
+                Path imageRootLocation = Paths.get(imageLocation);
+                if (!Files.exists(imageRootLocation)) {
+                    Files.createDirectories(imageRootLocation);
+                }
+    
+                String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
+                Path imagePath = imageRootLocation.resolve(imageName);
+                Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                String onlineImagePath = fileUploade.uploadImageToFTP(imagePath, imageName);
+                ac.setPhotoSiegeActeur(imageName);
+    
+            } catch (IOException e) {
+                throw new Exception("Erreur lors du traitement du fichier image siège : " + e.getMessage());
+            }
+        }
+    
+        // Traitement du fichier image logo acteur
+        if (imageFile2 != null) {
+            String imageLocation = "/ais";
+            try {
+                Path imageRootLocation = Paths.get(imageLocation);
+                if (!Files.exists(imageRootLocation)) {
+                    Files.createDirectories(imageRootLocation);
+                }
+    
+                String imageName = UUID.randomUUID().toString() + "_" + imageFile2.getOriginalFilename();
+                Path imagePath = imageRootLocation.resolve(imageName);
+                Files.copy(imageFile2.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                String onlineImagePath = fileUploade.uploadImageToFTP(imagePath, imageName);
+                ac.setLogoActeur(imageName);
+            } catch (IOException e) {
+                throw new Exception("Erreur lors du traitement du fichier image logo : " + e.getMessage());
+            }
+        }
+    
+        // Mise à jour des autres champs
         ac.setAdresseActeur(acteur.getAdresseActeur());
         ac.setNomActeur(acteur.getNomActeur());
         ac.setTelephoneActeur(acteur.getTelephoneActeur());
         ac.setWhatsAppActeur(acteur.getWhatsAppActeur());
         ac.setLocaliteActeur(acteur.getLocaliteActeur());
         ac.setEmailActeur(acteur.getEmailActeur());
+        ac.setNiveau3PaysActeur(acteur.getNiveau3PaysActeur());
     
-        ac.setTypeActeur(acteur.getTypeActeur());
-
-        if(acteur.getSpeculations() != null){
-            ac.setSpeculations(acteur.getSpeculations());
+        String pattern = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDateTime = now.format(formatter);
+        ac.setDateAjout(formattedDateTime);
+    
+        if (acteur.getTypeActeur() != null) {
+            ac.setTypeActeur(acteur.getTypeActeur());
         }
-
-    // Mettez à jour le mot de passe si un nouveau mot de passe est fourni
-    if (acteur.getPassword() != null) {
-        String hashedPassword = passwordEncoder.encode(acteur.getPassword());
-        ac.setPassword(hashedPassword);
-    }
+    
+        if (acteur.getSpeculation() != null) {
+            ac.setSpeculation(acteur.getSpeculation());
+        }
+    
+        // Mise à jour du mot de passe si fourni
+        if (acteur.getPassword() != null) {
+            String hashedPassword = passwordEncoder.encode(acteur.getPassword());
+            ac.setPassword(hashedPassword);
+        }
+    
+        System.out.println("acteur service : " + ac.toString());
+    
+        try {
             return acteurRepository.save(ac);
-        
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la sauvegarde de l'acteur : " + e.getMessage());
+            throw new Exception("Erreur lors de la mise à jour de l'acteur : " + e.getMessage());
+        }
     }
     
-
        //Recuperer la liste des Admins
      public List<Acteur> getAllActeur(){
 
