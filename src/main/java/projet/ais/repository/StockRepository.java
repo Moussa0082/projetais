@@ -19,7 +19,7 @@ import java.util.*;
 public interface StockRepository extends JpaRepository<Stock, String>{
     
     // Stock findByIdStock(String id);
-    
+     
     Optional<Stock> findByNomProduit(String nomProduit);
     List<Stock> findByActeurIdActeur(String id);
     List<Stock> findBySpeculationIdSpeculation(String id);
@@ -60,6 +60,10 @@ public interface StockRepository extends JpaRepository<Stock, String>{
             Pageable pageable);
     Page<Stock> findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndStatutSotckAndActeurStatutActeur(
             String idCategorieProduit, String idMagasin, boolean statutSotck, boolean statutActeur,Pageable pageable);
+    
+            Page<Stock> findBySpeculation_CategorieProduit_IdCategorieProduit_AndActeur_IdActeur(
+            String idCategorieProduit, String idActeur,Pageable pageable);
+            
     List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasinAndStatutSotck(
             String idCategorieProduit, String idMagasin, boolean statutSotck, Pageable pageable);
    Page<Stock> findByMagasin_IdMagasinAndStatutSotckAndActeurStatutActeur(String idMagasin, boolean statutSotck, boolean statutActeur,Pageable pageable);

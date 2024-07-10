@@ -807,7 +807,7 @@ public class ActeurService {
             ac.setPassword(hashedPassword);
         }
     
-        System.out.println("acteur service : " + ac.toString());
+        System.out.println("acteur tel : " + ac.getTelephoneActeur());
     
         try {
             return acteurRepository.save(ac);

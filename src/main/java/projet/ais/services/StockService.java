@@ -245,40 +245,6 @@ private String generateQRCodeImage(String qrCodeData) {
 
 }
 
-// public  BufferedImage generateQRCodeImage(String barcodeText) throws Exception {
-//     QRCodeWriter barcodeWriter = new QRCodeWriter();
-//     BitMatrix bitMatrix = 
-//       barcodeWriter.encode(barcodeText, BarcodeFormat.QR_CODE, 200, 200);
-
-//     return MatrixToImageWriter.toBufferedImage(bitMatrix);
-// }
-
-
-    // public Page<Stock> getAllStocksPageable(Pageable pageable) {
-    //     return stockRepository.findAllByStatutSotckAndActeurStatutActeur(true, true,pageable);
-    // }
-
-
-    //    @Transactional
-    // public Page<Stock> getAllStockPageableByPaysByCategorie(CategorieProduit categorie, String niveau3PaysActeur, Pageable pageable) {
-    //     // Fetch stock from the specified country
-    //     Page<Stock> stocksByPays = stockRepository.findBySpeculation_CategorieProduitAndPaysAndStatutSotckAndActeurStatutActeur(
-    //         categorie,  niveau3PaysActeur.trim().toLowerCase(), true, true,  pageable);
-
-    //     List<Stock> stocksList = new ArrayList<>(stocksByPays.getContent());
-
-    //     // Fetch stocks from other countries if needed
-    //     if (stocksList.size() < pageable.getPageSize()) {
-    //         Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - stocksList.size());
-    //         Page<Stock> stocksComplement = stockRepository.findBySpeculation_CategorieProduitAndPaysNotAndStatutSotckAndActeurStatutActeur(
-    //             categorie, niveau3PaysActeur.trim().toLowerCase(), true, true, complementPageable);
-    //         stocksList.addAll(stocksComplement.getContent());
-    //     }
-
-    //     return new PageImpl<>(stocksList, pageable, stocksByPays.getTotalElements() + stocksList.size());
-    // }
-
-
     @Transactional
     public Page<Stock> getAllStockPageableByPaysByCategorie(CategorieProduit categorie, String niveau3PaysActeur, Pageable pageable) {
         // Fetch stock from the specified country
@@ -327,59 +293,20 @@ private String generateQRCodeImage(String qrCodeData) {
             return new PageImpl<>(stocksList, pageable, stockByPays.getTotalElements() + stocksList.size());
         }
     }
-//     @Transactional
-// public Page<Stock> getAllStocksPageableByPays(String niveau3PaysActeur, Pageable pageable) {
-//     // Récupérer les stocks pour le pays spécifié
-//     Page<Stock> stocksByPays = stockRepository.findAllByStatutSotckTrueAndPaysAndActeurStatutActeurTrue(
-//         niveau3PaysActeur.trim().toLowerCase(), pageable);
-
-//     List<Stock> stocksList = new ArrayList<>(stocksByPays.getContent());
-//     long totalElements = stocksByPays.getTotalElements();
-
-//     // Si pas de stocks pour le pays spécifié, chercher directement des stocks d'autres pays
-//     if (!stocksByPays.hasContent()) {
-//         System.out.println("Pas d'autres stocks à fetch pour le pays " + niveau3PaysActeur);
-//         Page<Stock> stocksFromOtherCountries = stockRepository.findAllByStatutSotckAndActeurStatutActeur(
-//             true, true, pageable);
-
-//         return new PageImpl<>(stocksFromOtherCountries.getContent(), pageable, stocksFromOtherCountries.getTotalElements());
-//     }
-
-//     System.out.println("Stock fetch pour le pays " + niveau3PaysActeur);
-
-//     // Si le nombre de stocks est inférieur au nombre requis, compléter avec des stocks d'autres pays
-//     if (stocksList.size() < pageable.getPageSize()) {
-//         int remainingSlots = pageable.getPageSize() - stocksList.size();
-//         Pageable complementPageable = PageRequest.of(0, remainingSlots);
-//         Page<Stock> stocksComplement = stockRepository.findAllByStatutSotckTrueAndActeurStatutActeurTrueAndPaysNot(
-//             niveau3PaysActeur.trim().toLowerCase(), complementPageable);
-
-//         // Ajouter les stocks d'autres pays à la liste
-//         stocksList.addAll(stocksComplement.getContent());
-
-//         // Mettre à jour le nombre total d'éléments
-//         totalElements += stocksComplement.getTotalElements();
-//     }
-
-//     return new PageImpl<>(stocksList, pageable, totalElements);
-// }
-
-
-    
-
-    
-    
-
 
     public Page<Stock> getAllStockPageableByPaysByMagasinAndCategorie(String idCategorieProduit, String idMagasin, Pageable pageable) {
         return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndStatutSotck(
                     idCategorieProduit, idMagasin, true, pageable);
     }
 
-
     public Page<Stock> getAllStockPageableByPaysByMagasin(String idMagasin, Pageable pageable) {
         return stockRepository.findByMagasin_IdMagasinAndStatutSotck(
                     idMagasin, true, pageable);
+    }
+
+    public Page<Stock> getAllStockByActeurAndCategorie(String idCategorie, String idActeur, Pageable pageable) {
+        return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduit_AndActeur_IdActeur(
+                    idCategorie,idActeur, pageable);
     }
 
   
@@ -600,91 +527,23 @@ private String generateQRCodeImage(String qrCodeData) {
             return stockRepository.save(stocks);
     }
 
-    public Stock updateStockQteStocks(String id, double nouvelleQuantite) throws Exception {
-        Stock stock = stockRepository.findById(id).orElseThrow(() -> new Exception("Stock non trouvé pour l'ID : " + id));
-    
-        stock.setQuantiteStock(nouvelleQuantite);
-    
-        String pattern = "yyyy-MM-dd HH:mm";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-        LocalDateTime now = LocalDateTime.now();
-        String formattedDateTime = now.format(formatter);
-    
-        stock.setDateModif(formattedDateTime);
-    
-        return stockRepository.save(stock);
-    }
-    
-    public Stock updateQteStock(Stock stock,String id) throws Exception {
-        Stock stocks = stockRepository.findById(id).orElseThrow(null);
+    public Stock updateQuantiteStock(String id, double nouvelleQuantite) throws Exception {
+        Optional<Stock> stockOpt = stockRepository.findById(id);
 
-      
-        stocks.setQuantiteStock(stock.getQuantiteStock());
+        if (stockOpt.isPresent()) {
+            Stock stock = stockOpt.get();
+            stock.setQuantiteStock(nouvelleQuantite);
 
-        String pattern = "yyyy-MM-dd HH:mm";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-        LocalDateTime now = LocalDateTime.now();
-        String formattedDateTime = now.format(formatter);
+            // Mettre à jour la date de modification
+            stock.setDateModif(LocalDateTime.now().toString());
 
-        stocks.setDateModif(formattedDateTime);
-        
-        if(stock.getMonnaie() != null){
-            stocks.setMonnaie(stock.getMonnaie());
+            return stockRepository.save(stock);
+        } else {
+            throw new Exception("Stock non trouvé avec l'ID : " + id);
         }
-        
-        if(stock.getMagasin() != null){
-            stocks.setMagasin(stock.getMagasin());
-        }
-        
-        if(stock.getZoneProduction() != null){
-            stocks.setZoneProduction(stock.getZoneProduction());
-        }
-            
-        if(stock.getSpeculation() != null){
-            stocks.setSpeculation(stock.getSpeculation());
-        }
-        
-        stocks.setUnite(stock.getUnite());
-        
-            return stockRepository.save(stocks);
     }
 
-    public Stock updateQuantiteStock(Double quantiteStock, String idStock) throws Exception {
-        if (quantiteStock == null) {
-            throw new IllegalArgumentException("La quantité de stock ne peut pas être null.");
-        }
-    
-        System.out.println("stock new id" + idStock);
-    
-        Stock stocks = stockRepository.findById(idStock).orElseThrow(() -> new Exception("Stock not found"));
-        System.out.println("stock new : " + stocks + "id " + stocks.getIdStock());
-    
-        double ancienQuantity = stocks.getQuantiteStock();
-        double newQuantity = ancienQuantity + quantiteStock;
-        stocks.setQuantiteStock(newQuantity);
-        System.out.println(" new qte : " + newQuantity);
-        return stockRepository.save(stocks);
-    }
-    
 
-    // public Stock updateQuantiteStock(double quantiteStock, String idStock) throws Exception {
-    //     System.out.println("stock new  id"  + idStock);
-
-    //     Stock stocks = stockRepository.findById(idStock).orElseThrow(null);
-    //     System.out.println("stock new : " + stocks + "id " + stocks.getIdStock());
-
-    //     double ancienQuantity = stocks.getQuantiteStock();
-    //     double  newQuantity = ancienQuantity + quantiteStock;
-    //     stocks.setQuantiteStock(newQuantity);
-    //     System.out.println(" new qte : " +newQuantity);
-    //     return stockRepository.save(stocks);
-    // }
-
-
-   
-
-
-    
     public List<Stock> getAllStock(){
         List<Stock> stockList = stockRepository.findAll();
 
