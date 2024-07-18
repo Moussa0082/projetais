@@ -30,7 +30,6 @@ import projet.ais.models.Commande;
 import projet.ais.models.DetailCommande;
 import projet.ais.models.Forme;
 import projet.ais.models.Intrant;
-import projet.ais.models.Materiel;
 import projet.ais.models.Stock;
 import projet.ais.models.Vehicule;
 import projet.ais.repository.ActeurRepository;
@@ -501,7 +500,8 @@ public class IntrantService {
             if(intrant.getForme() != null){
                 it.setForme(intrant.getForme());
             }
-
+ 
+            
             if(intrant.getMonnaie() != null){
                 it.setMonnaie(intrant.getMonnaie());
             }
@@ -526,6 +526,22 @@ public class IntrantService {
         .collect(Collectors.toList());
 
         return intrantList;
+    }
+
+    public Intrant updateQuantiteIntrant(String id, double nouvelleQuantite) throws Exception {
+        Optional<Intrant> intrantOpt = intrantRepository.findById(id);
+
+        if (intrantOpt.isPresent()) {
+            Intrant intrant = intrantOpt.get();
+            intrant.setQuantiteIntrant(nouvelleQuantite);
+
+            // Mettre à jour la date de modification
+            intrant.setDateModif(LocalDateTime.now().toString());
+
+            return intrantRepository.save(intrant);
+        } else {
+            throw new Exception("Intrant non trouvé avec l'ID : " + id);
+        }
     }
 
     public String deleteIntrant(String id){

@@ -34,7 +34,6 @@ import org.springframework.http.MediaType;
 import java.io.IOException;
 
 @RestController
-// @CrossOrigin(origins = "*")
 @RequestMapping("api-koumi/intrant")
 public class IntrantController {
 
@@ -116,9 +115,9 @@ public class IntrantController {
                 return MediaType.APPLICATION_OCTET_STREAM;
             }
 
-             @PutMapping("/update/{id}")
-      @Operation(summary = "Mise à jour d'un intrant ")
-      public ResponseEntity<Intrant> updateIntrant(
+        @PutMapping("/update/{id}")
+        @Operation(summary = "Mise à jour d'un intrant ")
+        public ResponseEntity<Intrant> updateIntrant(
               @PathVariable String id,
               @Valid @RequestParam("intrant") String intrantString,
               @RequestParam(value = "image", required = false)  MultipartFile imageFile){
@@ -147,6 +146,11 @@ public class IntrantController {
         return ResponseEntity.ok().body(intrants);
     }
 
+
+    @PutMapping("/{id}/quantite")
+    public Intrant updateQuantiteIntrants(@PathVariable String id, @RequestParam double quantite) throws Exception {
+        return intrantService.updateQuantiteIntrant(id, quantite);
+    }
 
     @PutMapping("/update-pays/{id}")
     public String updatePaysForStocks(@PathVariable String id) {

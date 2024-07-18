@@ -1,19 +1,21 @@
 package projet.ais.services;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import jakarta.persistence.EntityNotFoundException;
+import projet.ais.CodeGenerator;
+import projet.ais.IdGenerator;
+import projet.ais.models.Acteur;
+import projet.ais.models.Materiels;
+import projet.ais.repository.ActeurRepository;
+import projet.ais.repository.MaterielRepository;
+import java.util.*;
+import java.time.LocalDateTime;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,21 +23,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.persistence.EntityNotFoundException;
-import projet.ais.CodeGenerator;
-import projet.ais.IdGenerator;
-import projet.ais.models.Acteur;
-import projet.ais.models.Forme;
-import projet.ais.models.Intrant;
-import projet.ais.models.Magasin;
-import projet.ais.models.Materiel;
-import projet.ais.models.Stock;
-import projet.ais.repository.ActeurRepository;
-import projet.ais.repository.MaterielRepository;
 import java.time.format.DateTimeFormatter;
-
+import java.nio.file.Path;
 
 @Service
 public class MaterielService {
@@ -54,7 +48,7 @@ public class MaterielService {
     FileUploade fileUploade;
     
 
-    public Materiel createMateriel(Materiel materiel, MultipartFile imageFile) throws Exception{
+    public Materiels createMateriel(Materiels materiel, MultipartFile imageFile) throws Exception{
         Acteur acteur = acteurRepository.findByIdActeur(materiel.getActeur().getIdActeur());
         
         if(acteur == null)
@@ -82,7 +76,7 @@ public class MaterielService {
         String codes  = codeGenerator.genererCode();
         String idCode = idGenerator.genererCode();
 
-        materiel.setPays((acteur.getPays().getNomPays()));
+        materiel.setPays((acteur.getNiveau3PaysActeur()));
         materiel.setCodeMateriel(codes);
         materiel.setIdMateriel(idCode);
         String pattern = "yyyy-MM-dd HH:mm";
@@ -90,12 +84,13 @@ public class MaterielService {
         LocalDateTime now = LocalDateTime.now();
         String formattedDateTime = now.format(formatter);
         materiel.setDateAjout(formattedDateTime);
-        Materiel saveMateriel = materielRepository.save(materiel);
+        Materiels saveMateriel = materielRepository.save(materiel);
+        System.out.println("nom "+saveMateriel.getNom());
         // sendMessageToAllActeur(saveMateriel);
         return saveMateriel;
     }
 
-    public ResponseEntity<String> sendMessageToAllActeur(Materiel materiel) {
+    public ResponseEntity<String> sendMessageToAllActeur(Materiels materiel) {
         List<Acteur> allActeurs = acteurRepository.findAll();
        
 
@@ -120,61 +115,35 @@ public class MaterielService {
     }
 
 
-     public Page<Materiel> getAllMaterielPageable(Pageable pageable) {
+     public Page<Materiels> getAllMaterielPageable(Pageable pageable) {
         return materielRepository.findAllByStatutAndActeurStatutActeurAndSpeculationIsNull(true,true,pageable);
     }
 
     // recuperer les materiels par  type materiel avec pagination
-    public Page<Materiel> getMaterielByTypeMaterielWithPagination(String idTypeMateriel,Pageable pageable) {
+    public Page<Materiels> getMaterielByTypeMaterielWithPagination(String idTypeMateriel,Pageable pageable) {
         return materielRepository.findByTypeMateriel_IdTypeMateriel(idTypeMateriel, pageable);
     }
-    // // recuperer les materiels par  type materiel avec pagination
-    // public Page<Materiel> getMaterielByTypeMaterielWithPagination(String idTypeMateriel,Pageable pageable) {
-    //     return materielRepository.findByTypeMateriel_IdTypeMaterielAndStatutAndActeurStatutActeur(idTypeMateriel, true, true, pageable);
-    // }
 
     // recuperer les magasins par  acteur avec pagination
-    public Page<Materiel> getMaterielByActeurWithPagination(String idActeur,Pageable pageable) {
+    public Page<Materiels> getMaterielByActeurWithPagination(String idActeur,Pageable pageable) {
         return materielRepository.findByActeur_IdActeur(idActeur, pageable);
     }
 
 
-    ///////get materiel
-    // public Page<Materiel> getAllMaterielPageableByPays(String niveau3PaysActeur, Pageable pageable) {
-    //     Page<Materiel> materielByPays = materielRepository.findAllByStatutTrueAndPaysAndActeurStatutActeurTrueAndSpeculationIsNull(niveau3PaysActeur.trim().toLowerCase(), pageable);
-        
-    //     if (!materielByPays.hasContent()) {
-    //         System.out.println("Pas d'autres materiels à fetch pour le pays " + niveau3PaysActeur);
-    //         return materielRepository.findAllByStatutAndActeurStatutActeurAndSpeculationIsNull(true, true, pageable);
-    //     } else {
-    //         System.out.println("Materiels fetch pour le pays " + niveau3PaysActeur);
-    //         List<Materiel> materielsList = new ArrayList<>(materielByPays.getContent());
-
-    //         // Si le nombre de materiels est inférieur au nombre requis, compléter avec des materiels d'autres pays
-    //         if (materielsList.size() < pageable.getPageSize()) {
-    //             Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - materielsList.size());
-    //             Page<Materiel> materielComplement = materielRepository.findAllByStatutTrueAndActeurStatutActeurTrueAndPaysNotAndSpeculationIsNull(niveau3PaysActeur.trim().toLowerCase(), complementPageable);
-    //             materielsList.addAll(materielComplement.getContent());
-    //         }
-
-    //         return new PageImpl<>(materielsList, pageable, materielByPays.getTotalElements() + materielsList.size());
-    //     }
-    // }
-
-    public Page<Materiel> getAllMaterielPageableByPays(String pays, Pageable pageable) {
+    public Page<Materiels> getAllMaterielPageableByPays(String pays, Pageable pageable) {
        
         String paysNormalise = pays.trim().toLowerCase();
         
         // Récupérer les stocks pour le pays spécifié
-        Page<Materiel> materielByPays = materielRepository.findAllByStatutTrueAndPaysAndActeurStatutActeurTrueAndSpeculationIsNull(paysNormalise, pageable);
+        Page<Materiels> materielByPays = materielRepository.findAllByStatutTrueAndPaysAndActeurStatutActeurTrueAndSpeculationIsNull(paysNormalise, pageable);
         
-        List<Materiel> materielList = new ArrayList<>(materielByPays.getContent());
+        List<Materiels> materielList = new ArrayList<>(materielByPays.getContent());
         long totalElements = materielByPays.getTotalElements();
     
         // Si le nombre de stocks est inférieur à la taille de la page, compléter avec des stocks d'autres pays
         if (materielList.size() < pageable.getPageSize()) {
             Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - materielList.size());
-            Page<Materiel> stocksComplement =  materielRepository.findAllByStatutTrueAndActeurStatutActeurTrueAndPaysNotAndSpeculationIsNull(paysNormalise, complementPageable);
+            Page<Materiels> stocksComplement =  materielRepository.findAllByStatutTrueAndActeurStatutActeurTrueAndPaysNotAndSpeculationIsNull(paysNormalise, complementPageable);
             materielList.addAll(stocksComplement.getContent());
             totalElements += stocksComplement.getTotalElements();
         }
@@ -183,50 +152,24 @@ public class MaterielService {
         return new PageImpl<>(materielList, pageable, totalElements);
     }
 
-/////////materiel par filiere
-// public Page<Materiel> getAllMaterielByLibelleFiliere(String libelleFiliere, String pays, Pageable pageable) {
-//     // Première requête pour récupérer les matériels pour le pays spécifique
-//     Page<Materiel> materielByPays = materielRepository.findBySpeculation_CategorieProduit_Filiere_LibelleFiliereAndPays(
-//         libelleFiliere, pays.trim().toLowerCase(), pageable);
 
-//     // Si aucun matériel trouvé pour le pays spécifique
-//     if (!materielByPays.hasContent()) {
-//         System.out.println("Pas d'autres materiels à fetch pour le pays " + pays);
-//         // Récupérer les matériels pour d'autres pays
-//         return materielRepository.findAllBySpeculation_CategorieProduit_Filiere_LibelleFiliereAndPaysNot(
-//             libelleFiliere, pays.trim().toLowerCase(), pageable);
-//     } else {
-//         System.out.println("Materiels fetch pour le pays " + pays);
-//         List<Materiel> materielsList = new ArrayList<>(materielByPays.getContent());
-
-//         // Si le nombre de matériels est inférieur au nombre requis, compléter avec des matériels d'autres pays
-//         if (materielsList.size() < pageable.getPageSize()) {
-//             Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - materielsList.size());
-//             Page<Materiel> materielComplement = materielRepository.findAllBySpeculation_CategorieProduit_Filiere_LibelleFiliereAndPaysNot(
-//                 libelleFiliere, pays.trim().toLowerCase(), complementPageable);
-//             materielsList.addAll(materielComplement.getContent());
-//         }
-
-//         return new PageImpl<>(materielsList, pageable, materielByPays.getTotalElements() + materielsList.size());
-//     }
-// }
 
     //get materiel par filiere    
-public Page<Materiel> getAllMaterielByLibelleFiliere(String libelleFiliere,String pays, Pageable pageable) {
+public Page<Materiels> getAllMaterielByLibelleFiliere(String libelleFiliere,String pays, Pageable pageable) {
        
     String paysNormalise = pays.trim().toLowerCase();
     
     // Récupérer les stocks pour le pays spécifié
-    Page<Materiel> materielByPays = materielRepository.findBySpeculation_CategorieProduit_Filiere_LibelleFiliereAndPays(
+    Page<Materiels> materielByPays = materielRepository.findBySpeculation_CategorieProduit_Filiere_LibelleFiliereAndPays(
         libelleFiliere, paysNormalise, pageable);
 
-    List<Materiel> materielList = new ArrayList<>(materielByPays.getContent());
+    List<Materiels> materielList = new ArrayList<>(materielByPays.getContent());
     long totalElements = materielByPays.getTotalElements();
 
     // Si le nombre de stocks est inférieur à la taille de la page, compléter avec des stocks d'autres pays
     if (materielList.size() < pageable.getPageSize()) {
         Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - materielList.size());
-        Page<Materiel> stocksComplement = materielRepository.findAllBySpeculation_CategorieProduit_Filiere_LibelleFiliereAndPaysNot(
+        Page<Materiels> stocksComplement = materielRepository.findAllBySpeculation_CategorieProduit_Filiere_LibelleFiliereAndPaysNot(
             libelleFiliere, paysNormalise, complementPageable);
         materielList.addAll(stocksComplement.getContent());
         totalElements += stocksComplement.getTotalElements();
@@ -238,16 +181,16 @@ public Page<Materiel> getAllMaterielByLibelleFiliere(String libelleFiliere,Strin
 
 
     @Transactional
-    public Page<Materiel> getAllMaterielPageableByPaysByCategorie(String idTypeMateriel, String niveau3PaysActeur, Pageable pageable) {
+    public Page<Materiels> getAllMaterielPageableByPaysByCategorie(String idTypeMateriel, String niveau3PaysActeur, Pageable pageable) {
         // Fetch materiel by type materiel from the specified country
-        Page<Materiel> materielByPays = materielRepository.findAllByTypeMaterielIdTypeMaterielAndStatutTrueAndPaysAndActeurStatutActeurTrue(
+        Page<Materiels> materielByPays = materielRepository.findAllByTypeMaterielIdTypeMaterielAndStatutTrueAndPaysAndActeurStatutActeurTrue(
             idTypeMateriel, niveau3PaysActeur.trim().toLowerCase(), pageable);
 
-        List<Materiel> materielsList = new ArrayList<>(materielByPays.getContent());
+        List<Materiels> materielsList = new ArrayList<>(materielByPays.getContent());
 
         // If no materiels are found for the specified country, fetch materiels from other countries
         if (materielsList.isEmpty()) {
-            Page<Materiel> materielFromOtherCountries = materielRepository.findAllByTypeMateriel_IdTypeMaterielAndStatutTrueAndActeurStatutActeurTrue(
+            Page<Materiels> materielFromOtherCountries = materielRepository.findAllByTypeMateriel_IdTypeMaterielAndStatutTrueAndActeurStatutActeurTrue(
                 idTypeMateriel, pageable);
 
             return new PageImpl<>(materielFromOtherCountries.getContent(), pageable, materielFromOtherCountries.getTotalElements());
@@ -256,7 +199,7 @@ public Page<Materiel> getAllMaterielByLibelleFiliere(String libelleFiliere,Strin
         // Fetch materiels from other countries if needed to fill the page
         if (materielsList.size() < pageable.getPageSize()) {
             Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - materielsList.size());
-            Page<Materiel> materielComplement = materielRepository.findAllByTypeMateriel_IdTypeMaterielAndStatutTrueAndActeurStatutActeurTrueAndPaysNot(
+            Page<Materiels> materielComplement = materielRepository.findAllByTypeMateriel_IdTypeMaterielAndStatutTrueAndActeurStatutActeurTrueAndPaysNot(
                 idTypeMateriel, niveau3PaysActeur.trim().toLowerCase(), complementPageable);
             materielsList.addAll(materielComplement.getContent());
         }
@@ -265,16 +208,16 @@ public Page<Materiel> getAllMaterielByLibelleFiliere(String libelleFiliere,Strin
     }
 
     @Transactional
-    public Page<Materiel> getAllMaterielByIdTypeMaterielAndFiliere(String idTypeMateriel, String libelleFiliere, String pays, Pageable pageable) {
+    public Page<Materiels> getAllMaterielByIdTypeMaterielAndFiliere(String idTypeMateriel, String libelleFiliere, String pays, Pageable pageable) {
         // Fetch materiel by type materiel from the specified country
-        Page<Materiel> materielByPays = materielRepository.findByTypeMateriel_IdTypeMaterielAndSpeculation_CategorieProduit_Filiere_LibelleFiliereAndPays(
+        Page<Materiels> materielByPays = materielRepository.findByTypeMateriel_IdTypeMaterielAndSpeculation_CategorieProduit_Filiere_LibelleFiliereAndPays(
             idTypeMateriel, libelleFiliere, pays.trim().toLowerCase(), pageable);
 
-        List<Materiel> materielsList = new ArrayList<>(materielByPays.getContent());
+        List<Materiels> materielsList = new ArrayList<>(materielByPays.getContent());
 
         // If no materiels are found for the specified country, fetch materiels from other countries
         if (materielsList.isEmpty()) {
-            Page<Materiel> materielFromOtherCountries = materielRepository.findAllByTypeMateriel_IdTypeMaterielAndSpeculation_CategorieProduit_Filiere_LibelleFiliereAndPaysNot(
+            Page<Materiels> materielFromOtherCountries = materielRepository.findAllByTypeMateriel_IdTypeMaterielAndSpeculation_CategorieProduit_Filiere_LibelleFiliereAndPaysNot(
                 idTypeMateriel, libelleFiliere, pays.trim().toLowerCase(), pageable
             );
             return new PageImpl<>(materielFromOtherCountries.getContent(), pageable, materielFromOtherCountries.getTotalElements());
@@ -283,7 +226,7 @@ public Page<Materiel> getAllMaterielByLibelleFiliere(String libelleFiliere,Strin
         // Fetch materiels from other countries if needed to fill the page
         if (materielsList.size() < pageable.getPageSize()) {
             Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - materielsList.size());
-            Page<Materiel> materielComplement = materielRepository.findAllByTypeMateriel_IdTypeMaterielAndSpeculation_CategorieProduit_Filiere_LibelleFiliereAndPaysNot(
+            Page<Materiels> materielComplement = materielRepository.findAllByTypeMateriel_IdTypeMaterielAndSpeculation_CategorieProduit_Filiere_LibelleFiliereAndPaysNot(
                 idTypeMateriel, libelleFiliere, pays.trim().toLowerCase(), complementPageable
             );
             materielsList.addAll(materielComplement.getContent());
@@ -297,10 +240,10 @@ public Page<Materiel> getAllMaterielByLibelleFiliere(String libelleFiliere,Strin
     @Transactional
     public void updatePaysForMateriel() {
         // Récupérer tous les stocks
-        List<Materiel> materiels = materielRepository.findAll();
+        List<Materiels> materiels = materielRepository.findAll();
 
         // Parcourir chaque materiel
-        for (Materiel materiel : materiels) {
+        for (Materiels materiel : materiels) {
             // Récupérer l'acteur lié au intrant
             Acteur acteur = materiel.getActeur();
 
@@ -321,8 +264,8 @@ public Page<Materiel> getAllMaterielByLibelleFiliere(String libelleFiliere,Strin
 
 
     
-    public Materiel updateMateriel(Materiel materiel, String id, MultipartFile imageFile) throws Exception{
-        Materiel mat = materielRepository.findById(id).orElseThrow();
+    public Materiels updateMateriel(Materiels materiel, String id, MultipartFile imageFile) throws Exception{
+        Materiels mat = materielRepository.findById(id).orElseThrow();
 
         mat.setDescription(materiel.getDescription());
         mat.setEtatMateriel(materiel.getEtatMateriel());
@@ -363,8 +306,8 @@ public Page<Materiel> getAllMaterielByLibelleFiliere(String libelleFiliere,Strin
         return materielRepository.save(mat);
     }
 
-    public List<Materiel> getMateriels(){
-        List<Materiel> materielList = materielRepository.findAll();
+    public List<Materiels> getMateriels(){
+        List<Materiels> materielList = materielRepository.findAll();
 
         if(materielList == null)
             throw new EntityNotFoundException("Aucune matériel trouvé");
@@ -375,8 +318,8 @@ public Page<Materiel> getAllMaterielByLibelleFiliere(String libelleFiliere,Strin
         return materielList;
     }
 
-    public List<Materiel> getMaterielByActeur(String id){
-        List<Materiel> materielList = materielRepository.findByActeurIdActeur(id);
+    public List<Materiels> getMaterielByActeur(String id){
+        List<Materiels> materielList = materielRepository.findByActeurIdActeur(id);
 
         if(materielList.isEmpty())
             throw new EntityNotFoundException("Aucune matériel trouvé");
@@ -387,8 +330,8 @@ public Page<Materiel> getAllMaterielByLibelleFiliere(String libelleFiliere,Strin
         return materielList;
     }
 
-    public List<Materiel> getMaterielByTypeMateriel(String id){
-        List<Materiel> materielList = materielRepository.findAllByTypeMaterielIdTypeMateriel(id);
+    public List<Materiels> getMaterielByTypeMateriel(String id){
+        List<Materiels> materielList = materielRepository.findAllByTypeMaterielIdTypeMateriel(id);
 
         if(materielList.isEmpty())
             throw new EntityNotFoundException("Aucune matériel trouvé");
@@ -400,15 +343,15 @@ public Page<Materiel> getAllMaterielByLibelleFiliere(String libelleFiliere,Strin
     }
 
     public String deleteMateriel(String id){
-        Materiel materiel = materielRepository.findById(id).orElseThrow(null);
+        Materiels materiel = materielRepository.findById(id).orElseThrow(null);
 
         materielRepository.delete(materiel);
 
         return "Supprimé avec succèss";
     }
 
-    public Materiel active(String id) throws Exception{
-        Materiel mat = materielRepository.findById(id).orElseThrow(null);
+    public Materiels active(String id) throws Exception{
+        Materiels mat = materielRepository.findById(id).orElseThrow(null);
 
        try {
         mat.setStatut(true);
@@ -419,8 +362,8 @@ public Page<Materiel> getAllMaterielByLibelleFiliere(String libelleFiliere,Strin
        return materielRepository.save(mat);
     }
 
-    public Materiel desactive(String id) throws Exception{
-        Materiel mat = materielRepository.findById(id).orElseThrow(null);
+    public Materiels desactive(String id) throws Exception{
+        Materiels mat = materielRepository.findById(id).orElseThrow(null);
 
        try {
         mat.setStatut(false);

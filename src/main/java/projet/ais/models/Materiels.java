@@ -1,38 +1,27 @@
 package projet.ais.models;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.CascadeType;
+import java.util.List;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
 import lombok.Data;
 
-@Data
+
 @Entity
-public class Materiel {
+@Data
+public class Materiels {
     
     @Id
     private String idMateriel;
 
     @Column(nullable = false)
     private String codeMateriel;
-
-//     @Convert(converter = MapToJsonConverter.class)
-//    @Column(columnDefinition = "json")
-//    private Map<Integer, Integer> prixParHeure;
 
     @Column(nullable = false)
     private int prixParHeure;

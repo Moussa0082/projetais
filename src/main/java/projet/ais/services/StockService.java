@@ -542,7 +542,7 @@ private String generateQRCodeImage(String qrCodeData) {
             throw new Exception("Stock non trouvé avec l'ID : " + id);
         }
     }
-
+ 
 
     public List<Stock> getAllStock(){
         List<Stock> stockList = stockRepository.findAll();

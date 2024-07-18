@@ -6,21 +6,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.*;
 
 
 import java.util.*;
-
-
-import java.time.LocalDateTime;
-
-
 
 @Entity
 @Getter
@@ -125,7 +117,7 @@ public class Acteur {
     @OneToMany(mappedBy = "acteur")
     @JsonManagedReference
     @JsonIgnore
-    private List<Materiel> materiels;
+    private List<Materiels> materiels;
 
     @OneToMany(mappedBy = "acteur")
     @JsonIgnore

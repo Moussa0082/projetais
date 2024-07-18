@@ -50,7 +50,7 @@ public class Monnaie {
     
     @OneToMany(mappedBy = "monnaie")
     @JsonIgnore
-    private List<Materiel> materielList;
+    private List<Materiels> materielList;
 
     @OneToMany(mappedBy = "monnaie")
     @JsonIgnore

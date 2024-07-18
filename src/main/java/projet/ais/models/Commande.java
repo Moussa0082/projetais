@@ -100,7 +100,7 @@ public class Commande {
     
     @ManyToMany(cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Materiel> materielList;
+    private List<Materiels> materielList;
 
     @OneToMany
     (mappedBy = "commande")

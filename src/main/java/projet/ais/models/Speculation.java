@@ -54,7 +54,7 @@ public class Speculation {
     @OneToMany
     (mappedBy = "speculation")
     @JsonIgnore
-    private List<Materiel> materielList;
+    private List<Materiels> materielList;
 
     // @OneToMany
     // (mappedBy = "speculation")

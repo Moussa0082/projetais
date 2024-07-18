@@ -40,5 +40,5 @@ public class TypeMateriel {
 
      @OneToMany
     @JsonIgnore
-    private List<Materiel> materiels;
+    private List<Materiels> materiels;
 }

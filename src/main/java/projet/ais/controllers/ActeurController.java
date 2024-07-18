@@ -32,6 +32,7 @@ import java.util.*;
 import projet.ais.config.ResponseHandler;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
+import projet.ais.models.Intrant;
 import projet.ais.models.Stock;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.ActeurRepository;
@@ -87,6 +88,12 @@ public class ActeurController {
                 System.out.println("Acteur controller :" + savedActeur);
 
                 return new ResponseEntity<>(savedActeur, HttpStatus.CREATED);
+            }
+
+    
+            @PutMapping("/{id}/password")
+            public Acteur updateActeurs(@PathVariable String id, @RequestParam String password) throws Exception {
+                return acteurService.updatePassWord(id, password);
             }
             @GetMapping("/{acteurId}/image")
             public ResponseEntity<byte[]> getImage(@PathVariable String acteurId) {

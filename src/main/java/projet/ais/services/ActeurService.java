@@ -15,6 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -32,6 +35,7 @@ import projet.ais.IdGenerator;
 import projet.ais.Exception.NoContentException;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
+import projet.ais.models.Intrant;
 import projet.ais.models.Pays;
 
 import java.time.format.DateTimeFormatter;
@@ -98,20 +102,25 @@ public class ActeurService {
             throw new IllegalArgumentException("Un acteur avec l'id " + id + " existe déjà");
         }
         
-        // Vérifier si l'acteur a le même mail et le même type
-        // Acteur existingActeurAvecMemeType = acteurRepository.findByEmailActeurAndTypeActeurIn(acteur.getEmailActeur(), acteur.getTypeActeur());
-        Acteur existingActeurAvecMemeType = acteurRepository.findByEmailActeur(acteur.getEmailActeur());
-        if (existingActeurAvecMemeType != null) {
-            // Si un acteur avec le même email et type existe déjà
-            throw new IllegalArgumentException("Un compte avec le même email existe déjà");
-        }
+       // Vérifier si l'email n'est pas vide
+if (acteur.getEmailActeur() != null && !acteur.getEmailActeur().isEmpty()) {
+    // Vérifier si un acteur a le même email
+    Acteur existingActeurAvecMemeType = acteurRepository.findByEmailActeur(acteur.getEmailActeur());
+    if (existingActeurAvecMemeType != null) {
+        // Si un acteur avec le même email existe déjà
+        throw new IllegalArgumentException("Un compte avec le même email existe déjà");
+    }
+}
+// Vérifier si les attributs WhatsApp et téléphone ne sont pas vides
+if ((acteur.getWhatsAppActeur() != null && !acteur.getWhatsAppActeur().isEmpty())) {
+    // Vérifier si un acteur a le même numéro de téléphone et le même numéro WhatsApp
+    Acteur existingActeur = acteurRepository.findByWhatsAppActeur(acteur.getWhatsAppActeur());
+    if (existingActeur != null) {
+        // Si un acteur avec le même numéro de téléphone et le même numéro WhatsApp existe déjà
+        throw new IllegalArgumentException("Un compte avec le même numéro de téléphone existe déjà");
+    }
+}
 
-        Acteur existingActeur = acteurRepository.findByWhatsAppActeurAndTelephoneActeur(acteur.getWhatsAppActeur(), acteur.getTelephoneActeur());
-        if (existingActeur != null) {
-            // Si un acteur avec le même email et type existe déjà
-            throw new IllegalArgumentException("Un compte avec le même numero de téléphone existe déjà");
-        }
-         
     // if (acteurRepository.findByEmailActeur(acteur.getEmailActeur()) == null) {
         
             if (acteur.getTypeActeur() == null) {
@@ -269,8 +278,23 @@ public class ActeurService {
                
     }
 
-
-
+    public Acteur updatePassWord(String id, String newPassWord) throws Exception {
+        Optional<Acteur> acteurOpt = acteurRepository.findById(id);
+    
+        if (acteurOpt.isPresent()) {
+            Acteur acteur = acteurOpt.get();
+    
+            // Hacher le nouveau mot de passe
+            String hashedPassword = passwordEncoder.encode(newPassWord);
+            acteur.setPassword(hashedPassword);
+            acteur.setDateModif(LocalDateTime.now().toString());
+    
+            return acteurRepository.save(acteur);
+        } else {
+            throw new Exception("Acteur non trouvé avec l'ID : " + id);
+        }
+    }
+    
     public String getLibelleNiveau1PaysForActeur(String idActeur) {
         Acteur acteur = acteurRepository.findById(idActeur).orElseThrow(() -> new RuntimeException("Acteur non trouvé"));
         String niveau3PaysNom = acteur.getNiveau3PaysActeur().toLowerCase();
@@ -437,8 +461,6 @@ public class ActeurService {
             // Gérer le cas où aucun acteur n'est trouvé avec cet e-mail
             throw new IllegalArgumentException("Aucun acteur n'est trouvé avec cet email");
         }
-        
-
         // Associer les types d'acteur à l'acteur existant
         acteur.getTypeActeur().addAll(typeActeurs);
         
@@ -658,7 +680,8 @@ public class ActeurService {
     }
     return resultat.toString();
     }
-    
+  
+  
     //créer un user
     // public Acteur updateActeur(Acteur acteur, String id, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
     //     // TypeActeur typeActeur = typeActeurRepository.findByIdTypeActeur(acteur.getTypeActeur());
@@ -801,11 +824,6 @@ public class ActeurService {
             ac.setSpeculation(acteur.getSpeculation());
         }
     
-        // Mise à jour du mot de passe si fourni
-        if (acteur.getPassword() != null) {
-            String hashedPassword = passwordEncoder.encode(acteur.getPassword());
-            ac.setPassword(hashedPassword);
-        }
     
         System.out.println("acteur tel : " + ac.getTelephoneActeur());
     
@@ -913,26 +931,44 @@ public class ActeurService {
     // Mot de passe oublié : envoyer un code à l'utilisateur par e-mail
 public String sendOtpCodeEmail(String email) throws Exception {
     Acteur userVerif = acteurRepository.findByEmailActeur(email);
-    if (userVerif == null) {
-        throw new Exception("Cet email n'existe pas, veuillez vérifier l'email saisi");
-    }
-    
-    // Générez le code
-    String code = getRandomNumberString();
-    
-    // Enregistrez le code et son horodatage dans la base de données
+    if (userVerif == null)
+    throw new Exception("Cet email n'existe pas, verifier votre email");
+     // Stockez temporairement le code dans le champ resetToken de l'utilisateur
     userVerif.setResetToken(code);
     // Définir la date d'expiration du token (après 2 minutes)
     LocalDateTime tokenExpiryDate = LocalDateTime.now().plusMinutes(2);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     String formattedDate = tokenExpiryDate.format(formatter);
-    userVerif.setTokenCreationDate(formattedDate);    acteurRepository.save(userVerif);
-    
-    // Envoyez le code par e-mail
+    userVerif.setTokenCreationDate(formattedDate);
+    acteurRepository.save(userVerif);
+    //   String msg = "Votre code de verification temporaire est " + code + " veuillez garder ce code pour vous uniquement si vous n'avez pas demander à changer de mot de passe veuiilez ignorer ce message";
+      //     // Envoyez le code par e-mail
     sendMail(userVerif, code);
-    
+
     return code;
 }
+// public String sendOtpCodeEmail(String email) throws Exception {
+//     Acteur userVerif = acteurRepository.findByEmailActeur(email);
+//     if (userVerif == null) {
+//         throw new Exception("Cet email n'existe pas, veuillez vérifier l'email saisi");
+//     }
+    
+//     // Générez le code
+//     String code = getRandomNumberString();
+    
+//     // Enregistrez le code et son horodatage dans la base de données
+//     userVerif.setResetToken(code);
+//     // Définir la date d'expiration du token (après 2 minutes)
+//     LocalDateTime tokenExpiryDate = LocalDateTime.now().plusMinutes(2);
+//     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//     String formattedDate = tokenExpiryDate.format(formatter);
+//     userVerif.setTokenCreationDate(formattedDate);    acteurRepository.save(userVerif);
+    
+//     // Envoyez le code par e-mail
+//     sendMail(userVerif, code);
+    
+//     return code;
+// }
 
 
     //Mot de pass oublier envoyer un code au user par whatts app
@@ -942,13 +978,13 @@ public String sendOtpCodeEmail(String email) throws Exception {
         throw new Exception("Ce numero n'existe pas, verifier  le numéro saisi");
          // Stockez temporairement le code dans le champ resetToken de l'utilisateur
         userVerif.setResetToken(code);
-    // Définir la date d'expiration du token (après 2 minutes)
-    LocalDateTime tokenExpiryDate = LocalDateTime.now().plusMinutes(2);
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    String formattedDate = tokenExpiryDate.format(formatter);
-    userVerif.setTokenCreationDate(formattedDate);        acteurRepository.save(userVerif);
-          String msg = "Votre code de verification temporaire est " + code + " veuillez garder ce code pour vous uniquement si vous n'avez pas demander à changer de mot de passe veuiilez ignorer ce message";
-            messageService.sendMessageAndSave(whatsAppActeur, msg, userVerif);
+        // Définir la date d'expiration du token (après 2 minutes)
+        LocalDateTime tokenExpiryDate = LocalDateTime.now().plusMinutes(2);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = tokenExpiryDate.format(formatter);
+        userVerif.setTokenCreationDate(formattedDate);        acteurRepository.save(userVerif);
+        String msg = "Votre code de verification temporaire est " + code + " veuillez garder ce code pour vous uniquement si vous n'avez pas demander à changer de mot de passe veuiilez ignorer ce message";
+        messageService.sendMessageAndSave(whatsAppActeur, msg, userVerif);
         return code;
     }
 
@@ -973,7 +1009,6 @@ public String sendOtpCodeEmail(String email) throws Exception {
     if (!userVerif.getResetToken().equals(code)) {
         throw new RuntimeException("Code incorrect");
     }
-
     
     // Réinitialisez le token et la date de création
     userVerif.setResetToken(null);

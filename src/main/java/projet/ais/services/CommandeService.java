@@ -6,8 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
@@ -17,20 +15,12 @@ import projet.ais.models.Alerte;
 import projet.ais.models.Commande;
 import projet.ais.models.DetailCommande;
 import projet.ais.models.Intrant;
-import projet.ais.models.Magasin;
-import projet.ais.models.Materiel;
+import projet.ais.models.Materiels;
 import projet.ais.models.Stock;
-import projet.ais.models.TypeActeur;
-import projet.ais.models.Unite;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.AlerteRepository;
 import projet.ais.repository.CommandeRepository;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -57,7 +47,7 @@ public class CommandeService {
     private EmailService emailService;
 
     @Autowired
-     private ActeurRepository acteurRepository;
+    private ActeurRepository acteurRepository;
 
     @Autowired
     private MessageService messageService;
@@ -70,13 +60,13 @@ public class CommandeService {
 
     @Autowired
     private CodeGenerator codeGenerator;
-     @Autowired
+    
+    @Autowired
     MaterielRepository materielRepository;
 
     @Autowired
     DetailCommandeRepository detailCommandeRepository;
 
-  
     public Commande ajouterStocksACommande(Acteur acteur, Optional<List<Stock>> stocks, Optional<List<Intrant>> intrants, Optional<List<Double>>  quantitesDemandees, Optional<List<Double>>  quantitesIntrants) throws Exception {
     
         Commande commande = new Commande();
@@ -377,10 +367,6 @@ public class CommandeService {
             alerte.setActeur(acteurProprietaire);
             alerteRepository.save(alerte);
 
-            // Envoyer un e-mail à l'acteur propriétaire
-            // emailService.sendSimpleMail(alerte);
-        
-
         return new ResponseEntity<>("La commande a été validée avec succès, le propriétaire a été informés.", HttpStatus.OK);
     } else {
         return new ResponseEntity<>("Commande non trouvée avec l'ID " + id, HttpStatus.BAD_REQUEST);
@@ -402,7 +388,7 @@ public class CommandeService {
 
 
    //Annuler commande en tant qu'acheteur
-   public ResponseEntity<String> disableCommande(String id) throws Exception {
+    public ResponseEntity<String> disableCommande(String id) throws Exception {
     Commande commande = commandeRepository.findByIdCommande(id);
 
     if (commande != null) {
@@ -416,13 +402,6 @@ public class CommandeService {
         // Récupérer les détails de commande de la commande
         List<DetailCommande> detailsCommande = commande.getDetailCommandeList();
 
-        // Récupérer la liste des acteurs propriétaires des produits commandés
-        // List<Acteur> acteursProprietaires = detailsCommande.stream()
-        // .map(detail -> detail.getNomProduit()) // Récupérer le nom du produit de chaque détail
-        // .flatMap(nomProduit -> stockRepository.findByNomProduit(nomProduit).stream()) // Convertir la collection de Stock en un flux
-        // .map(stock -> stock.getActeur()) // Récupérer l'acteur associé à chaque stock
-        // .distinct()
-        // .collect(Collectors.toList());
      
         Acteur acteurProprietaire = commande.getActeurProprietaire();
         // Informer chaque acteur propriétaire
@@ -511,7 +490,7 @@ public ResponseEntity<String> confirmerLivraisonVendeur(String id, Map<String, D
     
      public String commandeMateriel(String idMateriel, String idActeur) throws Exception{
         Acteur ac = acteurRepository.findByIdActeur(idActeur);
-        Materiel mat = materielRepository.findByIdMateriel(idMateriel);
+        Materiels mat = materielRepository.findByIdMateriel(idMateriel);
 
         if(ac == null)
             throw new EntityNotFoundException("Aucun acteur trouvé");
@@ -558,7 +537,7 @@ public ResponseEntity<String> confirmerLivraisonVendeur(String id, Map<String, D
 
     public String annulerCommande(String idMateriel, String idActeur) throws Exception{
         Acteur ac = acteurRepository.findByIdActeur(idActeur);
-        Materiel mat = materielRepository.findByIdMateriel(idMateriel);
+        Materiels mat = materielRepository.findByIdMateriel(idMateriel);
 
         if(ac == null)
             throw new EntityNotFoundException("Aucun acteur trouvé");
@@ -597,9 +576,7 @@ public ResponseEntity<String> confirmerLivraisonVendeur(String id, Map<String, D
         
     }
 
-
-
-      public List<Commande> getAllCommandes(){
+    public List<Commande> getAllCommandes(){
         List<Commande> commandeList = commandeRepository.findAll();
 
         if(commandeList.isEmpty())

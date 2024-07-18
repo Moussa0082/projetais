@@ -12,11 +12,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.io.ByteArrayOutputStream;
 
-
-// import org.apache.http.client.methods.HttpPost;
-// import org.apache.http.entity.FileEntity;
-// import org.apache.http.impl.client.HttpClients;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,25 +25,9 @@ import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
-import projet.ais.models.Intrant;
-import projet.ais.models.Magasin;
-import projet.ais.models.Materiel;
-import projet.ais.models.Stock;
-import projet.ais.models.Vehicule;
-import projet.ais.models.TypeMateriel;
 import projet.ais.models.Vehicule;
 import projet.ais.repository.VehiculeRepository;
 
-// import org.apache.http.HttpEntity;
-// import org.apache.http.HttpResponse;
-// import org.apache.http.client.HttpClient;
-// import org.apache.http.client.methods.HttpPost;
-// import org.apache.http.entity.ContentType;
-// import org.apache.http.entity.FileEntity;
-// import org.apache.http.impl.client.HttpClients;
-// import org.apache.commons.net.ftp.FTP;
-// import org.apache.commons.net.ftp.FTPClient;
-import java.io.File;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 
