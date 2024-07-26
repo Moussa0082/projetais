@@ -12,7 +12,6 @@ import lombok.Setter;
 import java.util.*;
 
 
-import java.util.*;
 
 @Entity
 @Getter
@@ -98,8 +97,6 @@ public class Acteur {
     private List<Stock> stockList;
     
 
-   
-  
     @OneToMany(mappedBy = "acteur")
     @JsonIgnore
     private List<Unite> unite;

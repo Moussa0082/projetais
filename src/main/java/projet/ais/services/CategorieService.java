@@ -43,7 +43,7 @@ public class CategorieService {
     CodeGenerator codeGenerator;
     @Autowired
     IdGenerator idGenerator ;
-     @Autowired
+    @Autowired
     ActeurRepository acteurRepository;
 
     public CategorieProduit createCategorie(CategorieProduit categorieProduit){

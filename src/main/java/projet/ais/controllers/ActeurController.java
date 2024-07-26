@@ -95,6 +95,7 @@ public class ActeurController {
             public Acteur updateActeurs(@PathVariable String id, @RequestParam String password) throws Exception {
                 return acteurService.updatePassWord(id, password);
             }
+           
             @GetMapping("/{acteurId}/image")
             public ResponseEntity<byte[]> getImage(@PathVariable String acteurId) {
                 try {
@@ -122,6 +123,35 @@ public class ActeurController {
             }
             }
             
+            @GetMapping("/{acteurId}/siege")
+            public ResponseEntity<byte[]> getLogoSiege(@PathVariable String acteurId) {
+                try {
+                    // Retrieve the actor based on the given ID
+                    Acteur acteur = acteurRepository.findByIdActeur(acteurId);
+                    if (acteur == null || acteur.getPhotoSiegeActeur() == null) {
+                        return ResponseEntity.notFound().build();
+                    }
+
+                    // Get the logo name
+                    String logoName = acteur.getPhotoSiegeActeur();
+
+                    // Retrieve the image bytes from the FTP server
+                    byte[] imageBytes = fileUploade.getImageByName(logoName);
+
+                    // Detect the content type based on the file extension
+                    MediaType contentType = detectContentType(logoName);
+
+                    // Return the image with the appropriate content type
+                    return ResponseEntity.ok()
+                            .contentType(contentType)
+                            .body(imageBytes);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+                }
+                }
+
+
             private MediaType detectContentType(String imageName) {
                 String[] parts = imageName.split("\\.");
                 if (parts.length > 1) {
@@ -363,7 +393,7 @@ public class ActeurController {
 
 
 
-             @GetMapping("/send-email-to-all-user")
+    @GetMapping("/send-email-to-all-user")
     public ResponseEntity<String> sendEmailToAllUsers(@RequestParam ("emails") List<String> emails, @RequestParam("sujet")String sujet, @RequestParam("message")String message) {
        
         //  acteurService.sendMailToAllUser(email, sujet, message);

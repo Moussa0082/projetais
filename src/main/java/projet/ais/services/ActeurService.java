@@ -103,23 +103,23 @@ public class ActeurService {
         }
         
        // Vérifier si l'email n'est pas vide
-if (acteur.getEmailActeur() != null && !acteur.getEmailActeur().isEmpty()) {
-    // Vérifier si un acteur a le même email
-    Acteur existingActeurAvecMemeType = acteurRepository.findByEmailActeur(acteur.getEmailActeur());
-    if (existingActeurAvecMemeType != null) {
-        // Si un acteur avec le même email existe déjà
-        throw new IllegalArgumentException("Un compte avec le même email existe déjà");
-    }
-}
-// Vérifier si les attributs WhatsApp et téléphone ne sont pas vides
-if ((acteur.getWhatsAppActeur() != null && !acteur.getWhatsAppActeur().isEmpty())) {
-    // Vérifier si un acteur a le même numéro de téléphone et le même numéro WhatsApp
-    Acteur existingActeur = acteurRepository.findByWhatsAppActeur(acteur.getWhatsAppActeur());
-    if (existingActeur != null) {
-        // Si un acteur avec le même numéro de téléphone et le même numéro WhatsApp existe déjà
-        throw new IllegalArgumentException("Un compte avec le même numéro de téléphone existe déjà");
-    }
-}
+        if (acteur.getEmailActeur() != null && !acteur.getEmailActeur().isEmpty()) {
+            // Vérifier si un acteur a le même email
+            Acteur existingActeurAvecMemeType = acteurRepository.findByEmailActeur(acteur.getEmailActeur());
+            if (existingActeurAvecMemeType != null) {
+                // Si un acteur avec le même email existe déjà
+                throw new IllegalArgumentException("Un compte avec le même email existe déjà");
+            }
+        }
+        // Vérifier si les attributs WhatsApp et téléphone ne sont pas vides
+        if ((acteur.getWhatsAppActeur() != null && !acteur.getWhatsAppActeur().isEmpty())) {
+            // Vérifier si un acteur a le même numéro de téléphone et le même numéro WhatsApp
+            Acteur existingActeur = acteurRepository.findByWhatsAppActeur(acteur.getWhatsAppActeur());
+            if (existingActeur != null) {
+                // Si un acteur avec le même numéro de téléphone et le même numéro WhatsApp existe déjà
+                throw new IllegalArgumentException("Un compte avec le même numéro de téléphone existe déjà");
+            }
+        }
 
     // if (acteurRepository.findByEmailActeur(acteur.getEmailActeur()) == null) {
         
@@ -138,19 +138,6 @@ if ((acteur.getWhatsAppActeur() != null && !acteur.getWhatsAppActeur().isEmpty()
                 }
             }
             
-            
-            
-        // Récupérer tous les pays depuis le repository
-        // List<Pays> tousLesPays = paysRepository.findAll();
-
-        // Trouver le pays correspondant au niveau3Pays de l'acteur
-        // Pays paysCorrespondant = tousLesPays.stream()
-        //     .filter(pays -> pays.getNomPays().toLowerCase().equals(acteur.getNiveau3PaysActeur().toLowerCase()))
-        //     .findFirst()
-        //     .orElseThrow(() -> new RuntimeException("Pays correspondant non trouvé"));
-
-        // // Affecter l'objet Pays correspondant au niveau3Pays de l'acteur
-        // acteur.setPays(paysCorrespondant);
             
             //On hashe le mot de passe
             String passWordHasher = passwordEncoder.encode(acteur.getPassword());
@@ -682,50 +669,119 @@ if ((acteur.getWhatsAppActeur() != null && !acteur.getWhatsAppActeur().isEmpty()
     }
   
   
-    //créer un user
+    @Transactional
+    public Acteur updateActeur(Acteur acteur, String id, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
+        Acteur ac = acteurRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Acteur non trouvé avec l'id " + id));
+    
+        try {
+            // Traitement du fichier image siège acteur
+            if (imageFile1 != null) {
+                String imageLocation = "/ais";
+                Path imageRootLocation = Paths.get(imageLocation);
+                if (!Files.exists(imageRootLocation)) {
+                    Files.createDirectories(imageRootLocation);
+                }
+                String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
+                Path imagePath = imageRootLocation.resolve(imageName);
+                Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                String onlineImagePath = fileUploade.uploadImageToFTP(imagePath, imageName);
+                ac.setPhotoSiegeActeur(imageName);
+            }
+    
+            // Traitement du fichier image logo acteur
+            if (imageFile2 != null) {
+                String imageLocation = "/ais";
+                Path imageRootLocation = Paths.get(imageLocation);
+                if (!Files.exists(imageRootLocation)) {
+                    Files.createDirectories(imageRootLocation);
+                }
+                String imageName = UUID.randomUUID().toString() + "_" + imageFile2.getOriginalFilename();
+                Path imagePath = imageRootLocation.resolve(imageName);
+                Files.copy(imageFile2.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                String onlineImagePath = fileUploade.uploadImageToFTP(imagePath, imageName);
+                ac.setLogoActeur(imageName);
+            }
+    
+            // Mise à jour des autres champs
+            ac.setAdresseActeur(acteur.getAdresseActeur());
+            ac.setNomActeur(acteur.getNomActeur());
+            ac.setTelephoneActeur(acteur.getTelephoneActeur());
+            ac.setWhatsAppActeur(acteur.getWhatsAppActeur());
+            ac.setLocaliteActeur(acteur.getLocaliteActeur());
+            ac.setEmailActeur(acteur.getEmailActeur());
+            ac.setNiveau3PaysActeur(acteur.getNiveau3PaysActeur());
+    
+            String pattern = "yyyy-MM-dd HH:mm";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+            LocalDateTime now = LocalDateTime.now();
+            String formattedDateTime = now.format(formatter);
+            ac.setDateModif(formattedDateTime);
+    
+            if (acteur.getTypeActeur() != null) {
+                ac.setTypeActeur(acteur.getTypeActeur());
+            }
+    
+            if (acteur.getSpeculation() != null) {
+                ac.setSpeculation(acteur.getSpeculation());
+            }
+    
+            System.out.println("Acteur après mise à jour: " + ac.toString());
+    
+            return acteurRepository.save(ac);
+        } catch (IOException e) {
+            System.err.println("Erreur lors du traitement des fichiers images: " + e.getMessage());
+            throw new Exception("Erreur lors du traitement des fichiers images: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la mise à jour de l'acteur: " + e.getMessage());
+            throw new Exception("Erreur lors de la mise à jour de l'acteur: " + e.getMessage());
+        }
+    }
+    
+    
+    // @Transactional
     // public Acteur updateActeur(Acteur acteur, String id, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
-    //     // TypeActeur typeActeur = typeActeurRepository.findByIdTypeActeur(acteur.getTypeActeur());
-    //     Acteur ac = acteurRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Acteur non trouver avec l'id " + id));
-        
-    //                  // Traitement du fichier image siege acteur
-    //         if (imageFile1 != null) {
-    //             String imageLocation = "/ais";
-    //             try {
-    //                 Path imageRootLocation = Paths.get(imageLocation);
-    //                 if (!Files.exists(imageRootLocation)) {
-    //                     Files.createDirectories(imageRootLocation);
-    //                 }
+    //     Acteur ac = acteurRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Acteur non trouvé avec l'id " + id));
     
-    //                 String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
-    //                 Path imagePath = imageRootLocation.resolve(imageName);
-    //                 Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-    //                 String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
-
-    //                 ac.setPhotoSiegeActeur(imageName);
-
-    //             } catch (IOException e) {
-    //                 throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
+    //     // Traitement du fichier image siège acteur
+    //     if (imageFile1 != null) {
+    //         String imageLocation = "/ais";
+    //         try {
+    //             Path imageRootLocation = Paths.get(imageLocation);
+    //             if (!Files.exists(imageRootLocation)) {
+    //                 Files.createDirectories(imageRootLocation);
     //             }
-    //         }
-    //         // image logo acteur 
-    //         if (imageFile2 != null) {
-    //             String imageLocation = "/ais";
-    //             try {
-    //                 Path imageRootLocation = Paths.get(imageLocation);
-    //                 if (!Files.exists(imageRootLocation)) {
-    //                     Files.createDirectories(imageRootLocation);
-    //                 }
     
-    //                 String imageName = UUID.randomUUID().toString() + "_" + imageFile2.getOriginalFilename();
-    //                 Path imagePath = imageRootLocation.resolve(imageName);
-    //                 Files.copy(imageFile2.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-    //                 String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
-    //                 ac.setLogoActeur(imageName);
-    //             } catch (IOException e) {
-    //                 throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
-    //             }
+    //             String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
+    //             Path imagePath = imageRootLocation.resolve(imageName);
+    //             Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+    //             String onlineImagePath = fileUploade.uploadImageToFTP(imagePath, imageName);
+    //             ac.setPhotoSiegeActeur(imageName);
+    
+    //         } catch (IOException e) {
+    //             throw new Exception("Erreur lors du traitement du fichier image siège : " + e.getMessage());
     //         }
-            
+    //     }
+    
+    //     // Traitement du fichier image logo acteur
+    //     if (imageFile2 != null) {
+    //         String imageLocation = "/ais";
+    //         try {
+    //             Path imageRootLocation = Paths.get(imageLocation);
+    //             if (!Files.exists(imageRootLocation)) {
+    //                 Files.createDirectories(imageRootLocation);
+    //             }
+    
+    //             String imageName = UUID.randomUUID().toString() + "_" + imageFile2.getOriginalFilename();
+    //             Path imagePath = imageRootLocation.resolve(imageName);
+    //             Files.copy(imageFile2.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+    //             String onlineImagePath = fileUploade.uploadImageToFTP(imagePath, imageName);
+    //             ac.setLogoActeur(imageName);
+    //         } catch (IOException e) {
+    //             throw new Exception("Erreur lors du traitement du fichier image logo : " + e.getMessage());
+    //         }
+    //     }
+    
+    //     // Mise à jour des autres champs
     //     ac.setAdresseActeur(acteur.getAdresseActeur());
     //     ac.setNomActeur(acteur.getNomActeur());
     //     ac.setTelephoneActeur(acteur.getTelephoneActeur());
@@ -739,101 +795,25 @@ if ((acteur.getWhatsAppActeur() != null && !acteur.getWhatsAppActeur().isEmpty()
     //     LocalDateTime now = LocalDateTime.now();
     //     String formattedDateTime = now.format(formatter);
     //     ac.setDateAjout(formattedDateTime);
-
-    //    if(acteur.getTypeActeur() != null){
-    //     ac.setTypeActeur(acteur.getTypeActeur());
-    //    }
-
-    //     if(acteur.getSpeculations() != null){
-    //         ac.setSpeculations(acteur.getSpeculations());
+    
+    //     if (acteur.getTypeActeur() != null) {
+    //         ac.setTypeActeur(acteur.getTypeActeur());
     //     }
-    // // Mettez à jour le mot de passe si un nouveau mot de passe est fourni
-    //     if (acteur.getPassword() != null) {
-    //     String hashedPassword = passwordEncoder.encode(acteur.getPassword());
-    //     ac.setPassword(hashedPassword);
+    
+    //     if (acteur.getSpeculation() != null) {
+    //         ac.setSpeculation(acteur.getSpeculation());
     //     }
-
-    //     System.out.println("acteur service : "+ac);
-    //     return acteurRepository.save(ac);
-        
+    
+    
+    //     System.out.println("acteur tel : " + ac.getTelephoneActeur());
+    
+    //     try {
+    //         return acteurRepository.save(ac);
+    //     } catch (Exception e) {
+    //         System.out.println(ac.toString());
+    //         throw new Exception("Erreur lors de la mise à jour de l'acteur : " + e.getMessage());
+    //     }
     // }
-    
-    @Transactional
-    public Acteur updateActeur(Acteur acteur, String id, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
-        Acteur ac = acteurRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Acteur non trouvé avec l'id " + id));
-    
-        // Traitement du fichier image siège acteur
-        if (imageFile1 != null) {
-            String imageLocation = "/ais";
-            try {
-                Path imageRootLocation = Paths.get(imageLocation);
-                if (!Files.exists(imageRootLocation)) {
-                    Files.createDirectories(imageRootLocation);
-                }
-    
-                String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
-                Path imagePath = imageRootLocation.resolve(imageName);
-                Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                String onlineImagePath = fileUploade.uploadImageToFTP(imagePath, imageName);
-                ac.setPhotoSiegeActeur(imageName);
-    
-            } catch (IOException e) {
-                throw new Exception("Erreur lors du traitement du fichier image siège : " + e.getMessage());
-            }
-        }
-    
-        // Traitement du fichier image logo acteur
-        if (imageFile2 != null) {
-            String imageLocation = "/ais";
-            try {
-                Path imageRootLocation = Paths.get(imageLocation);
-                if (!Files.exists(imageRootLocation)) {
-                    Files.createDirectories(imageRootLocation);
-                }
-    
-                String imageName = UUID.randomUUID().toString() + "_" + imageFile2.getOriginalFilename();
-                Path imagePath = imageRootLocation.resolve(imageName);
-                Files.copy(imageFile2.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                String onlineImagePath = fileUploade.uploadImageToFTP(imagePath, imageName);
-                ac.setLogoActeur(imageName);
-            } catch (IOException e) {
-                throw new Exception("Erreur lors du traitement du fichier image logo : " + e.getMessage());
-            }
-        }
-    
-        // Mise à jour des autres champs
-        ac.setAdresseActeur(acteur.getAdresseActeur());
-        ac.setNomActeur(acteur.getNomActeur());
-        ac.setTelephoneActeur(acteur.getTelephoneActeur());
-        ac.setWhatsAppActeur(acteur.getWhatsAppActeur());
-        ac.setLocaliteActeur(acteur.getLocaliteActeur());
-        ac.setEmailActeur(acteur.getEmailActeur());
-        ac.setNiveau3PaysActeur(acteur.getNiveau3PaysActeur());
-    
-        String pattern = "yyyy-MM-dd HH:mm";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-        LocalDateTime now = LocalDateTime.now();
-        String formattedDateTime = now.format(formatter);
-        ac.setDateAjout(formattedDateTime);
-    
-        if (acteur.getTypeActeur() != null) {
-            ac.setTypeActeur(acteur.getTypeActeur());
-        }
-    
-        if (acteur.getSpeculation() != null) {
-            ac.setSpeculation(acteur.getSpeculation());
-        }
-    
-    
-        System.out.println("acteur tel : " + ac.getTelephoneActeur());
-    
-        try {
-            return acteurRepository.save(ac);
-        } catch (Exception e) {
-            System.err.println("Erreur lors de la sauvegarde de l'acteur : " + e.getMessage());
-            throw new Exception("Erreur lors de la mise à jour de l'acteur : " + e.getMessage());
-        }
-    }
     
        //Recuperer la liste des Admins
      public List<Acteur> getAllActeur(){
@@ -929,24 +909,35 @@ if ((acteur.getWhatsAppActeur() != null && !acteur.getWhatsAppActeur().isEmpty()
     String code = getRandomNumberString();
 
     // Mot de passe oublié : envoyer un code à l'utilisateur par e-mail
-public String sendOtpCodeEmail(String email) throws Exception {
-    Acteur userVerif = acteurRepository.findByEmailActeur(email);
-    if (userVerif == null)
-    throw new Exception("Cet email n'existe pas, verifier votre email");
-     // Stockez temporairement le code dans le champ resetToken de l'utilisateur
-    userVerif.setResetToken(code);
-    // Définir la date d'expiration du token (après 2 minutes)
-    LocalDateTime tokenExpiryDate = LocalDateTime.now().plusMinutes(2);
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    String formattedDate = tokenExpiryDate.format(formatter);
-    userVerif.setTokenCreationDate(formattedDate);
-    acteurRepository.save(userVerif);
-    //   String msg = "Votre code de verification temporaire est " + code + " veuillez garder ce code pour vous uniquement si vous n'avez pas demander à changer de mot de passe veuiilez ignorer ce message";
-      //     // Envoyez le code par e-mail
-    sendMail(userVerif, code);
-
-    return code;
-}
+    public String sendOtpCodeEmail(String email) throws Exception {
+        Acteur userVerif = acteurRepository.findByEmailActeur(email);
+        if (userVerif == null)
+            throw new Exception("Cet email n'existe pas, veuillez vérifier votre email");
+    
+        // Générer le code OTP
+        String code = getRandomNumberString(); // Assurez-vous d'avoir une méthode pour générer le code OTP
+    
+        // Stockez temporairement le code dans le champ resetToken de l'utilisateur
+        userVerif.setResetToken(code);
+    
+        // Définir la date d'expiration du token (après 2 minutes)
+        LocalDateTime tokenExpiryDate = LocalDateTime.now().plusMinutes(2);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = tokenExpiryDate.format(formatter);
+        userVerif.setTokenCreationDate(formattedDate);
+        acteurRepository.save(userVerif);
+    
+        try {
+            // Envoyez le code par e-mail
+            sendMail(userVerif, code);
+        } catch (Exception e) {
+            // System.out.println("Failed to send OTP email: " + e.getMessage());
+            throw new Exception("Erreur lors de l'envoie du code ");
+        }
+    
+        return code;
+    }
+    
 // public String sendOtpCodeEmail(String email) throws Exception {
 //     Acteur userVerif = acteurRepository.findByEmailActeur(email);
 //     if (userVerif == null) {
@@ -975,7 +966,7 @@ public String sendOtpCodeEmail(String email) throws Exception {
     public String sendOtpCodeWhatsApp(String whatsAppActeur) throws Exception {
         Acteur userVerif = acteurRepository.findByWhatsAppActeur(whatsAppActeur);
         if (userVerif == null)
-        throw new Exception("Ce numero n'existe pas, verifier  le numéro saisi");
+        throw new Exception("Ce numero n'existe pas, verifier  le numero saisi");
          // Stockez temporairement le code dans le champ resetToken de l'utilisateur
         userVerif.setResetToken(code);
         // Définir la date d'expiration du token (après 2 minutes)
@@ -1099,11 +1090,6 @@ public String sendOtpCodeEmail(String email) throws Exception {
    //Function pour reinitialiser le mot de pass par whatsApp numéro
     public Acteur resetPasswordWhatsApp(String whatsAppActeur, String password) throws Exception{
         Acteur userVerif = acteurRepository.findByWhatsAppActeur(whatsAppActeur);
-        // Vérifier si le code est expiré
-        // if (isCodeExpired(code)) {
-        //     throw new Exception("Code expiré");
-        // }
-        
         userVerif.setPassword(passwordEncoder.encode(password));
 
         return acteurRepository.save(userVerif);
@@ -1121,20 +1107,18 @@ public String sendOtpCodeEmail(String email) throws Exception {
     }
 
     private void sendMail(Acteur acteur, String code) throws Exception {
-
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         try {
             mailMessage.setFrom(sender);
             mailMessage.setTo(acteur.getEmailActeur());
-            mailMessage.setText("Votre code de verification est "+code);
+            mailMessage.setText("Votre code de verification est " + code);
             mailMessage.setSubject("Validation email");
 
             javaMailSender.send(mailMessage);
-        }catch (Exception e){
-            throw new Exception(e.getMessage());
+        } catch (Exception e) {
+            throw new Exception("Error while sending email: " + e.getMessage(), e);
         }
     }
-
     // Methode d'envoi d'email à un user 
     private void sendMailAuUser(String email, String sujet, String message) throws Exception {
 
@@ -1224,7 +1208,7 @@ public String sendOtpCodeEmail(String email) throws Exception {
          return acteur;
         }
 
-     //Se connecter avec  code pin
+        //Se connecter avec  code pin
         public Acteur connexionActeurWithPin(String codeActeur,String password){
             // String hashedPassword = passwordEncoder.encode(password); // Hasher le mot de passe saisi par l'utilisateur
             Acteur acteur = acteurRepository.findByCodeActeur(codeActeur);

@@ -49,15 +49,8 @@ public class ZoneProductionService {
     FileUploade fileUploade;
 
     public ZoneProduction createZoneProduction(ZoneProduction zoneProduction, MultipartFile imageFile) throws Exception{
-        ZoneProduction zoneProductions = zoneProductionRepository.findByNomZoneProduction(zoneProduction.getNomZoneProduction());
-        //  Acteur acteur = acteurRepository.findByIdActeur(zoneProduction.getActeur().getIdActeur());
-
-        // if(acteur == null)
-        //     throw new IllegalStateException("Aucun acteur trouvé");
-
-        // if(zoneProductions != null)
-        //     throw new DuplicateRequestException("Cette zone de production existe déjà");
- 
+        // ZoneProduction zoneProductions = zoneProductionRepository.findByNomZoneProduction(zoneProduction.getNomZoneProduction());
+       
         if (imageFile != null) {
             //  String imageLocation = "C:\\xampp\\htdocs\\ais";
                 String imageLocation = "/ais";
