@@ -1004,10 +1004,10 @@ public class ActeurService {
     acteurRepository.save(userVerif);
     
     return true; // Code vérifié avec succès
-}
-    // Vérifier le code envoyé par whats app
+    }
+    // Vérifier le code envoyé par whats app teste
     public boolean verifyOtpCodeWhtasApp(String whatsAppActeur, String resetToken) {
-    Acteur userVerif = acteurRepository.findByEmailActeurAndResetToken(whatsAppActeur, resetToken);
+    Acteur userVerif = acteurRepository.findByWhatsAppActeurAndResetToken(whatsAppActeur, resetToken);
     if (userVerif == null) {
         throw new RuntimeException("Code incorrect ou expiré");
     }
@@ -1019,13 +1019,13 @@ public class ActeurService {
 
    if (tokenCreationDate == null || tokenCreationDate.isBefore(LocalDateTime.now().minusMinutes(2))) {
        // Code expiré
-       throw new RuntimeException("Code expiré");
+    throw new RuntimeException("Code expiré");
    }
 
    // Vérifier si le code correspond
-   if (!userVerif.getResetToken().equals(code)) {
-       throw new RuntimeException("Code incorrect");
-   }
+    if (!userVerif.getResetToken().equals(code)) {
+        throw new RuntimeException("Code incorrect");
+    }
 
     
     // Réinitialisez le token et la date de création
@@ -1036,8 +1036,9 @@ public class ActeurService {
     return true; // Code vérifié avec succès
 }
 
-
+//standby
     public boolean verifyOtpCodeWhatsApp(String whatsAppActeur,String code ) {
+        
         if (isCodeExpired(code)) {
             throw new RuntimeException("Code expiré");
         }
@@ -1053,7 +1054,8 @@ public class ActeurService {
     LocalDateTime tokenExpiryDate = LocalDateTime.now().plusMinutes(2);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     String formattedDate = tokenExpiryDate.format(formatter);
-    userVerif.setTokenCreationDate(formattedDate);        acteurRepository.save(userVerif);
+    userVerif.setTokenCreationDate(formattedDate);        
+    acteurRepository.save(userVerif);
     
         return true; // Code vérifié avec succès
     }
@@ -1193,7 +1195,7 @@ public class ActeurService {
 
 
      //Se connecter 
-      public Acteur connexionActeur(String emailActeur, String password){
+    public Acteur connexionActeur(String emailActeur, String password){
         Acteur acteur = acteurRepository.findByEmailActeur(emailActeur);
         if (acteur == null || !passwordEncoder.matches(password, acteur.getPassword())) {
             throw new EntityNotFoundException("Email ou mot de passe incorrect");
@@ -1202,14 +1204,14 @@ public class ActeurService {
         if(acteur.getStatutActeur()==false){
             throw new NoContentException("Connexion échoué votre compte  est desactivé \n veuillez contacter l'administrateur pour la procedure d'activation de votre compte !");
         }
-         return acteur;
+        return acteur;
         }
 
         //Se connecter avec  code pin
         public Acteur connexionActeurWithPin(String codeActeur,String password){
             // String hashedPassword = passwordEncoder.encode(password); // Hasher le mot de passe saisi par l'utilisateur
             Acteur acteur = acteurRepository.findByCodeActeur(codeActeur);
-          
+        
             
             // Comparer les mots de passe hachés
             if (acteur == null || !passwordEncoder.matches(password, acteur.getPassword())) {
@@ -1239,10 +1241,5 @@ public class ActeurService {
             
             return acteur;
         }
-        
-        
-   
-       
-
 
 }

@@ -347,11 +347,11 @@ public class ActeurController {
   
     
 
-
+    //teste
     @GetMapping("/verifierOtpCodeWhatsApp")
     public ResponseEntity<String> verifyOtpCodeWhatsAppActeur(@RequestParam("whatsAppActeur") String whatsAppActeur, @RequestParam("resetToken") String resetToken) {
         try {
-            boolean isVerified = acteurService.verifyOtpCodeWhatsApp(whatsAppActeur, resetToken);
+            boolean isVerified = acteurService.verifyOtpCodeWhtasApp(whatsAppActeur, resetToken);
             if (isVerified) {
                 return ResponseEntity.ok("Code vérifié avec succès");
             } else {
@@ -362,6 +362,7 @@ public class ActeurController {
         }
     }
 
+    //teste
     @GetMapping("/verifierOtpCodeEmail")
     public ResponseEntity<String> verifyOtpCodeEmail(@RequestParam("emailActeur") String emailActeur, @RequestParam(required = false) String resetToken) {
         try {
