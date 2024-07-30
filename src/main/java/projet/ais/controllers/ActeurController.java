@@ -344,55 +344,36 @@ public class ActeurController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur est survenue : " + e.getMessage());
         }
     }
-  
-    
 
-    //teste
-    @GetMapping("/verifierOtpCodeWhatsApp")
-    public ResponseEntity<String> verifyOtpCodeWhatsAppActeur(@RequestParam("whatsAppActeur") String whatsAppActeur, @RequestParam("resetToken") String resetToken) {
-        try {
-            boolean isVerified = acteurService.verifyOtpCodeWhtasApp(whatsAppActeur, resetToken);
-            if (isVerified) {
-                return ResponseEntity.ok("Code vérifié avec succès");
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Code incorrect");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur est survenue : " + e.getMessage());
-        }
-    }
-
-    //teste
     @GetMapping("/verifierOtpCodeEmail")
-    public ResponseEntity<String> verifyOtpCodeEmail(@RequestParam("emailActeur") String emailActeur, @RequestParam(required = false) String resetToken) {
+    public ResponseEntity<?> verifyOtpCodeEmail(@RequestParam String emailActeur, @RequestParam String resetToken) {
+        System.out.println("Received emailActeur: " + emailActeur);
+        System.out.println("Received resetToken: " + resetToken);
+
         try {
-            boolean isVerified = acteurService.verifyOtpCodeEmail(emailActeur,resetToken);
-            if (isVerified) {
-                return ResponseEntity.ok("Code vérifié avec succès");
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Code incorrect ou expiré");
-            }
+            acteurService.verifyOtpCodeEmail(emailActeur, resetToken);
+            return ResponseEntity.ok("Code vérifié avec succès");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur est survenue : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur est survenue");
         }
     }
 
-    @GetMapping("/verifierOtpCodeWhatsAppActeur")
-    public ResponseEntity<String> verifyOtpCodeWhatsApp(@RequestParam("whatsAppActeur") String whatsAppActeur, @RequestParam("resetToken") String resetToken) {
+    @GetMapping("/verifierOtpCodeWhatsApp")
+    public ResponseEntity<?> verifyOtpCodeWhatsApp(@RequestParam String whatsAppActeur, @RequestParam String code) {
+        System.out.println("Received whatsAppActeur: " + whatsAppActeur);
+        System.out.println("Received code: " + code);
+
         try {
-            boolean isVerified = acteurService.verifyOtpCodeWhatsApp(whatsAppActeur,resetToken);
-            if (isVerified) {
-                return ResponseEntity.ok("Code vérifié avec succès");
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Code incorrect ou expiré");
-            }
+            acteurService.verifyOtpCodeWhatsApp(whatsAppActeur, code);
+            return ResponseEntity.ok("Code vérifié avec succès");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur est survenue : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur est survenue");
         }
     }
-            // fin logique  mot de passe oublier
-
-
 
     @GetMapping("/send-email-to-all-user")
     public ResponseEntity<String> sendEmailToAllUsers(@RequestParam ("emails") List<String> emails, @RequestParam("sujet")String sujet, @RequestParam("message")String message) {
