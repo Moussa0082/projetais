@@ -968,14 +968,16 @@ public class ActeurService {
          // Stockez temporairement le code dans le champ resetToken de l'utilisateur
         
         String code = getRandomNumberString();
+
         userVerif.setResetToken(code);
        
         LocalDateTime tokenExpiryDate = LocalDateTime.now().plusMinutes(2);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDate = tokenExpiryDate.format(formatter);
         
-        userVerif.setTokenCreationDate(formattedDate);        acteurRepository.save(userVerif);
-        String msg = "Votre code de verification temporaire est " + code + " veuillez garder ce code pour vous uniquement si vous n'avez pas demander à changer de mot de passe veuiilez ignorer ce message";
+        userVerif.setTokenCreationDate(formattedDate);        
+        acteurRepository.save(userVerif);
+        String msg = "Votre code de vérification  est " + code + " veuillez garder ce code pour vous uniquement si vous n'avez pas demander à changer de mot de passe veuiilez ignorer ce message";
         messageService.sendMessageAndSave(whatsAppActeur, msg, userVerif);
         return code;
     }
@@ -987,14 +989,19 @@ public class ActeurService {
             throw new IllegalStateException("Code incorrect ou expiré");
         }
 
+        String codes = userVerif.getResetToken();
+
+        if (!codes.equals(resetToken))
+            throw new IllegalStateException("Code incorrect");
+
         // Vérifiez si le code est expiré
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime tokenCreationDate = LocalDateTime.parse(userVerif.getTokenCreationDate(), formatter);
 
-        if (tokenCreationDate == null || tokenCreationDate.isBefore(LocalDateTime.now().minusMinutes(2))) {
-            // Code expiré
-            throw new IllegalStateException("Code expiré");
-        }
+        // if (tokenCreationDate == null || tokenCreationDate.isBefore(LocalDateTime.now().minusMinutes(2))) {
+        //     // Code expiré
+        //     throw new IllegalStateException("Code expiré");
+        // }
 
         // Réinitialisez le token et la date de création
         userVerif.setResetToken(null);
@@ -1006,22 +1013,25 @@ public class ActeurService {
 
     public boolean verifyOtpCodeWhatsApp(String whatsAppActeur, String code) {
         Acteur userVerif = acteurRepository.findByWhatsAppActeur(whatsAppActeur);
+
         if (userVerif == null) {
             throw new IllegalStateException("Ce numéro n'existe pas, veuillez vérifier le numéro saisi");
         }
 
-        // Stockez temporairement le code dans le champ resetToken de l'utilisateur
-        userVerif.setResetToken(code);
-        
+        String codes = userVerif.getResetToken();
+
+        if (!codes.equals(code))
+            throw new IllegalStateException("Code incorrect");
+
         // Définir la date d'expiration du token (après 2 minutes)
         LocalDateTime tokenExpiryDate = LocalDateTime.now().plusMinutes(2);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDate = tokenExpiryDate.format(formatter);
         userVerif.setTokenCreationDate(formattedDate);
-        
+
         acteurRepository.save(userVerif);
 
-        return true; // Code vérifié avec succès
+        return true;
     }
 
     // Vérifier le code envoyé par e-mail
@@ -1174,14 +1184,6 @@ public class ActeurService {
             throw new Exception(e.getMessage());
         }
     }
-
-    // fin methode d'envoi d'eamil à un user
-
-
-  
-   
-
-    // fin logique service mot de passe oublier 
    
     //activer un acteur
     public ResponseEntity<String> enableActeur(String id) throws Exception {
