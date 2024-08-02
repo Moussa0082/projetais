@@ -17,6 +17,7 @@ import projet.ais.models.DetailCommande;
 import projet.ais.models.Intrant;
 import projet.ais.models.Materiels;
 import projet.ais.models.Stock;
+import projet.ais.models.ZoneProduction;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.AlerteRepository;
 import projet.ais.repository.CommandeRepository;
@@ -384,55 +385,101 @@ public class CommandeService {
             Commande commande = commandeRepository.findById(commandeId).orElseThrow(() -> new RuntimeException("Commande non trouvée"));
             return detailCommandeRepository.countByCommande(commande);
         }
-    
 
+        public Commande disableCommande(String id) throws Exception {
+            // Rechercher la commande par son identifiant
+            Commande commande = commandeRepository.findById(id)
+                .orElseThrow(() -> new Exception("Commande non trouvée avec l'ID : " + id));
+            
+            Commande cmd;
+        
+            try {
+                // Récupérer l'acteur propriétaire de la commande
+                Acteur acteurProprietaire = commande.getActeurProprietaire();
+                
+                // Désactiver la commande
+                commande.setStatutCommande(false);
+                
+                // Sauvegarder les modifications de la commande
+                cmd = commandeRepository.save(commande);
+        
+                // Vérifier si la commande n'a pas encore été confirmée
+                // if (commande.getStatut) {
+                    String message = "Commande annulée : " + commande.getActeur().getNomActeur().toUpperCase() + " a annulé la " +
+                        "(Commande n° " + commande.getCodeCommande() + ").";
+                    
+                    // Envoyer le message ou l'alerte à l'acteur propriétaire
+                    messageService.sendMessageAndSave(acteurProprietaire.getWhatsAppActeur(), message, acteurProprietaire);
+                    
+                    Alerte alerte = new Alerte(acteurProprietaire.getEmailActeur(), message, "Commande de vos produits annulée");
+                    alerte.setId(idGenerator.genererCode());
+                    
+                    // Créer et sauvegarder une alerte avec la date et l'heure actuelles
+                    String pattern = "yyyy-MM-dd HH:mm";
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+                    LocalDateTime now = LocalDateTime.now();
+                    String formattedDateTime = now.format(formatter);
+                    alerte.setDateAjout(formattedDateTime);
+                    alerte.setActeur(acteurProprietaire);
+                    
+                    alerteRepository.save(alerte);
+                // }
+            } catch (Exception e) {
+                // Gérer les exceptions et les remonter avec un message spécifique
+                throw new Exception("Erreur lors de la désactivation de la commande : " + e.getMessage());
+            }
+        
+            // Retourner la commande mise à jour
+            return cmd;
+        }
+        
 
    //Annuler commande en tant qu'acheteur
-    public ResponseEntity<String> disableCommande(String id) throws Exception {
-    Commande commande = commandeRepository.findByIdCommande(id);
+//     public ResponseEntity<String> disableCommande(String id) throws Exception {
+//     Commande commande = commandeRepository.findById(id).orElseThrow();
 
-    if (commande != null) {
-        // Mettre à jour le statut de la commande
-        if(commande.getStatutCommande()==false){
-            throw new IllegalArgumentException("La commande est déjà annulé par default vous pouvez le valider.");
-        }
-        commande.setStatutCommande(false);
-        commandeRepository.save(commande);
+//     if (commande != null) {
+//         // Mettre à jour le statut de la commande
+//         if(commande.getStatutCommande()==false){
+//             throw new IllegalArgumentException("La commande est déjà annulé par default vous pouvez le valider.");
+//         }
+//         commande.setStatutCommande(false);
+//         commandeRepository.save(commande);
 
-        // Récupérer les détails de commande de la commande
-        List<DetailCommande> detailsCommande = commande.getDetailCommandeList();
+//         // Récupérer les détails de commande de la commande
+//         List<DetailCommande> detailsCommande = commande.getDetailCommandeList();
 
      
-        Acteur acteurProprietaire = commande.getActeurProprietaire();
-        // Informer chaque acteur propriétaire
-        // for (Acteur acteurProprietaire : acteursProprietaires) {
-            // Construire le message pour l'acteur propriétaire
-            String message = "Commande annulé " + commande.getActeur().getNomActeur().toUpperCase() + " a annulé la " +
-                    " (Commande n° " + commande.getCodeCommande() + ")  .  ";
+//         Acteur acteurProprietaire = commande.getActeurProprietaire();
+//         // Informer chaque acteur propriétaire
+//         // for (Acteur acteurProprietaire : acteursProprietaires) {
+//             // Construire le message pour l'acteur propriétaire
+//             String message = "Commande annulé " + commande.getActeur().getNomActeur().toUpperCase() + " a annulé la " +
+//                     " (Commande n° " + commande.getCodeCommande() + ")  .  ";
 
-            // Envoyer le message ou l'alerte à l'acteur propriétaire
-            messageService.sendMessageAndSave(acteurProprietaire.getWhatsAppActeur(), message, acteurProprietaire);
+//             // Envoyer le message ou l'alerte à l'acteur propriétaire
+//             messageService.sendMessageAndSave(acteurProprietaire.getWhatsAppActeur(), message, acteurProprietaire);
 
-            // Créer et sauvegarder une alerte
-            String pattern = "yyyy-MM-dd HH:mm";
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-            LocalDateTime now = LocalDateTime.now();
-            String formattedDateTime = now.format(formatter);
-            Alerte alerte = new Alerte(acteurProprietaire.getEmailActeur(), message, "Commande de vos produits annulé");
-            alerte.setId(idGenerator.genererCode());
-            alerte.setDateAjout(formattedDateTime);
-            alerte.setActeur(acteurProprietaire);
-            alerteRepository.save(alerte);
+//             // Créer et sauvegarder une alerte
+//             String pattern = "yyyy-MM-dd HH:mm";
+//             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+//             LocalDateTime now = LocalDateTime.now();
+//             String formattedDateTime = now.format(formatter);
+//             Alerte alerte = new Alerte(acteurProprietaire.getEmailActeur(), message, "Commande de vos produits annulé");
+//             alerte.setId(idGenerator.genererCode());
+//             alerte.setDateAjout(formattedDateTime);
+//             alerte.setActeur(acteurProprietaire);
+//             alerteRepository.save(alerte);
 
-            // Envoyer un e-mail à l'acteur propriétaire
-            // emailService.sendSimpleMail(alerte);
-        // }
+//             // Envoyer un e-mail à l'acteur propriétaire
+//             // emailService.sendSimpleMail(alerte);
+//         // }
 
-        return new ResponseEntity<>("La commande a été annulé avec succès, les acteurs propriétaires ont été informés.", HttpStatus.OK);
-    } else {
-        return new ResponseEntity<>("Commande non trouvée avec l'ID " + id, HttpStatus.BAD_REQUEST);
-    }
-}
+//         return new ResponseEntity<>("La commande a été annulé avec succès, les acteurs propriétaires ont été informés.", HttpStatus.OK);
+//     } else {
+//         return new ResponseEntity<>("Commande non trouvée avec l'ID " + id, HttpStatus.BAD_REQUEST);
+//     }
+// }
 
 
     

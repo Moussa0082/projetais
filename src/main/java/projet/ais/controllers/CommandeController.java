@@ -87,18 +87,27 @@ public class CommandeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body("Une erreur est survenue lors de la validation de la commande : " + e.getMessage());
                 }
-            }
+     }
 
-        //Annuler commande
-        @PutMapping("/{id}/disable")
-        public ResponseEntity<String> disableCommande(@PathVariable("id") String id) {
-            try {
-                return commandeService.disableCommande(id);
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Une erreur est survenue lors de l'annulation de la commande : " + e.getMessage());
-            }
-        }
+     @PutMapping("/disable/{id}")
+     public ResponseEntity<?> disableCommande(@PathVariable String id) {
+         try {
+             Commande commande = commandeService.disableCommande(id);
+             return new ResponseEntity<>(commande, HttpStatus.OK);
+         } catch (Exception e) {
+             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+         }
+     }
+
+        // @PutMapping("/{id}/disable")
+        // public ResponseEntity<String> disableCommande(@PathVariable("id") String id) {
+        //     try {
+        //         return commandeService.disableCommande(id);
+        //     } catch (Exception e) {
+        //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        //             .body("Une erreur est survenue lors de l'annulation de la commande : " + e.getMessage());
+        //     }
+        // }
 
         //confirmation commande
         @PutMapping("/confirmer/{id}")
@@ -179,15 +188,6 @@ public ResponseEntity<Map<String, String>> confirmerLivrasonProduit(@PathVariabl
 }
 
 
-//     @PutMapping("annulerLivraison/{idDetailCommande}")
-//     public ResponseEntity<?> annulerLivrasonProduit(@PathVariable String idDetailCommande , @RequestBody(required = false) String description) {
-//     try {
-//         commandeService.annulerCommandeParProduit(idDetailCommande, description);
-//         return ResponseEntity.ok("Commande annulée avec succès pour le produit : " + idDetailCommande);
-//     } catch (Exception e) {
-//         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de l'annulation de la commande pour le produit : " + e.getMessage());
-//     }
-// }
 @PutMapping("annulerLivraison/{idDetailCommande}")
 public ResponseEntity<Map<String, String>> annulerLivrasonProduit(@PathVariable String idDetailCommande, @RequestBody(required = false) Map<String, String> description) {
     Map<String, String> response = new HashMap<>();

@@ -33,12 +33,12 @@ public class Commande {
     private String descriptionCommande;
     
     @Column(nullable = false)
-    private Boolean statutCommande = false;
+    private Boolean statutCommande = true;
 
-    @Column
+    @Column(nullable = true)
     private boolean statutCommandeLivrer = false;
 
-    @Column
+    @Column(nullable = true)
     private boolean statutConfirmation = false;
     
     private String dateCommande;
