@@ -81,7 +81,7 @@ public class ActeurService {
      @Autowired
      JavaMailSender javaMailSender;
 
-     @Value("bane8251@gmail.com")
+     @Value("ibrahim10sy@gmail.com")
      String sender;
 
 

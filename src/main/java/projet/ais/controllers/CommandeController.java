@@ -99,6 +99,16 @@ public class CommandeController {
          }
      }
 
+     @PutMapping("/disableWithNotif/{id}")
+     public ResponseEntity<?> disableCommandes(@PathVariable String id) {
+         try {
+             Commande commande = commandeService.disableCommandeWithNotif(id);
+             return new ResponseEntity<>(commande, HttpStatus.OK);
+         } catch (Exception e) {
+             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+         }
+     }
+
         // @PutMapping("/{id}/disable")
         // public ResponseEntity<String> disableCommande(@PathVariable("id") String id) {
         //     try {

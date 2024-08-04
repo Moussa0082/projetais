@@ -386,7 +386,29 @@ public class CommandeService {
             return detailCommandeRepository.countByCommande(commande);
         }
 
+        //anuuler commande 
         public Commande disableCommande(String id) throws Exception {
+            // Rechercher la commande par son identifiant
+            Commande commande = commandeRepository.findById(id)
+                .orElseThrow(() -> new Exception("Commande non trouvée avec l'ID : " + id));
+            Commande cmd;
+            try {
+                // Récupérer l'acteur propriétaire de la commande
+                Acteur acteurProprietaire = commande.getActeurProprietaire();
+                // Désactiver la commande
+                commande.setStatutCommande(false);
+                // Sauvegarder les modifications de la commande
+                cmd = commandeRepository.save(commande);
+            } catch (Exception e) {
+                // Gérer les exceptions et les remonter avec un message spécifique
+                throw new Exception("Erreur lors de la désactivation de la commande : " + e.getMessage());
+            }
+        
+            // Retourner la commande mise à jour
+            return cmd;
+        }
+        
+        public Commande disableCommandeWithNotif(String id) throws Exception {
             // Rechercher la commande par son identifiant
             Commande commande = commandeRepository.findById(id)
                 .orElseThrow(() -> new Exception("Commande non trouvée avec l'ID : " + id));
@@ -404,7 +426,7 @@ public class CommandeService {
                 cmd = commandeRepository.save(commande);
         
                 // Vérifier si la commande n'a pas encore été confirmée
-                // if (commande.getStatut) {
+                //  if (cmd.getStatutCommande()) {
                     String message = "Commande annulée : " + commande.getActeur().getNomActeur().toUpperCase() + " a annulé la " +
                         "(Commande n° " + commande.getCodeCommande() + ").";
                     
