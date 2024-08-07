@@ -118,6 +118,8 @@ public class ActeurService {
             }
         }
 
+       
+
     // if (acteurRepository.findByEmailActeur(acteur.getEmailActeur()) == null) {
         
             if (acteur.getTypeActeur() == null) {
@@ -713,6 +715,10 @@ public class ActeurService {
             LocalDateTime now = LocalDateTime.now();
             String formattedDateTime = now.format(formatter);
             ac.setDateModif(formattedDateTime);
+    
+            if (acteur.getEmailActeur() != null && !acteur.getEmailActeur().isEmpty()) {
+                ac.setEmailActeur(acteur.getEmailActeur());
+            }
     
             if (acteur.getTypeActeur() != null) {
                 ac.setTypeActeur(acteur.getTypeActeur());
