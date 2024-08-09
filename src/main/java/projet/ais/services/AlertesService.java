@@ -44,7 +44,7 @@ import projet.ais.repository.PaysRepository;
 public class AlertesService {
     
     @Autowired
-    private AlertesRepository AlertesRepository;
+    private AlertesRepository alertesRepository;
 
     @Autowired
     private IdGenerator idGenerator;
@@ -137,7 +137,7 @@ public class AlertesService {
             LocalDateTime now = LocalDateTime.now();
             String formattedDateTime = now.format(formatter);
             alertes.setDateAjout(formattedDateTime);
-           Alertes savedAlertes = AlertesRepository.save(alertes);        
+           Alertes savedAlertes = alertesRepository.save(alertes);        
         //    sendMessageToAllActeur();
          return savedAlertes;
    
@@ -170,7 +170,7 @@ public class AlertesService {
 
 
      public Page<Alertes> getAllAlertesPageable(Pageable pageable) {
-        return AlertesRepository.findByPhotoAlerteIsNotNullAndStatutAlerte(true,pageable);
+        return alertesRepository.findByPhotoAlerteIsNotNullAndStatutAlerte(true,pageable);
     }
 
     //   public Page<Alertes> getAlertesByPaysForActeur(String idActeur, Alertes al, int page, int size) {
@@ -209,17 +209,17 @@ public class AlertesService {
         Pageable pageable = PageRequest.of(page, size);
 
         // Retrieve alerts where the country matches the actor's country, photo is not null, and status matches
-        return AlertesRepository.findByPhotoAlerteIsNotNullAndStatutAlerteAndPays(true, niveau3PaysNom, pageable);
+        return alertesRepository.findByPhotoAlerteIsNotNullAndStatutAlerteAndPays(true, niveau3PaysNom, pageable);
     }
 
 
     //  public Page<Alertes> getAllAlertesPageable(Pageable pageable) {
-    //     return AlertesRepository.findAll(pageable);
+    //     return alertesRepository.findAll(pageable);
     // }
 
     //    //Liste des Alertes par acteur
     // public List<Alertes> getAllAlertesByActeur(String id){
-    //     List<Alertes>  AlertesList = AlertesRepository.findAllByActeurIdActeur(id);
+    //     List<Alertes>  AlertesList = alertesRepository.findAllByActeurIdActeur(id);
 
     //     if(AlertesList.isEmpty()){
     //         throw new EntityNotFoundException("Aucun Alertes trouvé");
@@ -235,7 +235,7 @@ public class AlertesService {
       public Alertes updateAlertes(Alertes alertes, MultipartFile imageFile, MultipartFile audio, MultipartFile video, String id) throws Exception {
         
         
-        Alertes c = AlertesRepository.findByIdAlerte(alertes.getIdAlerte());
+        Alertes c = alertesRepository.findByIdAlerte(alertes.getIdAlerte());
         if(c == null){
 
             throw new IllegalArgumentException("Le Alertes avec l'id " + c + " n'existe déjà");
@@ -310,7 +310,7 @@ public class AlertesService {
             c.setTitreAlerte(alertes.getTitreAlerte());
             c.setPays(alertes.getPays());
             c.setCodePays(alertes.getCodePays());
-           Alertes updatedAlertes = AlertesRepository.save(c);
+           Alertes updatedAlertes = alertesRepository.save(c);
    
          return updatedAlertes;
         
@@ -319,7 +319,7 @@ public class AlertesService {
 
      public Page<Alertes> getAlertesByPaysSortedByDate(String pays, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "dateAjout"));
-        Page<Alertes> alertesPage = AlertesRepository.findByPhotoAlerteIsNotNullAndStatutAlerteAndPays(true, pays, pageable);
+        Page<Alertes> alertesPage = alertesRepository.findByPhotoAlerteIsNotNullAndStatutAlerteAndPays(true, pays, pageable);
 
         if (alertesPage.isEmpty()) {
             throw new NoAlertsFoundException("Aucune alerte trouvée pour le pays: " + pays);
@@ -330,7 +330,7 @@ public class AlertesService {
   
       //Liste des Alertess
        public List<Alertes> getAllAlertes(){
-        List<Alertes> AlertesList = AlertesRepository.findAll();
+        List<Alertes> AlertesList = alertesRepository.findAll();
 
         AlertesList = AlertesList
         .stream().sorted((v1,v2) -> v2.getDateAjout().compareTo(v1.getDateAjout()))
@@ -340,53 +340,67 @@ public class AlertesService {
     }
 
     public String deleteAlertes(String id){
-        Alertes alertes = AlertesRepository.findById(id).orElseThrow(null);
+        Alertes alertes = alertesRepository.findById(id).orElseThrow(null);
 
-        AlertesRepository.delete(alertes);
+        alertesRepository.delete(alertes);
         return "Alertes supprimé avec success";
     }
 
     public Alertes active(String id) throws Exception{
-        Alertes alertes = AlertesRepository.findById(id).orElseThrow(null);
+        Alertes alertes = alertesRepository.findById(id).orElseThrow(null);
 
         try {
             alertes.setStatutAlerte(true);
         } catch (Exception e) {
             throw new Exception("Erreur lors de l'activation du Alertes: " + e.getMessage());
         }
-        return AlertesRepository.save(alertes);
+        return alertesRepository.save(alertes);
     }
 
     public Alertes desactive(String id) throws Exception{
-        Alertes alertes = AlertesRepository.findById(id).orElseThrow(null);
+        Alertes alertes = alertesRepository.findById(id).orElseThrow(null);
 
         try {
             alertes.setStatutAlerte(false);
         } catch (Exception e) {
             throw new Exception("Erreur lors de la desactivation du Alertes : " + e.getMessage());
         }
-        return AlertesRepository.save(alertes);
+        return alertesRepository.save(alertes);
     }
 
-
+//fecth alerte par pays bane 
            @Transactional
     public Page<Alertes> getAllAlertesPageableByPays(String niveau3PaysActeur, Pageable pageable) {
-        // Fetch alertes  from the specified country
-        Page<Alertes> alertesByPays = AlertesRepository.findByPhotoAlerteIsNotNullAndStatutAlerteTrueAndPays( 
+        
+        Page<Alertes> alertesByPays = alertesRepository.findByPhotoAlerteIsNotNullAndStatutAlerteTrueAndPays( 
             niveau3PaysActeur.trim().toLowerCase(), pageable);
 
         List<Alertes> alertesList = new ArrayList<>(alertesByPays.getContent());
 
-        // Fetch alertes from other countries if needed
+         
         if (alertesList.size() < pageable.getPageSize()) {
             Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - alertesList.size());
-            Page<Alertes> alertesComplement = AlertesRepository.findByPhotoAlerteIsNotNullAndStatutAlerteTrueAndPaysNot(
+            Page<Alertes> alertesComplement = alertesRepository.findByPhotoAlerteIsNotNullAndStatutAlerteTrueAndPaysNot(
                  niveau3PaysActeur.trim().toLowerCase(), complementPageable);
             alertesList.addAll(alertesComplement.getContent());
         }
 
         return new PageImpl<>(alertesList, pageable, alertesByPays.getTotalElements() + alertesList.size());
     }
-    
-    
+
+//fecth alerte par pays sy 
+    @Transactional
+    public Page<Alertes> getAllAlertesByPays(String pays, Pageable pageable) {
+        // Utiliser la méthode du repository pour récupérer les alertes
+        Page<Alertes> alertesByPays = alertesRepository.findByPaysAndStatutAlerte(
+            pays.trim().toLowerCase(), true, pageable);
+
+        // Créer une nouvelle liste contenant les alertes récupérées
+        List<Alertes> alertesList = new ArrayList<>(alertesByPays.getContent());
+        
+        alertesList.sort(Comparator.comparing(Alertes::getDateAjout).reversed());
+        // Retourner une nouvelle page avec les alertes récupérées
+        return new PageImpl<>(alertesList, pageable, alertesByPays.getTotalElements());
+    }
+
 }

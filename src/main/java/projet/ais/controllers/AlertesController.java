@@ -26,6 +26,7 @@ import jakarta.validation.Valid;
 import projet.ais.Exception.NoAlertsFoundException;
 import projet.ais.models.Alertes;
 import projet.ais.models.AlertesOffLine;
+import projet.ais.models.Intrant;
 import projet.ais.models.Stock;
 import projet.ais.repository.AlerteRepository;
 import projet.ais.repository.AlertesRepository;
@@ -283,6 +284,19 @@ private MediaType determineContentTypeAudio(String fileName) {
         return ResponseEntity.ok().body(alertes);
     }
 
+    @GetMapping("/getAlertesByPays")
+        public ResponseEntity<Page<Alertes>> getAlerteByPays(
+                @RequestParam String pays,
+                @RequestParam int page,
+                @RequestParam int size) {
+
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Alertes> alertes = alertesService.getAllAlertesByPays(pays,pageable);
+
+            return ResponseEntity.ok(alertes);
+        }
+
+
     //recuperer les alertes par pays de lacteur connecté
     @GetMapping("/alertesByPaysForConnectedActor")
     public Page<Alertes> getAlertesByPaysForActeur(
@@ -306,6 +320,7 @@ private MediaType determineContentTypeAudio(String fileName) {
         return alertesService.getAllAlertesPageableByPays(niveau3PaysActeur, pageable);
     }
     
+   
 
     @GetMapping("/getAlertesByPaysSortedByDate")
     public ResponseEntity<?> getAlertesByPaysSortedByDate(

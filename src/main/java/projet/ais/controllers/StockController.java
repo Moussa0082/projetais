@@ -249,14 +249,6 @@ public Stock updateQuantiteStock(@PathVariable String id, @RequestParam double q
         return ResponseEntity.ok().body(stocks);
     }
 
-                                    
-       
-
-        // @GetMapping("/getStocksByPaysWithPagination")
-        // public Page<Stock> getAllStocksPageableByPays(@RequestParam String niveau3PaysActeur, Pageable pageable) {
-        //     return stockService.getAllStocksPageableByPays(niveau3PaysActeur, pageable);
-        // }
-
         @GetMapping("/getStocksByPaysWithPagination")
         public ResponseEntity<Page<Stock>> getAllStocksPageableByPays(
                 @RequestParam String niveau3PaysActeur,

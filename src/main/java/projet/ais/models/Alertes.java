@@ -44,7 +44,7 @@ public class Alertes {
     
     
     @Column
-    private boolean statutAlerte = true;
+   private boolean statutAlerte = true;
 
     @Column
     private String pays;

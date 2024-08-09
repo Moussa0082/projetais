@@ -158,7 +158,6 @@ public class StockService {
             stock.setIdStock(idCode);
             stock.setCodeStock(codes);
 
-            
             String pattern = "yyyy-MM-dd HH:mm";
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
             LocalDateTime now = LocalDateTime.now();
@@ -202,6 +201,7 @@ public class StockService {
     
         return st;
     }
+    
 
 
     private String generateQRCodeData(Stock stock) {
@@ -334,7 +334,6 @@ private String generateQRCodeImage(String qrCodeData) {
         // Créer et retourner une nouvelle page avec la liste complète des stocks et le pageable original
         return new PageImpl<>(stocksList, pageable, totalElements);
     }
-    
 
     // public Page<Stock> getAllStocksPageableByPays(String pays, Pageable pageable) {
        
