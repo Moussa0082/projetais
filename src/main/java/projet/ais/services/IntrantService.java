@@ -174,18 +174,18 @@ public class IntrantService {
 
       // recuperer les intrants par  categorie avec pagination
     public Page<Intrant> getIntrantByCategorieWithPagination(String idCategorieProduit,Pageable pageable) {
-        return intrantRepository.findByCategorieProduit_IdCategorieProduitAndStatutIntrantAndActeurStatutActeur(idCategorieProduit, true, true, pageable);
+        return intrantRepository.findByCategorieProduit_IdCategorieProduitAndStatutIntrantAndActeurStatutActeurAndQuantiteIntrantGreaterThan(idCategorieProduit, true, true, pageable,0.0);
     }
 
     // recuperer les intrants par  acteur avec pagination
     public Page<Intrant> getIntrantByActeurWithPagination(String idActeur,Pageable pageable) {
-        return intrantRepository.findByActeur_IdActeur(idActeur, pageable);
+        return intrantRepository.findByActeur_IdActeurAndQuantiteIntrantGreaterThan(idActeur, pageable,0.0);
     }
 
 
        //Liste des intrants par categorie
     public List<Intrant> getAllIntrantByCategorie(String id){
-        List<Intrant>  intrantList = intrantRepository.findAllByCategorieProduit_IdCategorieProduit(id);
+        List<Intrant>  intrantList = intrantRepository.findAllByCategorieProduit_IdCategorieProduitAndQuantiteIntrantGreaterThan(id,0.0);
 
         if(intrantList.isEmpty()){
             throw new EntityNotFoundException("Aucun intrant trouvé");
@@ -249,8 +249,8 @@ public class IntrantService {
     String paysNormalise = pays.trim().toLowerCase();
     
     // Récupérer les stocks pour le pays spécifié
-    Page<Intrant> intrantByPays = intrantRepository.findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPays(
-        libelleFiliere, true,true,paysNormalise, pageable);
+    Page<Intrant> intrantByPays = intrantRepository.findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysAndQuantiteIntrantGreaterThan(
+        libelleFiliere, true,true,paysNormalise, pageable,0.0);
 
     List<Intrant> intrantList = new ArrayList<>(intrantByPays.getContent());
     long totalElements = intrantByPays.getTotalElements();
@@ -258,8 +258,8 @@ public class IntrantService {
     // Si le nombre de stocks est inférieur à la taille de la page, compléter avec des stocks d'autres pays
     if (intrantList.size() < pageable.getPageSize()) {
         Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - intrantList.size());
-        Page<Intrant> intrantComplement = intrantRepository.findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysNot(
-            libelleFiliere,true,true, pays.trim().toLowerCase(), complementPageable);
+        Page<Intrant> intrantComplement = intrantRepository.findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysNotAndQuantiteIntrantGreaterThan(
+            libelleFiliere,true,true, pays.trim().toLowerCase(), complementPageable,0.0);
         intrantList.addAll(intrantComplement.getContent());
         totalElements += intrantComplement.getTotalElements();
     }
@@ -275,8 +275,8 @@ public class IntrantService {
     String paysNormalise = pays.trim().toLowerCase();
     
     // Récupérer les stocks pour le pays spécifié
-    Page<Intrant> intrantByPays = intrantRepository.findAllByCategorieProduit_idCategorieProduitAndCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPays(
-        idCategorie ,libelleFiliere, true,true,paysNormalise, pageable);
+    Page<Intrant> intrantByPays = intrantRepository.findAllByCategorieProduit_idCategorieProduitAndCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysAndQuantiteIntrantGreaterThan(
+        idCategorie ,libelleFiliere, true,true,paysNormalise, pageable,0.0);
 
     List<Intrant> intrantList = new ArrayList<>(intrantByPays.getContent());
     long totalElements = intrantByPays.getTotalElements();
@@ -284,8 +284,8 @@ public class IntrantService {
     // Si le nombre de stocks est inférieur à la taille de la page, compléter avec des stocks d'autres pays
     if (intrantList.size() < pageable.getPageSize()) {
         Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - intrantList.size());
-        Page<Intrant> intrantComplement = intrantRepository.findAllByCategorieProduit_idCategorieProduitAndCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysNot(
-           idCategorie, libelleFiliere,true,true, pays.trim().toLowerCase(), complementPageable);
+        Page<Intrant> intrantComplement = intrantRepository.findAllByCategorieProduit_idCategorieProduitAndCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysNotAndQuantiteIntrantGreaterThan(
+           idCategorie, libelleFiliere,true,true, pays.trim().toLowerCase(), complementPageable,0.0);
         intrantList.addAll(intrantComplement.getContent());
         totalElements += intrantComplement.getTotalElements();
     }
@@ -302,7 +302,7 @@ public class IntrantService {
     // }
 
     public Page<Intrant> getAllIntrantPageable(Pageable pageable) {
-        return intrantRepository.findAllByStatutIntrantAndActeurStatutActeur(true,true,pageable);
+        return intrantRepository.findAllByStatutIntrantAndActeurStatutActeurAndQuantiteIntrantGreaterThan(true,true,pageable,0.0);
     }    
 
     @Transactional
@@ -332,15 +332,15 @@ public class IntrantService {
     @Transactional
     public Page<Intrant> getAllIntrantPageableByPaysByCategorie(String idCategorieProduit, String niveau3PaysActeur, Pageable pageable) {
         // Fetch intrants from the specified country
-        Page<Intrant> intrantByPays = intrantRepository.findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndPaysAndActeurStatutActeurTrue(
-            idCategorieProduit, niveau3PaysActeur.trim().toLowerCase(), pageable);
+        Page<Intrant> intrantByPays = intrantRepository.findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndPaysAndActeurStatutActeurTrueAndQuantiteIntrantGreaterThan(
+            idCategorieProduit, niveau3PaysActeur.trim().toLowerCase(), pageable,0.0);
 
         List<Intrant> intrantsList = new ArrayList<>(intrantByPays.getContent());
 
         // If no intrants are found for the specified country, fetch intrants from other countries
         if (intrantsList.isEmpty()) {
-            Page<Intrant> intrantFromOtherCountries = intrantRepository.findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndActeurStatutActeurTrue(
-                idCategorieProduit, pageable);
+            Page<Intrant> intrantFromOtherCountries = intrantRepository.findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndActeurStatutActeurTrueAndQuantiteIntrantGreaterThan(
+                idCategorieProduit, pageable,0.0);
 
             return new PageImpl<>(intrantFromOtherCountries.getContent(), pageable, intrantFromOtherCountries.getTotalElements());
         }
@@ -348,8 +348,8 @@ public class IntrantService {
         // Fetch intrants from other countries if needed to fill the page
         if (intrantsList.size() < pageable.getPageSize()) {
             Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - intrantsList.size());
-            Page<Intrant> intrantComplement = intrantRepository.findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndActeurStatutActeurTrueAndPaysNot(
-                idCategorieProduit, niveau3PaysActeur.trim().toLowerCase(), complementPageable);
+            Page<Intrant> intrantComplement = intrantRepository.findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndActeurStatutActeurTrueAndPaysNotAndQuantiteIntrantGreaterThan(
+                idCategorieProduit, niveau3PaysActeur.trim().toLowerCase(), complementPageable,0.0);
             intrantsList.addAll(intrantComplement.getContent());
         }
 
@@ -359,14 +359,14 @@ public class IntrantService {
 
      @Transactional
     public Page<Intrant> getAllIntrantPageableByPaysByLibelleCategorie(String libelle, String niveau3PaysActeur, Pageable pageable) {
-        Page<Intrant> intrantByPays = intrantRepository.findAllByCategorieProduit_filiere_libelleFiliereAndPaysAndStatutIntrantTrueAndActeurStatutActeurTrue(niveau3PaysActeur.trim().toLowerCase(), libelle.trim().toLowerCase(), pageable);
+        Page<Intrant> intrantByPays = intrantRepository.findAllByCategorieProduit_filiere_libelleFiliereAndPaysAndStatutIntrantTrueAndActeurStatutActeurTrueAndQuantiteIntrantGreaterThan(niveau3PaysActeur.trim().toLowerCase(), libelle.trim().toLowerCase(), pageable,0.0);
         
         List<Intrant> intrantsList = new ArrayList<>(intrantByPays.getContent());
        
             // Si le nombre d'intrants est inférieur au nombre requis, compléter avec des intrants d'autres pays
             if (intrantsList.size() < pageable.getPageSize()) {
                 Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - intrantsList.size());
-                Page<Intrant> intrantComplement = intrantRepository.findAllByCategorieProduit_filiere_libelleFiliereAndStatutIntrantTrueAndActeurStatutActeurTrueAndPaysNot(niveau3PaysActeur.trim().toLowerCase(), libelle.trim().toLowerCase(), complementPageable);
+                Page<Intrant> intrantComplement = intrantRepository.findAllByCategorieProduit_filiere_libelleFiliereAndStatutIntrantTrueAndActeurStatutActeurTrueAndPaysNotAndQuantiteIntrantGreaterThan(niveau3PaysActeur.trim().toLowerCase(), libelle.trim().toLowerCase(), complementPageable,0.0);
                 intrantsList.addAll(intrantComplement.getContent());
             }
 
@@ -403,7 +403,7 @@ public class IntrantService {
         String paysNormalise = pays.trim().toLowerCase();
         
         // Récupérer les stocks pour le pays spécifié
-        Page<Intrant> intrantByPays = intrantRepository.findAllByStatutIntrantTrueAndPaysAndActeurStatutActeurTrue(paysNormalise, pageable);
+        Page<Intrant> intrantByPays = intrantRepository.findAllByStatutIntrantTrueAndPaysAndActeurStatutActeurTrueAndQuantiteIntrantGreaterThan(paysNormalise, pageable,0.0);
         
         List<Intrant> intrantList = new ArrayList<>(intrantByPays.getContent());
         long totalElements = intrantByPays.getTotalElements();
@@ -411,7 +411,7 @@ public class IntrantService {
         // Si le nombre de stocks est inférieur à la taille de la page, compléter avec des stocks d'autres pays
         if (intrantList.size() < pageable.getPageSize()) {
             Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - intrantList.size());
-            Page<Intrant> stocksComplement = intrantRepository.findAllByStatutIntrantTrueAndActeurStatutActeurTrueAndPaysNot(paysNormalise, complementPageable);
+            Page<Intrant> stocksComplement = intrantRepository.findAllByStatutIntrantTrueAndActeurStatutActeurTrueAndPaysNotAndQuantiteIntrantGreaterThan(paysNormalise, complementPageable,0.0);
             intrantList.addAll(stocksComplement.getContent());
             totalElements += stocksComplement.getTotalElements();
         }

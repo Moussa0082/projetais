@@ -248,15 +248,15 @@ private String generateQRCodeImage(String qrCodeData) {
     @Transactional
     public Page<Stock> getAllStockPageableByPaysByCategorie(CategorieProduit categorie, String niveau3PaysActeur, Pageable pageable) {
         // Fetch stock from the specified country
-        Page<Stock> stocksByPays = stockRepository.findBySpeculation_CategorieProduitAndPaysAndStatutSotckAndActeurStatutActeur(
-            categorie, niveau3PaysActeur.trim().toLowerCase(), true, true, pageable);
+        Page<Stock> stocksByPays = stockRepository.findBySpeculation_CategorieProduitAndPaysAndStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(
+            categorie, niveau3PaysActeur.trim().toLowerCase(), true, true, pageable,0.0);
 
         List<Stock> stocksList = new ArrayList<>(stocksByPays.getContent());
 
         // If no stocks are found for the specified country, fetch stocks from other countries
         if (stocksList.isEmpty()) {
-            Page<Stock> stocksFromOtherCountries = stockRepository.findBySpeculation_CategorieProduitAndStatutSotckAndActeurStatutActeur(
-                categorie, true, true, pageable);
+            Page<Stock> stocksFromOtherCountries = stockRepository.findBySpeculation_CategorieProduitAndStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(
+                categorie, true, true, pageable,0.0);
 
             return new PageImpl<>(stocksFromOtherCountries.getContent(), pageable, stocksFromOtherCountries.getTotalElements());
         }
@@ -264,8 +264,8 @@ private String generateQRCodeImage(String qrCodeData) {
         // Fetch stocks from other countries if needed to fill the page
         if (stocksList.size() < pageable.getPageSize()) {
             Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - stocksList.size());
-            Page<Stock> stocksComplement = stockRepository.findBySpeculation_CategorieProduitAndPaysNotAndStatutSotckAndActeurStatutActeur(
-                categorie, niveau3PaysActeur.trim().toLowerCase(), true, true, complementPageable);
+            Page<Stock> stocksComplement = stockRepository.findBySpeculation_CategorieProduitAndPaysNotAndStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(
+                categorie, niveau3PaysActeur.trim().toLowerCase(), true, true, complementPageable,0.0);
             stocksList.addAll(stocksComplement.getContent());
         }
 
@@ -274,11 +274,11 @@ private String generateQRCodeImage(String qrCodeData) {
 
 ////New methode
     public Page<Stock> getAllStockPageableByPaysAndStatut(String niveau3PaysActeur, Pageable pageable) {
-        Page<Stock> stockByPays = stockRepository.findAllByStatutSotckTrueAndPaysAndActeurStatutActeurTrue(niveau3PaysActeur.trim().toLowerCase(), pageable);
+        Page<Stock> stockByPays = stockRepository.findAllByStatutSotckTrueAndPaysAndActeurStatutActeurTrueAndQuantiteStockGreaterThan(niveau3PaysActeur.trim().toLowerCase(), pageable,0.0);
         
         if (!stockByPays.hasContent()) {
             System.out.println("Pas d'autres stock à fetch pour le pays " + niveau3PaysActeur);
-            return stockRepository.findAllByStatutSotckAndActeurStatutActeur(true, true, pageable);
+            return stockRepository.findAllByStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(true, true, pageable,0.0);
         } else {
             System.out.println("stock fetch pour le pays " + niveau3PaysActeur);
             List<Stock> stocksList = new ArrayList<>(stockByPays.getContent());
@@ -286,7 +286,7 @@ private String generateQRCodeImage(String qrCodeData) {
             // Si le nombre d'intrants est inférieur au nombre requis, compléter avec des intrants d'autres pays
             if (stocksList.size() < pageable.getPageSize()) {
                 Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - stocksList.size());
-                Page<Stock> stockComplement = stockRepository.findAllByStatutSotckTrueAndActeurStatutActeurTrueAndPaysNot(niveau3PaysActeur.trim().toLowerCase(), complementPageable);
+                Page<Stock> stockComplement = stockRepository.findAllByStatutSotckTrueAndActeurStatutActeurTrueAndPaysNotAndQuantiteStockGreaterThan(niveau3PaysActeur.trim().toLowerCase(), complementPageable,0.0);
                 stocksList.addAll(stockComplement.getContent());
             }
 
@@ -295,18 +295,18 @@ private String generateQRCodeImage(String qrCodeData) {
     }
 
     public Page<Stock> getAllStockPageableByPaysByMagasinAndCategorie(String idCategorieProduit, String idMagasin, Pageable pageable) {
-        return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndStatutSotck(
-                    idCategorieProduit, idMagasin, true, pageable);
+        return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndStatutSotckAndQuantiteStockGreaterThan(
+                    idCategorieProduit, idMagasin, true, pageable,0.0);
     }
 
     public Page<Stock> getAllStockPageableByPaysByMagasin(String idMagasin, Pageable pageable) {
-        return stockRepository.findByMagasin_IdMagasinAndStatutSotck(
-                    idMagasin, true, pageable);
+        return stockRepository.findByMagasin_IdMagasinAndStatutSotckAndQuantiteStockGreaterThan(
+                    idMagasin, true, pageable,0.0);
     }
 
     public Page<Stock> getAllStockByActeurAndCategorie(String idCategorie, String idActeur, Pageable pageable) {
-        return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduit_AndActeur_IdActeur(
-                    idCategorie,idActeur, pageable);
+        return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduit_AndActeur_IdActeurAndQuantiteStockGreaterThan(
+                    idCategorie,idActeur, pageable,0.0);
     }
 
   
@@ -314,7 +314,7 @@ private String generateQRCodeImage(String qrCodeData) {
         String paysNormalise = pays.trim().toLowerCase();
         
         // Récupérer les stocks pour le pays spécifié
-        Page<Stock> stocksByPays = stockRepository.findAllByStatutSotckTrueAndPaysAndActeurStatutActeurTrue(paysNormalise, pageable);
+        Page<Stock> stocksByPays = stockRepository.findAllByStatutSotckTrueAndPaysAndActeurStatutActeurTrueAndQuantiteStockGreaterThan(paysNormalise, pageable,0.0);
         
         List<Stock> stocksList = new ArrayList<>(stocksByPays.getContent());
         long totalElements = stocksByPays.getTotalElements();
@@ -325,7 +325,7 @@ private String generateQRCodeImage(String qrCodeData) {
             
             // Si oui, compléter avec des stocks d'autres pays
             Pageable complementPageable = PageRequest.of(0, remainingSize);
-            Page<Stock> stocksComplement = stockRepository.findAllByStatutSotckTrueAndActeurStatutActeurTrueAndPaysNot(paysNormalise, complementPageable);
+            Page<Stock> stocksComplement = stockRepository.findAllByStatutSotckTrueAndActeurStatutActeurTrueAndPaysNotAndQuantiteStockGreaterThan(paysNormalise, complementPageable,0.0);
             
             stocksList.addAll(stocksComplement.getContent());
             totalElements += stocksComplement.getTotalElements();
@@ -389,11 +389,11 @@ private String generateQRCodeImage(String qrCodeData) {
     }
 
     public Page<Stock> getAllStocksPageable(Pageable pageable) {
-        return stockRepository.findAllByStatutSotckAndActeurStatutActeur(true, true,pageable);
+        return stockRepository.findAllByStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(true, true,pageable,0.0);
     }
 
     public Page<Stock> getAllStocksPageableAndStatut(Pageable pageable) {
-        return stockRepository.findAllByStatutSotckAndActeurStatutActeur(true, true,pageable);
+        return stockRepository.findAllByStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(true, true,pageable,0.0);
     }
 
     
@@ -618,12 +618,12 @@ private String generateQRCodeImage(String qrCodeData) {
 
     //recuperer les stock par categorie produit et magasin
     public List<Stock> getStocksByCategorieAndMagasin(String idCategorieProduit, String idMagasin) {
-        return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasin(idCategorieProduit, idMagasin);
+        return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasinAndQuantiteStockGreaterThan(idCategorieProduit, idMagasin,0.0);
     }
     
     // recuperer les stock par  magasin avec pagination
     public Page<Stock> getStocksByMagasinWithPagination(String idMagasin,Pageable pageable) {
-        return stockRepository.findByMagasin_IdMagasinAndStatutSotckAndActeurStatutActeur(idMagasin,true, true,pageable);
+        return stockRepository.findByMagasin_IdMagasinAndStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(idMagasin,true, true,pageable,0.0);
     }
 
      // recuperer les intrants par  libelle categorie
@@ -634,15 +634,15 @@ private String generateQRCodeImage(String qrCodeData) {
     //liste stock par libelle 
     public Page<Stock> getAllStockByLibelleCategorie(String libelleFiliere, String pays, Pageable pageable) {
         // Première requête pour récupérer les matériels pour le pays spécifique
-        Page<Stock> stockByPays = stockRepository.findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPays(
-            libelleFiliere,true,true, pays.trim().toLowerCase(), pageable);
+        Page<Stock> stockByPays = stockRepository.findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysAndQuantiteStockGreaterThan(
+            libelleFiliere,true,true, pays.trim().toLowerCase(), pageable,0.0);
     
         // Si aucun matériel trouvé pour le pays spécifique
         if (!stockByPays.hasContent()) {
             System.out.println("Pas d'autres stock à fetch pour le pays " + pays);
             // Récupérer les matériels pour d'autres pays
-            return stockRepository.findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNot(
-                libelleFiliere,true,true, pays.trim().toLowerCase(), pageable);
+            return stockRepository.findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNotAndQuantiteStockGreaterThan(
+                libelleFiliere,true,true, pays.trim().toLowerCase(), pageable,0.0);
         } else {
             System.out.println("Materiels fetch pour le pays " + pays);
             List<Stock> stockList = new ArrayList<>(stockByPays.getContent());
@@ -650,8 +650,8 @@ private String generateQRCodeImage(String qrCodeData) {
             // Si le nombre d' intrant est inférieur au nombre requis, compléter avec des intrants d'autres pays
             if (stockList.size() < pageable.getPageSize()) {
                 Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - stockList.size());
-                Page<Stock> intrantComplement =  stockRepository.findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNot(
-                    libelleFiliere,true,true, pays.trim().toLowerCase(), complementPageable);
+                Page<Stock> intrantComplement =  stockRepository.findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNotAndQuantiteStockGreaterThan(
+                    libelleFiliere,true,true, pays.trim().toLowerCase(), complementPageable,0.0);
                     stockList.addAll(intrantComplement.getContent());
             }
             return new PageImpl<>(stockList, pageable, stockByPays.getTotalElements() + stockList.size());
@@ -662,15 +662,15 @@ private String generateQRCodeImage(String qrCodeData) {
     @Transactional
     public Page<Stock> getAllStockPageableByPaysByCategorieAndFiliere(String idcategorie,String libelleFiliere, String niveau3PaysActeur, Pageable pageable) {
         // Fetch stock from the specified country
-        Page<Stock> stocksByPays = stockRepository.findAllBySpeculation_CategorieProduit_idCategorieProduitAndSpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPays(
-            idcategorie, libelleFiliere, true, true, niveau3PaysActeur.trim().toLowerCase(), pageable);
+        Page<Stock> stocksByPays = stockRepository.findAllBySpeculation_CategorieProduit_idCategorieProduitAndSpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysAndQuantiteStockGreaterThan(
+            idcategorie, libelleFiliere, true, true, niveau3PaysActeur.trim().toLowerCase(), pageable,0.0);
 
         List<Stock> stocksList = new ArrayList<>(stocksByPays.getContent());
 
         // If no stocks are found for the specified country, fetch stocks from other countries
         if (stocksList.isEmpty()) {
-            Page<Stock> stocksFromOtherCountries = stockRepository.findAllBySpeculation_CategorieProduit_idCategorieProduitAndSpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNot(
-                idcategorie, libelleFiliere ,true, true,  niveau3PaysActeur.trim().toLowerCase(), pageable);
+            Page<Stock> stocksFromOtherCountries = stockRepository.findAllBySpeculation_CategorieProduit_idCategorieProduitAndSpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNotAndQuantiteStockGreaterThan(
+                idcategorie, libelleFiliere ,true, true,  niveau3PaysActeur.trim().toLowerCase(), pageable,0.0);
 
             return new PageImpl<>(stocksFromOtherCountries.getContent(), pageable, stocksFromOtherCountries.getTotalElements());
         }
@@ -678,8 +678,8 @@ private String generateQRCodeImage(String qrCodeData) {
         // Fetch stocks from other countries if needed to fill the page
         if (stocksList.size() < pageable.getPageSize()) {
             Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - stocksList.size());
-            Page<Stock> stocksComplement = stockRepository.findAllBySpeculation_CategorieProduit_idCategorieProduitAndSpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNot(
-                idcategorie, libelleFiliere, true, true,  niveau3PaysActeur.trim().toLowerCase(), complementPageable);
+            Page<Stock> stocksComplement = stockRepository.findAllBySpeculation_CategorieProduit_idCategorieProduitAndSpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNotAndQuantiteStockGreaterThan(
+                idcategorie, libelleFiliere, true, true,  niveau3PaysActeur.trim().toLowerCase(), complementPageable,0.0);
             stocksList.addAll(stocksComplement.getContent());
         }
 
@@ -688,40 +688,40 @@ private String generateQRCodeImage(String qrCodeData) {
 
     // recuperer les stock par  acteur avec pagination
     public Page<Stock> getStocksByActeurWithPagination(String idActeur,Pageable pageable) {
-        return stockRepository.findByActeur_IdActeur(idActeur, pageable);
+        return stockRepository.findByActeur_IdActeurAndQuantiteStockGreaterThan(idActeur, pageable,0.0);
     }
 
     // recuperer les stock par  acteur avec pagination
     public Page<Stock> getStocksByMagasinAndActeurWithPagination(String idMagasin,String idActeur,Pageable pageable) {
-        return stockRepository.findByMagasin_IdMagasinAndActeur_IdActeur(idMagasin,idActeur, pageable);
+        return stockRepository.findByMagasin_IdMagasinAndActeur_IdActeurAndQuantiteStockGreaterThan(idMagasin,idActeur, pageable,0.0);
     }
 
 
     
     //Avec pagination stock par magasin , acteur  et categorie 
     public Page<Stock> listeStockByCategorieProduitAndMagasinWithPagination(String idCategorieProduit, String idMagasin, Pageable pageable) {
-        return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndStatutSotckAndActeurStatutActeur(idCategorieProduit,idMagasin, true, true,pageable);
+        return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(idCategorieProduit,idMagasin, true, true,pageable,0.0);
     }
 
     //recuperer les stock par categorie produit et idActeur
     public List<Stock> getStocksByCategorieAndActeurIdacteur(String idCategorieProduit, String idActeur) {
-        return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduitAndActeur_IdActeur(idCategorieProduit, idActeur);
+        return stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduitAndActeur_IdActeurAndQuantiteStockGreaterThan(idCategorieProduit, idActeur,0.0);
     }
 
       // Récupérer les stocks par catégorie
     public List<Stock> getStocksByCategorie(CategorieProduit categorie) {
-        return stockRepository.findBySpeculation_CategorieProduit(categorie);
+        return stockRepository.findBySpeculation_CategorieProduitAndQuantiteStockGreaterThan(categorie,0.0);
     }
 
 
     public Page<Stock> getStocksByCategorieWithPagination(CategorieProduit categorie, Pageable pageable) {
-        return stockRepository.findBySpeculation_CategorieProduitAndStatutSotckAndActeurStatutActeur(categorie,true, true, pageable);
+        return stockRepository.findBySpeculation_CategorieProduitAndStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(categorie,true, true, pageable,0.0);
     }
 
 
     public List<Stock> listeStockByCategorieProduitAndMagasinAndActeur( String idCategorie, String idMagasin ,String idActeur) throws Exception {
 
-        List<Stock> stockList = stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasinAndActeurIdActeur(idCategorie,idMagasin,idActeur);
+        List<Stock> stockList = stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasinAndActeurIdActeurAndQuantiteStockGreaterThan(idCategorie,idMagasin,idActeur,0.0);
 
         if(stockList.isEmpty())
             throw new IllegalStateException("Aucun stock trouvé");

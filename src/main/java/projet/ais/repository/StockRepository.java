@@ -34,106 +34,76 @@ public interface StockRepository extends JpaRepository<Stock, String>{
     List<Stock> findByIdStockIn(List<String> idStock);
     // List<Stock> findByIdStock(List<String> idStock);
     //Recuperer les stocks par categorie produit
-    List<Stock> findBySpeculation_CategorieProduit(CategorieProduit categorie);
+    List<Stock> findBySpeculation_CategorieProduitAndQuantiteStockGreaterThan(CategorieProduit categorie,double qte);
    
     //Recuperer les stocks par libelle categorie produit
-        Page<Stock> findBySpeculation_CategorieProduit_libelleCategorie(String libelle , Pageable pageable);
+        Page<Stock> findBySpeculation_CategorieProduit_libelleCategorieAndQuantiteStockGreaterThan(String libelle , Pageable pageable,double qte);
         // Page<Stock> findBySpeculation_CategorieProduit_filiere_libelleFiliere(String libelleFiliere, Pageable pageable);
 
- Page<Stock> findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPays(String libelleFiliere, boolean statutSotck, boolean statutActeur ,String pays, Pageable pageable);
-    Page<Stock> findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNot(String libelleFiliere, boolean statutSotck, boolean statutActeur , String pays, Pageable pageable);
+ Page<Stock> findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysAndQuantiteStockGreaterThan(String libelleFiliere, boolean statutSotck, boolean statutActeur ,String pays, Pageable pageable,double qte);
+    Page<Stock> findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNotAndQuantiteStockGreaterThan(String libelleFiliere, boolean statutSotck, boolean statutActeur , String pays, Pageable pageable,double qte);
 
-    Page<Stock> findAllBySpeculation_CategorieProduit_idCategorieProduitAndSpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPays(String idCategorie , String libelleFiliere, boolean statutSotck, boolean statutActeur ,String pays, Pageable pageable);
-    Page<Stock> findAllBySpeculation_CategorieProduit_idCategorieProduitAndSpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNot(String idCategorie , String libelleFiliere, boolean statutSotck, boolean statutActeur , String pays, Pageable pageable);
+    Page<Stock> findAllBySpeculation_CategorieProduit_idCategorieProduitAndSpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysAndQuantiteStockGreaterThan(String idCategorie , String libelleFiliere, boolean statutSotck, boolean statutActeur ,String pays, Pageable pageable,double qte);
+    Page<Stock> findAllBySpeculation_CategorieProduit_idCategorieProduitAndSpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNotAndQuantiteStockGreaterThan(String idCategorie , String libelleFiliere, boolean statutSotck, boolean statutActeur , String pays, Pageable pageable,double qte);
         // Page<Stock> findBySpeculation_CategorieProduit_filiere_libelleFiliereAndPays(String libelleFiliere ,String pays, Pageable pageable);
     //Recuperer les stock par magasin et par categorieProduit
-    List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasin(String idCategorie, String idMagasin);
+    List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasinAndQuantiteStockGreaterThan(String idCategorie, String idMagasin,double qte);
     // List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduit(String idCategorie);
-    List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasinAndActeurIdActeur(
-            String idCategorieProduit, String idMagasin,String idActeur);
+    List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasinAndActeurIdActeurAndQuantiteStockGreaterThan(
+            String idCategorieProduit, String idMagasin,String idActeur,double qte);
 //     Collection<Stock> findByNomProduit(String nomProduit);
     List<Stock> findByCommande_IdCommande(String id);
-    List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduitAndActeur_IdActeur(String idCategorieProduit,
-            String idActeur);
+    List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduitAndActeur_IdActeurAndQuantiteStockGreaterThan(String idCategorieProduit,
+            String idActeur,double qte);
 //     Page<Stock> findAllByStatutSotckAndActeurStatutActeur(boolean statutSotck,boolean statutActeur ,Pageable pageable);
-    Page<Stock> findBySpeculation_CategorieProduitAndStatutSotckAndActeurStatutActeur(CategorieProduit categorie, boolean statutSotck, boolean statutActeur,
-            Pageable pageable);
-    Page<Stock> findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndStatutSotckAndActeurStatutActeur(
-            String idCategorieProduit, String idMagasin, boolean statutSotck, boolean statutActeur,Pageable pageable);
+    Page<Stock> findBySpeculation_CategorieProduitAndStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(CategorieProduit categorie, boolean statutSotck, boolean statutActeur,
+            Pageable pageable,double qte);
+    Page<Stock> findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(
+            String idCategorieProduit, String idMagasin, boolean statutSotck, boolean statutActeur,Pageable pageable,double qte);
     
-            Page<Stock> findBySpeculation_CategorieProduit_IdCategorieProduit_AndActeur_IdActeur(
-            String idCategorieProduit, String idActeur,Pageable pageable);
+            Page<Stock> findBySpeculation_CategorieProduit_IdCategorieProduit_AndActeur_IdActeurAndQuantiteStockGreaterThan(
+            String idCategorieProduit, String idActeur,Pageable pageable,double qte);
             
-    List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasinAndStatutSotck(
-            String idCategorieProduit, String idMagasin, boolean statutSotck, Pageable pageable);
-   Page<Stock> findByMagasin_IdMagasinAndStatutSotckAndActeurStatutActeur(String idMagasin, boolean statutSotck, boolean statutActeur,Pageable pageable);
-   Page<Stock> findByActeur_IdActeur(String idActeur, Pageable pageable);
-Page<Stock> findByMagasin_IdMagasinAndActeur_IdActeur(String idMagasin, String idActeur, Pageable pageable);
+    List<Stock> findBySpeculation_CategorieProduit_IdCategorieProduitAndMagasin_IdMagasinAndStatutSotckAndQuantiteStockGreaterThan(
+            String idCategorieProduit, String idMagasin, boolean statutSotck, Pageable pageable,double qte);
+   Page<Stock> findByMagasin_IdMagasinAndStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(String idMagasin, boolean statutSotck, boolean statutActeur,Pageable pageable,double qte);
+   Page<Stock> findByActeur_IdActeurAndQuantiteStockGreaterThan(String idActeur, Pageable pageable,double qte);
+Page<Stock> findByMagasin_IdMagasinAndActeur_IdActeurAndQuantiteStockGreaterThan(String idMagasin, String idActeur, Pageable pageable,double qte);
  
 //  @Query("SELECT s FROM Stock s WHERE s.pays = :pays AND s.statutSotck = true AND s.acteurStatutActeur = true")
 //     Page<Stock> findAllByPays(@Param("pays") String pays, Pageable pageable);
 
 //     @Query("SELECT s FROM Stock s WHERE s.pays != :pays AND s.statutSotck = true AND s.acteurStatutActeur = true")
 //     Page<Stock> findAllByPaysNot(@Param("pays") String pays, Pageable pageable);
-        Page<Stock> findAllByPaysAndStatutSotckTrueAndActeurStatutActeurTrue(String pays, Pageable pageable);
-        Page<Stock> findAllByPaysNotAndStatutSotckTrueAndActeurStatutActeurTrue(String pays, Pageable pageable);
-        Page<Stock> findAllByStatutSotckTrueAndActeurStatutActeurTrueAndActeurNiveau3PaysActeur(String niveau3PaysActeur,
-                        Pageable pageable);
-// @Query(value = "SELECT s.* FROM stock s " +
-// "JOIN acteur a ON s.acteur_id = a.id " +
-// "WHERE s.statut_sotck = true " +
-// "AND a.statut_acteur = true " +
-// "AND LOWER(a.niveau3_pays_acteur) = LOWER(:niveau3PaysActeur)",
-// countQuery = "SELECT COUNT(*) FROM stock s " +
-//      "JOIN acteur a ON s.id_acteur = a.id " +
-//      "WHERE s.statut_sotck = true " +
-//      "AND a.statut_acteur = true " +
-//      "AND LOWER(a.niveau3_pays_acteur) = LOWER(:niveau3PaysActeur)",
-// nativeQuery = true)
-// Page<Stock> findAllByStatutStockTrueAndActeurStatutActeurTrueAndActeurNiveau3PaysActeur(@Param("niveau3PaysActeur") String niveau3PaysActeur, Pageable pageable);
+        Page<Stock> findAllByPaysAndStatutSotckTrueAndActeurStatutActeurTrueAndQuantiteStockGreaterThan(String pays, Pageable pageable,double qte);
+        Page<Stock> findAllByPaysNotAndStatutSotckTrueAndActeurStatutActeurTrueAndQuantiteStockGreaterThan(String pays, Pageable pageable,double qte);
+        Page<Stock> findAllByStatutSotckTrueAndActeurStatutActeurTrueAndActeurNiveau3PaysActeurAndQuantiteStockGreaterThan(String niveau3PaysActeur,
+                        Pageable pageable,double qte);
 
-             
-//         @Query(value = "SELECT s.* FROM stock s " +
-//         "JOIN acteur a ON s.id_acteur = a.id " +
-//         "WHERE s.statut_sotck = true " +
-//         "AND a.statut_acteur = true " +
-//         "AND LOWER(a.niveau3_pays_acteur) = LOWER(:niveau3PaysActeur)",
-//         countQuery = "SELECT COUNT(*) FROM stock s " +
-//      "JOIN acteur a ON s.id_acteur = a.id " +
-//      "WHERE s.statut_sotck = true " +
-//      "AND a.statut_acteur = true " +
-//      "AND LOWER(a.niveau3_pays_acteur) = LOWER(:niveau3PaysActeur)",
-//       nativeQuery = true)
-//   Page<Stock> findAllByActeurNiveau3PaysActeur(@Param("niveau3PaysActeur") String niveau3PaysActeur, Pageable pageable);
-
-
-        Page<Stock> findAllByStatutSotck(boolean StatutSotck, boolean statutActeur, Pageable pageable);
+        Page<Stock> findAllByStatutSotckAndQuantiteStockGreaterThan(boolean StatutSotck, boolean statutActeur, Pageable pageable,double qte);
 
       
-                Page<Stock> findBySpeculation_CategorieProduitAndPaysAndStatutSotckAndActeurStatutActeur(CategorieProduit categorie, String pays ,
+                Page<Stock> findBySpeculation_CategorieProduitAndPaysAndStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(CategorieProduit categorie, String pays ,
                 boolean statutSotck, boolean statutActeur,
-                Pageable pageable);
-                Page<Stock> findBySpeculation_CategorieProduitAndPaysNotAndStatutSotckAndActeurStatutActeur(CategorieProduit categorie, String pays ,
+                Pageable pageable,double qte);
+                Page<Stock> findBySpeculation_CategorieProduitAndPaysNotAndStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(CategorieProduit categorie, String pays ,
                 boolean statutSotck, boolean statutActeur,
-                Pageable pageable);
+                Pageable pageable,double qte);
 
-                // Page<Stock> findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndPaysAndStatutSotckAndActeurStatutActeur(
-                //         String idCategorieProduit, String idMagasin, String pays, boolean statutSotck, boolean statutActeur,Pageable pageable);
+ Page<Stock> findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndStatutSotckAndQuantiteStockGreaterThan(
+       String idCategorieProduit, String idMagasin, boolean statutSotck,Pageable pageable,double qte);
 
- Page<Stock> findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndStatutSotck(
-       String idCategorieProduit, String idMagasin, boolean statutSotck,Pageable pageable);
+                Page<Stock> findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndPaysNotAndStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(
+                        String idCategorieProduit, String idMagasin, String pays, boolean statutSotck, boolean statutActeur,Pageable pageable,double qte);
 
-                Page<Stock> findBySpeculation_CategorieProduit_IdCategorieProduit_AndMagasin_IdMagasinAndPaysNotAndStatutSotckAndActeurStatutActeur(
-                        String idCategorieProduit, String idMagasin, String pays, boolean statutSotck, boolean statutActeur,Pageable pageable);
-
-                        Page<Stock> findByMagasin_IdMagasinAndStatutSotck( String idMagasin, boolean statutSotck,Pageable pageable);
+                        Page<Stock> findByMagasin_IdMagasinAndStatutSotckAndQuantiteStockGreaterThan( String idMagasin, boolean statutSotck,Pageable pageable,double qte);
 
 
-                        Page<Stock> findByMagasin_IdMagasinAndPaysNotAndStatutSotckAndActeurStatutActeur(String pays, String idMagasin, boolean statutSotck, boolean statutActeur,Pageable pageable);
-                        Page<Stock> findAllByStatutSotckTrueAndPaysNotAndActeurStatutActeurTrue(String pays,
-                                Pageable complementPageable);
+                        Page<Stock> findByMagasin_IdMagasinAndPaysNotAndStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(String pays, String idMagasin, boolean statutSotck, boolean statutActeur,Pageable pageable,double qte);
+                        Page<Stock> findAllByStatutSotckTrueAndPaysNotAndActeurStatutActeurTrueAndQuantiteStockGreaterThan(String pays,
+                                Pageable complementPageable,double qte);
 
-                        Page<Stock> findAllByStatutSotckTrueAndPaysAndActeurStatutActeurTrue(String pays, Pageable pageable);
-                        Page<Stock> findAllByStatutSotckAndActeurStatutActeur(boolean StatutSotck, boolean statutActeur , Pageable pageable);
-                        Page<Stock> findAllByStatutSotckTrueAndActeurStatutActeurTrueAndPaysNot(String pays, Pageable pageable);
+                        Page<Stock> findAllByStatutSotckTrueAndPaysAndActeurStatutActeurTrueAndQuantiteStockGreaterThan(String pays, Pageable pageable,double qte);
+                        Page<Stock> findAllByStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(boolean StatutSotck, boolean statutActeur , Pageable pageable,double qte);
+                        Page<Stock> findAllByStatutSotckTrueAndActeurStatutActeurTrueAndPaysNotAndQuantiteStockGreaterThan(String pays, Pageable pageable,double qte);
 }

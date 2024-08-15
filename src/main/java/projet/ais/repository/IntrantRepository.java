@@ -26,60 +26,60 @@ public interface IntrantRepository extends JpaRepository<Intrant , String> {
 
     List<Intrant> findAllByActeurIdActeur(String idIntrant);
     // List<Intrant> findAllBySpeculationIdSpeculation(String idSpeculation);
-    List<Intrant> findAllByCategorieProduit_IdCategorieProduit(String idCategorieProduit);
+    List<Intrant> findAllByCategorieProduit_IdCategorieProduitAndQuantiteIntrantGreaterThan(String idCategorieProduit,double quantite);
 
     //Intrant par categorie et par pays
-    Page<Intrant> findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndPaysAndActeurStatutActeurTrue(String pays,String idCategorieProduit, Pageable pageable);
+    Page<Intrant> findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndPaysAndActeurStatutActeurTrueAndQuantiteIntrantGreaterThan(String pays,String idCategorieProduit, Pageable pageable,double qte);
     
     //Intrant par categorie et non par pays
-    Page<Intrant> findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndActeurStatutActeurTrueAndPaysNot(String pays,String idCategorieProduit, Pageable pageable);
+    Page<Intrant> findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndActeurStatutActeurTrueAndPaysNotAndQuantiteIntrantGreaterThan(String pays,String idCategorieProduit, Pageable pageable,double qte);
    
     //Non utiliser
-    Page<Intrant> findAllByCategorieProduit_libelleCategorie(String libelle , Pageable pageable);
+    Page<Intrant> findAllByCategorieProduit_libelleCategorieAndQuantiteIntrantGreaterThan(String libelle , Pageable pageable,double qte);
     
     //Intrant par libelle categorie
-    Page<Intrant> findAllByCategorieProduit_filiere_libelleFiliereAndStatutIntrantTrueAndActeurStatutActeurTrue(String libelle , Pageable pageable);
+    Page<Intrant> findAllByCategorieProduit_filiere_libelleFiliereAndStatutIntrantTrueAndActeurStatutActeurTrueAndQuantiteIntrantGreaterThan(String libelle , Pageable pageable,double qte);
     
     //Intrant par libelle categorie
-    Page<Intrant> findAllByCategorieProduit_filiere_libelleFiliere(String libelle , Pageable pageable);
+    Page<Intrant> findAllByCategorieProduit_filiere_libelleFiliereAndQuantiteIntrantGreaterThan(String libelle , Pageable pageable,double qte);
     
-    Page<Intrant> findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPays(String libelleFiliere, boolean statutIntrant, boolean statutActeur, String pays, Pageable pageable);
-    Page<Intrant> findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysNot(String libelleFiliere,boolean statutIntrant, boolean statutActeur, String pays, Pageable pageable);
+    Page<Intrant> findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysAndQuantiteIntrantGreaterThan(String libelleFiliere, boolean statutIntrant, boolean statutActeur, String pays, Pageable pageable,double qte);
+    Page<Intrant> findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysNotAndQuantiteIntrantGreaterThan(String libelleFiliere,boolean statutIntrant, boolean statutActeur, String pays, Pageable pageable,double qte);
 
-    Page<Intrant> findAllByCategorieProduit_idCategorieProduitAndCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPays(String idCategorie ,String libelleFiliere, boolean statutIntrant, boolean statutActeur, String pays, Pageable pageable);
-    Page<Intrant> findAllByCategorieProduit_idCategorieProduitAndCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysNot(String idCategorie ,String libelleFiliere,boolean statutIntrant, boolean statutActeur, String pays, Pageable pageable);
+    Page<Intrant> findAllByCategorieProduit_idCategorieProduitAndCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysAndQuantiteIntrantGreaterThan(String idCategorie ,String libelleFiliere, boolean statutIntrant, boolean statutActeur, String pays, Pageable pageable,double qte);
+    Page<Intrant> findAllByCategorieProduit_idCategorieProduitAndCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysNotAndQuantiteIntrantGreaterThan(String idCategorie ,String libelleFiliere,boolean statutIntrant, boolean statutActeur, String pays, Pageable pageable,double qte);
     // Page<Intrant> findAllByCategorieProduit_filiere_LibelleFiliere(String libelleFiliere, Pageable pageable);
 
     //Intrant par libelle categorie et  par pays
-    Page<Intrant> findAllByCategorieProduit_filiere_libelleFiliereAndPaysAndStatutIntrantTrueAndActeurStatutActeurTrue(String pays , String libelle , Pageable pageable);
+    Page<Intrant> findAllByCategorieProduit_filiere_libelleFiliereAndPaysAndStatutIntrantTrueAndActeurStatutActeurTrueAndQuantiteIntrantGreaterThan(String pays , String libelle , Pageable pageable,double qte);
     
     //Intrant par libelle categorie et non par pays
-    Page<Intrant> findAllByCategorieProduit_filiere_libelleFiliereAndStatutIntrantTrueAndActeurStatutActeurTrueAndPaysNot(String pays , String libelle , Pageable pageable);
+    Page<Intrant> findAllByCategorieProduit_filiere_libelleFiliereAndStatutIntrantTrueAndActeurStatutActeurTrueAndPaysNotAndQuantiteIntrantGreaterThan(String pays , String libelle , Pageable pageable,double qte);
     
     // Collection<Intrant> findByNomIntrant(String nomIntrant);
         
          //ancien
-        Page<Intrant> findByCategorieProduit_IdCategorieProduitAndStatutIntrantAndActeurStatutActeur(String idCategorieProduit, boolean statutIntrant,
-        boolean statutActeur,  Pageable pageable);
+        Page<Intrant> findByCategorieProduit_IdCategorieProduitAndStatutIntrantAndActeurStatutActeurAndQuantiteIntrantGreaterThan(String idCategorieProduit, boolean statutIntrant,
+        boolean statutActeur,  Pageable pageable,double qte);
 
-    Page<Intrant> findByCategorieProduit_IdCategorieProduitAndStatutIntrantAndPaysAndActeurStatutActeur(String idCategorieProduit, String pays, boolean statutIntrant,
-         boolean statutActeur,  Pageable pageable);
+    Page<Intrant> findByCategorieProduit_IdCategorieProduitAndStatutIntrantAndPaysAndActeurStatutActeurAndQuantiteIntrantGreaterThan(String idCategorieProduit, String pays, boolean statutIntrant,
+         boolean statutActeur,  Pageable pageable,double qte);
 
-    Page<Intrant> findByActeur_IdActeur(String idActeur, Pageable pageable);
+    Page<Intrant> findByActeur_IdActeurAndQuantiteIntrantGreaterThan(String idActeur, Pageable pageable,double qte);
 
-    Page<Intrant> findAllByStatutIntrantAndActeurStatutActeur(boolean statutIntrant, boolean statutActeur , Pageable pageable);
+    Page<Intrant> findAllByStatutIntrantAndActeurStatutActeurAndQuantiteIntrantGreaterThan(boolean statutIntrant, boolean statutActeur , Pageable pageable,double qte);
 
-   Page<Intrant> findAllByStatutIntrantTrueAndPaysAndActeurStatutActeurTrue(String pays, Pageable pageable);
+   Page<Intrant> findAllByStatutIntrantTrueAndPaysAndActeurStatutActeurTrueAndQuantiteIntrantGreaterThan(String pays, Pageable pageable,double qte);
 
 //    @Query("SELECT i FROM Intrant i JOIN i.acteur a WHERE i.statutIntrant = :statutIntrant AND a.statutActeur = :statutActeur AND LOWER(i.pays) <> LOWER(:pays)")
 //    Page<Intrant> findAllByStatutIntrantAndActeurStatutActeurAndPaysNot(@Param("statutIntrant") boolean statutIntrant,
 //                                                                        @Param("statutActeur") boolean statutActeur,
 //                                                                        @Param("pays") String pays,
 //                                                                        Pageable pageable);
-   Page<Intrant> findAllByStatutIntrantTrueAndActeurStatutActeurTrueAndPaysNot(String pays, Pageable pageable);
+   Page<Intrant> findAllByStatutIntrantTrueAndActeurStatutActeurTrueAndPaysNotAndQuantiteIntrantGreaterThan(String pays, Pageable pageable,double qte);
 
-    Page<Intrant> findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndActeurStatutActeurTrue(
-        String idCategorieProduit, Pageable pageable);
+    Page<Intrant> findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndActeurStatutActeurTrueAndQuantiteIntrantGreaterThan(
+        String idCategorieProduit, Pageable pageable,double qte);
 
 
     // Page<Intrant> findAllByStatutIntrantTrueAndPaysAndActeurStatutActeurTrue(String pays, Pageable pageable);
