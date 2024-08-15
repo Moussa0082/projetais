@@ -50,10 +50,12 @@ public class MagasinService {
     StockRepository stockRepository;
     @Autowired
     CodeGenerator codeGenerator;
-      @Autowired
+    @Autowired
     IdGenerator idGenerator ;
     @Autowired
     FileUploade fileUploade;
+    @Autowired
+    HistoriqueService historiqueService;
 
     public Magasin createMagasin(Magasin magasin, MultipartFile imageFile) throws Exception{
         Acteur acteur = acteurRepository.findByIdActeur(magasin.getActeur().getIdActeur());
@@ -81,16 +83,19 @@ public class MagasinService {
             }
             String codes = codeGenerator.genererCode();
             String idcodes = idGenerator.genererCode();
-             String pattern = "yyyy-MM-dd HH:mm";
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-    LocalDateTime now = LocalDateTime.now();
-    String formattedDateTime = now.format(formatter);
-    magasin.setDateAjout(formattedDateTime);
+            String pattern = "yyyy-MM-dd HH:mm";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+            LocalDateTime now = LocalDateTime.now();
+            String formattedDateTime = now.format(formatter);
+            magasin.setDateAjout(formattedDateTime);
             magasin.setCodeMagasin(codes);
             magasin.setIdMagasin(idcodes);
 
-            
-        return magasinRepository.save(magasin);
+            Magasin mag = magasinRepository.save(magasin);
+             // Création de l'historique
+        historiqueService.createHistorique("Création" , mag.getNomMagasin() , mag.getActeur().getNomActeur(), mag.getActeur().getLocaliteActeur(),mag.getActeur().getNiveau3PaysActeur(),"Création de magasin " + mag.getNomMagasin());
+
+        return mag;
     }
 
     public Magasin updateMagasin(Magasin magasin, MultipartFile imageFile, String id) throws Exception{
@@ -130,7 +135,11 @@ public class MagasinService {
             LocalDateTime now = LocalDateTime.now();
             String formattedDateTime = now.format(formatter);
             mag.setDateModif(formattedDateTime);
-        return magasinRepository.save(mag);
+
+         Magasin maga = magasinRepository.save(magasin);
+             // Création de l'historique
+        historiqueService.createHistorique("Modification" , maga.getNomMagasin() , maga.getActeur().getNomActeur(), maga.getActeur().getLocaliteActeur(),maga.getActeur().getNiveau3PaysActeur(),"Création de magasin " + maga.getNomMagasin());
+        return maga;
     }
 
     public List<Magasin> getMagasin() {
@@ -306,18 +315,24 @@ public class MagasinService {
 
         magasinRepository.delete(magasin);
 
+             // Création de l'historique
+        historiqueService.createHistorique("Création" , magasin.getNomMagasin() , magasin.getActeur().getNomActeur(), magasin.getActeur().getLocaliteActeur(),magasin.getActeur().getNiveau3PaysActeur(),"Suppression de magasin " + magasin.getNomMagasin());
+    
         return "supprimé avec success";
     }
 
     public Magasin active(String id) throws Exception{
-        Magasin mag = magasinRepository.findById(id).orElseThrow(null);
+        Magasin maga = magasinRepository.findById(id).orElseThrow(null);
 
         try {
-          mag.setStatutMagasin(true);
+          maga.setStatutMagasin(true);
         } catch (Exception e) {
             throw new Exception("Erreur lors de l'activation  de la magasin : " + e.getMessage());
         }
-        return magasinRepository.save(mag);
+        Magasin mag = magasinRepository.save(maga);
+        // Création de l'historique
+   historiqueService.createHistorique("Activation" , maga.getNomMagasin() , maga.getActeur().getNomActeur(), maga.getActeur().getLocaliteActeur(),maga.getActeur().getNiveau3PaysActeur(),"Activation de magasin " + maga.getNomMagasin());
+   return mag;
     }
 
     public Magasin desactive(String id) throws Exception{
@@ -328,6 +343,9 @@ public class MagasinService {
         } catch (Exception e) {
             throw new Exception("Erreur lors de desactivation : " + e.getMessage());
         }
-        return magasinRepository.save(mag);
+        Magasin maga = magasinRepository.save(mag);
+        // Création de l'historique
+   historiqueService.createHistorique("Désactivation" , maga.getNomMagasin() , maga.getActeur().getNomActeur(), maga.getActeur().getLocaliteActeur(),maga.getActeur().getNiveau3PaysActeur(),"Désactivation de magasin " + maga.getNomMagasin());
+   return maga;
     }
 }

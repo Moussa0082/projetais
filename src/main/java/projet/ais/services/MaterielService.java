@@ -46,7 +46,8 @@ public class MaterielService {
     MessageService messageService;
     @Autowired
     FileUploade fileUploade;
-    
+    @Autowired
+    HistoriqueService historiqueService;
 
     public Materiels createMateriel(Materiels materiel, MultipartFile imageFile) throws Exception{
         Acteur acteur = acteurRepository.findByIdActeur(materiel.getActeur().getIdActeur());
@@ -87,6 +88,10 @@ public class MaterielService {
         Materiels saveMateriel = materielRepository.save(materiel);
         System.out.println("nom "+saveMateriel.getNom());
         // sendMessageToAllActeur(saveMateriel);
+
+            // Création de l'historique
+            historiqueService.createHistorique("Création" , saveMateriel.getNom() , saveMateriel.getActeur().getNomActeur(), saveMateriel.getActeur().getLocaliteActeur(),saveMateriel.getActeur().getNiveau3PaysActeur(),"Création de matériel " + saveMateriel.getNom());
+
         return saveMateriel;
     }
 
@@ -303,7 +308,12 @@ public Page<Materiels> getAllMaterielByLibelleFiliere(String libelleFiliere,Stri
                 }
             }
             
-        return materielRepository.save(mat);
+            Materiels saveMateriel = materielRepository.save(mat);
+            // Création de l'historique
+            historiqueService.createHistorique("Modification" , saveMateriel.getNom() , saveMateriel.getActeur().getNomActeur(), saveMateriel.getActeur().getLocaliteActeur(),saveMateriel.getActeur().getNiveau3PaysActeur(),"Modification de matériel " + saveMateriel.getNom());
+
+
+        return saveMateriel;
     }
 
     public List<Materiels> getMateriels(){

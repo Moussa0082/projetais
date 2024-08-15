@@ -65,12 +65,15 @@ public class IntrantService {
     @Autowired
     CodeGenerator codeGenerator;
 
-     @Autowired
-     DetailCommandeRepository detailCommandeRepository;
+    @Autowired
+    DetailCommandeRepository detailCommandeRepository;
 
-     @Autowired
-     FileUploade fileUploade;
+    @Autowired
+    FileUploade fileUploade;
 
+    @Autowired
+    HistoriqueService historiqueService;
+    
      //créer un intrant
       public Intrant createIntrant(Intrant intrant, MultipartFile imageFile) throws Exception {
         Intrant it = intrantRepository.findByIdIntrant(intrant.getIdIntrant());
@@ -113,6 +116,10 @@ public class IntrantService {
         intrant.setDateAjout(formattedDateTime);
            Intrant savedIntrant = intrantRepository.save(intrant);        
         //    sendMessageToAllActeur(intrant);
+
+        // Création de l'historique
+        historiqueService.createHistorique("Création" , savedIntrant.getNomIntrant() ,savedIntrant.getActeur().getNomActeur(), savedIntrant.getActeur().getLocaliteActeur(),savedIntrant.getActeur().getNiveau3PaysActeur(),"Création d'intrant " + savedIntrant.getNomIntrant());
+
          return savedIntrant;
    
     }
@@ -513,6 +520,9 @@ public class IntrantService {
         it.setDateModif(formattedDateTime);
             Intrant savedIntrant = intrantRepository.save(it);        
    
+         // Création de l'historique
+        historiqueService.createHistorique("Modification" , savedIntrant.getNomIntrant() ,savedIntrant.getActeur().getNomActeur(), savedIntrant.getActeur().getLocaliteActeur(),savedIntrant.getActeur().getNiveau3PaysActeur(),"Modification d'intrant " + it.getNomIntrant());
+
            return savedIntrant;
    
     }
@@ -548,6 +558,9 @@ public class IntrantService {
         Intrant intrant = intrantRepository.findById(id).orElseThrow(null);
 
         intrantRepository.delete(intrant);
+          // Création de l'historique
+          historiqueService.createHistorique("Suppression" , intrant.getNomIntrant() ,intrant.getActeur().getNomActeur(), intrant.getActeur().getLocaliteActeur(),intrant.getActeur().getNiveau3PaysActeur(),"Suppression d'intrant " + intrant.getNomIntrant());
+
         return "Intrant supprimé avec success";
     }
 
@@ -559,18 +572,27 @@ public class IntrantService {
         } catch (Exception e) {
             throw new Exception("Erreur lors de l'activation de l'intrant: " + e.getMessage());
         }
-        return intrantRepository.save(intrant);
+
+        Intrant intrants =  intrantRepository.save(intrant);
+        // Création de l'historique
+        historiqueService.createHistorique("Activation" , intrants.getNomIntrant() ,intrants.getActeur().getNomActeur(), intrants.getActeur().getLocaliteActeur(),intrants.getActeur().getNiveau3PaysActeur(),"Activation d'intrant " + intrants.getNomIntrant());
+
+        return intrants;
     }
 
     public Intrant desactive(String id) throws Exception{
-        Intrant intrant = intrantRepository.findById(id).orElseThrow(null);
+        Intrant intrants = intrantRepository.findById(id).orElseThrow(null);
 
         try {
-            intrant.setStatutIntrant(false);
+            intrants.setStatutIntrant(false);
         } catch (Exception e) {
             throw new Exception("Erreur lors de la desactivation de l'intrant : " + e.getMessage());
         }
-        return intrantRepository.save(intrant);
+        Intrant intrant =  intrantRepository.save(intrants);
+        // Création de l'historique
+        historiqueService.createHistorique("Désactivation" , intrant.getNomIntrant() ,intrant.getActeur().getNomActeur(), intrant.getActeur().getLocaliteActeur(),intrant.getActeur().getNiveau3PaysActeur(),"Désactivation d'intrant " + intrant.getNomIntrant());
+
+        return intrant;
     }
 
 

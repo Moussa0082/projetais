@@ -14,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.lang.Nullable;
 import java.util.*;
-
 @Repository
 public interface StockRepository extends JpaRepository<Stock, String>{
     
