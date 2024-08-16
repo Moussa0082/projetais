@@ -42,6 +42,9 @@ public class VehiculeService {
     CodeGenerator codeGenerator;
     @Autowired
     IdGenerator idGenerator ;
+    @Autowired
+    HistoriqueService historiqueService;
+
     // Connexion FTP
     private static final String FTP_SERVER = "ftp.koumi.ml";
     private static final int FTP_PORT = 21; // Mise à jour si nécessaire
@@ -95,6 +98,7 @@ public class VehiculeService {
         // Enregistrement de l'objet Vehicule dans la base de données
         Vehicule savedVehicule = vehiculeRepository.save(vehicule);
 
+        historiqueService.createHistorique("Création" , savedVehicule.getNomVehicule() ,savedVehicule.getActeur().getNomActeur(), savedVehicule.getActeur().getLocaliteActeur(),savedVehicule.getActeur().getNiveau3PaysActeur(),"Création de véhicule de transport " + savedVehicule.getNomVehicule());
         return savedVehicule; 
     }
     
@@ -517,9 +521,11 @@ public class VehiculeService {
         LocalDateTime now = LocalDateTime.now();
         String formattedDateTime = now.format(formatter);
         vh.setDateAjout(formattedDateTime);
-            Vehicule savedVehicule = vehiculeRepository.save(vh);        
-   
-           return savedVehicule;
+       
+        Vehicule savedVehicule = vehiculeRepository.save(vh);        
+        
+        historiqueService.createHistorique("Modification" , savedVehicule.getNomVehicule() ,savedVehicule.getActeur().getNomActeur(), savedVehicule.getActeur().getLocaliteActeur(),savedVehicule.getActeur().getNiveau3PaysActeur(),"Modification de véhicule de transport " + savedVehicule.getNomVehicule());
+        return savedVehicule;
    
     }
   
@@ -538,6 +544,8 @@ public class VehiculeService {
         Vehicule vehicule = vehiculeRepository.findById(id).orElseThrow(null);
 
         vehiculeRepository.delete(vehicule);
+        
+        historiqueService.createHistorique("Suppression" , vehicule.getNomVehicule() ,vehicule.getActeur().getNomActeur(), vehicule.getActeur().getLocaliteActeur(),vehicule.getActeur().getNiveau3PaysActeur(),"Suppression de véhicule de transport " + vehicule.getNomVehicule());
         return "Vehicule supprimé avec success";
     }
 
@@ -549,6 +557,9 @@ public class VehiculeService {
         } catch (Exception e) {
             throw new Exception("Erreur lors de l'activation du vehicule: " + e.getMessage());
         }
+        Vehicule savedVehicule = vehiculeRepository.save(vehicule);
+
+        historiqueService.createHistorique("Activation" , savedVehicule.getNomVehicule() ,savedVehicule.getActeur().getNomActeur(), savedVehicule.getActeur().getLocaliteActeur(),savedVehicule.getActeur().getNiveau3PaysActeur(),"Activation de véhicule de transport " + savedVehicule.getNomVehicule());
         return vehiculeRepository.save(vehicule);
     }
 
@@ -560,10 +571,11 @@ public class VehiculeService {
         } catch (Exception e) {
             throw new Exception("Erreur lors de la desactivation du vehicule : " + e.getMessage());
         }
-        return vehiculeRepository.save(vehicule);
-    }
 
-    
+        Vehicule savedVehicule = vehiculeRepository.save(vehicule);
+        historiqueService.createHistorique("Désactivation" , savedVehicule.getNomVehicule() ,savedVehicule.getActeur().getNomActeur(), savedVehicule.getActeur().getLocaliteActeur(),savedVehicule.getActeur().getNiveau3PaysActeur(),"Désactivation de véhicule de transport " + savedVehicule.getNomVehicule());
+        return savedVehicule;
+    }  
     
 }
 

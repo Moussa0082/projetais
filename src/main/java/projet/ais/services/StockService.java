@@ -111,6 +111,8 @@ public class StockService {
     @Autowired
     FileUploade fileUploade;
     
+    @Autowired
+    HistoriqueService historiqueService;
     
     public Stock createStock(Stock stock, MultipartFile imageFile) throws Exception {
         Unite unite = uniteRepository.findByIdUnite(stock.getUnite().getIdUnite());
@@ -198,7 +200,8 @@ public class StockService {
     } catch (Exception e) {
         System.out.println(e.getMessage());
     }
-    
+     // Création de l'historique
+     historiqueService.createHistorique("Création" , st.getNomProduit() ,st.getActeur().getNomActeur(), st.getActeur().getLocaliteActeur(),st.getActeur().getNiveau3PaysActeur(),"Création de produit " + st.getNomProduit());
         return st;
     }
     
@@ -523,7 +526,12 @@ private String generateQRCodeImage(String qrCodeData) {
                 throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
             }
         }
-            return stockRepository.save(stocks);
+
+        Stock st = stockRepository.save(stocks);
+          // Création de l'historique
+     historiqueService.createHistorique("Modification" , st.getNomProduit() ,st.getActeur().getNomActeur(), st.getActeur().getLocaliteActeur(),st.getActeur().getNiveau3PaysActeur(),"Modification  de produit " + stocks.getNomProduit());
+
+            return  st;
     }
 
     public Stock updateQuantiteStock(String id, double nouvelleQuantite) throws Exception {
@@ -795,9 +803,11 @@ private String generateQRCodeImage(String qrCodeData) {
     }
 
     public String deleteStock(String id){
-        Stock stock = stockRepository.findById(id).orElseThrow(null);
+        Stock st = stockRepository.findById(id).orElseThrow(null);
 
-        stockRepository.delete(stock);
+        stockRepository.delete(st);
+
+        historiqueService.createHistorique("Suppression" , st.getNomProduit() ,st.getActeur().getNomActeur(), st.getActeur().getLocaliteActeur(),st.getActeur().getNiveau3PaysActeur(),"Suppression de produit " + st.getNomProduit());
 
         return "Supprimé avec success";
     }
@@ -810,7 +820,11 @@ private String generateQRCodeImage(String qrCodeData) {
         } catch (Exception e) {
             throw new Exception("Erreur lors de l'activation : " + e.getMessage());
         }
-        return stockRepository.save(stock);
+
+        Stock st = stockRepository.save(stock);
+        historiqueService.createHistorique("Activation" , st.getNomProduit() ,st.getActeur().getNomActeur(), st.getActeur().getLocaliteActeur(),st.getActeur().getNiveau3PaysActeur(),"Activation de produit " + st.getNomProduit());
+
+        return st;
     }
 
     public Stock desactive(String id) throws Exception{
@@ -821,6 +835,10 @@ private String generateQRCodeImage(String qrCodeData) {
         } catch (Exception e) {
             throw new Exception("Erreur lors de l'activation : " + e.getMessage());
         }
-        return stockRepository.save(stock);
+
+        Stock st = stockRepository.save(stock);
+        historiqueService.createHistorique("Désactivation" , st.getNomProduit() ,st.getActeur().getNomActeur(), st.getActeur().getLocaliteActeur(),st.getActeur().getNiveau3PaysActeur(),"Désactivation de produit " + st.getNomProduit());
+
+        return st;
     }
 }

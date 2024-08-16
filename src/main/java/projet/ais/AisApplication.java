@@ -2,10 +2,6 @@ package projet.ais;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import java.awt.image.BufferedImage;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.converter.BufferedImageHttpMessageConverter;
-import org.springframework.http.converter.HttpMessageConverter;
 
 @SpringBootApplication
 public class AisApplication {
