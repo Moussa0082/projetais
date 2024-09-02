@@ -68,6 +68,9 @@ public class Stock {
     @Column(nullable = false)
     private boolean statutSotck = true;
 
+    @Column(nullable = true)
+    private int nbreView = 0;
+
     @ManyToOne
     @JoinColumn(name = "idSpeculation")
     private Speculation speculation;    

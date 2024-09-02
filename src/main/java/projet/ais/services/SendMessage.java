@@ -27,7 +27,7 @@ public class SendMessage {
     MessageWaRepository messageRepository;
 
     
-public String sendMessages(String whatsAppActeur, String msg) throws Exception {
+public String sendMessages(String numero, String msg) throws Exception {
     String apiKey = greenApiConfig.getApiId();
     String apiToken = greenApiConfig.getApiToken();
 
@@ -45,7 +45,7 @@ public String sendMessages(String whatsAppActeur, String msg) throws Exception {
 
     // Utiliser une structure de données, comme une Map, pour stocker les valeurs dynamiques
     Map<String, String> requestBody = new HashMap<>();
-    requestBody.put("chatId", whatsAppActeur + "@c.us");
+    requestBody.put("chatId", numero + "@c.us");
     requestBody.put("message", msg);
 
     // Convertir la structure de données en JSON

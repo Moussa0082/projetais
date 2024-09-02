@@ -63,6 +63,9 @@ public class Intrant {
     @Column(nullable=true)
     private String unite;
 
+    @Column(nullable = true)
+    private int nbreView = 0;
+
     @ManyToOne
     @JoinColumn(name = "idCategorieProduit")
     private CategorieProduit categorieProduit;
@@ -74,13 +77,7 @@ public class Intrant {
     @ManyToOne
     @JoinColumn(name = "idActeur")
     private Acteur acteur;
-    
-    // @ManyToOne
-    // @JoinColumn(name = "idSuperficie")
-    // private Superficie superficie;
-    
-    
-    
+
     @ManyToMany(mappedBy = "intrant", fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Commande>  commande;

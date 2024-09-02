@@ -12,6 +12,7 @@ import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Materiels;
+import projet.ais.models.Stock;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.MaterielRepository;
 import java.util.*;
@@ -135,6 +136,9 @@ public class MaterielService {
     }
 
 
+    public Page<Materiels> getMaterielByPaysWithPagination(String nomPays,Pageable pageable) {
+        return materielRepository.findAllByStatutTrueAndPaysAndActeurStatutActeurTrueAndSpeculationIsNull(nomPays,pageable);
+    }
     public Page<Materiels> getAllMaterielPageableByPays(String pays, Pageable pageable) {
        
         String paysNormalise = pays.trim().toLowerCase();
@@ -157,7 +161,15 @@ public class MaterielService {
         return new PageImpl<>(materielList, pageable, totalElements);
     }
 
+    public Page<Materiels> getMatByPaysWithPagination(String nomPays,Pageable pageable) {
+        return  materielRepository.findAllByStatutTrueAndPaysAndActeurStatutActeurTrueAndSpeculationIsNull(nomPays, pageable);
+    }
 
+
+    public Page<Materiels> getEquipementByPaysWithPagination(String libelleFiliere, String nomPays,Pageable pageable) {
+        return materielRepository.findBySpeculation_CategorieProduit_Filiere_LibelleFiliereAndPays(
+            libelleFiliere, nomPays, pageable);
+    }
 
     //get materiel par filiere    
 public Page<Materiels> getAllMaterielByLibelleFiliere(String libelleFiliere,String pays, Pageable pageable) {
@@ -370,6 +382,20 @@ public Page<Materiels> getAllMaterielByLibelleFiliere(String libelleFiliere,Stri
 
        }
        return materielRepository.save(mat);
+    }
+
+      public Materiels updateNbViev(String id) throws Exception {
+        Optional<Materiels> vOpt = materielRepository.findById(id);
+        
+        if (vOpt.isPresent()) {
+            Materiels m = vOpt.get();
+            int count = m.getNbreView() + 1;
+            m.setNbreView(count);
+
+            return materielRepository.save(m);
+        } else {
+            throw new Exception("Une erreur s'est produite");
+        }
     }
 
     public Materiels desactive(String id) throws Exception{

@@ -16,7 +16,6 @@ import lombok.Data;
 public class Magasin {
 
     @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idMagasin;
 
     @Column(nullable = false)
@@ -24,11 +23,6 @@ public class Magasin {
 
     @Column(nullable = false)
     private String nomMagasin;
-    // @Column(nullable = false)
-    // private String codeActeur;
-
-    // @Column(nullable = false)
-    // private String niveau3PaysMagasin;
 
     @Column(nullable = true)
     private String latitude;
@@ -60,6 +54,9 @@ public class Magasin {
     @Column(nullable = true)
     private String pays;
 
+    @Column(nullable = false)
+    private int nbreView = 0 ;
+
     @ManyToOne
     @JoinColumn( name = "idActeur")
     private Acteur acteur;
@@ -72,13 +69,6 @@ public class Magasin {
     (mappedBy = "magasin")
     @JsonIgnore
     private List<Stock> stockList;
-
-
-    // @ManyToOne
-    // @JoinColumn(name = "idCategorieProduit")
-    // @JsonIgnore
-    // private CategorieProduit categorieProduit;
-
 
 }
 

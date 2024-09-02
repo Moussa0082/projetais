@@ -45,7 +45,6 @@ import org.springframework.http.MediaType;
 import java.io.IOException;
 
 @RestController
-// @CrossOrigin(origins = "*")
 @RequestMapping("api-koumi/acteur")
 public class ActeurController {
 
@@ -295,7 +294,7 @@ public class ActeurController {
         return ResponseHandler.generateResponse(acteurService.sendOtpCodeEmail(emailActeur), HttpStatus.OK,null);
     }
 
-                @GetMapping("/sendOtpCodeWhatsApp")
+    @GetMapping("/sendOtpCodeWhatsApp")
     @Operation(summary = "Verifier le numéro de l'utilisateur en lui envoyant un code de verification à numéro whatsApp pour la procedure de changement de son mot de pass")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "Le numéro exist et le code a été envoyer avec succès", content = {
@@ -480,10 +479,10 @@ public class ActeurController {
         }
     }
              //Mettre à jour un acteur
-    @PutMapping("/update/{id}")
+    @PutMapping("/update/{idActeur}")
     @Operation(summary = "Mise à jour d'un acteur ")
       public ResponseEntity<Acteur> updateActeur(
-              @PathVariable String id,
+              @PathVariable String idActeur,
               @Valid @RequestParam("acteur") String acteurString,
               @RequestParam(value = "image1", required = false)  MultipartFile imageFile1,
               @RequestParam(value = "image2", required = false) MultipartFile imageFile2) {
@@ -495,7 +494,7 @@ public class ActeurController {
           }
 
           try {
-            Acteur acteurMisAjour = acteurService.updateActeur(acteur, id, imageFile1, imageFile2);
+            Acteur acteurMisAjour = acteurService.updateActeur(acteur, idActeur, imageFile1, imageFile2);
             return new ResponseEntity<>(acteurMisAjour, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

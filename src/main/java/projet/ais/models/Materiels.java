@@ -60,6 +60,9 @@ public class Materiels {
     @Column(nullable = true)
     private String dateModif;
 
+    @Column(nullable = false)
+    private int nbreView = 0;
+
     @ManyToOne
     @JoinColumn(name = "idActeur")
     private Acteur acteur;

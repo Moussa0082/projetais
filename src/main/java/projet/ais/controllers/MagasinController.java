@@ -79,7 +79,12 @@ public class MagasinController {
     return new ResponseEntity<>(saveMag, HttpStatus.CREATED);
     }
 
-    
+    @PutMapping("/updateView/{id}")
+    @Operation(summary = "Update view")
+    public ResponseEntity<Magasin> updateViews(@PathVariable String id) throws Exception{
+        return new ResponseEntity<>(magasinService.updateNbViev(id), HttpStatus.OK);
+    }
+
     @GetMapping("/{magasinId}/image")
     public ResponseEntity<byte[]> getImage(@PathVariable String magasinId) {
     try {

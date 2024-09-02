@@ -12,7 +12,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.UUID;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -347,5 +347,19 @@ public class MagasinService {
         // Création de l'historique
    historiqueService.createHistorique("Désactivation" , maga.getNomMagasin() , maga.getActeur().getNomActeur(), maga.getActeur().getLocaliteActeur(),maga.getActeur().getNiveau3PaysActeur(),"Désactivation de magasin " + maga.getNomMagasin());
    return maga;
+    }
+
+     public Magasin updateNbViev(String id) throws Exception {
+        Optional<Magasin> vOpt = magasinRepository.findById(id);
+        
+        if (vOpt.isPresent()) {
+            Magasin mag = vOpt.get();
+            int count = mag.getNbreView() + 1;
+            mag.setNbreView(count);
+
+            return magasinRepository.save(mag);
+        } else {
+            throw new Exception("Une erreur s'est produite");
+        }
     }
 }

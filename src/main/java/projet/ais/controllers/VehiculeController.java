@@ -135,10 +135,20 @@ private MediaType detectContentType(String imageName) {
   
     }
 
+    @PutMapping("/updateView/{id}")
+    @Operation(summary = "Update view")
+    public ResponseEntity<Vehicule> updateViews(@PathVariable String id) throws Exception{
+        return new ResponseEntity<>(vehiculeService.updateNbViev(id), HttpStatus.OK);
+    }
 
     @GetMapping("/getVehiculesByPaysWithPagination")
     public Page<Vehicule> getAllVehiculesPageableByPays(@RequestParam String niveau3PaysActeur, Pageable pageable) {
         return vehiculeService.getAllVehiculePageableByPays(niveau3PaysActeur, pageable);
+    }
+
+    @GetMapping("/getAllByPaysWithPagination")
+    public Page<Vehicule> getAllVePageableByPays(@RequestParam String nomPays, Pageable pageable) {
+        return vehiculeService.getAllVByPaysWithPagination(nomPays, pageable);
     }
 
     @GetMapping("/getVehiculesByPaysAndTypeVoitureWithPagination")

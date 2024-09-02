@@ -46,34 +46,6 @@ public class MessageService {
     @Autowired
     SendMessage sendMessage;
   
-
-
-    // public MessageWa sendMessageAndSave(String whatsAppActeur, String msg, String acteur) throws Exception {
-    //     // Créer une instance de MessageWa et définir les valeurs
-    //     MessageWa message = new MessageWa();
-    //     // message.setActeurConcerner(acteur);
-    //     message.setText(msg);
-    //     String pattern = "yyyy-MM-dd HH:mm";
-    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-    //     LocalDateTime now = LocalDateTime.now();
-    //     String formattedDateTime = now.format(formatter);  
-    //     message.setDateAjout(formattedDateTime);
-        
-    //     // Générer le code et l'ID
-    //     String codes = codeGenerator.genererCode();
-    //     String idCode = idGenerator.genererCode();
-    //     message.setCodeMessage(codes);
-    //     message.setIdMessage(idCode);
-        
-    //     // Enregistrer le message dans la base de données
-    //     messageRepository.save(message);
-        
-    //     // Envoyer le message
-    //     sendMessage.sendMessages(whatsAppActeur, msg);
-        
-    //     return message;
-    // }
-
     public MessageWa sendMessageAndSave(String whatsAppActeur, String msg, Acteur acteur) throws Exception {
         // Créer une instance de MessageWa et définir les valeurs
         MessageWa message = new MessageWa();

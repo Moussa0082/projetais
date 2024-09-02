@@ -16,9 +16,7 @@ import org.springframework.lang.Nullable;
 import java.util.*;
 @Repository
 public interface StockRepository extends JpaRepository<Stock, String>{
-    
-    // Stock findByIdStock(String id);
-     
+
     Optional<Stock> findByNomProduit(String nomProduit);
     List<Stock> findByActeurIdActeur(String id);
     List<Stock> findBySpeculationIdSpeculation(String id);

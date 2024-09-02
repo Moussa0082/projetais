@@ -35,6 +35,7 @@ public class HistoriqueService {
             historique.setDateHistorique(formattedDateTime);
             historique.setType(type);
             historique.setActeur(acteur);
+            historique.setLibelle(libelle);
             historique.setLocalite(localite);
             historique.setPays(pays);
             historique.setDetail(detail);

@@ -1,67 +1,47 @@
 package projet.ais.services;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.*;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
+
+import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.transaction.annotation.Transactional;
-
-
-
-import javax.imageio.ImageIO;
-
-import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import com.google.zxing.qrcode.encoder.QRCode;
-
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
-import java.awt.image.BufferedImage;
-// import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.context.annotation.Bean;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.converter.BufferedImageHttpMessageConverter;
-import org.springframework.http.converter.HttpMessageConverter;
 
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
 import projet.ais.models.CategorieProduit;
-import projet.ais.models.Intrant;
 import projet.ais.models.Magasin;
 import projet.ais.models.Speculation;
 import projet.ais.models.Stock;
 import projet.ais.models.TypeActeur;
 import projet.ais.models.Unite;
 import projet.ais.models.ZoneProduction;
-import java.time.format.DateTimeFormatter;
-
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.AlerteRepository;
 import projet.ais.repository.MagasinRepository;
@@ -208,21 +188,11 @@ public class StockService {
 
 
     private String generateQRCodeData(Stock stock) {
-        // Générer les données du QR code à partir des informations du stock
-        // Vous pouvez personnaliser le contenu du QR code selon vos besoins
-        // Par exemple, stock.getName(), stock.getId(), etc.
         return stock.getNomProduit() + "_" + stock.getIdStock();
     }
 
 private String generateQRCodeImage(String qrCodeData) {
-    // Générer l'image du QR code à partir des données fournies
-    // Ici, vous pouvez utiliser une bibliothèque pour générer l'image du QR code
-    // Retournez le nom de l'image générée
-    // Assurez-vous de stocker cette image quelque part où elle peut être accessible publiquement
-    // Par exemple, dans un dossier statique de votre application web
-    // Assurez-vous également de manipuler les exceptions au besoin
-
-    // Assumant que vous utilisez ZXing pour générer le QR code
+   
     try {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrCodeWriter.encode(qrCodeData, BarcodeFormat.QR_CODE, 250, 250);
@@ -338,32 +308,6 @@ private String generateQRCodeImage(String qrCodeData) {
         return new PageImpl<>(stocksList, pageable, totalElements);
     }
 
-    // public Page<Stock> getAllStocksPageableByPays(String pays, Pageable pageable) {
-       
-    //     String paysNormalise = pays.trim().toLowerCase();
-        
-    //     // Récupérer les stocks pour le pays 
-    //     Page<Stock> stocksByPays = stockRepository.findAllByStatutSotckTrueAndPaysAndActeurStatutActeurTrue(paysNormalise, pageable);
-        
-    //     if (!stocksByPays.hasContent()) {
-    //         // Si aucun stock n'est trouvé pour le pays spécifié, récupérer tous les stocks 
-    //         System.out.println("Pas d'autres stocks à récupérer pour le pays " + paysNormalise);
-    //         return stockRepository.findAllByStatutSotckAndActeurStatutActeur(true, true, pageable);
-    //     } else {
-    //         System.out.println("Stocks récupérés pour le pays " + paysNormalise);
-    //         List<Stock> stocksList = new ArrayList<>(stocksByPays.getContent());
-    
-    //         // Si le nombre de stocks est inférieur au nombre requis, compléter avec des stocks d'autres pays
-    //         if (stocksList.size() < pageable.getPageSize()) {
-    //             Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - stocksList.size());
-    //             Page<Stock> stocksComplement = stockRepository.findAllByStatutSotckTrueAndActeurStatutActeurTrueAndPaysNot(paysNormalise, complementPageable);
-    //             stocksList.addAll(stocksComplement.getContent());
-    //         }
-    
-    //         // Créer une nouvelle page avec la liste complète des stocks et le pageable original
-    //         return new PageImpl<>(stocksList, pageable, stocksByPays.getTotalElements() + stocksList.size());
-    //     }
-    // }
     
     @Transactional
     public void updatePaysForStocks() {
@@ -597,20 +541,20 @@ private String generateQRCodeImage(String qrCodeData) {
         return stockList;
     }
 
-    //liste des stock par libelle categorie
-    // public List<Stock> getAllStockByLibelleCategorie(String libelle){
-    //     List<Stock> stockList = stockRepository.findBySpeculation_CategorieProduit_libelleCategorie(libelle);
-
-    //     if(stockList.isEmpty())
-    //         throw new IllegalStateException("Aucun stock trouvé");
+    public Stock updateNbViev(String id) throws Exception {
+        Optional<Stock> vOpt = stockRepository.findById(id);
         
-    //         stockList = stockList
-    //          .stream().sorted((s1,s2) -> s2.getDescriptionStock().compareTo(s1.getDescriptionStock()))
-    //     .collect(Collectors.toList());
+        if (vOpt.isPresent()) {
+            Stock st = vOpt.get();
+            int count = st.getNbreView() + 1;
+            st.setNbreView(count);
 
-    //     return stockList;
-    // }
-
+            return stockRepository.save(st);
+        } else {
+            throw new Exception("Une erreur s'est produite");
+        }
+    }
+   
     public List<Stock> getAllStockByActeur(String id){
         List<Stock> stockList = stockRepository.findByActeurIdActeur(id);
 
@@ -634,11 +578,11 @@ private String generateQRCodeImage(String qrCodeData) {
         return stockRepository.findByMagasin_IdMagasinAndStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(idMagasin,true, true,pageable,0.0);
     }
 
-     // recuperer les intrants par  libelle categorie
-    // public Page<Stock> getAllStockByLibelleCategorie(String libelleFiliere, Pageable pageable) {
-    //     return stockRepository.findBySpeculation_CategorieProduit_filiere_libelleFiliere(libelleFiliere, pageable);
-    // }
+    public Page<Stock> getStocksByPaysWithPagination(String nomPays,Pageable pageable) {
+        return stockRepository.findAllByPaysAndStatutSotckTrueAndActeurStatutActeurTrueAndQuantiteStockGreaterThan(nomPays,pageable,0.0);
+    }
 
+  
     //liste stock par libelle 
     public Page<Stock> getAllStockByLibelleCategorie(String libelleFiliere, String pays, Pageable pageable) {
         // Première requête pour récupérer les matériels pour le pays spécifique
@@ -652,7 +596,7 @@ private String generateQRCodeImage(String qrCodeData) {
             return stockRepository.findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNotAndQuantiteStockGreaterThan(
                 libelleFiliere,true,true, pays.trim().toLowerCase(), pageable,0.0);
         } else {
-            System.out.println("Materiels fetch pour le pays " + pays);
+            System.out.println(" fetch pour le pays " + pays);
             List<Stock> stockList = new ArrayList<>(stockByPays.getContent());
     
             // Si le nombre d' intrant est inférieur au nombre requis, compléter avec des intrants d'autres pays
@@ -666,6 +610,11 @@ private String generateQRCodeImage(String qrCodeData) {
         }
     }
     
+       ///stock libelle filiere
+    public Page<Stock> getAllByFiliereAndPays(String libelleFiliere,String nomPays,Pageable pageable) {
+        return stockRepository.findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysAndQuantiteStockGreaterThan(libelleFiliere,true,true, nomPays,pageable,0.0);
+    }
+
     ///stock par idCategorie et libelle filiere
     @Transactional
     public Page<Stock> getAllStockPageableByPaysByCategorieAndFiliere(String idcategorie,String libelleFiliere, String niveau3PaysActeur, Pageable pageable) {

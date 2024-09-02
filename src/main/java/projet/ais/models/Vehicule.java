@@ -61,6 +61,9 @@ public class Vehicule {
    @Column(nullable=true)
    private String personneModif;
 
+   @Column(nullable = false)
+   private int nbreView = 0 ;
+
    @ManyToOne
    @JoinColumn(name = "idActeur")
    private Acteur acteur;

@@ -67,6 +67,12 @@ public class IntrantController {
                 return new ResponseEntity<>(savedIntrant, HttpStatus.CREATED);
             }
 
+            @PutMapping("/updateView/{id}")
+            @Operation(summary = "Update view")
+            public ResponseEntity<Intrant> updateViews(@PathVariable String id) throws Exception{
+                return new ResponseEntity<>(intrantService.updateNbViev(id), HttpStatus.OK);
+            }
+
             @GetMapping("/{intrantId}/image")
             public ResponseEntity<byte[]> getImage(@PathVariable String intrantId) {
                 try {
@@ -163,6 +169,11 @@ public class IntrantController {
         return intrantService.getAllIntrantPageableByPays(niveau3PaysActeur, pageable);
     }
 
+    @GetMapping("/getAllIntrantByPaysWithPagination")
+    public Page<Intrant> getAllIntrantsByPays(@RequestParam String nomPays, Pageable pageable) {
+        return intrantService.getAllByPaysWithPagination(nomPays, pageable);
+    }
+
     @GetMapping("/getIntrantsByPaysAndCategorieWithPagination")
     public Page<Intrant> getAllIntrantsPageableByPaysAndCategorie(@RequestParam String idCategorieProduit, @RequestParam String niveau3PaysActeur,  Pageable pageable) {
         return intrantService.getAllIntrantPageableByPaysByCategorie(idCategorieProduit, niveau3PaysActeur , pageable);
@@ -231,6 +242,16 @@ public class IntrantController {
         @RequestParam() int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Intrant> intrants = intrantService.getAllIntrantByLibelleCategorie(libelle,pays, pageable);
+        return ResponseEntity.ok().body(intrants);
+    }
+    @GetMapping("/listeIntrantByLibelleAndPays")
+    public ResponseEntity<Page<Intrant>> getIntrantsByLibelle(
+        @RequestParam() String libelle,
+        @RequestParam() String pays,
+        @RequestParam() int page,
+        @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Intrant> intrants = intrantService.getByLibelleAndPaysWithPagination(libelle,pays, pageable);
         return ResponseEntity.ok().body(intrants);
     }
 

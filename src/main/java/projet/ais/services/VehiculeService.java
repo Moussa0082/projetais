@@ -25,6 +25,7 @@ import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
+import projet.ais.models.Intrant;
 import projet.ais.models.Vehicule;
 import projet.ais.repository.VehiculeRepository;
 
@@ -187,85 +188,18 @@ public class VehiculeService {
     }
 
 
-    //     @Transactional
-    // public Page<Vehicule> getAllVehiculePageableByPaysByCategorie(String idTypeVoiture, String niveau3PaysActeur, Pageable pageable) {
-    //     // Fetch vehicules from the specified country
-    //     Page<Vehicule> vehiculesByPays = vehiculeRepository.findAllByTypeVoiture_IdTypeVoitureAndStatutVehiculeTrueAndPaysAndActeurStatutActeurTrue(
-    //         idTypeVoiture, niveau3PaysActeur.trim().toLowerCase(), pageable);
-
-    //     List<Vehicule> vehiculesList = new ArrayList<>(vehiculesByPays.getContent());
-
-    //     // Fetch vehicules from other countries if needed
-    //     if (vehiculesList.size() < pageable.getPageSize()) {
-    //         Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - vehiculesList.size());
-    //         Page<Vehicule> vehiculeComplement = vehiculeRepository.findAllByTypeVoiture_IdTypeVoitureAndStatutVehiculeTrueAndActeurStatutActeurTrueAndPaysNot(
-    //             idTypeVoiture, niveau3PaysActeur.trim().toLowerCase(), complementPageable);
-    //             vehiculesList.addAll(vehiculeComplement.getContent());
-    //     }
-
-    //     return new PageImpl<>(vehiculesList, pageable, vehiculesByPays.getTotalElements() + vehiculesList.size());
-    // }
+   
 
  public Page<Vehicule> getAllVehiculePageableByPaysByCategorie(String idTypeVoiture,Pageable pageable) {
     return vehiculeRepository.findAllByTypeVoiture_IdTypeVoiture(
         idTypeVoiture,  pageable);
 }
 
-    // @Transactional
-    // public Page<Vehicule> getAllVehiculePageableByPaysByCategorie(String idTypeVoiture, String niveau3PaysActeur, Pageable pageable) {
-    //     // Fetch vehicules from the specified country
-    //     Page<Vehicule> vehiculesByPays = vehiculeRepository.findAllByTypeVoiture_IdTypeVoiture(
-    //         idTypeVoiture,  pageable);
-
-    //     List<Vehicule> vehiculesList = new ArrayList<>(vehiculesByPays.getContent());
-
-    //     // If no vehicules are found for the specified country, fetch vehicules from other countries
-    //     if (vehiculesList.isEmpty()) {
-    //         Page<Vehicule> vehiculeFromOtherCountries = vehiculeRepository.findAllByTypeVoiture_IdTypeVoitureAndStatutVehiculeTrueAndActeurStatutActeurTrue(
-    //             idTypeVoiture, pageable);
-
-    //         return new PageImpl<>(vehiculeFromOtherCountries.getContent(), pageable, vehiculeFromOtherCountries.getTotalElements());
-    //     }
-
-    //     // Fetch vehicules from other countries if needed to fill the page
-    //     if (vehiculesList.size() < pageable.getPageSize()) {
-    //         Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - vehiculesList.size());
-    //         Page<Vehicule> vehiculeComplement = vehiculeRepository.findAllByTypeVoiture_IdTypeVoitureAndStatutVehiculeTrueAndActeurStatutActeurTrueAndPaysNot(
-    //             idTypeVoiture, niveau3PaysActeur.trim().toLowerCase(), complementPageable);
-    //         vehiculesList.addAll(vehiculeComplement.getContent());
-    //     }
-
-    //     return new PageImpl<>(vehiculesList, pageable, vehiculesByPays.getTotalElements() + vehiculesList.size());
-    // }
-    // @Transactional
-    // public Page<Vehicule> getAllVehiculePageableByPaysByCategorie(String idTypeVoiture, String niveau3PaysActeur, Pageable pageable) {
-    //     // Fetch vehicules from the specified country
-    //     Page<Vehicule> vehiculesByPays = vehiculeRepository.findAllByTypeVoiture_IdTypeVoitureAndStatutVehiculeTrueAndPaysAndActeurStatutActeurTrue(
-    //         idTypeVoiture, niveau3PaysActeur.trim().toLowerCase(), pageable);
-
-    //     List<Vehicule> vehiculesList = new ArrayList<>(vehiculesByPays.getContent());
-
-    //     // If no vehicules are found for the specified country, fetch vehicules from other countries
-    //     if (vehiculesList.isEmpty()) {
-    //         Page<Vehicule> vehiculeFromOtherCountries = vehiculeRepository.findAllByTypeVoiture_IdTypeVoitureAndStatutVehiculeTrueAndActeurStatutActeurTrue(
-    //             idTypeVoiture, pageable);
-
-    //         return new PageImpl<>(vehiculeFromOtherCountries.getContent(), pageable, vehiculeFromOtherCountries.getTotalElements());
-    //     }
-
-    //     // Fetch vehicules from other countries if needed to fill the page
-    //     if (vehiculesList.size() < pageable.getPageSize()) {
-    //         Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - vehiculesList.size());
-    //         Page<Vehicule> vehiculeComplement = vehiculeRepository.findAllByTypeVoiture_IdTypeVoitureAndStatutVehiculeTrueAndActeurStatutActeurTrueAndPaysNot(
-    //             idTypeVoiture, niveau3PaysActeur.trim().toLowerCase(), complementPageable);
-    //         vehiculesList.addAll(vehiculeComplement.getContent());
-    //     }
-
-    //     return new PageImpl<>(vehiculesList, pageable, vehiculesByPays.getTotalElements() + vehiculesList.size());
-    // }
+    public Page<Vehicule> getAllVByPaysWithPagination(String nomPays,Pageable pageable) {
+        return vehiculeRepository.findAllByStatutVehiculeTrueAndPaysAndActeurStatutActeurTrue(nomPays, pageable);
+    }
 
     ///get vehicule 
-
     public Page<Vehicule> getAllVehiculePageableByPays(String pays, Pageable pageable) {
     
         String paysNormalise = pays.trim().toLowerCase();
@@ -288,28 +222,7 @@ public class VehiculeService {
         return new PageImpl<>(vehiculeList, pageable, totalElements);
     }
 
-    //     public Page<Vehicule> getAllVehiculePageableByPays(String niveau3PaysActeur, Pageable pageable) {
-    //     Page<Vehicule> vehiculeByPays = vehiculeRepository.findAllByStatutVehiculeTrueAndPaysAndActeurStatutActeurTrue(niveau3PaysActeur.trim().toLowerCase(), pageable);
-        
-    //     if (!vehiculeByPays.hasContent()) {
-    //         System.out.println("Pas d'autres vehicule à fetch pour le pays " + niveau3PaysActeur);
-    //         return vehiculeRepository.findAllByStatutVehiculeAndActeurStatutActeur(true, true, pageable);
-    //     } else {
-    //         System.out.println("Vehicules fetch pour le pays " + niveau3PaysActeur);
-    //         List<Vehicule> vehiculesList = new ArrayList<>(vehiculeByPays.getContent());
-
-    //         // Si le nombre de vehicule est inférieur au nombre requis, compléter avec des vehicules d'autres pays
-    //         if (vehiculesList.size() < pageable.getPageSize()) {
-    //             Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - vehiculesList.size());
-    //             Page<Vehicule> vehiculeComplement = vehiculeRepository.findAllByStatutVehiculeTrueAndActeurStatutActeurTrueAndPaysNot(niveau3PaysActeur.trim().toLowerCase(), complementPageable);
-    //             vehiculesList.addAll(vehiculeComplement.getContent());
-    //         }
-
-    //         return new PageImpl<>(vehiculesList, pageable, vehiculeByPays.getTotalElements() + vehiculesList.size());
-    //     }
-    // }
-
-
+  
      @Transactional
     public void updatePaysForVehicule() {
         // Récupérer tous les vehicules
@@ -440,7 +353,19 @@ public class VehiculeService {
     //     return savedVehicule;
     // }
 
+    public Vehicule updateNbViev(String id) throws Exception {
+        Optional<Vehicule> vOpt = vehiculeRepository.findById(id);
+        
+        if (vOpt.isPresent()) {
+            Vehicule vehicules = vOpt.get();
+            int count = vehicules.getNbreView() + 1;
+            vehicules.setNbreView(count);
 
+            return vehiculeRepository.save(vehicules);
+        } else {
+            throw new Exception("Une erreur s'est produite");
+        }
+    }
        //Liste des vehicules par acteur
     public List<Vehicule> getAllVehiculeByActeur(String id){
         List<Vehicule>  vehiculeList = vehiculeRepository.findAllByActeurIdActeur(id);

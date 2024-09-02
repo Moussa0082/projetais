@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import projet.ais.models.CategorieProduit;
+import projet.ais.models.Materiels;
 import projet.ais.models.Stock;
 import projet.ais.repository.StockRepository;
 import projet.ais.services.FileUploade;
@@ -97,6 +98,12 @@ public class StockController {
         return new ResponseEntity<>(stockService.desactive(id), HttpStatus.OK);
     }
 
+    @PutMapping("/updateView/{id}")
+    @Operation(summary = "Update view")
+    public ResponseEntity<Stock> updateViews(@PathVariable String id) throws Exception{
+        return new ResponseEntity<>(stockService.updateNbViev(id), HttpStatus.OK);
+    }
+    
     @GetMapping("/{stockId}/image")
 public ResponseEntity<byte[]> getImage(@PathVariable String stockId) {
     try {
@@ -246,6 +253,28 @@ public Stock updateQuantiteStock(@PathVariable String id, @RequestParam double q
         Pageable pageable = PageRequest.of(page, size);
         Page<Stock> stocks = stockService.getStocksByMagasinWithPagination(idMagasin, pageable);
 
+        return ResponseEntity.ok().body(stocks);
+    }
+
+    @GetMapping("/getAllStocksByPays")
+    public ResponseEntity<Page<Stock>> getStocksByPaysWithPagination(
+            @RequestParam String nomPays,
+            @RequestParam int page,
+            @RequestParam int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Stock> stocks = stockService.getStocksByPaysWithPagination(nomPays, pageable);
+        return ResponseEntity.ok().body(stocks);
+    }
+   
+    @GetMapping("/getAllByFiliereAndPays")
+    public ResponseEntity<Page<Stock>> getStocksByFilierePaysWithPagination(
+            @RequestParam String libelle,
+            @RequestParam String nomPays,
+            @RequestParam int page,
+            @RequestParam int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Stock> stocks = stockService.getAllByFiliereAndPays(libelle,nomPays, pageable);
         return ResponseEntity.ok().body(stocks);
     }
 

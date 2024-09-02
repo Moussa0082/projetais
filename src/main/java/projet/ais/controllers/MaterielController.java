@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import projet.ais.models.Magasin;
 import projet.ais.models.Materiels;
 import projet.ais.repository.MaterielRepository;
 import projet.ais.services.FileUploade;
@@ -59,6 +60,12 @@ public class MaterielController {
        return new ResponseEntity<>(savedMateriel, HttpStatus.CREATED);
     }
 
+  
+  @PutMapping("/updateView/{id}")
+    @Operation(summary = "Update view")
+    public ResponseEntity<Materiels> updateViews(@PathVariable String id) throws Exception{
+        return new ResponseEntity<>(materielService.updateNbViev(id), HttpStatus.OK);
+    }
     @GetMapping("/{materielId}/image")
 public ResponseEntity<byte[]> getImage(@PathVariable String materielId) {
     try {
@@ -148,10 +155,31 @@ private MediaType detectContentType(String imageName) {
         Page<Materiels> materiels = materielService.getAllMaterielByLibelleFiliere(libelleFiliere, pays, pageable);
         return ResponseEntity.ok().body(materiels);
     }
+
+    @GetMapping("/getMaterielsByFiliereAndPaysWithPagination")
+    public ResponseEntity<Page<Materiels>> getAllMatByFiliereAndPays(
+        @RequestParam String libelleFiliere,
+        @RequestParam String pays,
+        @RequestParam() int page,
+        @RequestParam() int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Materiels> materiels = materielService.getEquipementByPaysWithPagination(libelleFiliere, pays, pageable);
+        return ResponseEntity.ok().body(materiels);
+    }
     
     @GetMapping("/getMaterielsByPaysWithPagination")
     public Page<Materiels> getAllMaterielsPageableByPays(@RequestParam String niveau3PaysActeur, Pageable pageable) {
         return materielService.getAllMaterielPageableByPays(niveau3PaysActeur, pageable);
+    }
+
+    @GetMapping("/getAllByPaysWithPagination")
+    public Page<Materiels> getAllMatPageableByPays(@RequestParam String nomPays, Pageable pageable) {
+        return materielService.getMaterielByPaysWithPagination(nomPays, pageable);
+    }
+
+    @GetMapping("/getMaterielsByPays")
+    public Page<Materiels> getAllMaterielsByPays(@RequestParam String niveau3PaysActeur, Pageable pageable) {
+        return materielService.getMatByPaysWithPagination(niveau3PaysActeur, pageable);
     }
 
     @GetMapping("/getMaterielsByIdTypeAndFiliere")
