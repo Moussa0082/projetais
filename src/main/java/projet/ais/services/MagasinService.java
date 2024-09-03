@@ -172,6 +172,7 @@ public class MagasinService {
         return magasinRepository.findAllByStatutMagasin(true,pageable);
     }
 
+    
      @Transactional
     public Page<Magasin> getAllMagasinPageableByPays( String niveau3PaysActeur, Pageable pageable) {
         // Fetch magasin from the specified country

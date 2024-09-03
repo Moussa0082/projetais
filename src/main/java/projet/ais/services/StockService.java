@@ -282,31 +282,37 @@ private String generateQRCodeImage(String qrCodeData) {
                     idCategorie,idActeur, pageable,0.0);
     }
 
-  
-    public Page<Stock> getAllStocksPageableByPays(String pays, Pageable pageable) {
-        String paysNormalise = pays.trim().toLowerCase();
-        
-        // Récupérer les stocks pour le pays spécifié
-        Page<Stock> stocksByPays = stockRepository.findAllByStatutSotckTrueAndPaysAndActeurStatutActeurTrueAndQuantiteStockGreaterThan(paysNormalise, pageable,0.0);
-        
-        List<Stock> stocksList = new ArrayList<>(stocksByPays.getContent());
-        long totalElements = stocksByPays.getTotalElements();
-    
-        // Vérifier si le nombre de stocks récupérés est inférieur à la taille de la page
-        if (stocksList.size() < pageable.getPageSize()) {
-            int remainingSize = pageable.getPageSize() - stocksList.size();
-            
-            // Si oui, compléter avec des stocks d'autres pays
-            Pageable complementPageable = PageRequest.of(0, remainingSize);
-            Page<Stock> stocksComplement = stockRepository.findAllByStatutSotckTrueAndActeurStatutActeurTrueAndPaysNotAndQuantiteStockGreaterThan(paysNormalise, complementPageable,0.0);
-            
-            stocksList.addAll(stocksComplement.getContent());
-            totalElements += stocksComplement.getTotalElements();
-        }
-    
-        // Créer et retourner une nouvelle page avec la liste complète des stocks et le pageable original
-        return new PageImpl<>(stocksList, pageable, totalElements);
+
+    //test get all 
+    public Page<Stock> getAllStocksPageableByPays(Pageable pageable) {
+        return stockRepository.findAllByStatutSotckTrueAndActeurStatutActeurTrueAndQuantiteStockGreaterThan(pageable,0.0);
     }
+  
+
+    // public Page<Stock> getAllStocksPageableByPays(String pays, Pageable pageable) {
+    //     String paysNormalise = pays.trim().toLowerCase();
+        
+    //     // Récupérer les stocks pour le pays spécifié
+    //     Page<Stock> stocksByPays = stockRepository.findAllByStatutSotckTrueAndPaysAndActeurStatutActeurTrueAndQuantiteStockGreaterThan(paysNormalise, pageable,0.0);
+        
+    //     List<Stock> stocksList = new ArrayList<>(stocksByPays.getContent());
+    //     long totalElements = stocksByPays.getTotalElements();
+    
+    //     // Vérifier si le nombre de stocks récupérés est inférieur à la taille de la page
+    //     if (stocksList.size() < pageable.getPageSize()) {
+    //         int remainingSize = pageable.getPageSize() - stocksList.size();
+            
+    //         // Si oui, compléter avec des stocks d'autres pays
+    //         Pageable complementPageable = PageRequest.of(0, remainingSize);
+    //         Page<Stock> stocksComplement = stockRepository.findAllByStatutSotckTrueAndActeurStatutActeurTrueAndPaysNotAndQuantiteStockGreaterThan(paysNormalise, complementPageable,0.0);
+            
+    //         stocksList.addAll(stocksComplement.getContent());
+    //         totalElements += stocksComplement.getTotalElements();
+    //     }
+    
+    //     // Créer et retourner une nouvelle page avec la liste complète des stocks et le pageable original
+    //     return new PageImpl<>(stocksList, pageable, totalElements);
+    // }
 
     
     @Transactional
@@ -583,32 +589,37 @@ private String generateQRCodeImage(String qrCodeData) {
     }
 
   
-    //liste stock par libelle 
-    public Page<Stock> getAllStockByLibelleCategorie(String libelleFiliere, String pays, Pageable pageable) {
-        // Première requête pour récupérer les matériels pour le pays spécifique
-        Page<Stock> stockByPays = stockRepository.findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysAndQuantiteStockGreaterThan(
-            libelleFiliere,true,true, pays.trim().toLowerCase(), pageable,0.0);
-    
-        // Si aucun matériel trouvé pour le pays spécifique
-        if (!stockByPays.hasContent()) {
-            System.out.println("Pas d'autres stock à fetch pour le pays " + pays);
-            // Récupérer les matériels pour d'autres pays
-            return stockRepository.findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNotAndQuantiteStockGreaterThan(
-                libelleFiliere,true,true, pays.trim().toLowerCase(), pageable,0.0);
-        } else {
-            System.out.println(" fetch pour le pays " + pays);
-            List<Stock> stockList = new ArrayList<>(stockByPays.getContent());
-    
-            // Si le nombre d' intrant est inférieur au nombre requis, compléter avec des intrants d'autres pays
-            if (stockList.size() < pageable.getPageSize()) {
-                Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - stockList.size());
-                Page<Stock> intrantComplement =  stockRepository.findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNotAndQuantiteStockGreaterThan(
-                    libelleFiliere,true,true, pays.trim().toLowerCase(), complementPageable,0.0);
-                    stockList.addAll(intrantComplement.getContent());
-            }
-            return new PageImpl<>(stockList, pageable, stockByPays.getTotalElements() + stockList.size());
-        }
+   //test libelle
+   public Page<Stock> getAllStockByLibelleCategorie(String libelleFiliere, Pageable pageable) {
+    return stockRepository.findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan( libelleFiliere,true,true,pageable,0.0);
     }
+
+    //liste stock par libelle 
+    // public Page<Stock> getAllStockByLibelleCategorie(String libelleFiliere, String pays, Pageable pageable) {
+    //     // Première requête pour récupérer les matériels pour le pays spécifique
+    //     Page<Stock> stockByPays = stockRepository.findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysAndQuantiteStockGreaterThan(
+    //         libelleFiliere,true,true, pays.trim().toLowerCase(), pageable,0.0);
+    
+    //     // Si aucun matériel trouvé pour le pays spécifique
+    //     if (!stockByPays.hasContent()) {
+    //         System.out.println("Pas d'autres stock à fetch pour le pays " + pays);
+    //         // Récupérer les matériels pour d'autres pays
+    //         return stockRepository.findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNotAndQuantiteStockGreaterThan(
+    //             libelleFiliere,true,true, pays.trim().toLowerCase(), pageable,0.0);
+    //     } else {
+    //         System.out.println(" fetch pour le pays " + pays);
+    //         List<Stock> stockList = new ArrayList<>(stockByPays.getContent());
+    
+    //         // Si le nombre d' intrant est inférieur au nombre requis, compléter avec des intrants d'autres pays
+    //         if (stockList.size() < pageable.getPageSize()) {
+    //             Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - stockList.size());
+    //             Page<Stock> intrantComplement =  stockRepository.findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNotAndQuantiteStockGreaterThan(
+    //                 libelleFiliere,true,true, pays.trim().toLowerCase(), complementPageable,0.0);
+    //                 stockList.addAll(intrantComplement.getContent());
+    //         }
+    //         return new PageImpl<>(stockList, pageable, stockByPays.getTotalElements() + stockList.size());
+    //     }
+    // }
     
        ///stock libelle filiere
     public Page<Stock> getAllByFiliereAndPays(String libelleFiliere,String nomPays,Pageable pageable) {

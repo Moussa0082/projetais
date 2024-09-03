@@ -226,13 +226,13 @@ public Stock updateQuantiteStock(@PathVariable String id, @RequestParam double q
     @GetMapping("/listeStockByLibelleCategorie")
     public ResponseEntity<Page<Stock>> getStocksByLibelleCategorie(
         @RequestParam() String libelle,
-        @RequestParam() String pays,
         @RequestParam() int page,
         @RequestParam() int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Stock> stocks = stockService.getAllStockByLibelleCategorie(libelle,pays, pageable);
+        Page<Stock> stocks = stockService.getAllStockByLibelleCategorie(libelle, pageable);
         return ResponseEntity.ok().body(stocks);
     }
+    
     // @GetMapping("/listeStockByLibelleCategorie")
     // public ResponseEntity<Page<Stock>> getStocksByLibelleCategorie(
     //     @RequestParam() String libelle,
@@ -240,7 +240,7 @@ public Stock updateQuantiteStock(@PathVariable String id, @RequestParam double q
     //     @RequestParam() int page,
     //     @RequestParam() int size) {
     //     Pageable pageable = PageRequest.of(page, size);
-    //     Page<Stock> stocks = stockService.getAllStockByLibelleCategorie(libelle, pays, pageable);
+    //     Page<Stock> stocks = stockService.getAllStockByLibelleCategorie(libelle,pays, pageable);
     //     return ResponseEntity.ok().body(stocks);
     // }
 
@@ -280,12 +280,12 @@ public Stock updateQuantiteStock(@PathVariable String id, @RequestParam double q
 
         @GetMapping("/getStocksByPaysWithPagination")
         public ResponseEntity<Page<Stock>> getAllStocksPageableByPays(
-                @RequestParam String niveau3PaysActeur,
+                // @RequestParam String niveau3PaysActeur,
                 @RequestParam int page,
                 @RequestParam int size) {
     
             Pageable pageable = PageRequest.of(page, size);
-            Page<Stock> stocks = stockService.getAllStocksPageableByPays(niveau3PaysActeur, pageable);
+            Page<Stock> stocks = stockService.getAllStocksPageableByPays(pageable);
     
             return ResponseEntity.ok(stocks);
         }

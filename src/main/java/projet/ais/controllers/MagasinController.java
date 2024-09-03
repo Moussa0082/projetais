@@ -190,18 +190,7 @@ public class MagasinController {
         Page<Magasin> magasins = magasinService.getAllMagasinPageable(pageable);
         return ResponseEntity.ok().body(magasins);
     }
-    //  @GetMapping("/getAllMagasinWithPagination")
-    // public ResponseEntity<Page<Magasin>> getMagasins(
-    //     @RequestParam() String niveau3PaysActeur,
-    //     @RequestParam() int page,
-    //                                               @RequestParam() int size) {
-    //     Pageable pageable = PageRequest.of(page, size);
-    //     Page<Magasin> magasins = magasinService.getAllMagasinPageableByPays(niveau3PaysActeur,pageable);
-    //     return ResponseEntity.ok().body(magasins);
-    // }
-
-
-
+    
     @PutMapping("/update-pays")
     public String updatePaysForMagasins() {
         magasinService.updatePaysForMagasins();
