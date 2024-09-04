@@ -30,6 +30,7 @@ import projet.ais.models.Commande;
 import projet.ais.models.DetailCommande;
 import projet.ais.models.Forme;
 import projet.ais.models.Intrant;
+import projet.ais.models.Magasin;
 import projet.ais.models.Materiels;
 import projet.ais.models.Stock;
 import projet.ais.models.Vehicule;
@@ -263,30 +264,37 @@ public class IntrantService {
 //         return new PageImpl<>(intrantList, pageable, intrantByPays.getTotalElements() + intrantList.size());
 //     }
 // }
-  ///liste intrant par libelle filiere
-    public Page<Intrant> getAllIntrantByLibelleCategorie(String libelleFiliere,String pays, Pageable pageable) {
-    
-    String paysNormalise = pays.trim().toLowerCase();
-    
-    // Récupérer les stocks pour le pays spécifié
-    Page<Intrant> intrantByPays = intrantRepository.findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysAndQuantiteIntrantGreaterThan(
-        libelleFiliere, true,true,paysNormalise, pageable,0.0);
 
-    List<Intrant> intrantList = new ArrayList<>(intrantByPays.getContent());
-    long totalElements = intrantByPays.getTotalElements();
-
-    // Si le nombre de stocks est inférieur à la taille de la page, compléter avec des stocks d'autres pays
-    if (intrantList.size() < pageable.getPageSize()) {
-        Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - intrantList.size());
-        Page<Intrant> intrantComplement = intrantRepository.findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysNotAndQuantiteIntrantGreaterThan(
-            libelleFiliere,true,true, pays.trim().toLowerCase(), complementPageable,0.0);
-        intrantList.addAll(intrantComplement.getContent());
-        totalElements += intrantComplement.getTotalElements();
+    //teste libelle
+    public Page<Intrant> getAllIntrantByLibelleCategorie(String libelleFiliere, Pageable pageable) {
+        return intrantRepository.findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndQuantiteIntrantGreaterThan(
+            libelleFiliere, true,true, pageable,0.0);
     }
 
-    // Créer et retourner une nouvelle page avec la liste complète des stocks et le pageable original
-    return new PageImpl<>(intrantList, pageable, totalElements);
-}
+  ///liste intrant par libelle filiere
+//     public Page<Intrant> getAllIntrantByLibelleCategorie(String libelleFiliere,String pays, Pageable pageable) {
+    
+//     String paysNormalise = pays.trim().toLowerCase();
+    
+//     // Récupérer les stocks pour le pays spécifié
+//     Page<Intrant> intrantByPays = intrantRepository.findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysAndQuantiteIntrantGreaterThan(
+//         libelleFiliere, true,true,paysNormalise, pageable,0.0);
+
+//     List<Intrant> intrantList = new ArrayList<>(intrantByPays.getContent());
+//     long totalElements = intrantByPays.getTotalElements();
+
+//     // Si le nombre de stocks est inférieur à la taille de la page, compléter avec des stocks d'autres pays
+//     if (intrantList.size() < pageable.getPageSize()) {
+//         Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - intrantList.size());
+//         Page<Intrant> intrantComplement = intrantRepository.findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysNotAndQuantiteIntrantGreaterThan(
+//             libelleFiliere,true,true, pays.trim().toLowerCase(), complementPageable,0.0);
+//         intrantList.addAll(intrantComplement.getContent());
+//         totalElements += intrantComplement.getTotalElements();
+//     }
+
+//     // Créer et retourner une nouvelle page avec la liste complète des stocks et le pageable original
+//     return new PageImpl<>(intrantList, pageable, totalElements);
+// }
 
     public Page<Intrant> getByLibelleAndPaysWithPagination(String libelleFiliere,String nomPays,Pageable pageable) {
         return intrantRepository.findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysAndQuantiteIntrantGreaterThan(
@@ -403,27 +411,33 @@ public class IntrantService {
         return intrantRepository.findAllByStatutIntrantTrueAndPaysAndActeurStatutActeurTrueAndQuantiteIntrantGreaterThan(nomPays, pageable,0.0);
     }
 
-    public Page<Intrant> getAllIntrantPageableByPays(String pays, Pageable pageable) {
+    //test get all 
     
-        String paysNormalise = pays.trim().toLowerCase();
-        
-        // Récupérer les stocks pour le pays spécifié
-        Page<Intrant> intrantByPays = intrantRepository.findAllByStatutIntrantTrueAndPaysAndActeurStatutActeurTrueAndQuantiteIntrantGreaterThan(paysNormalise, pageable,0.0);
-        
-        List<Intrant> intrantList = new ArrayList<>(intrantByPays.getContent());
-        long totalElements = intrantByPays.getTotalElements();
-    
-        // Si le nombre de stocks est inférieur à la taille de la page, compléter avec des stocks d'autres pays
-        if (intrantList.size() < pageable.getPageSize()) {
-            Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - intrantList.size());
-            Page<Intrant> stocksComplement = intrantRepository.findAllByStatutIntrantTrueAndActeurStatutActeurTrueAndPaysNotAndQuantiteIntrantGreaterThan(paysNormalise, complementPageable,0.0);
-            intrantList.addAll(stocksComplement.getContent());
-            totalElements += stocksComplement.getTotalElements();
-        }
-    
-        // Créer et retourner une nouvelle page avec la liste complète des stocks et le pageable original
-        return new PageImpl<>(intrantList, pageable, totalElements);
+    public Page<Intrant> getAllIntrantPageableByPays(Pageable pageable) {
+        return intrantRepository.findAllByStatutIntrantTrueAndActeurStatutActeurTrueAndQuantiteIntrantGreaterThan(pageable,0.0);
     }
+
+    // public Page<Intrant> getAllIntrantPageableByPays(String pays, Pageable pageable) {
+    
+    //     String paysNormalise = pays.trim().toLowerCase();
+        
+    //     // Récupérer les stocks pour le pays spécifié
+    //     Page<Intrant> intrantByPays = intrantRepository.findAllByStatutIntrantTrueAndPaysAndActeurStatutActeurTrueAndQuantiteIntrantGreaterThan(paysNormalise, pageable,0.0);
+        
+    //     List<Intrant> intrantList = new ArrayList<>(intrantByPays.getContent());
+    //     long totalElements = intrantByPays.getTotalElements();
+    
+    //     // Si le nombre de stocks est inférieur à la taille de la page, compléter avec des stocks d'autres pays
+    //     if (intrantList.size() < pageable.getPageSize()) {
+    //         Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - intrantList.size());
+    //         Page<Intrant> stocksComplement = intrantRepository.findAllByStatutIntrantTrueAndActeurStatutActeurTrueAndPaysNotAndQuantiteIntrantGreaterThan(paysNormalise, complementPageable,0.0);
+    //         intrantList.addAll(stocksComplement.getContent());
+    //         totalElements += stocksComplement.getTotalElements();
+    //     }
+    
+    //     // Créer et retourner une nouvelle page avec la liste complète des stocks et le pageable original
+    //     return new PageImpl<>(intrantList, pageable, totalElements);
+    // }
 
     
     @Transactional

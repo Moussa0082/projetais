@@ -165,9 +165,14 @@ public class IntrantController {
     }
 
     @GetMapping("/getIntrantsByPaysWithPagination")
-    public Page<Intrant> getAllIntrantsPageableByPays(@RequestParam String niveau3PaysActeur, Pageable pageable) {
-        return intrantService.getAllIntrantPageableByPays(niveau3PaysActeur, pageable);
+    public Page<Intrant> getAllIntrantsPageableByPays( Pageable pageable) {
+        return intrantService.getAllIntrantPageableByPays(pageable);
     }
+
+    // @GetMapping("/getIntrantsByPaysWithPagination")
+    // public Page<Intrant> getAllIntrantsPageableByPays(@RequestParam String niveau3PaysActeur, Pageable pageable) {
+    //     return intrantService.getAllIntrantPageableByPays(niveau3PaysActeur, pageable);
+    // }
 
     @GetMapping("/getAllIntrantByPaysWithPagination")
     public Page<Intrant> getAllIntrantsByPays(@RequestParam String nomPays, Pageable pageable) {
@@ -187,15 +192,25 @@ public class IntrantController {
 
       @GetMapping("/getAllIntrantsByPaysWithPagination")
         public ResponseEntity<Page<Intrant>> getAllIntrantPageableByPays(
-                @RequestParam String niveau3PaysActeur,
                 @RequestParam int page,
                 @RequestParam int size) {
     
             Pageable pageable = PageRequest.of(page, size);
-            Page<Intrant> intrants = intrantService.getAllIntrantPageableByPays(niveau3PaysActeur, pageable);
+            Page<Intrant> intrants = intrantService.getAllIntrantPageableByPays( pageable);
     
             return ResponseEntity.ok(intrants);
         }
+    //   @GetMapping("/getAllIntrantsByPaysWithPagination")
+    //     public ResponseEntity<Page<Intrant>> getAllIntrantPageableByPays(
+    //             @RequestParam String niveau3PaysActeur,
+    //             @RequestParam int page,
+    //             @RequestParam int size) {
+    
+    //         Pageable pageable = PageRequest.of(page, size);
+    //         Page<Intrant> intrants = intrantService.getAllIntrantPageableByPays(niveau3PaysActeur, pageable);
+    
+    //         return ResponseEntity.ok(intrants);
+    //     }
 
        @GetMapping("/getAllIntrantsByActeurWithPagination")
     public ResponseEntity<Page<Intrant>> getIntrantsByActeur(
@@ -237,13 +252,23 @@ public class IntrantController {
     @GetMapping("/listeIntrantByLibelleCategorie")
     public ResponseEntity<Page<Intrant>> getIntrantsByLibelleCategorie(
         @RequestParam() String libelle,
-        @RequestParam() String pays,
         @RequestParam() int page,
         @RequestParam() int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Intrant> intrants = intrantService.getAllIntrantByLibelleCategorie(libelle,pays, pageable);
+        Page<Intrant> intrants = intrantService.getAllIntrantByLibelleCategorie(libelle, pageable);
         return ResponseEntity.ok().body(intrants);
     }
+   
+    // @GetMapping("/listeIntrantByLibelleCategorie")
+    // public ResponseEntity<Page<Intrant>> getIntrantsByLibelleCategorie(
+    //     @RequestParam() String libelle,
+    //     @RequestParam() String pays,
+    //     @RequestParam() int page,
+    //     @RequestParam() int size) {
+    //     Pageable pageable = PageRequest.of(page, size);
+    //     Page<Intrant> intrants = intrantService.getAllIntrantByLibelleCategorie(libelle,pays, pageable);
+    //     return ResponseEntity.ok().body(intrants);
+    // }
     @GetMapping("/listeIntrantByLibelleAndPays")
     public ResponseEntity<Page<Intrant>> getIntrantsByLibelle(
         @RequestParam() String libelle,

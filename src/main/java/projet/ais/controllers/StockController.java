@@ -338,18 +338,33 @@ public Stock updateQuantiteStock(@PathVariable String id, @RequestParam double q
         public ResponseEntity<Page<Stock>> listeStockByCategorieAndLibelleFiliere(
                 @RequestParam String idCategorie,
                 @RequestParam String libelleFiliere,
-                @RequestParam String niveau3PaysActeur,
                 @RequestParam int page,
                 @RequestParam int size) {
     
             CategorieProduit categorie = new CategorieProduit();
             categorie.setIdCategorieProduit(idCategorie);
-    
+
             Pageable pageable = PageRequest.of(page, size);
-            Page<Stock> stocks = stockService.getAllStockPageableByPaysByCategorieAndFiliere(idCategorie, libelleFiliere, niveau3PaysActeur,pageable);
+            Page<Stock> stocks = stockService.getAllStockPageableByPaysByCategorieAndFiliere(idCategorie, libelleFiliere,pageable);
     
             return ResponseEntity.ok().body(stocks);
         }
+        // @GetMapping("/getAllStocksByCategorieAndFiliere")
+        // public ResponseEntity<Page<Stock>> listeStockByCategorieAndLibelleFiliere(
+        //         @RequestParam String idCategorie,
+        //         @RequestParam String libelleFiliere,
+        //         @RequestParam String niveau3PaysActeur,
+        //         @RequestParam int page,
+        //         @RequestParam int size) {
+    
+        //     CategorieProduit categorie = new CategorieProduit();
+        //     categorie.setIdCategorieProduit(idCategorie);
+    
+        //     Pageable pageable = PageRequest.of(page, size);
+        //     Page<Stock> stocks = stockService.getAllStockPageableByPaysByCategorieAndFiliere(idCategorie, libelleFiliere, niveau3PaysActeur,pageable);
+    
+        //     return ResponseEntity.ok().body(stocks);
+        // }
     
 
 

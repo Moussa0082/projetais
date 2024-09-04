@@ -28,6 +28,9 @@ public interface IntrantRepository extends JpaRepository<Intrant , String> {
     // List<Intrant> findAllBySpeculationIdSpeculation(String idSpeculation);
     List<Intrant> findAllByCategorieProduit_IdCategorieProduitAndQuantiteIntrantGreaterThan(String idCategorieProduit,double quantite);
 
+    //test  categorie
+    // Page<Intrant> findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndActeurStatutActeurTrueAndQuantiteIntrantGreaterThan(String idCategorieProduit, Pageable pageable,double qte);
+    
     //Intrant par categorie et par pays
     Page<Intrant> findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndPaysAndActeurStatutActeurTrueAndQuantiteIntrantGreaterThan(String pays,String idCategorieProduit, Pageable pageable,double qte);
     
@@ -42,7 +45,13 @@ public interface IntrantRepository extends JpaRepository<Intrant , String> {
     
     //Intrant par libelle categorie
     Page<Intrant> findAllByCategorieProduit_filiere_libelleFiliereAndQuantiteIntrantGreaterThan(String libelle , Pageable pageable,double qte);
-    
+   
+    //test
+    // Page<Intrant> findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndQuantiteIntrantGreaterThan(String libelleFiliere, boolean statutIntrant, boolean statutActeur, Pageable pageable,double qte);
+  
+    //test
+    Page<Intrant> findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndQuantiteIntrantGreaterThan(String libelleFiliere, boolean statutIntrant, boolean statutActeur, Pageable pageable,double qte);
+  
     Page<Intrant> findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysAndQuantiteIntrantGreaterThan(String libelleFiliere, boolean statutIntrant, boolean statutActeur, String pays, Pageable pageable,double qte);
     Page<Intrant> findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysNotAndQuantiteIntrantGreaterThan(String libelleFiliere,boolean statutIntrant, boolean statutActeur, String pays, Pageable pageable,double qte);
 
@@ -69,6 +78,9 @@ public interface IntrantRepository extends JpaRepository<Intrant , String> {
 
     Page<Intrant> findAllByStatutIntrantAndActeurStatutActeurAndQuantiteIntrantGreaterThan(boolean statutIntrant, boolean statutActeur , Pageable pageable,double qte);
 
+    //test get all
+   Page<Intrant> findAllByStatutIntrantTrueAndActeurStatutActeurTrueAndQuantiteIntrantGreaterThan(Pageable pageable,double qte);
+   
    Page<Intrant> findAllByStatutIntrantTrueAndPaysAndActeurStatutActeurTrueAndQuantiteIntrantGreaterThan(String pays, Pageable pageable,double qte);
 
 //    @Query("SELECT i FROM Intrant i JOIN i.acteur a WHERE i.statutIntrant = :statutIntrant AND a.statutActeur = :statutActeur AND LOWER(i.pays) <> LOWER(:pays)")

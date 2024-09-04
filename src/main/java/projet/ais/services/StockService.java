@@ -628,31 +628,37 @@ private String generateQRCodeImage(String qrCodeData) {
 
     ///stock par idCategorie et libelle filiere
     @Transactional
-    public Page<Stock> getAllStockPageableByPaysByCategorieAndFiliere(String idcategorie,String libelleFiliere, String niveau3PaysActeur, Pageable pageable) {
-        // Fetch stock from the specified country
-        Page<Stock> stocksByPays = stockRepository.findAllBySpeculation_CategorieProduit_idCategorieProduitAndSpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysAndQuantiteStockGreaterThan(
-            idcategorie, libelleFiliere, true, true, niveau3PaysActeur.trim().toLowerCase(), pageable,0.0);
-
-        List<Stock> stocksList = new ArrayList<>(stocksByPays.getContent());
-
-        // If no stocks are found for the specified country, fetch stocks from other countries
-        if (stocksList.isEmpty()) {
-            Page<Stock> stocksFromOtherCountries = stockRepository.findAllBySpeculation_CategorieProduit_idCategorieProduitAndSpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNotAndQuantiteStockGreaterThan(
-                idcategorie, libelleFiliere ,true, true,  niveau3PaysActeur.trim().toLowerCase(), pageable,0.0);
-
-            return new PageImpl<>(stocksFromOtherCountries.getContent(), pageable, stocksFromOtherCountries.getTotalElements());
-        }
-
-        // Fetch stocks from other countries if needed to fill the page
-        if (stocksList.size() < pageable.getPageSize()) {
-            Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - stocksList.size());
-            Page<Stock> stocksComplement = stockRepository.findAllBySpeculation_CategorieProduit_idCategorieProduitAndSpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNotAndQuantiteStockGreaterThan(
-                idcategorie, libelleFiliere, true, true,  niveau3PaysActeur.trim().toLowerCase(), complementPageable,0.0);
-            stocksList.addAll(stocksComplement.getContent());
-        }
-
-        return new PageImpl<>(stocksList, pageable, stocksByPays.getTotalElements() + stocksList.size());
+    public Page<Stock> getAllStockPageableByPaysByCategorieAndFiliere(String idcategorie,String libelleFiliere, Pageable pageable) {
+        return stockRepository.findAllBySpeculation_CategorieProduit_idCategorieProduitAndSpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(idcategorie, libelleFiliere, true, true,pageable,0.0);
     }
+  
+
+    // @Transactional
+    // public Page<Stock> getAllStockPageableByPaysByCategorieAndFiliere(String idcategorie,String libelleFiliere, String niveau3PaysActeur, Pageable pageable) {
+    //     // Fetch stock from the specified country
+    //     Page<Stock> stocksByPays = stockRepository.findAllBySpeculation_CategorieProduit_idCategorieProduitAndSpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysAndQuantiteStockGreaterThan(
+    //         idcategorie, libelleFiliere, true, true, niveau3PaysActeur.trim().toLowerCase(), pageable,0.0);
+
+    //     List<Stock> stocksList = new ArrayList<>(stocksByPays.getContent());
+
+    //     // If no stocks are found for the specified country, fetch stocks from other countries
+    //     if (stocksList.isEmpty()) {
+    //         Page<Stock> stocksFromOtherCountries = stockRepository.findAllBySpeculation_CategorieProduit_idCategorieProduitAndSpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNotAndQuantiteStockGreaterThan(
+    //             idcategorie, libelleFiliere ,true, true,  niveau3PaysActeur.trim().toLowerCase(), pageable,0.0);
+
+    //         return new PageImpl<>(stocksFromOtherCountries.getContent(), pageable, stocksFromOtherCountries.getTotalElements());
+    //     }
+
+    //     // Fetch stocks from other countries if needed to fill the page
+    //     if (stocksList.size() < pageable.getPageSize()) {
+    //         Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - stocksList.size());
+    //         Page<Stock> stocksComplement = stockRepository.findAllBySpeculation_CategorieProduit_idCategorieProduitAndSpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNotAndQuantiteStockGreaterThan(
+    //             idcategorie, libelleFiliere, true, true,  niveau3PaysActeur.trim().toLowerCase(), complementPageable,0.0);
+    //         stocksList.addAll(stocksComplement.getContent());
+    //     }
+
+    //     return new PageImpl<>(stocksList, pageable, stocksByPays.getTotalElements() + stocksList.size());
+    // }
 
     // recuperer les stock par  acteur avec pagination
     public Page<Stock> getStocksByActeurWithPagination(String idActeur,Pageable pageable) {
