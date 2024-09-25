@@ -27,6 +27,7 @@ import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Intrant;
 import projet.ais.models.Vehicule;
+import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.VehiculeRepository;
 
 import org.apache.commons.net.ftp.FTP;
@@ -37,7 +38,9 @@ public class VehiculeService {
 
     @Autowired
     private VehiculeRepository vehiculeRepository;
-  
+     @Autowired
+    ActeurRepository acteurRepository;
+
 
     @Autowired
     CodeGenerator codeGenerator;
@@ -59,6 +62,7 @@ public class VehiculeService {
             throw new IllegalArgumentException("Un vehicule avec l'id " + vh + " existe déjà");
         }
 
+        Acteur acteur = acteurRepository.findByIdActeur(vehicule.getActeur().getIdActeur());
         // Traitement du fichier image 
         if (imageFile != null) {
             try {
@@ -95,7 +99,7 @@ public class VehiculeService {
         LocalDateTime now = LocalDateTime.now();
         String formattedDateTime = now.format(formatter);
         vehicule.setDateAjout(formattedDateTime);
-        
+        vehicule.setPays(acteur.getNiveau3PaysActeur());
         // Enregistrement de l'objet Vehicule dans la base de données
         Vehicule savedVehicule = vehiculeRepository.save(vehicule);
 

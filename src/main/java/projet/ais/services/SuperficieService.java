@@ -47,22 +47,6 @@ public class SuperficieService {
 
         Campagne campagne = campagneRepository.findByIdCampagne(superficie.getCampagne().getIdCampagne());
 
-        // List<Intrant> intrants = superficie.getIntrants();
-
-        // List<String> idIntrants = new ArrayList<>();
-
-        // for(Intrant intrant : intrants){
-        //     System.out.println("recuperation des intrants");
-        //     idIntrants.add(intrant.getIdIntrant());
-        // }
-
-        // List<Intrant> intrantList = intrantRepository.findByIdIntrantIn(idIntrants);
-
-        // System.out.println("Apres insertion intrants");
-
-        // if(intrantList.isEmpty())
-        //     throw new EntityNotFoundException("Aucune intrant trouvé");
-
         if(campagne == null)
             throw new EntityNotFoundException("Aucune campagne trouvé");
 
@@ -88,7 +72,7 @@ public class SuperficieService {
         sup.setLocalite(superficie.getLocalite());
         sup.setDateSemi(superficie.getDateSemi());
         sup.setSuperficieHa(superficie.getSuperficieHa());
-        sup.setPersonneModif(superficie.getPersonneModif());
+        sup.setPersonneModif(superficie.getActeur().getNomActeur());
         String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         LocalDateTime now = LocalDateTime.now();

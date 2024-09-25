@@ -459,6 +459,7 @@ private String generateQRCodeImage(String qrCodeData) {
           stocks.setUnite(stock.getUnite());
         
         if (imageFile != null) {
+            System.out.println("Televersement en cours");
             String imageLocation = "/ais";
             try {
                 Path imageRootLocation = Paths.get(imageLocation);
@@ -471,7 +472,8 @@ private String generateQRCodeImage(String qrCodeData) {
                 Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                 String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
 
-                stock.setPhoto(imageName);
+                stocks.setPhoto(imageName);
+                System.out.println("Televersement terminer " + imageName);
             } catch (IOException e) {
                 throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
             }

@@ -136,7 +136,7 @@ public class MagasinService {
             String formattedDateTime = now.format(formatter);
             mag.setDateModif(formattedDateTime);
 
-         Magasin maga = magasinRepository.save(magasin);
+         Magasin maga = magasinRepository.save(mag);
              // Création de l'historique
         historiqueService.createHistorique("Modification" , maga.getNomMagasin() , maga.getActeur().getNomActeur(), maga.getActeur().getLocaliteActeur(),maga.getActeur().getNiveau3PaysActeur(),"Création de magasin " + maga.getNomMagasin());
         return maga;

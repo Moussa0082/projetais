@@ -217,54 +217,7 @@ public class IntrantService {
         return intrantList;
     } 
 
-     // recuperer les intrants par  libelle categorie
-    // public Page<Intrant> getAllIntrantByLibelleCategorie(String libelle,Pageable pageable) {
-    //     return intrantRepository.findAllByCategorieProduit_libelleCategorie(libelle, pageable);
-    // }
-
-     // recuperer les intrants par  libelle categorie
-    // public Page<Intrant> getAllIntrantByLibelleCategorie(String libelle,Pageable pageable) {
-    //     return intrantRepository.findAllByCategorieProduit_filiere_libelleFiliere(libelle, pageable);
-    // }
-
-    // public Page<Intrant> getAllIntrantByLibelleCategorie(String libelle, Pageable pageable) {
-    //     Page<Intrant> intrants = intrantRepository.findAllByCategorieProduit_filiere_libelleFiliere(libelle, pageable);
-
-    //     // If no intrants are found, return an empty page
-    //     if (intrants.isEmpty()) {
-    //         return Page.empty(pageable);
-    //     }
-
-    //     return intrants;
-    // }
-
-    ///liste intrant par libelle filiere
-//     public Page<Intrant> getAllIntrantByLibelleCategorie(String libelleFiliere, String pays, Pageable pageable) {
-//     // Première requête pour récupérer les matériels pour le pays spécifique
-//     Page<Intrant> intrantByPays = intrantRepository.findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPays(
-//         libelleFiliere, true,true,pays.trim().toLowerCase(), pageable);
-
-//     // Si aucun matériel trouvé pour le pays spécifique
-//     if (!intrantByPays.hasContent()) {
-//         System.out.println("Pas d'autres intrant à fetch pour le pays " + pays);
-//         // Récupérer les matériels pour d'autres pays
-//         return intrantRepository.findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysNot(
-//             libelleFiliere,true,true, pays.trim().toLowerCase(), pageable);
-//     } else {
-//         System.out.println("Materiels fetch pour le pays " + pays);
-//         List<Intrant> intrantList = new ArrayList<>(intrantByPays.getContent());
-
-//         // Si le nombre d' intrant est inférieur au nombre requis, compléter avec des intrants d'autres pays
-//         if (intrantList.size() < pageable.getPageSize()) {
-//             Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - intrantList.size());
-//             Page<Intrant> intrantComplement =  intrantRepository.findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysNot(
-//                 libelleFiliere,true,true, pays.trim().toLowerCase(), complementPageable);
-//             intrantList.addAll(intrantComplement.getContent());
-//         }
-//         return new PageImpl<>(intrantList, pageable, intrantByPays.getTotalElements() + intrantList.size());
-//     }
-// }
-
+    
     //teste libelle
     public Page<Intrant> getAllIntrantByLibelleCategorie(String libelleFiliere, Pageable pageable) {
         return intrantRepository.findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndQuantiteIntrantGreaterThan(
@@ -412,7 +365,6 @@ public class IntrantService {
     }
 
     //test get all 
-    
     public Page<Intrant> getAllIntrantPageableByPays(Pageable pageable) {
         return intrantRepository.findAllByStatutIntrantTrueAndActeurStatutActeurTrueAndQuantiteIntrantGreaterThan(pageable,0.0);
     }
@@ -499,7 +451,8 @@ public class IntrantService {
             it.setPrixIntrant(intrant.getPrixIntrant());
             it.setDateExpiration(intrant.getDateExpiration());
             it.setUnite(intrant.getUnite());
-
+            it.setPersonneModif(intrant.getActeur().getNomActeur());
+            
             if(intrant.getCategorieProduit() != null){
                 it.setCategorieProduit(intrant.getCategorieProduit());
             }
@@ -547,7 +500,7 @@ public class IntrantService {
 
             // Mettre à jour la date de modification
             intrant.setDateModif(LocalDateTime.now().toString());
-
+            intrant.setPersonneModif(intrant.getActeur().getNomActeur());
             return intrantRepository.save(intrant);
         } else {
             throw new Exception("Intrant non trouvé avec l'ID : " + id);

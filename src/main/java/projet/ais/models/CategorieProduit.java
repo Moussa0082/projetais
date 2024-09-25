@@ -16,7 +16,6 @@ import java.util.List;
 public class CategorieProduit {
 
     @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idCategorieProduit;
 
     @Column(nullable = false)
@@ -65,5 +64,27 @@ public class CategorieProduit {
     // @ManyToOne
     // @JoinColumn(name = "idActeur")
     // private Acteur acteur;
+
+    public CategorieProduit() {
+        // Constructeur par défaut
+    }
+    
+    public CategorieProduit(String idCategorieProduit, String codeCategorie, String libelleCategorie, 
+                        String descriptionCategorie, boolean statutCategorie, String personneModif, 
+                        String dateAjout, String dateModif, Filiere filiere, List<Speculation> speculationList, 
+                        List<Intrant> intrants) {
+    this.idCategorieProduit = idCategorieProduit;
+    this.codeCategorie = codeCategorie;
+    this.libelleCategorie = libelleCategorie;
+    this.descriptionCategorie = descriptionCategorie;
+    this.statutCategorie = statutCategorie;
+    this.personneModif = personneModif;
+    this.dateAjout = dateAjout;
+    this.dateModif = dateModif;
+    this.filiere = filiere;
+    this.speculationList = speculationList;
+    this.intrants = intrants;
+}
+
 }
 

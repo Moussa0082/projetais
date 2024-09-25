@@ -729,6 +729,29 @@ public class ActeurService {
                 ac.setLogoActeur(imageName);
                 System.out.println("Logo de l'acteur mis à jour: " + imageName);
             }
+            // Traitement du fichier image du siege
+            if (imageFile1 != null && !imageFile1.isEmpty()) {
+                System.out.println("Traitement du fichier image: " + imageFile1.getOriginalFilename());
+    
+                String imageLocation = "/ais";
+                Path imageRootLocation = Paths.get(imageLocation);
+                if (!Files.exists(imageRootLocation)) {
+                    Files.createDirectories(imageRootLocation);
+                    System.out.println("Dossier image créé à: " + imageRootLocation);
+                }
+                String imageName = UUID.randomUUID().toString() + "_" + imageFile1.getOriginalFilename();
+                Path imagePath = imageRootLocation.resolve(imageName);
+                System.out.println("Chemin d'image calculé: " + imagePath);
+    
+                Files.copy(imageFile1.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+                System.out.println("Image copiée à: " + imagePath);
+    
+                String onlineImagePath = fileUploade.uploadImageToFTP(imagePath, imageName);
+                System.out.println("Chemin d'image en ligne: " + onlineImagePath);
+    
+                ac.setPhotoSiegeActeur(imageName);
+                System.out.println("Siege de l'acteur mis à jour: " + imageName);
+            }
     
             // Mise à jour des autres champs
             if (acteur.getAdresseActeur() != null) {
