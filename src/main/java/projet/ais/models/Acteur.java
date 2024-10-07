@@ -119,15 +119,9 @@ public class Acteur {
     @JsonIgnore
     private List<MessageWa> messageList;
 
-    // @OneToMany
-    // (mappedBy = "acteur")
-    // @JsonIgnore
-    // private List<CategorieProduit> categorieProduits;
-
-    // @OneToMany
-    // (mappedBy = "acteur")
-    // @JsonIgnore
-    // private List<Filiere> filieresList;
+    @OneToMany(mappedBy = "acteur")
+    @JsonIgnore
+    private List<Abonnement> abonnement;
 
     @OneToMany(mappedBy = "acteur")
     @JsonIgnore

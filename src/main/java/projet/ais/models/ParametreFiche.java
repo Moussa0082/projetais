@@ -27,7 +27,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class ParametreFiche {
     
     @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idParametreFiche;
 
     @Column(nullable = false)

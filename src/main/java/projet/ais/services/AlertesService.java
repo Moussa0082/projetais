@@ -342,7 +342,7 @@ public class AlertesService {
     public String deleteAlertes(String id){
         Alertes alertes = alertesRepository.findById(id).orElseThrow(null);
 
-        alertesRepository.delete(alertes);
+        alertesRepository.delete(alertes); 
         return "Alertes supprimé avec success";
     }
 

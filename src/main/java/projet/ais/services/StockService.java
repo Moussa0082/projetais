@@ -33,6 +33,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
+import projet.ais.models.Abonnement;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
 import projet.ais.models.CategorieProduit;
@@ -42,6 +43,7 @@ import projet.ais.models.Stock;
 import projet.ais.models.TypeActeur;
 import projet.ais.models.Unite;
 import projet.ais.models.ZoneProduction;
+import projet.ais.repository.AbonnementRepository;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.AlerteRepository;
 import projet.ais.repository.MagasinRepository;
@@ -83,14 +85,14 @@ public class StockService {
     
     @Autowired
     CodeGenerator codeGenerator;
-
     @Autowired
     IdGenerator idGenerator ;
     @Autowired
     MessageService messageService;
     @Autowired
     FileUploade fileUploade;
-    
+     @Autowired
+    AbonnementRepository aRepository;
     @Autowired
     HistoriqueService historiqueService;
     
@@ -148,35 +150,9 @@ public class StockService {
         stock.setDateAjout(formattedDateTime);
         stock.setDateProduction(formattedDateTime);
         Stock st = stockRepository.save(stock);
-        
-    //     if (st.getActeur().getTypeActeur() != null) {
-    //     for (TypeActeur typeActeur : st.getActeur().getTypeActeur()) {
-    //     if (typeActeur.getLibelle().equals("Producteur")) {
-    //         System.out.println("Producteur mail: " + st.getActeur().getEmailActeur());
-            
-    //         // Récupérer tous les acteurs de type "Commerçant"
-    //         List<Acteur> allCommercants = acteurRepository.findAllByTypeActeur_Libelle("Commerçant");
-            
-    //         // Envoyer un e-mail à chaque acteur commerçant
-    //         for (Acteur commercant : allCommercants) {
-    //             if (commercant != null) {
-    //                 System.out.println("E-mail commerçant: " + commercant.getEmailActeur());
-    //                 Alerte alerte = new Alerte(commercant.getEmailActeur(), "Nouveau produit ajouté", "Un nouveau produit a été ajouté");
-    //                 emailService.sendSimpleMail(alerte);
-    //             } else {
-    //                 System.out.println("E-mail commerçant non trouvé");
-    //             }
-    //         }
-    //         break; // Sortir de la boucle dès que "Producteur" est trouvé
-    //     }
-    // }
-    // } else {
-    //     System.out.println("Type d'acteur non trouvé");
-    // }
-
 
     try {
-        //  sendMessageToAllActeur(st);
+        sendMessageToAllActeurWithAbonner(st);
     } catch (Exception e) {
         System.out.println(e.getMessage());
     }
@@ -289,32 +265,7 @@ private String generateQRCodeImage(String qrCodeData) {
     }
   
 
-    // public Page<Stock> getAllStocksPageableByPays(String pays, Pageable pageable) {
-    //     String paysNormalise = pays.trim().toLowerCase();
-        
-    //     // Récupérer les stocks pour le pays spécifié
-    //     Page<Stock> stocksByPays = stockRepository.findAllByStatutSotckTrueAndPaysAndActeurStatutActeurTrueAndQuantiteStockGreaterThan(paysNormalise, pageable,0.0);
-        
-    //     List<Stock> stocksList = new ArrayList<>(stocksByPays.getContent());
-    //     long totalElements = stocksByPays.getTotalElements();
-    
-    //     // Vérifier si le nombre de stocks récupérés est inférieur à la taille de la page
-    //     if (stocksList.size() < pageable.getPageSize()) {
-    //         int remainingSize = pageable.getPageSize() - stocksList.size();
-            
-    //         // Si oui, compléter avec des stocks d'autres pays
-    //         Pageable complementPageable = PageRequest.of(0, remainingSize);
-    //         Page<Stock> stocksComplement = stockRepository.findAllByStatutSotckTrueAndActeurStatutActeurTrueAndPaysNotAndQuantiteStockGreaterThan(paysNormalise, complementPageable,0.0);
-            
-    //         stocksList.addAll(stocksComplement.getContent());
-    //         totalElements += stocksComplement.getTotalElements();
-    //     }
-    
-    //     // Créer et retourner une nouvelle page avec la liste complète des stocks et le pageable original
-    //     return new PageImpl<>(stocksList, pageable, totalElements);
-    // }
-
-    
+  
     @Transactional
     public void updatePaysForStocks() {
         // Récupérer tous les stocks
@@ -374,6 +325,70 @@ private String generateQRCodeImage(String qrCodeData) {
         }
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
+   
+    public ResponseEntity<String> sendMessageToAllActeurWithAbonner(Stock stock) {
+        Acteur ac = stock.getActeur();
+        Abonnement ab = aRepository.findLatestAbonnementByActeurId(ac.getIdActeur());
+    
+        // Vérifiez si l'abonnement est actif
+        if (ab != null && Boolean.TRUE.equals(ab.getStatutAbonnement())) {
+            List<String> optionsList = ab.getOptions();
+    
+            // Pour chaque option dans l'abonnement
+            for (String option : optionsList) {
+                // Récupérer les acteurs par type
+                List<Acteur> allActeurs = acteurRepository.findByTypeActeur_Libelle(option);
+    
+                // Filtrer les acteurs à notifier
+                allActeurs.stream()
+                    .filter(acteur -> !acteur.getIdActeur().equals(ac.getIdActeur()))
+                    .forEach(acteur -> sendNotification(acteur, ac, stock)); // Envoyer la notification
+            }
+        }
+    
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+    
+    private void sendNotification(Acteur acteur, Acteur ac, Stock stock) {
+        // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
+         // Extraire les détails nécessaires du stock
+    String nomProduit = stock.getNomProduit();
+    double quantiteStock = stock.getQuantiteStock();
+    String uniteMesure = stock.getUnite().getNomUnite(); // Exemple pour extraire l'unité
+    int prix = stock.getPrix();
+    String zoneProduction = stock.getZoneProduction().getNomZoneProduction(); // Exemple d'extraction de la localisation
+    
+    // Lien vers l'image ou la page du stock
+    String lienProduit = "https://koumi.ml/api-koumi/Stock/" + stock.getIdStock() + "/image";
+    
+    // Message de notification à envoyer
+    String message = String.format(
+        "Bonjour M. %s,\n\n"
+        + "M. %s habitant à %s vient d'ajouter un nouveau stock :\n\n"
+        + "Produit : %s\n"
+        + "Quantité : %.2f %s\n"
+        + "Prix : %d F CFA\n"
+        + "Localisation : %s\n\n"
+        + "Lien vers le produit : %s",
+        acteur.getNomActeur(),
+        ac.getNomActeur(),
+        ac.getAdresseActeur(),
+        nomProduit,
+        quantiteStock,
+        uniteMesure,
+        prix,
+        zoneProduction,
+        lienProduit
+    );
+    
+    // Envoi de la notification (par exemple via WhatsApp)
+    try {
+        messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), message, ac);
+    } catch (Exception e) {
+        System.err.println("Erreur lors de l'envoi de la notification : " + e.getMessage());
+    }
+    }
+    
 
     public ResponseEntity<String> sendEmailToAllActeur(Stock stock) {
         List<Acteur> allActeurs = acteurRepository.findAll();
