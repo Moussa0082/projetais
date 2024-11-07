@@ -59,8 +59,8 @@ public class Sortie_Stock {
     @Column(nullable=true)
     private String personneAjout;
 
-    @ManyToOne
-    @JoinColumn(name = "idStock")
-    private Stock stock;
+    // @ManyToOne
+    // @JoinColumn(name = "idStock")
+    // private Stock stock;
 }
 

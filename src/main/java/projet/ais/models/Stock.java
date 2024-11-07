@@ -94,24 +94,15 @@ public class Stock {
     @OneToMany
     (mappedBy = "stock")
     @JsonIgnore
-    private List<Sortie_Stock> sortie_Stock;
-
-    @OneToMany
-    (mappedBy = "stock")
-    @JsonIgnore
     private List<DetailCommande> detailCommandes;
 
-    @OneToMany(mappedBy = "stock")
-    private List<Rating> ratings;
+    // @OneToMany(mappedBy = "stock")
+    // private List<Rating> ratings;
 
     @ManyToOne
     @JoinColumn( name = "idMonnaie")
     private  Monnaie monnaie;
-    
-    // @ManyToOne
-    // @JoinColumn(name = "idForme")
-    // private Forme forme;
-
+   
 }
 
 

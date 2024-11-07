@@ -34,48 +34,48 @@ public class RatingService {
     private ActeurRepository acteurRepository;
 
 
-     public Rating addRatingToStock(String stockId, String idActeur, int stars) {
-        Stock stock = stockRepository.findById(stockId).orElseThrow(() -> new RuntimeException("Stock non trouver"));
-        Acteur acteur = acteurRepository.findById(idActeur).orElseThrow(() -> new RuntimeException("Acteur  non trouver"));
+    //  public Rating addRatingToStock(String stockId, String idActeur, int stars) {
+    //     Stock stock = stockRepository.findById(stockId).orElseThrow(() -> new RuntimeException("Stock non trouver"));
+    //     Acteur acteur = acteurRepository.findById(idActeur).orElseThrow(() -> new RuntimeException("Acteur  non trouver"));
 
-        Optional<Rating> existingRatingOpt = ratingRepository.findByStockAndActeur(stock, acteur);
+    //     Optional<Rating> existingRatingOpt = ratingRepository.findByStockAndActeur(stock, acteur);
 
-        Rating rating;
-        if (existingRatingOpt.isPresent()) {
-            rating = existingRatingOpt.get();
-            rating.setStars(stars);
-        } else {
-            rating = new Rating();
-            rating.setIdRating(idGenerator.genererCode());
-            rating.setStars(stars);
-            rating.setStock(stock);
-            rating.setActeur(acteur);
-        }
+    //     Rating rating;
+    //     if (existingRatingOpt.isPresent()) {
+    //         rating = existingRatingOpt.get();
+    //         rating.setStars(stars);
+    //     } else {
+    //         rating = new Rating();
+    //         rating.setIdRating(idGenerator.genererCode());
+    //         rating.setStars(stars);
+    //         // rating.setStock(stock);
+    //         // rating.setActeur(acteur);
+    //     }
 
-        return ratingRepository.save(rating);
-    }
+    //     return ratingRepository.save(rating);
+    // }
 
-    public Rating updateRatingByActeurAndStock(String idStock, String idActeur, int newStars) {
-        Stock stock = stockRepository.findById(idStock).orElseThrow(() -> new RuntimeException("Stock non trouvé"));
-        Acteur acteur = acteurRepository.findById(idActeur).orElseThrow(() -> new RuntimeException("Acteur non trouvé"));
+    // public Rating updateRatingByActeurAndStock(String idStock, String idActeur, int newStars) {
+    //     Stock stock = stockRepository.findById(idStock).orElseThrow(() -> new RuntimeException("Stock non trouvé"));
+    //     Acteur acteur = acteurRepository.findById(idActeur).orElseThrow(() -> new RuntimeException("Acteur non trouvé"));
 
-        Rating rating = ratingRepository.findByStockAndActeur(stock, acteur)
-                .orElseThrow(() -> new RuntimeException("Rating non trouvé"));
+    //     Rating rating = ratingRepository.findByStockAndActeur(stock, acteur)
+    //             .orElseThrow(() -> new RuntimeException("Rating non trouvé"));
 
-        rating.setStars(newStars);
+    //     rating.setStars(newStars);
 
-        return ratingRepository.save(rating);
-    }
+    //     return ratingRepository.save(rating);
+    // }
 
-    public Page<Acteur> getUsersWhoLikedStock(String idStock, Pageable pageable) {
-        Stock stock = stockRepository.findById(idStock).orElseThrow(() -> new RuntimeException("Stock non trouver"));
-        Page<Rating> ratings = ratingRepository.findByStock(stock, pageable);
-        return ratings.map(Rating::getActeur);
-    }
+    // // public Page<Acteur> getUsersWhoLikedStock(String idStock, Pageable pageable) {
+    // //     Stock stock = stockRepository.findById(idStock).orElseThrow(() -> new RuntimeException("Stock non trouver"));
+    // //     Page<Rating> ratings = ratingRepository.findByStock(stock, pageable);
+    // //     return ratings.map(Rating::getActeur);
+    // // }
 
-    public String countRatingsByStockId(String idStock) {
-        return ratingRepository.countByStockIdStock(idStock);
-    }
+    // public String countRatingsByStockId(String idStock) {
+    //     return ratingRepository.countByStockIdStock(idStock);
+    // }
 
     
 

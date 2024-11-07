@@ -91,7 +91,7 @@ public class StockService {
     MessageService messageService;
     @Autowired
     FileUploade fileUploade;
-     @Autowired
+    @Autowired
     AbonnementRepository aRepository;
     @Autowired
     HistoriqueService historiqueService;
@@ -135,8 +135,8 @@ public class StockService {
             String codes = codeGenerator.genererCode();
             String idCode = idGenerator.genererCode();
 
-            String qrCodeData = generateQRCodeData(stock);
-            String qrCodeImageName = generateQRCodeImage(qrCodeData);
+            // String qrCodeData = generateQRCodeData(stock);
+            // String qrCodeImageName = generateQRCodeImage(qrCodeData);
             stock.setPays(acteur.getNiveau3PaysActeur());
 
             stock.setIdStock(idCode);
@@ -154,7 +154,7 @@ public class StockService {
     try {
         sendMessageToAllActeurWithAbonner(st);
     } catch (Exception e) {
-        System.out.println(e.getMessage());
+        System.out.println("Erreur lors de l'envoie du message abonnement " + e.getMessage());
     }
      // Création de l'historique
      historiqueService.createHistorique("Création" , st.getNomProduit() ,st.getActeur().getNomActeur(), st.getActeur().getLocaliteActeur(),st.getActeur().getNiveau3PaysActeur(),"Création de produit " + st.getNomProduit());
@@ -328,7 +328,7 @@ private String generateQRCodeImage(String qrCodeData) {
    
     public ResponseEntity<String> sendMessageToAllActeurWithAbonner(Stock stock) {
         Acteur ac = stock.getActeur();
-        Abonnement ab = aRepository.findLatestAbonnementByActeurId(ac.getIdActeur());
+        Abonnement ab = aRepository.findTopByActeurIdActeurOrderByDateAjoutDesc(ac.getIdActeur());
     
         // Vérifiez si l'abonnement est actif
         if (ab != null && Boolean.TRUE.equals(ab.getStatutAbonnement())) {

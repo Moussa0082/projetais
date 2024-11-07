@@ -19,12 +19,12 @@ public class Rating {
     @Column(nullable = true)
     private int stars;
 
-    @ManyToOne
-    @JoinColumn(name = "idActeur")
-    private Acteur acteur;
+    // @ManyToOne
+    // @JoinColumn(name = "idActeur")
+    // private Acteur acteur;
 
-    @ManyToOne
-    @JoinColumn(name = "idStock")
-    private Stock stock;
+    // @ManyToOne
+    // @JoinColumn(name = "idStock")
+    // private Stock stock;
     
 }

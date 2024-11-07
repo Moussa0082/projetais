@@ -10,9 +10,12 @@ import java.util.stream.Collectors;
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
+import projet.ais.models.Abonnement;
 import projet.ais.models.Acteur;
+import projet.ais.models.Intrant;
 import projet.ais.models.Materiels;
 import projet.ais.models.Stock;
+import projet.ais.repository.AbonnementRepository;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.MaterielRepository;
 import java.util.*;
@@ -49,6 +52,8 @@ public class MaterielService {
     FileUploade fileUploade;
     @Autowired
     HistoriqueService historiqueService;
+    @Autowired
+    AbonnementRepository aRepository;
 
     public Materiels createMateriel(Materiels materiel, MultipartFile imageFile) throws Exception{
         Acteur acteur = acteurRepository.findByIdActeur(materiel.getActeur().getIdActeur());
@@ -94,6 +99,70 @@ public class MaterielService {
             historiqueService.createHistorique("Création" , saveMateriel.getNom() , saveMateriel.getActeur().getNomActeur(), saveMateriel.getActeur().getLocaliteActeur(),saveMateriel.getActeur().getNiveau3PaysActeur(),"Création de matériel " + saveMateriel.getNom());
 
         return saveMateriel;
+    }
+
+      public ResponseEntity<String> sendMessageToAllActeurWithAbonner(Materiels in) {
+        Acteur ac = in.getActeur();
+        Abonnement ab = aRepository.findTopByActeurIdActeurOrderByDateAjoutDesc(ac.getIdActeur());
+    
+        // Vérifiez si l'abonnement est actif
+        if (ab != null && Boolean.TRUE.equals(ab.getStatutAbonnement())) {
+            List<String> optionsList = ab.getOptions();
+    
+            // Pour chaque option dans l'abonnement
+            for (String option : optionsList) {
+                // Récupérer les acteurs par type
+                List<Acteur> allActeurs = acteurRepository.findByTypeActeur_Libelle(option);
+    
+                // Filtrer les acteurs à notifier
+                allActeurs.stream()
+                    .filter(acteur -> !acteur.getIdActeur().equals(ac.getIdActeur()))
+                    .forEach(acteur -> sendNotification(acteur, ac, in)); // Envoyer la notification
+            }
+        }
+    
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+    
+    private void sendNotification(Acteur acteur, Acteur ac, Materiels i) {
+        // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
+         // Extraire les détails nécessaires du stock
+    String nomProduit = i.getNom();
+    int prix = i.getPrixParHeure();
+    String etatMateriel = i.getEtatMateriel();
+    String localisation = i.getLocalisation(); // Exemple pour extraire l'unité
+    String zoneProduction = i.getPays(); // Exemple d'extraction de la localisation
+    
+    // Lien vers l'image ou la page du stock
+    String lienProduit = "https://koumi.ml/api-koumi/Materiel/" + i.getIdMateriel() + "/image";
+    
+    // Message de notification à envoyer
+    String message = String.format(
+        "Bonjour M. %s,\n\n"
+        + "M. %s habitant à %s vient d'ajouter un nouveau equipement :\n\n"
+        + "Nom : %s\n"
+        + "Prix : %d F CFA\n"
+        + "Etat du matériel : %s\n"
+        + "Localité : %s\n"
+        + "Localisation : %s\n\n"
+        + "Lien vers le produit : %s",
+        acteur.getNomActeur(),
+        ac.getNomActeur(),
+        ac.getAdresseActeur(),
+        nomProduit,
+        prix,
+        etatMateriel,
+        localisation,
+        zoneProduction,
+        lienProduit
+    );
+    
+    // Envoi de la notification (par exemple via WhatsApp)
+    try {
+        messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), message, ac);
+    } catch (Exception e) {
+        System.err.println("Erreur lors de l'envoi de la notification : " + e.getMessage());
+    }
     }
 
     public ResponseEntity<String> sendMessageToAllActeur(Materiels materiel) {

@@ -13,12 +13,12 @@ import projet.ais.models.Rating;
 import projet.ais.models.Stock;
 
 public interface RatingRepository extends JpaRepository<Rating, String> {
-        Optional<Rating> findByStockAndActeur(Stock stock, Acteur acteur);
+        // Optional<Rating> findByStockAndActeur(Stock stock, Acteur acteur);
 
-        Page<Rating> findByStock(Stock stock, Pageable pageable);
+        // Page<Rating> findByStock(Stock stock, Pageable pageable);
 
         
-        String countByStockIdStock(String idStock);
+        // String countByStockIdStock(String idStock);
 
     
 }

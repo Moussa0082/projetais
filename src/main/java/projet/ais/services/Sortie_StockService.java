@@ -59,27 +59,27 @@ public class Sortie_StockService {
     // }
      
 
-     public List<Sortie_Stock> getAllSortieStocksByStockId(String idStock) {
-        return sortie_StockRepository.findByStockIdStock(idStock);
-    }
+    //  public List<Sortie_Stock> getAllSortieStocksByStockId(String idStock) {
+    //     return sortie_StockRepository.findByStockIdStock(idStock);
+    // }
 
     // public List<Sortie_Stock> getAllSortieStocksByActeur(Stock stock, String idActeur) {
     //     return sortie_StockRepository.findByStockAndActeurIdActeur(stock, idActeur);
     // }
 
-    public List<Sortie_Stock> getSortieStocksBetweenDates(Date startDate, Date endDate) {
-        return sortie_StockRepository.findByDateSortieBetween(startDate, endDate);
-    }
+    // public List<Sortie_Stock> getSortieStocksBetweenDates(Date startDate, Date endDate) {
+    //     return sortie_StockRepository.findByDateSortieBetween(startDate, endDate);
+    // }
 
       //  Supprimer historique sortie stock
-      public String deleteByIdSortieStock(String id){
-        Sortie_Stock sortieStock = sortie_StockRepository.findByIdSortieStock(id);
-        if(sortieStock == null){
-            throw new EntityNotFoundException("Désolé le sortie de stock à supprimer n'existe pas");
-        }
-        sortie_StockRepository.delete(sortieStock);
-        return "Sortie stock supprimé avec succèss";
-    }
+    //   public String deleteByIdSortieStock(String id){
+    //     Sortie_Stock sortieStock = sortie_StockRepository.findByIdSortieStock(id);
+    //     if(sortieStock == null){
+    //         throw new EntityNotFoundException("Désolé le sortie de stock à supprimer n'existe pas");
+    //     }
+    //     sortie_StockRepository.delete(sortieStock);
+    //     return "Sortie stock supprimé avec succèss";
+    // }
 
 
 }

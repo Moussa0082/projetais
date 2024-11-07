@@ -24,16 +24,14 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
+import projet.ais.models.Abonnement;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
 import projet.ais.models.Commande;
 import projet.ais.models.DetailCommande;
-import projet.ais.models.Forme;
 import projet.ais.models.Intrant;
-import projet.ais.models.Magasin;
-import projet.ais.models.Materiels;
 import projet.ais.models.Stock;
-import projet.ais.models.Vehicule;
+import projet.ais.repository.AbonnementRepository;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.AlerteRepository;
 import projet.ais.repository.CommandeRepository;
@@ -75,13 +73,15 @@ public class IntrantService {
 
     @Autowired
     HistoriqueService historiqueService;
+    @Autowired
+    AbonnementRepository aRepository;
     
      //créer un intrant
       public Intrant createIntrant(Intrant intrant, MultipartFile imageFile) throws Exception {
-        Intrant it = intrantRepository.findByIdIntrant(intrant.getIdIntrant());
-        if(it != null){
-            throw new IllegalArgumentException("Un intrant avec l'id " + it + " existe déjà");
-        }
+        // Intrant it = intrantRepository.findByIdIntrant(intrant.getIdIntrant());
+        // if(it != null){
+        //     throw new IllegalArgumentException("Un intrant avec l'id " + it + " existe déjà");
+        // }
 
         Acteur acteur = acteurRepository.findByIdActeur(intrant.getActeur().getIdActeur());
 
@@ -117,13 +117,79 @@ public class IntrantService {
         String formattedDateTime = now.format(formatter);
         intrant.setDateAjout(formattedDateTime);
            Intrant savedIntrant = intrantRepository.save(intrant);        
-        //    sendMessageToAllActeur(intrant);
-
-        // Création de l'historique
+       
         historiqueService.createHistorique("Création" , savedIntrant.getNomIntrant() ,savedIntrant.getActeur().getNomActeur(), savedIntrant.getActeur().getLocaliteActeur(),savedIntrant.getActeur().getNiveau3PaysActeur(),"Création d'intrant " + savedIntrant.getNomIntrant());
-
+        
+        try {
+            sendMessageToAllActeurWithAbonner(savedIntrant);
+        } catch (Exception e) {
+            System.out.println("Erreur lors de l'envoie du message abonnement " + e.getMessage());
+        }
          return savedIntrant;
    
+    }
+
+     public ResponseEntity<String> sendMessageToAllActeurWithAbonner(Intrant in) {
+        Acteur ac = in.getActeur();
+        Abonnement ab = aRepository.findTopByActeurIdActeurOrderByDateAjoutDesc(ac.getIdActeur());
+    
+        // Vérifiez si l'abonnement est actif
+        if (ab != null && Boolean.TRUE.equals(ab.getStatutAbonnement())) {
+            List<String> optionsList = ab.getOptions();
+    
+            // Pour chaque option dans l'abonnement
+            for (String option : optionsList) {
+                // Récupérer les acteurs par type
+                List<Acteur> allActeurs = acteurRepository.findByTypeActeur_Libelle(option);
+    
+                // Filtrer les acteurs à notifier
+                allActeurs.stream()
+                    .filter(acteur -> !acteur.getIdActeur().equals(ac.getIdActeur()))
+                    .forEach(acteur -> sendNotification(acteur, ac, in)); // Envoyer la notification
+            }
+        }
+    
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+    
+    private void sendNotification(Acteur acteur, Acteur ac, Intrant i) {
+        // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
+         // Extraire les détails nécessaires du stock
+    String nomProduit = i.getNomIntrant();
+    double quantiteStock = i.getQuantiteIntrant();
+    String uniteMesure = i.getUnite(); // Exemple pour extraire l'unité
+    int prix = i.getPrixIntrant();
+    String zoneProduction = i.getPays(); // Exemple d'extraction de la localisation
+    
+    // Lien vers l'image ou la page du stock
+    String lienProduit = "https://koumi.ml/api-koumi/intrant/" + i.getIdIntrant() + "/image";
+    
+    // Message de notification à envoyer
+    String message = String.format(
+        "Bonjour M. %s,\n\n"
+        + "M. %s habitant à %s vient d'ajouter un nouveau stock :\n\n"
+        + "Produit : %s\n"
+        + "Quantité : %.2f %s\n"
+        + "Prix : %d F CFA\n"
+        + "Localisation : %s\n\n"
+        + "Lien vers le produit : %s",
+        acteur.getNomActeur(),
+        ac.getNomActeur(),
+        ac.getAdresseActeur(),
+        nomProduit,
+        quantiteStock,
+        uniteMesure,
+        prix,
+        zoneProduction,
+        lienProduit
+    );
+    
+    // Envoi de la notification (par exemple via WhatsApp)
+    try {
+        messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), message, ac);
+    } catch (Exception e) {
+        System.err.println("Erreur lors de l'envoi de la notification : " + e.getMessage());
+    }
     }
 
     public ResponseEntity<String> sendMessageToAllActeur(Intrant intrant) {

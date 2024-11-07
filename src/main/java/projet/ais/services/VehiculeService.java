@@ -17,6 +17,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,9 +26,10 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.persistence.EntityNotFoundException;
 import projet.ais.CodeGenerator;
 import projet.ais.IdGenerator;
+import projet.ais.models.Abonnement;
 import projet.ais.models.Acteur;
-import projet.ais.models.Intrant;
 import projet.ais.models.Vehicule;
+import projet.ais.repository.AbonnementRepository;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.VehiculeRepository;
 
@@ -38,16 +41,18 @@ public class VehiculeService {
 
     @Autowired
     private VehiculeRepository vehiculeRepository;
-     @Autowired
+    @Autowired
     ActeurRepository acteurRepository;
-
-
     @Autowired
     CodeGenerator codeGenerator;
     @Autowired
     IdGenerator idGenerator ;
     @Autowired
     HistoriqueService historiqueService;
+    @Autowired
+    AbonnementRepository aRepository;
+    @Autowired
+    MessageService messageService;
 
     // Connexion FTP
     private static final String FTP_SERVER = "ftp.koumi.ml";
@@ -75,12 +80,7 @@ public class VehiculeService {
                 String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                 Path imagePath = imageRootLocation.resolve(imageName);
                 Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                
-                // // Enregistrement du chemin local de l'image dans l'objet Vehicule
-                // vehicule.setPhotoVehicule("ais/" + imageName);
-                
-                // Téléchargement de l'image vers le serveur FTP et récupération du chemin en ligne
-               // Téléchargement de l'image vers le serveur FTP et récupération du chemin en ligne
+              
                 String onlineImagePath = uploadImageToFTP(imagePath, imageName);
                 vehicule.setPhotoVehicule(imageName); // Enregistrement du chemin en ligne dans l'objet Vehicule
 
@@ -104,9 +104,80 @@ public class VehiculeService {
         Vehicule savedVehicule = vehiculeRepository.save(vehicule);
 
         historiqueService.createHistorique("Création" , savedVehicule.getNomVehicule() ,savedVehicule.getActeur().getNomActeur(), savedVehicule.getActeur().getLocaliteActeur(),savedVehicule.getActeur().getNiveau3PaysActeur(),"Création de véhicule de transport " + savedVehicule.getNomVehicule());
+        try {
+            sendMessageToAllActeurWithAbonner(savedVehicule);
+        } catch (Exception e) {
+            System.out.println("Erreur lors de l'envoie du message abonnement " + e.getMessage());
+        }
         return savedVehicule; 
     }
     
+      public ResponseEntity<String> sendMessageToAllActeurWithAbonner(Vehicule v) {
+        Acteur ac = v.getActeur();
+        Abonnement ab = aRepository.findTopByActeurIdActeurOrderByDateAjoutDesc(ac.getIdActeur());
+    
+        // Vérifiez si l'abonnement est actif
+        if (ab != null && Boolean.TRUE.equals(ab.getStatutAbonnement())) {
+            List<String> optionsList = ab.getOptions();
+    
+            // Pour chaque option dans l'abonnement
+            for (String option : optionsList) {
+                // Récupérer les acteurs par type
+                List<Acteur> allActeurs = acteurRepository.findByTypeActeur_Libelle(option);
+    
+                // Filtrer les acteurs à notifier
+                allActeurs.stream()
+                    .filter(acteur -> !acteur.getIdActeur().equals(ac.getIdActeur()))
+                    .forEach(acteur -> sendNotification(acteur, ac, v)); // Envoyer la notification
+            }
+        }
+    
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+    
+    private void sendNotification(Acteur acteur, Acteur ac, Vehicule i) {
+        // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
+         // Extraire les détails nécessaires du stock
+    String nomProduit = i.getNomVehicule();
+    String capacite = i.getCapaciteVehicule();
+    String localisation = i.getLocalisation(); // Exemple pour extraire l'unité
+    String etatVehicule = i.getEtatVehicule();
+    int nbKilo = i.getNbKilometrage();
+    String zoneProduction = i.getPays(); // Exemple d'extraction de la localisation
+    
+    
+    String lienProduit = "https://koumi.ml/api-koumi/vehicule/" + i.getIdVehicule() + "/image";
+    
+    // Message de notification à envoyer
+    String message = String.format(
+        "Bonjour M. %s,\n\n"
+        + "M. %s habitant à %s vient d'ajouter une nouvelle véhicule :\n\n"
+        + "Produit : %s\n"
+        + "Capacité :  %s\n"
+        + "Localisation : %s\n"
+        + "Etat du véhicule : %s\n"
+        + "Nombre de kilométrage : %s\n\n"
+        + "Localité : %s\n"
+        + "Lien vers la véhicule : %s",
+        acteur.getNomActeur(),
+        ac.getNomActeur(),
+        ac.getAdresseActeur(),
+        nomProduit,
+        capacite,
+        localisation,
+        etatVehicule,
+        nbKilo,
+        zoneProduction,
+        lienProduit
+    );
+    
+    // Envoi de la notification (par exemple via WhatsApp)
+    try {
+        messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), message, ac);
+    } catch (Exception e) {
+        System.err.println("Erreur lors de l'envoi de la notification : " + e.getMessage());
+    }
+    }
 
     public String uploadImageToFTP(Path imagePath, String imageName) throws Exception {
         FTPClient ftpClient = new FTPClient();

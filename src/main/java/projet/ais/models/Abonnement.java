@@ -26,16 +26,11 @@ public class Abonnement {
     @Column(nullable = false)
     private String modePaiement;
 
-     @Column(nullable = true)
+    @Column(nullable = true)
     private LocalDate dateAjout;
 
     @Column(nullable = true)
     private LocalDate dateFin;
-    // @Column(nullable = true)
-    // private String dateAjout;
-   
-    // @Column(nullable = true)
-    // private String dateFin;
 
     @Column(nullable = true)
     private int montant;

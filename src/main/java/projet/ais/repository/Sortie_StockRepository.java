@@ -11,11 +11,11 @@ import projet.ais.models.Stock;
 public interface Sortie_StockRepository extends JpaRepository<Sortie_Stock, String>{
     
 
-    Sortie_Stock findByIdSortieStock(String idSortieStock);
+    // Sortie_Stock findByIdSortieStock(String idSortieStock);
 
-    List<Sortie_Stock> findByStockIdStock(String idStock);
+    // List<Sortie_Stock> findByStockIdStock(String idStock);
 
-    List<Sortie_Stock> findByDateSortieBetween(Date startDate, Date endDate);
+    // List<Sortie_Stock> findByDateSortieBetween(Date startDate, Date endDate);
 
     // List<Sortie_Stock> findByStockAndActeurIdActeur(Stock stock, String idActeur);
 

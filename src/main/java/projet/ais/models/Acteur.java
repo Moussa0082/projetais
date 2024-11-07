@@ -180,8 +180,8 @@ public class Acteur {
    
 
    
-   @OneToMany(mappedBy = "acteur")
-   private List<Rating> ratings;
+//    @OneToMany(mappedBy = "acteur")
+//    private List<Rating> ratings;
 
 }
 

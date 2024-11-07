@@ -27,17 +27,32 @@ public class AbonnementService {
     IdGenerator idGenerator ;
 
     public Abonnement creerAbonnement(Abonnement abonnement) {
-       
-        if (abonnement.getDateAjout() == null) {
-            abonnement.setDateAjout(LocalDate.now()); 
-        }
+      
+        abonnement.setDateAjout(LocalDate.now()); 
 
-        Abonnement ab = aRepository.save(abonnement);
-        // Calculer la date de fin en fonction du type d'abonnement
-        abonnement = calculerDateFin(ab);
-
+        String typeAbonnement = abonnement.getTypeAbonnement();
         
-        return ab;
+        if (abonnement.getDateAjout() != null && typeAbonnement != null) {
+            switch (typeAbonnement.toLowerCase()) {
+                case "semestriel":
+                    abonnement.setDateFin(abonnement.getDateAjout().plusMonths(6));
+                    break;
+                case "annuel":
+                    abonnement.setDateFin(abonnement.getDateAjout().plusMonths(12));
+                    break;
+                default:
+                    throw new IllegalArgumentException("Type d'abonnement non reconnu : " + typeAbonnement);
+            }
+        } else {
+            throw new IllegalStateException("La date d'ajout ou le type d'abonnement est null");
+        }
+       
+        String codes = codeGenerator.genererCode();
+        String idcodes = idGenerator.genererCode();
+        
+        abonnement.setCodeAbonnement(codes);
+        abonnement.setIdAbonnement(idcodes);
+        return aRepository.save(abonnement);
     }
     
     private Abonnement calculerDateFin(Abonnement abonnement) {
@@ -83,9 +98,11 @@ public class AbonnementService {
         return aList;
     }
 
+  
     public Abonnement getLastAbonnementByActeur(String idActeur) {
-        return aRepository.findLatestAbonnementByActeurId(idActeur);
+        return aRepository.findTopByActeurIdActeurOrderByDateAjoutDesc(idActeur);
     }
+    
 
      public Abonnement active(String id) throws Exception{
         Abonnement a = aRepository.findById(id).orElseThrow(null);
