@@ -144,7 +144,7 @@ public class VehiculeService {
     String etatVehicule = i.getEtatVehicule();
     int nbKilo = i.getNbKilometrage();
     String zoneProduction = i.getPays(); // Exemple d'extraction de la localisation
-    
+    String contact = ac.getWhatsAppActeur();
     
     String lienProduit = "https://koumi.ml/api-koumi/vehicule/" + i.getIdVehicule() + "/image";
     
@@ -156,8 +156,9 @@ public class VehiculeService {
         + "Capacité :  %s\n"
         + "Localisation : %s\n"
         + "Etat du véhicule : %s\n"
-        + "Nombre de kilométrage : %s\n\n"
+        + "Nombre de kilométrage : %s\n"
         + "Localité : %s\n"
+        + "Contact : %s\n\n"
         + "Lien vers la véhicule : %s",
         acteur.getNomActeur(),
         ac.getNomActeur(),
@@ -168,6 +169,7 @@ public class VehiculeService {
         etatVehicule,
         nbKilo,
         zoneProduction,
+        contact,
         lienProduit
     );
     

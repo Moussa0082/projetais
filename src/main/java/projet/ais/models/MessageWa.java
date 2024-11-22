@@ -22,14 +22,13 @@ public class MessageWa {
     @Column(nullable = true)
     private String personneModif;
 
-
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String text;
-
+    
     @Column(nullable = true)
     private String dateAjout;
 
-    // @Column(nullable = false)
+    // @Column(nullable = false)Ab
     // private String produitConcerner;
  
     @Column(nullable = true)

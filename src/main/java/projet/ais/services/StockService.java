@@ -152,6 +152,7 @@ public class StockService {
         Stock st = stockRepository.save(stock);
 
     try {
+        System.out.println("----------Methode Envoie-----------------");
         sendMessageToAllActeurWithAbonner(st);
     } catch (Exception e) {
         System.out.println("Erreur lors de l'envoie du message abonnement " + e.getMessage());
@@ -327,6 +328,7 @@ private String generateQRCodeImage(String qrCodeData) {
     }
    
     public ResponseEntity<String> sendMessageToAllActeurWithAbonner(Stock stock) {
+        System.out.println("Debut de l'envoie");
         Acteur ac = stock.getActeur();
         Abonnement ab = aRepository.findTopByActeurIdActeurOrderByDateAjoutDesc(ac.getIdActeur());
     
@@ -336,6 +338,7 @@ private String generateQRCodeImage(String qrCodeData) {
     
             // Pour chaque option dans l'abonnement
             for (String option : optionsList) {
+                System.out.println("Recuperation et envoie");
                 // Récupérer les acteurs par type
                 List<Acteur> allActeurs = acteurRepository.findByTypeActeur_Libelle(option);
     
@@ -356,7 +359,9 @@ private String generateQRCodeImage(String qrCodeData) {
     double quantiteStock = stock.getQuantiteStock();
     String uniteMesure = stock.getUnite().getNomUnite(); // Exemple pour extraire l'unité
     int prix = stock.getPrix();
-    String zoneProduction = stock.getZoneProduction().getNomZoneProduction(); // Exemple d'extraction de la localisation
+    String zoneProduction = stock.getZoneProduction().getNomZoneProduction();
+    String pays = ac.getNiveau3PaysActeur();
+    String contact = ac.getWhatsAppActeur();
     
     // Lien vers l'image ou la page du stock
     String lienProduit = "https://koumi.ml/api-koumi/Stock/" + stock.getIdStock() + "/image";
@@ -368,7 +373,9 @@ private String generateQRCodeImage(String qrCodeData) {
         + "Produit : %s\n"
         + "Quantité : %.2f %s\n"
         + "Prix : %d F CFA\n"
-        + "Localisation : %s\n\n"
+        + "Zone de production : %s\n"
+        + "Pays : %s\n"
+        + "Contact : %s\n\n"
         + "Lien vers le produit : %s",
         acteur.getNomActeur(),
         ac.getNomActeur(),
@@ -378,11 +385,14 @@ private String generateQRCodeImage(String qrCodeData) {
         uniteMesure,
         prix,
         zoneProduction,
+        pays,
+        contact,
         lienProduit
     );
     
     // Envoi de la notification (par exemple via WhatsApp)
     try {
+        System.out.println("Envoie de la notif : "+message);
         messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), message, ac);
     } catch (Exception e) {
         System.err.println("Erreur lors de l'envoi de la notification : " + e.getMessage());

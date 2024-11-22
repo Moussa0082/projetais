@@ -132,7 +132,7 @@ public class MaterielService {
     String etatMateriel = i.getEtatMateriel();
     String localisation = i.getLocalisation(); // Exemple pour extraire l'unité
     String zoneProduction = i.getPays(); // Exemple d'extraction de la localisation
-    
+    String contact = ac.getWhatsAppActeur();
     // Lien vers l'image ou la page du stock
     String lienProduit = "https://koumi.ml/api-koumi/Materiel/" + i.getIdMateriel() + "/image";
     
@@ -144,7 +144,8 @@ public class MaterielService {
         + "Prix : %d F CFA\n"
         + "Etat du matériel : %s\n"
         + "Localité : %s\n"
-        + "Localisation : %s\n\n"
+        + "Localisation : %s\n"
+        + "Contact : %s\n\n"
         + "Lien vers le produit : %s",
         acteur.getNomActeur(),
         ac.getNomActeur(),
@@ -154,10 +155,11 @@ public class MaterielService {
         etatMateriel,
         localisation,
         zoneProduction,
+        contact,
         lienProduit
     );
     
-    // Envoi de la notification (par exemple via WhatsApp)
+
     try {
         messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), message, ac);
     } catch (Exception e) {

@@ -160,7 +160,7 @@ public class IntrantService {
     String uniteMesure = i.getUnite(); // Exemple pour extraire l'unité
     int prix = i.getPrixIntrant();
     String zoneProduction = i.getPays(); // Exemple d'extraction de la localisation
-    
+    String contact = ac.getWhatsAppActeur();
     // Lien vers l'image ou la page du stock
     String lienProduit = "https://koumi.ml/api-koumi/intrant/" + i.getIdIntrant() + "/image";
     
@@ -171,7 +171,8 @@ public class IntrantService {
         + "Produit : %s\n"
         + "Quantité : %.2f %s\n"
         + "Prix : %d F CFA\n"
-        + "Localisation : %s\n\n"
+        + "Localisation : %s\n"
+        + "Contact : %s\n\n"
         + "Lien vers le produit : %s",
         acteur.getNomActeur(),
         ac.getNomActeur(),
@@ -181,6 +182,7 @@ public class IntrantService {
         uniteMesure,
         prix,
         zoneProduction,
+        contact,
         lienProduit
     );
     
