@@ -63,6 +63,7 @@ public class StockController {
             return new ResponseEntity<>(saveStock, HttpStatus.CREATED);
         }
 
+    
     @PutMapping("/updateStock/{idStock}")
     @Operation(summary = "Modification de stock")
     public ResponseEntity<Stock> updatedStock(
@@ -88,7 +89,7 @@ public class StockController {
     // }
 
 
-        @PutMapping("/activer/{id}")
+     @PutMapping("/activer/{id}")
     public ResponseEntity<Stock> activeStock(@PathVariable String id) throws Exception {
         return new ResponseEntity<>(stockService.active(id), HttpStatus.OK);
     }
@@ -104,8 +105,15 @@ public class StockController {
         return new ResponseEntity<>(stockService.updateNbViev(id), HttpStatus.OK);
     }
     
+    @GetMapping("/search")
+    public ResponseEntity<List<Stock>> searchStocks(
+            @RequestParam String nomProduit) {
+        List<Stock> stocks = stockService.searchStocksByProductName(nomProduit);
+        return ResponseEntity.ok(stocks);
+    }
+    
     @GetMapping("/{stockId}/image")
-public ResponseEntity<byte[]> getImage(@PathVariable String stockId) {
+    public ResponseEntity<byte[]> getImage(@PathVariable String stockId) {
     try {
         // Récupérer le nom de l'image associée au véhicule
         Stock stock = stockRepository.findByIdStock(stockId);

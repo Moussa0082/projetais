@@ -443,7 +443,11 @@ private String generateQRCodeImage(String qrCodeData) {
     //     return new ResponseEntity<>(HttpStatus.ACCEPTED);
     // }
     
-    
+    //methode de recherche
+    public List<Stock> searchStocksByProductName(String nomProduit) {
+        return stockRepository.findTop10ByNomProduitContaining(nomProduit);
+    }
+
     public Stock updateStock(Stock stock, MultipartFile imageFile,String id) throws Exception {
         Stock stocks = stockRepository.findById(id).orElseThrow(null);
 

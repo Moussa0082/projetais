@@ -21,7 +21,10 @@ public interface StockRepository extends JpaRepository<Stock, String>{
     List<Stock> findByActeurIdActeur(String id);
     List<Stock> findBySpeculationIdSpeculation(String id);
     List<Stock> findByMagasinIdMagasin(String id);
-
+   
+    @Query("SELECT s FROM Stock s WHERE s.nomProduit LIKE %:nomProduit% ORDER BY s.dateAjout DESC")
+    List<Stock> findTop10ByNomProduitContaining(@Param("nomProduit") String nomProduit);
+    
     Stock findByNomProduitAndActeurIdActeur(String nom, String id);
     
     Stock findByCommandeIdCommande(String idCommande);
