@@ -40,7 +40,7 @@ public interface StockRepository extends JpaRepository<Stock, String>{
         Page<Stock> findBySpeculation_CategorieProduit_libelleCategorieAndQuantiteStockGreaterThan(String libelle , Pageable pageable,double qte);
         // Page<Stock> findBySpeculation_CategorieProduit_filiere_libelleFiliere(String libelleFiliere, Pageable pageable);
 
-        //teste libelle
+      //test libelle
         Page<Stock> findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(String libelleFiliere, boolean statutSotck, boolean statutActeur , Pageable pageable,double qte);
 
     Page<Stock> findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysAndQuantiteStockGreaterThan(String libelleFiliere, boolean statutSotck, boolean statutActeur ,String pays, Pageable pageable,double qte);
