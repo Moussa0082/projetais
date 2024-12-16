@@ -519,6 +519,15 @@ public class ActeurController {
         acteurService.disableActeur(id);
         return new ResponseEntity<>("Acteur desactiver avec succes", HttpStatus.ACCEPTED);
     }
+ 
+    @PutMapping("/deleteActeur/{id}")
+    //Desactiver un admin methode
+    @Operation(summary = "Demande de suppression de compte ")
+    public ResponseEntity <String> demandeActeur(@PathVariable String id) throws Exception{
+    
+        acteurService.demandeSup(id);
+        return new ResponseEntity<>("Demande envoyé avec succèss", HttpStatus.ACCEPTED);
+    }
 
     //Aciver admin
       @PutMapping("/enable/{id}")

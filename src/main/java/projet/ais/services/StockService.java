@@ -444,6 +444,9 @@ private String generateQRCodeImage(String qrCodeData) {
     // }
     
     //methode de recherche
+    // public List<Stock> searchStocksByProductName(String nomProduit) {
+    //     return stockRepository.findTop10ByNomProduit(nomProduit);
+    // }
     public List<Stock> searchStocksByProductName(String nomProduit) {
         return stockRepository.findTop10ByNomProduitContaining(nomProduit);
     }

@@ -341,54 +341,7 @@ public class ActeurService {
         return paysCorrespondant.getMonnaie();
     }
 
-    // public String getTauxDollarPaysForActeur(String idActeur) {
-    //     Acteur acteur = acteurRepository.findById(idActeur).orElseThrow(() -> new RuntimeException("Acteur non trouvé"));
-    //     String niveau3PaysNom = acteur.getNiveau3PaysActeur().toLowerCase();
-
-    //     // Récupérer tous les pays depuis le repository
-    //     List<Pays> tousLesPays = paysRepository.findAll();
-
-    //     // Trouver le pays correspondant au niveau3PaysActeur
-    //     Pays paysCorrespondant = tousLesPays.stream()
-    //         .filter(pays -> pays.getNomPays().toLowerCase().equals(niveau3PaysNom))
-    //         .findFirst()
-    //         .orElseThrow(() -> new RuntimeException("Pays correspondant non trouvé"));
-
-    //     return paysCorrespondant.getTauxDollar();
-    // }
-    
-    // public String getTauxYuanPaysForActeur(String idActeur) {
-    //     Acteur acteur = acteurRepository.findById(idActeur).orElseThrow(() -> new RuntimeException("Acteur non trouvé"));
-    //     String niveau3PaysNom = acteur.getNiveau3PaysActeur().toLowerCase();
-
-    //     // Récupérer tous les pays depuis le repository
-    //     List<Pays> tousLesPays = paysRepository.findAll();
-
-    //     // Trouver le pays correspondant au niveau3PaysActeur
-    //     Pays paysCorrespondant = tousLesPays.stream()
-    //         .filter(pays -> pays.getNomPays().toLowerCase().equals(niveau3PaysNom))
-    //         .findFirst()
-    //         .orElseThrow(() -> new RuntimeException("Pays correspondant non trouvé"));
-
-    //     return paysCorrespondant.getTauxYuan();
-    // }
-
-    // public String getTauxEuroPaysForActeur(String idActeur) {
-    //     Acteur acteur = acteurRepository.findById(idActeur).orElseThrow(() -> new RuntimeException("Acteur non trouvé"));
-    //     String niveau3PaysNom = acteur.getNiveau3PaysActeur().toLowerCase();
-
-    //     // Récupérer tous les pays depuis le repository
-    //     List<Pays> tousLesPays = paysRepository.findAll();
-
-    //     // Trouver le pays correspondant au niveau3PaysActeur
-    //     Pays paysCorrespondant = tousLesPays.stream()
-    //         .filter(pays -> pays.getNomPays().toLowerCase().equals(niveau3PaysNom))
-    //         .findFirst()
-    //         .orElseThrow(() -> new RuntimeException("Pays correspondant non trouvé"));
-
-    //     return paysCorrespondant.getTauxEuro();
-    // }
-
+   
 
  public ResponseEntity<String> sendMessageToAdmin(Acteur acteur) throws Exception {
 
@@ -418,24 +371,7 @@ public class ActeurService {
         return acteurRepository.findAll(pageable);
     }
 
-    // public ResponseEntity<String> sendMessageWaToAdmin(String message, String acteur) throws Exception {
-
-    //     Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
-    
-    //     if (admins != null) { // Vérifiez si des administrateurs ont été trouvés
-    //                 // Si un administrateur est trouvé, envoyez un e-mail
-    //            try {
-    //             messageService.sendMessageAndSave(admins.getWhatsAppActeur(), message, acteur);
-    //            } catch (Exception e) {
-    //              throw new Exception("Erreur lors de l'envoie de message wathsapp : " +e.getMessage());
-    //            }
-            
-    //     } else {
-    //         System.out.println("Aucun administrateur trouvé"); // Gérez le cas où aucun administrateur n'est trouvé
-    //     }
-            
-    //         return new ResponseEntity<>(HttpStatus.ACCEPTED);
-    //     }
+   
    
     public Acteur addTypesToActeur(String idActeur, List<TypeActeur> typeActeurs) throws Exception{
         Acteur acteur = acteurRepository.findByIdActeur(idActeur);
@@ -838,7 +774,9 @@ public class ActeurService {
     // }
     //Desactiver un acteur
 
-    public ResponseEntity<String> disableActeur(String id) throws Exception {
+     //Desactiver un acteur
+
+     public ResponseEntity<String> disableActeur(String id) throws Exception {
         Optional<Acteur> acteur = acteurRepository.findById(id);
         if (acteur.isPresent()) {
             acteur.get().setStatutActeur(false);
@@ -853,7 +791,43 @@ public class ActeurService {
             return new ResponseEntity<>("Admin non trouvé avec l'ID " + id, HttpStatus.BAD_REQUEST);
         }
     }
+    
+    public ResponseEntity<String> demandeSup(String id) throws Exception {
+        Optional<Acteur> acteur = acteurRepository.findById(id);
+        if (acteur.isPresent()) {
+            acteur.get().setStatutActeur(false);
+            acteurRepository.save(acteur.get());
+            // Récupérez l'administrateur
+            Acteur admin = acteurRepository.findByTypeActeurLibelle("Admin");
 
+            // Vérifiez si un administrateur a été trouvé
+            if (admin != null) {
+                // Accédez aux types d'acteurs de l'administrateur
+                List<TypeActeur> typeActeurs = admin.getTypeActeur();
+                if (typeActeurs != null) {
+                    for (TypeActeur typeActeur : typeActeurs) {
+                        if (typeActeur.getLibelle().equals("Admin")) {
+                            // Si l'administrateur a le type "Admin", envoyez un e-mail
+                            String msg = acteur.get().getNomActeur().toUpperCase() + " avec l'id " +  acteur.get().getIdActeur()+ " souhaite supprimé son compte ";
+                            Alerte alerte = new Alerte(admin.getEmailActeur(), msg, "Demande de suppression de compte");
+                            alerte.setId(idGenerator.genererCode());
+                            alerteRepository.save(alerte);
+                            emailService.sendSimpleMail(alerte);
+                            messageService.sendMessagePersonnalAndSave(admin.getWhatsAppActeur(), msg);
+                            System.out.println(admin.getWhatsAppActeur());
+                            break;
+                        }
+                    }
+                }
+            } else {
+                System.out.println("Aucun administrateur trouvé");
+            }
+            
+            return new ResponseEntity<>("L'acteur " + acteur.get().getNomActeur() + " a été désactivé avec succès", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Admin non trouvé avec l'ID " + id, HttpStatus.BAD_REQUEST);
+        }
+    }
 
 
       //Fonction pour un email à un utilisateur
