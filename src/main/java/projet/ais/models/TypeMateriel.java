@@ -26,7 +26,7 @@ public class TypeMateriel {
     @Column(nullable = false)
     private String nom;
 
-    @Column(nullable = true)
+    @Column(nullable = true,columnDefinition = "TEXT")
    private String description;
 
     @Column(nullable = true)

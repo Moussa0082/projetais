@@ -28,7 +28,7 @@ public class ParametreGeneraux {
     @Column(nullable = false)
     private String nomSysteme;
 
-    @Column(nullable = false)
+    @Column(nullable = false,columnDefinition = "TEXT")
     private String descriptionSysteme;
 
     @Column(nullable = false)

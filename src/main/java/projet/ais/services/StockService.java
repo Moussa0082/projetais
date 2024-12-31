@@ -451,6 +451,16 @@ private String generateQRCodeImage(String qrCodeData) {
         return stockRepository.findTop10ByNomProduitContaining(nomProduit);
     }
 
+    //fecth by id stock 
+    public Stock getStockById(String idStock) {
+        Stock s = stockRepository.findByIdStock(idStock);
+        if(s == null)
+            {
+                throw new IllegalStateException("Aucun stock trouvé avec l'ID : " + idStock);
+            }
+
+     return s;
+    }
     public Stock updateStock(Stock stock, MultipartFile imageFile,String id) throws Exception {
         Stock stocks = stockRepository.findById(id).orElseThrow(null);
 

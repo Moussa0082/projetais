@@ -25,7 +25,7 @@ public class Campagne {
     @Column(nullable = false)
     private String nomCampagne;
 
-    @Column(nullable = false)
+    @Column(nullable = false ,columnDefinition = "TEXT")
     private String description;
 
     @Column(nullable=true)

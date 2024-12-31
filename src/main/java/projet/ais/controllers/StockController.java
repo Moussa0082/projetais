@@ -99,6 +99,12 @@ public class StockController {
         return new ResponseEntity<>(stockService.desactive(id), HttpStatus.OK);
     }
 
+    @GetMapping("getStockById/{idStock}")
+    public Stock getStockById(@PathVariable String idStock) {
+        return stockService.getStockById(idStock);
+    }
+
+    
     @PutMapping("/updateView/{id}")
     @Operation(summary = "Update view")
     public ResponseEntity<Stock> updateViews(@PathVariable String id) throws Exception{

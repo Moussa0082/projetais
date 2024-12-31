@@ -38,7 +38,7 @@ public class Conseil {
     @Column(nullable=true)
     private String personneModif;
 
-    @Column(nullable = true)
+    @Column(nullable = true, columnDefinition = "TEXT")
     private String descriptionConseil;
 
     @Column(nullable = true)

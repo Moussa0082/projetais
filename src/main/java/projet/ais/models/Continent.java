@@ -24,7 +24,7 @@ public class Continent {
     @Column(nullable = false)
     private String nomContinent;
 
-    @Column(nullable = false)
+    @Column(nullable = false,columnDefinition = "TEXT")
     private String descriptionContinent;
 
     @Column(nullable = false)

@@ -24,7 +24,7 @@ public class CategorieProduit {
     @Column(nullable = false)
     private String libelleCategorie;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String descriptionCategorie;
 
     @Column(nullable = false)

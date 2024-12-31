@@ -26,7 +26,7 @@ public class Niveau2Pays {
     @Column(nullable = true)
     private String personneModif;
 
-    @Column(nullable = false)
+    @Column(nullable = false,columnDefinition = "TEXT")
     private String descriptionN2;
 
     @Column(nullable = false)

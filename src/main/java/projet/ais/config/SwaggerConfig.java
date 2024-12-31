@@ -13,7 +13,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI usersMicroserviceOpenAPI() {
         return new OpenAPI()
-                .info(new Info().title("Projet AIS) ")
+                .info(new Info().title("Projet AIS ")
                         .description("API Projet AIS  ")
                         .version("1.0"));
     }

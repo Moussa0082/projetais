@@ -152,6 +152,10 @@ public class IntrantController {
         return ResponseEntity.ok().body(intrants);
     }
 
+    @GetMapping("getIntrantById/{idIntrant}")
+    public Intrant getIntrantById(@PathVariable String idIntrant) {
+        return intrantService.getIntrantById(idIntrant);
+    }
 
     @PutMapping("/{id}/quantite")
     public Intrant updateQuantiteIntrants(@PathVariable String id, @RequestParam double quantite) throws Exception {

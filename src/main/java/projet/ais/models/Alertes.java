@@ -36,7 +36,7 @@ public class Alertes {
     @Column(nullable=true)
     private String personneModif;
 
-    @Column(nullable = true)
+    @Column(nullable = true, columnDefinition = "TEXT")
     private String descriptionAlerte;
 
     @Column(nullable = true)

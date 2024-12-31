@@ -483,6 +483,14 @@ public class IntrantService {
         }
     }
 
+    //fetch by id
+    public Intrant getIntrantById(String idIntrant) {
+       Intrant i = intrantRepository.findByIdIntrant(idIntrant);
+       if(i == null){
+              throw new EntityNotFoundException("Aucun intrant trouvé");
+       }
+    return i;
+    }
       //Modifier intrant
       public Intrant updateIntrant(Intrant intrant, MultipartFile imageFile , String id) throws Exception {
         

@@ -42,7 +42,7 @@ public class Pays {
     // @Column(nullable = true)
     // private String tauxEuro;
 
-    @Column(nullable = false)
+    @Column(nullable = false,columnDefinition = "TEXT")
     private String descriptionPays;
 
     @Column(nullable = true)

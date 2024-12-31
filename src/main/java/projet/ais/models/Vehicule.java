@@ -27,7 +27,7 @@ public class Vehicule {
    @Column(nullable = true)
    private String codeVehicule;
 
-   @Column(nullable = true)
+   @Column(nullable = true,columnDefinition = "TEXT")
    private String description;
 
    @Column(nullable = true)

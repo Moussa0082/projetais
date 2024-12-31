@@ -510,7 +510,12 @@ public class ActeurController {
         return new ResponseEntity<>(acteurService.getAllActeur(), HttpStatus.OK);
     }
 
-   
+    @GetMapping("getActeurById/{idActeur}")
+    @Operation(summary = "Recuperation d'un acteur")
+    public Acteur getActeurById(@PathVariable String idActeur) {
+        return acteurService.getActeurById(idActeur);
+    }
+
     @PutMapping("/disable/{id}")
     //Desactiver un admin methode
     @Operation(summary = "Désactiver acteur ")
@@ -523,14 +528,14 @@ public class ActeurController {
     @PutMapping("/deleteActeur/{id}")
     //Desactiver un admin methode
     @Operation(summary = "Demande de suppression de compte ")
-    public ResponseEntity <String> demandeActeur(@PathVariable String id) throws Exception{
+    public ResponseEntity <String> demandeActeur(@PathVariable String id, @RequestParam String msg) throws Exception{
     
-        acteurService.demandeSup(id);
+        acteurService.demandeSup(id,msg);
         return new ResponseEntity<>("Demande envoyé avec succèss", HttpStatus.ACCEPTED);
     }
 
     //Aciver admin
-      @PutMapping("/enable/{id}")
+    @PutMapping("/enable/{id}")
     @Operation(summary = "Activer acteur ")
     public ResponseEntity <String> enableAdmin(@PathVariable String id) throws Exception{
     
@@ -547,7 +552,7 @@ public class ActeurController {
     }
 
            //Supprimer un acteur
-           @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression d'un acteur")
     public ResponseEntity<String> deleteActeur(@PathVariable String id){
         return new ResponseEntity<>(acteurService.deleteByIdActeur(id), HttpStatus.OK);
@@ -560,6 +565,15 @@ public class ActeurController {
                             @RequestParam("password")  String password) {
         return acteurService.connexionActeur(emailActeur, password);
     }
+
+    @PostMapping("/connexion")
+    @Operation(summary = "Connexion d'un Acteur ")
+    public Acteur connexionActeur(@RequestBody Map<String, String> loginData) {
+        String emailActeur = loginData.get("emailActeur");
+        String passWord = loginData.get("passWord");
+        return acteurService.loginActeur(emailActeur, passWord);
+    }
+    
 
     //Se connecter 
     @GetMapping("/pinLogin")

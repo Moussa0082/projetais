@@ -21,7 +21,7 @@ public class Niveau1Pays {
     @Column(nullable = false)
     private String nomN1;
 
-    @Column(nullable = false)
+    @Column(nullable = false ,columnDefinition = "TEXT")
     private String descriptionN1;
 
     @Column(nullable = false)

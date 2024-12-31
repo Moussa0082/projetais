@@ -23,7 +23,7 @@ public class Forme {
     @Column(nullable = false)
     private String libelleForme;
 
-    @Column(nullable = false)
+    @Column(nullable = false ,columnDefinition = "TEXT")
     private String descriptionForme;
 
     @Column(nullable = false)

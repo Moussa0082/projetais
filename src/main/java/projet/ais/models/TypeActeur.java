@@ -29,7 +29,7 @@ public class TypeActeur {
     @Column(nullable = true)
     private boolean statutTypeActeur;
 
-    @Column(nullable = false)
+    @Column(nullable = false,columnDefinition = "TEXT")
     private String descriptionTypeActeur;
 
     @Column(nullable = true)

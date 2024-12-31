@@ -31,7 +31,7 @@ public class TypeVoiture {
     @Column(nullable = true)
     private int nombreSieges;
 
-    @Column(nullable = true)
+    @Column(nullable = true,columnDefinition = "TEXT")
    private String description;
 
     @Column(nullable = true)

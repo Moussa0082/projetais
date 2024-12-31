@@ -36,7 +36,7 @@ public class Intrant {
     @Column(nullable = false)
     private int prixIntrant;
     
-    @Column(nullable = true)
+    @Column(nullable = true , columnDefinition = "TEXT")
     private String descriptionIntrant;
 
     @Column(nullable = true)

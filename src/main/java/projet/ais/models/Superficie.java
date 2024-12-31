@@ -32,7 +32,7 @@ public class Superficie {
     @Column(nullable = false)
     private String superficieHa; 
     
-    @Column(nullable = true)
+    @Column(nullable = true,columnDefinition = "TEXT")
     private String description;
 
     

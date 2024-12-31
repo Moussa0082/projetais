@@ -22,7 +22,7 @@ public class MessageWa {
     @Column(nullable = true)
     private String personneModif;
 
-    @Column(nullable = false, length = 1000)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String text;
     
     @Column(nullable = true)

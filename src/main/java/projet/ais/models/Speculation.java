@@ -22,7 +22,7 @@ public class Speculation {
     @Column(nullable = false)
     private String nomSpeculation;
 
-    @Column(nullable = false)
+    @Column(nullable = false ,columnDefinition = "TEXT")
     private String descriptionSpeculation;
 
     @Column(nullable = false)

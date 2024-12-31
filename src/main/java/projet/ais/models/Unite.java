@@ -26,7 +26,7 @@ public class Unite {
     @Column(nullable = true)
     private String sigleUnite;
 
-    @Column(nullable = true)
+    @Column(nullable = true,columnDefinition = "TEXT")
     private String description;
 
     @Column(nullable = true)

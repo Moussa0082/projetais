@@ -38,6 +38,7 @@ import projet.ais.Exception.NoContentException;
 import projet.ais.IdGenerator;
 import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
+import projet.ais.models.Intrant;
 import projet.ais.models.Pays;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.ActeurRepository;
@@ -792,43 +793,53 @@ public class ActeurService {
         }
     }
     
-    public ResponseEntity<String> demandeSup(String id) throws Exception {
-        Optional<Acteur> acteur = acteurRepository.findById(id);
-        if (acteur.isPresent()) {
-            acteur.get().setStatutActeur(false);
-            acteurRepository.save(acteur.get());
+    public ResponseEntity<String> demandeSup(String id, String msgs) throws Exception {
+        // Récupération de l'acteur via Optional
+        Optional<Acteur> optionalActeur = acteurRepository.findById(id);
+    
+        // Vérification si l'acteur existe
+        if (optionalActeur.isPresent()) {
+            Acteur acteur = optionalActeur.get(); // Extraction de la valeur
+            acteur.setStatutActeur(false);
+            acteurRepository.save(acteur);
+    
             // Récupérez l'administrateur
             Acteur admin = acteurRepository.findByTypeActeurLibelle("Admin");
-
-            // Vérifiez si un administrateur a été trouvé
+    
             if (admin != null) {
-                // Accédez aux types d'acteurs de l'administrateur
+                // Vérifiez si l'administrateur a des types d'acteurs
                 List<TypeActeur> typeActeurs = admin.getTypeActeur();
                 if (typeActeurs != null) {
                     for (TypeActeur typeActeur : typeActeurs) {
-                        if (typeActeur.getLibelle().equals("Admin")) {
-                            // Si l'administrateur a le type "Admin", envoyez un e-mail
-                            String msg = acteur.get().getNomActeur().toUpperCase() + " avec l'id " +  acteur.get().getIdActeur()+ " souhaite supprimé son compte ";
-                            Alerte alerte = new Alerte(admin.getEmailActeur(), msg, "Demande de suppression de compte");
-                            alerte.setId(idGenerator.genererCode());
-                            alerteRepository.save(alerte);
-                            emailService.sendSimpleMail(alerte);
-                            messageService.sendMessagePersonnalAndSave(admin.getWhatsAppActeur(), msg);
+                        if ("Admin".equals(typeActeur.getLibelle())) {
+                            // Construction et envoi du message
+                            String message = String.format(
+                                "Bonjour ,\n\n"
+                                + "M. %s habitant à %s souhaite supprimer son compte \n\n"
+                                + "Cause : %s",
+                                acteur.getNomActeur().toUpperCase(),
+                                acteur.getAdresseActeur(),
+                                msgs
+                            );
+    
+                            messageService.sendMessagePersonnalAndSave(admin.getWhatsAppActeur(), message);
                             System.out.println(admin.getWhatsAppActeur());
-                            break;
+                            break; // Sortir de la boucle
                         }
                     }
                 }
             } else {
                 System.out.println("Aucun administrateur trouvé");
             }
-            
-            return new ResponseEntity<>("L'acteur " + acteur.get().getNomActeur() + " a été désactivé avec succès", HttpStatus.OK);
+    
+            // Retourner la réponse de succès
+            return new ResponseEntity<>("L'acteur " + acteur.getNomActeur() + " a été désactivé avec succès", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Admin non trouvé avec l'ID " + id, HttpStatus.BAD_REQUEST);
+            // Si l'acteur n'existe pas
+            return new ResponseEntity<>("Acteur non trouvé avec l'ID " + id, HttpStatus.BAD_REQUEST);
         }
     }
-
+    
 
       //Fonction pour un email à un utilisateur
     //   public String verifyNewUserMail(String email, String sujet, String message) throws Exception {
@@ -1220,6 +1231,27 @@ public class ActeurService {
         Acteur acteur = acteurRepository.findByEmailActeur(emailActeur);
         if (acteur == null || !passwordEncoder.matches(password, acteur.getPassword())) {
             throw new EntityNotFoundException("Email ou mot de passe incorrect");
+        }
+        
+        if(acteur.getStatutActeur()==false){
+            throw new NoContentException("Connexion échoué votre compte  est desactivé \n veuillez contacter l'administrateur pour la procedure d'activation de votre compte !");
+        }
+        return acteur;
+        }
+
+         //fetch by id
+    public Acteur getActeurById(String idActeur) {
+       Acteur ac = acteurRepository.findByIdActeur(idActeur);
+       if(ac == null){
+              throw new EntityNotFoundException("Aucun acteur trouvé");
+       }
+    return ac;
+    }
+
+    public Acteur loginActeur(String emailActeur, String password){
+        Acteur acteur = acteurRepository.findByEmailActeur(emailActeur);
+        if (acteur == null || !passwordEncoder.matches(password, acteur.getPassword())) {
+            throw new EntityNotFoundException("Email ou code Pin incorrect");
         }
         
         if(acteur.getStatutActeur()==false){

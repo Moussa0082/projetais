@@ -22,7 +22,7 @@ public class Filiere {
     @Column(nullable = false)
     private String libelleFiliere;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String descriptionFiliere;
 
     @Column(nullable = false)

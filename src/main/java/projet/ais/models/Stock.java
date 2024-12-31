@@ -40,7 +40,7 @@ public class Stock {
     private String origineProduit;
 
 
-    @Column(nullable = true)
+    @Column(nullable = true ,columnDefinition = "TEXT")
     private String descriptionStock;
 
     @Column(nullable = true)
