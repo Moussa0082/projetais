@@ -451,6 +451,15 @@ private String generateQRCodeImage(String qrCodeData) {
         return stockRepository.findTop10ByNomProduitContaining(nomProduit);
     }
 
+    // public Page<Stock> searchStocksByProduct(String nomSpeculation,int prix,double quantite, Pageable pageable) {
+    //     Page<Stock> stock = stockRepository.findBySpeculationNomSpeculationAndPrixAndQuantiteStock(nomSpeculation,prix,quantite,pageable);
+    //     return stock;
+    // }
+
+    public Page<Stock> searchStocksByProduct(String nomProduit, Double quantiteStock, Integer prixMin,Integer prixMax,  Pageable pageable) {
+        return stockRepository.findByProduit(nomProduit, quantiteStock, prixMin,prixMax, pageable);
+    }
+    
     //fecth by id stock 
     public Stock getStockById(String idStock) {
         Stock s = stockRepository.findByIdStock(idStock);

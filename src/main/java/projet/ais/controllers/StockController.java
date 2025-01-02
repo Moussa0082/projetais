@@ -104,7 +104,7 @@ public class StockController {
         return stockService.getStockById(idStock);
     }
 
-    
+   
     @PutMapping("/updateView/{id}")
     @Operation(summary = "Update view")
     public ResponseEntity<Stock> updateViews(@PathVariable String id) throws Exception{
@@ -179,12 +179,42 @@ public Stock updateQuantiteStock(@PathVariable String id, @RequestParam double q
             return new ResponseEntity<>(stockService.getAllStock(), HttpStatus.OK);
         }
 
+        // @GetMapping("/rechercher")
+        // @Operation(summary = "Recherche produit par critère")
+        // public ResponseEntity<Page<Stock>> rechercherStocks(
+        //         @RequestParam(required = false) String nomProduit,
+        //         @RequestParam(required = false) Integer prix,
+        //         @RequestParam(required = false) Double quantiteStock,
+        //         @RequestParam int page,
+        //         @RequestParam int size
+        // ) {
+        //     Pageable pageable = PageRequest.of(page, size);
+        //     Page<Stock> stocks = stockService.searchStocksByProduct(nomProduit, prix, quantiteStock, pageable);
+        //     return ResponseEntity.ok().body(stocks);
+        // }
+
+        @GetMapping("/rechercher")
+    @Operation(summary = "Recherche produit par critères avec intervalle de prix")
+    public ResponseEntity<Page<Stock>> rechercherStocks(
+            @RequestParam(required = false) String nomProduit,
+            @RequestParam(required = false) Double quantiteStock,
+            @RequestParam(required = false) Integer prixMin,
+            @RequestParam(required = false) Integer prixMax,
+            @RequestParam int page,
+            @RequestParam int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Stock> stocks = stockService.searchStocksByProduct(nomProduit,quantiteStock, prixMin, prixMax, pageable);
+        return ResponseEntity.ok().body(stocks);
+    }
+
+
+        
         @GetMapping("/getAllStocksByActeurWithPagination")
         public ResponseEntity<Page<Stock>> getStocksByActeur(@RequestParam String idActeur,
                                                                 @RequestParam int page,
                                                                 @RequestParam int size) {
   
-    
             Pageable pageable = PageRequest.of(page, size);
             Page<Stock> stocks = stockService.getStocksByActeurWithPagination(idActeur, pageable);
     

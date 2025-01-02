@@ -1,27 +1,52 @@
 package projet.ais.repository;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import projet.ais.models.Acteur;
 import projet.ais.models.CategorieProduit;
-import projet.ais.models.Intrant;
-import projet.ais.models.Magasin;
 import projet.ais.models.Stock;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.lang.Nullable;
-import java.util.*;
 @Repository
 public interface StockRepository extends JpaRepository<Stock, String>{
 
     Optional<Stock> findByNomProduit(String nomProduit);
     List<Stock> findByActeurIdActeur(String id);
     List<Stock> findBySpeculationIdSpeculation(String id);
+    List<Stock> findBySpeculationNomSpeculation(String nomSpeculation);
     List<Stock> findByMagasinIdMagasin(String id);
    
+    @Query("SELECT s FROM Stock s WHERE " +
+    "(:nomProduit IS NULL OR s.nomProduit = :nomProduit) AND " +
+    "(:quantiteStock IS NULL OR s.quantiteStock = :quantiteStock) AND " +
+    "(:prixMin IS NULL OR s.prix >= :prixMin) AND " +
+    "(:prixMax IS NULL OR s.prix <= :prixMax)")
+        Page<Stock> findByProduit(
+    @Param("nomProduit") String nomProduit, 
+    @Param("quantiteStock") Double quantiteStock, 
+    @Param("prixMin") Integer prixMin, 
+    @Param("prixMax") Integer prixMax, 
+    Pageable pageable);
+
+
+//     @Query("SELECT s FROM Stock s WHERE " +
+//     "(:nomProduit IS NULL OR s.nomProduit = :nomProduit) AND " +
+//     "(:prix IS NULL OR s.prix = :prix) AND " +
+//     "(:quantiteStock IS NULL OR s.quantiteStock = :quantiteStock)")
+//     Page<Stock> findByProduit(
+//                         @Param("nomProduit") String nomProduit, 
+//                         @Param("prix") Integer prix, 
+//                         @Param("quantiteStock") Double quantiteStock, 
+//                         Pageable pageable);
+
+//     Page<Stock> findBySpeculationNomSpeculationAndPrixAndQuantiteStock(String nomSpeculation,int prix,double quantite,Pageable pageable);
+//     Page<Stock> findBySpeculationNomSpeculationPrixMinAndPrixMaxAndQuantite(String nomSpeculation,int min,int max,int quantite,Pageable pageable);
+
     @Query("SELECT s FROM Stock s WHERE s.nomProduit LIKE %:nomProduit% ORDER BY s.dateAjout DESC")
     List<Stock> findTop10ByNomProduitContaining(@Param("nomProduit") String nomProduit);
     
