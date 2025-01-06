@@ -58,7 +58,6 @@ public class ConseilController {
             @RequestParam(value = "video", required = false) MultipartFile video)
             throws Exception {
                 
-
                 Conseil conseil = new Conseil();
                 try {
                     conseil = new JsonMapper().readValue(conseilString, Conseil.class);
