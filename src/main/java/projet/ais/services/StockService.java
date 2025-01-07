@@ -456,8 +456,8 @@ private String generateQRCodeImage(String qrCodeData) {
     //     return stock;
     // }
 
-    public Page<Stock> searchStocksByProduct(String nomProduit, Double quantiteStock, Integer prixMin,Integer prixMax,  Pageable pageable) {
-        return stockRepository.findByProduit(nomProduit, quantiteStock, prixMin,prixMax, pageable);
+    public Page<Stock> searchStocksByProduct(String nomProduit,String nomCategorie,List<String> speculations, Double quantiteStock, Integer prixMin,Integer prixMax,  Pageable pageable) {
+    return stockRepository.findByProduit(nomProduit,nomCategorie,speculations, quantiteStock, prixMin,prixMax, pageable);
     }
     
     //fecth by id stock 

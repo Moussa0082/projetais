@@ -23,11 +23,15 @@ public interface StockRepository extends JpaRepository<Stock, String>{
    
     @Query("SELECT s FROM Stock s WHERE " +
     "(:nomProduit IS NULL OR s.nomProduit = :nomProduit) AND " +
+    "(:nomCategorie IS NULL OR s.speculation.categorieProduit.libelleCategorie = :nomCategorie) AND " +
+    "(:speculations IS NULL OR s.speculation.nomSpeculation IN :speculations) AND " +
     "(:quantiteStock IS NULL OR s.quantiteStock = :quantiteStock) AND " +
     "(:prixMin IS NULL OR s.prix >= :prixMin) AND " +
     "(:prixMax IS NULL OR s.prix <= :prixMax)")
         Page<Stock> findByProduit(
     @Param("nomProduit") String nomProduit, 
+    @Param("nomCategorie") String nomCategorie, 
+    @Param("speculations") List<String> speculations, 
     @Param("quantiteStock") Double quantiteStock, 
     @Param("prixMin") Integer prixMin, 
     @Param("prixMax") Integer prixMax, 
