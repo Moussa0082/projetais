@@ -22,9 +22,6 @@ public class Stock {
     @Column(nullable = true)
     private String nomProduit;
 
-    // @Column(nullable = true)
-    // private String formeProduit;
-
     private String dateProduction;
 
     @Column(nullable = false)
@@ -95,9 +92,6 @@ public class Stock {
     (mappedBy = "stock")
     @JsonIgnore
     private List<DetailCommande> detailCommandes;
-
-    // @OneToMany(mappedBy = "stock")
-    // private List<Rating> ratings;
 
     @ManyToOne
     @JoinColumn( name = "idMonnaie")
