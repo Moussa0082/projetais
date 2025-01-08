@@ -24,9 +24,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import projet.ais.models.Conseil;
 import projet.ais.models.Intrant;
-import projet.ais.models.Stock;
 import projet.ais.repository.IntrantRepository;
 import projet.ais.services.FileUploade;
 import projet.ais.services.IntrantService;
@@ -143,8 +141,23 @@ public class IntrantController {
   
       }
 
+      @GetMapping("/getIntrantByCritereWithPagination")
+      @Operation(summary = "Recuperer  un intrant par critères")
+      public ResponseEntity<Page<Intrant>> getIntrantWithCritere(
+              @RequestParam(required = false) String nomIntrant,
+              @RequestParam(required = false) List<String> categories,
+              @RequestParam(required = false) Double quantiteIntrant,
+              @RequestParam(required = false) Integer prixMin,
+              @RequestParam(required = false) Integer prixMax,
+              @RequestParam int page,
+              @RequestParam int size
+      ) {
+          Pageable pageable = PageRequest.of(page, size);
+          Page<Intrant> i = intrantService.getIntrantByCritere(nomIntrant,categories,quantiteIntrant, prixMin, prixMax, pageable);
+          return ResponseEntity.ok().body(i);
+      }
 
-       @GetMapping("/getAllIntrantsWithPagination")
+    @GetMapping("/getAllIntrantsWithPagination")
     public ResponseEntity<Page<Intrant>> getIntrants(@RequestParam() int page,
                                                   @RequestParam() int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -163,7 +176,7 @@ public class IntrantController {
     }
 
     @PutMapping("/update-pays/{id}")
-    public String updatePaysForStocks(@PathVariable String id) {
+    public String updatePaysFor(@PathVariable String id) {
         intrantService.updatePaysForIntrantsss(id);
         return "Mise à jour de la colonne pays réussie";
     }

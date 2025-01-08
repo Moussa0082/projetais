@@ -2,7 +2,6 @@
 
 package projet.ais.repository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +12,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import projet.ais.models.Intrant;
-import projet.ais.models.Superficie;
 
 public interface IntrantRepository extends JpaRepository<Intrant , String> {
 
@@ -21,6 +19,20 @@ public interface IntrantRepository extends JpaRepository<Intrant , String> {
     
     Optional<Intrant> findByNomIntrant(String nomIntrant);
 
+    @Query("SELECT i FROM Intrant i WHERE " +
+    "(:nomIntrant IS NULL OR i.nomIntrant LIKE %:nomIntrant% ) AND " +
+    "(:categories IS NULL OR i.categorieProduit.libelleCategorie IN :categories) AND " +
+    "(:quantiteIntrant IS NULL OR i.quantiteIntrant = :quantiteIntrant) AND " +
+    "(:prixMin IS NULL OR i.prixIntrant >= :prixMin) AND " +
+    "(:prixMax IS NULL OR i.prixIntrant <= :prixMax) " +
+    "ORDER BY i.dateAjout DESC")
+        Page<Intrant> findByProduit(
+    @Param("nomIntrant") String nomIntrant, 
+    @Param("categories") List<String> categories, 
+    @Param("quantiteIntrant") Double quantiteIntrant, 
+    @Param("prixMin") Integer prixMin, 
+    @Param("prixMax") Integer prixMax, 
+    Pageable pageable);
 
     List<Intrant> findByIdIntrantIn(List<String> idIntrants);
 
@@ -68,7 +80,7 @@ public interface IntrantRepository extends JpaRepository<Intrant , String> {
     // Collection<Intrant> findByNomIntrant(String nomIntrant);
         
          //ancien
-        Page<Intrant> findByCategorieProduit_IdCategorieProduitAndStatutIntrantAndActeurStatutActeurAndQuantiteIntrantGreaterThan(String idCategorieProduit, boolean statutIntrant,
+    Page<Intrant> findByCategorieProduit_IdCategorieProduitAndStatutIntrantAndActeurStatutActeurAndQuantiteIntrantGreaterThan(String idCategorieProduit, boolean statutIntrant,
         boolean statutActeur,  Pageable pageable,double qte);
 
     Page<Intrant> findByCategorieProduit_IdCategorieProduitAndStatutIntrantAndPaysAndActeurStatutActeurAndQuantiteIntrantGreaterThan(String idCategorieProduit, String pays, boolean statutIntrant,

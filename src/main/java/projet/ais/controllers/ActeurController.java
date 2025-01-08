@@ -570,8 +570,8 @@ public class ActeurController {
     @Operation(summary = "Connexion d'un Acteur ")
     public Acteur connexionActeur(@RequestBody Map<String, String> loginData) {
         String emailActeur = loginData.get("emailActeur");
-        String passWord = loginData.get("passWord");
-        return acteurService.loginActeur(emailActeur, passWord);
+        String password = loginData.get("password");
+        return acteurService.loginActeur(emailActeur, password);
     }
     
 

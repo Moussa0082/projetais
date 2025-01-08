@@ -194,8 +194,8 @@ public Stock updateQuantiteStock(@PathVariable String id, @RequestParam double q
         // }
 
     @GetMapping("/getStockByCritereWithPagination")
-    @Operation(summary = "Recherche produit par critères")
-    public ResponseEntity<Page<Stock>> rechercherStocks(
+    @Operation(summary = "Recuperer les stocks par critères")
+    public ResponseEntity<Page<Stock>> getStocksWithCritere(
             @RequestParam(required = false) String nomProduit,
             @RequestParam(required = false) String nomCategorie,
             @RequestParam(required = false) List<String> speculations,
@@ -206,7 +206,7 @@ public Stock updateQuantiteStock(@PathVariable String id, @RequestParam double q
             @RequestParam int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Stock> stocks = stockService.searchStocksByProduct(nomProduit,nomCategorie,speculations,quantiteStock, prixMin, prixMax, pageable);
+        Page<Stock> stocks = stockService.getStocksByProduct(nomProduit,nomCategorie,speculations,quantiteStock, prixMin, prixMax, pageable);
         return ResponseEntity.ok().body(stocks);
     }
 

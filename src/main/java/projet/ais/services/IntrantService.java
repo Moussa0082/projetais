@@ -247,19 +247,10 @@ public class IntrantService {
         }
     }
 
-       //Liste des intrants par speculation
-    // public List<Intrant> getAllIntrantBySpeculation(String id){
-    //     List<Intrant>  intrantList = intrantRepository.findAllBySpeculationIdSpeculation(id);
-
-    //     if(intrantList.isEmpty()){
-    //         throw new EntityNotFoundException("Aucun intrant trouvé");
-    //     }
-    //     intrantList = intrantList
-    //             .stream().sorted((d1, d2) -> d2.getNomIntrant().compareTo(d1.getNomIntrant()))
-    //             .collect(Collectors.toList());
-    //     return intrantList;
-    // } 
-
+       //Liste des intrants par critère 
+       public Page<Intrant> getIntrantByCritere(String nomIntrant,List<String> categories, Double quantiteIntrant, Integer prixMin,Integer prixMax,  Pageable pageable) {
+        return intrantRepository.findByProduit(nomIntrant,categories, quantiteIntrant, prixMin,prixMax, pageable);
+        }
 
       // recuperer les intrants par  categorie avec pagination
     public Page<Intrant> getIntrantByCategorieWithPagination(String idCategorieProduit,Pageable pageable) {
@@ -293,29 +284,6 @@ public class IntrantService {
     }
 
   ///liste intrant par libelle filiere
-//     public Page<Intrant> getAllIntrantByLibelleCategorie(String libelleFiliere,String pays, Pageable pageable) {
-    
-//     String paysNormalise = pays.trim().toLowerCase();
-    
-//     // Récupérer les stocks pour le pays spécifié
-//     Page<Intrant> intrantByPays = intrantRepository.findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysAndQuantiteIntrantGreaterThan(
-//         libelleFiliere, true,true,paysNormalise, pageable,0.0);
-
-//     List<Intrant> intrantList = new ArrayList<>(intrantByPays.getContent());
-//     long totalElements = intrantByPays.getTotalElements();
-
-//     // Si le nombre de stocks est inférieur à la taille de la page, compléter avec des stocks d'autres pays
-//     if (intrantList.size() < pageable.getPageSize()) {
-//         Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - intrantList.size());
-//         Page<Intrant> intrantComplement = intrantRepository.findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysNotAndQuantiteIntrantGreaterThan(
-//             libelleFiliere,true,true, pays.trim().toLowerCase(), complementPageable,0.0);
-//         intrantList.addAll(intrantComplement.getContent());
-//         totalElements += intrantComplement.getTotalElements();
-//     }
-
-//     // Créer et retourner une nouvelle page avec la liste complète des stocks et le pageable original
-//     return new PageImpl<>(intrantList, pageable, totalElements);
-// }
 
     public Page<Intrant> getByLibelleAndPaysWithPagination(String libelleFiliere,String nomPays,Pageable pageable) {
         return intrantRepository.findAllByCategorieProduit_filiere_LibelleFiliereAndStatutIntrantAndActeurStatutActeurAndPaysAndQuantiteIntrantGreaterThan(

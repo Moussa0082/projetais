@@ -451,12 +451,7 @@ private String generateQRCodeImage(String qrCodeData) {
         return stockRepository.findTop10ByNomProduitContaining(nomProduit);
     }
 
-    // public Page<Stock> searchStocksByProduct(String nomSpeculation,int prix,double quantite, Pageable pageable) {
-    //     Page<Stock> stock = stockRepository.findBySpeculationNomSpeculationAndPrixAndQuantiteStock(nomSpeculation,prix,quantite,pageable);
-    //     return stock;
-    // }
-
-    public Page<Stock> searchStocksByProduct(String nomProduit,String nomCategorie,List<String> speculations, Double quantiteStock, Integer prixMin,Integer prixMax,  Pageable pageable) {
+    public Page<Stock> getStocksByProduct(String nomProduit,String nomCategorie,List<String> speculations, Double quantiteStock, Integer prixMin,Integer prixMax,  Pageable pageable) {
     return stockRepository.findByProduit(nomProduit,nomCategorie,speculations, quantiteStock, prixMin,prixMax, pageable);
     }
     
@@ -582,10 +577,8 @@ private String generateQRCodeImage(String qrCodeData) {
 
     // Retourne les stocks de la page
     return stockPage.getContent();
-}
+    }
 
-
-   
 
     public List<Stock> getAllStockBySpeculation(String id){
         List<Stock> stockList = stockRepository.findBySpeculationIdSpeculation(id);
@@ -762,39 +755,7 @@ private String generateQRCodeImage(String qrCodeData) {
 
     }
 
-    // public List<Stock> listeStockByCategorieProduit( String idCategorie) throws Exception {
-
-    //     List<Stock> stockList = stockRepository.findBySpeculation_CategorieProduit_IdCategorieProduit(idCategorie);
-
-    //     if(stockList.isEmpty())
-    //         throw new IllegalStateException("Aucun stock trouvé");
-        
-    //         stockList = stockList
-    //         .stream().sorted((s1,s2) -> s2.getDescriptionStock().compareTo(s1.getDescriptionStock()))
-
-    //     .collect(Collectors.toList());
-
-    //     return stockList;
-
-    // }
-
-
-// public List<Stock> getAllStockBySpeculation(String id){
-//     List<Stock> stockList = stockRepository.findBySpeculationIdSpeculation(id);
-
-//     if(stockList.isEmpty())
-//         throw new IllegalStateException("Aucun stock trouvé");
     
-//         stockList = stockList
-//         .stream().sorted((s1,s2) -> s2.getDescriptionStock().compareTo(s1.getDescriptionStock()))
-
-//     .collect(Collectors.toList());
-
-//     return stockList;
-// }
-
-
-
     public List<Stock> getAllStockByMagasin(String id){
         List<Stock> stockList = stockRepository.findByMagasinIdMagasin(id);
 
