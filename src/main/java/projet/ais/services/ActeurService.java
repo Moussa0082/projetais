@@ -1038,10 +1038,7 @@ public class ActeurService {
     //Fonction pour reinitialiser le mot de passe par email
     public Acteur resetPasswordEmail(String email, String password) throws Exception{
         Acteur userVerif = acteurRepository.findByEmailActeur(email);
-        // Vérifier si le code est expiré
-        // if (isCodeExpired(code)) {
-        //     throw new Exception("Code expiré");
-        // }
+        
         
         userVerif.setPassword(passwordEncoder.encode(password));
 
