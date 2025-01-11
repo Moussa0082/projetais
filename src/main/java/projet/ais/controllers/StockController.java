@@ -179,19 +179,7 @@ public Stock updateQuantiteStock(@PathVariable String id, @RequestParam double q
             return new ResponseEntity<>(stockService.getAllStock(), HttpStatus.OK);
         }
 
-        // @GetMapping("/rechercher")
-        // @Operation(summary = "Recherche produit par critère")
-        // public ResponseEntity<Page<Stock>> rechercherStocks(
-        //         @RequestParam(required = false) String nomProduit,
-        //         @RequestParam(required = false) Integer prix,
-        //         @RequestParam(required = false) Double quantiteStock,
-        //         @RequestParam int page,
-        //         @RequestParam int size
-        // ) {
-        //     Pageable pageable = PageRequest.of(page, size);
-        //     Page<Stock> stocks = stockService.searchStocksByProduct(nomProduit, prix, quantiteStock, pageable);
-        //     return ResponseEntity.ok().body(stocks);
-        // }
+        //
 
     @GetMapping("/getStockByCritereWithPagination")
     @Operation(summary = "Recuperer les stocks par critères")
