@@ -104,7 +104,7 @@ public class StockController {
         return stockService.getStockById(idStock);
     }
 
-   
+
     @PutMapping("/updateView/{id}")
     @Operation(summary = "Update view")
     public ResponseEntity<Stock> updateViews(@PathVariable String id) throws Exception{

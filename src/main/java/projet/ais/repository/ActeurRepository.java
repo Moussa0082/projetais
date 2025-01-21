@@ -1,12 +1,15 @@
 package projet.ais.repository;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import projet.ais.models.Acteur;
-import projet.ais.models.Alerte;
-
-import java.util.*;
-
 import projet.ais.models.TypeActeur;
 
 public interface ActeurRepository extends JpaRepository<Acteur, String>{
@@ -25,13 +28,23 @@ public interface ActeurRepository extends JpaRepository<Acteur, String>{
     //  Recuperer la liste des mails acteurs existants dans la base de donnés 
      List<Acteur> findAllByEmailActeur(String emailActeur);
 
-    //  Acteur findByAlerte(Alerte alerteList);
-    //  Acteur findByTypeActeur(TypeActeur typeActeur);
+    @Query(
+        "SELECT a FROM Acteur a WHERE " +
+        "(:typeActeurs IS NULL OR element(a.typeActeur).libelle IN :typeActeurs) AND " +
+        "(:speculations IS NULL OR element(a.speculation).nomSpeculation IN :speculations)"
+    )
+    Page<Acteur> findByActeurWithCritere(
+        @Param("typeActeurs") List<String> typeActeurs,
+        @Param("speculations") List<String> speculations,
+        Pageable pageable
+    );
+    
+    
 
-     Acteur findByTypeActeurLibelle(String libelle);     
-     List<Acteur> findByTypeActeur_Libelle(String libelle);     
+    Acteur findByTypeActeurLibelle(String libelle);     
+    List<Acteur> findByTypeActeur_Libelle(String libelle);     
 
-     List<Acteur> findByTypeActeurIdTypeActeur(String idTypeActeur);
+    List<Acteur> findByTypeActeurIdTypeActeur(String idTypeActeur);
 
      // Méthode pour trouver tous les acteurs par libellé de type d'acteur
     List<Acteur> findAllByTypeActeur_Libelle(String libelle);

@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -196,24 +195,18 @@ public class ActeurController {
         String monnaie = acteurService.getMonnaiePaysForActeur(id);
         return ResponseEntity.ok(monnaie);
     }
-
-    // @GetMapping("/tauxDollar/{id}")
-    // public ResponseEntity<String> getTauxDollar(@PathVariable String id) {
-    //     String tauxDollar = acteurService.getTauxDollarPaysForActeur(id);
-    //     return ResponseEntity.ok(tauxDollar);
-    // }
-    
-    // @GetMapping("/tauxEuro/{id}")
-    // public ResponseEntity<String> getTauxEuro(@PathVariable String id) {
-    //     String tauxEuro = acteurService.getTauxEuroPaysForActeur(id);
-    //     return ResponseEntity.ok(tauxEuro);
-    // }
-    // @GetMapping("/tauxYuan/{id}")
-    // public ResponseEntity<String> getTauxYuan(@PathVariable String id) {
-    //     String tauxYuan = acteurService.getTauxYuanPaysForActeur(id);
-    //     return ResponseEntity.ok(tauxYuan);
-    // }
-
+    @GetMapping("/getActeurByCritereWithPagination")
+    @Operation(summary = "Recuperer les acteurs par critères")
+    public ResponseEntity<Page<Acteur>> getStocksWithCritere(
+            @RequestParam(required = false) List<String> typeActeurs,
+            @RequestParam(required = false) List<String> speculations,
+            @RequestParam int page,
+            @RequestParam int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Acteur> acteur = acteurService.getActeurWithCritere(typeActeurs,speculations, pageable);
+        return ResponseEntity.ok().body(acteur);
+    }
 
              @GetMapping("/getAllActeurWithPagination")
     public ResponseEntity<Page<Acteur>> getActeurs(@RequestParam() int page,

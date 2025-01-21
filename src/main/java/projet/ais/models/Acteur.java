@@ -179,9 +179,5 @@ public class Acteur {
    private List<Campagne> campagnes;
    
 
-   
-//    @OneToMany(mappedBy = "acteur")
-//    private List<Rating> ratings;
-
 }
 

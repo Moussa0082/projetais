@@ -40,6 +40,7 @@ import projet.ais.models.Acteur;
 import projet.ais.models.Alerte;
 import projet.ais.models.Intrant;
 import projet.ais.models.Pays;
+import projet.ais.models.Stock;
 import projet.ais.models.TypeActeur;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.AlerteRepository;
@@ -569,67 +570,7 @@ public class ActeurService {
     return resultat.toString();
     }
   
-  
-    // @Transactional
-    // public Acteur updateActeur(Acteur acteur, String idActeur, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
-    //     Acteur ac = acteurRepository.findById(idActeur).orElseThrow(() -> new IllegalArgumentException("Acteur non trouvé avec l'id " + idActeur));
-    
-    //     try {
-    //         // Traitement du fichier image siège acteur
-           
-    
-    //         // Traitement du fichier image logo acteur
-    //         if (imageFile2 != null) {
-    //             String imageLocation = "/ais";
-    //             Path imageRootLocation = Paths.get(imageLocation);
-    //             if (!Files.exists(imageRootLocation)) {
-    //                 Files.createDirectories(imageRootLocation);
-    //             }
-    //             String imageName = UUID.randomUUID().toString() + "_" + imageFile2.getOriginalFilename();
-    //             Path imagePath = imageRootLocation.resolve(imageName);
-    //             Files.copy(imageFile2.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-    //             String onlineImagePath = fileUploade.uploadImageToFTP(imagePath, imageName);
-    //             ac.setLogoActeur(imageName);
-    //         }
-    
-    //         // Mise à jour des autres champs
-    //         ac.setAdresseActeur(acteur.getAdresseActeur());
-    //         ac.setNomActeur(acteur.getNomActeur());
-    //         ac.setTelephoneActeur(acteur.getTelephoneActeur());
-    //         ac.setWhatsAppActeur(acteur.getWhatsAppActeur());
-    //         ac.setLocaliteActeur(acteur.getLocaliteActeur());
-    //         ac.setEmailActeur(acteur.getEmailActeur());
-    //         ac.setNiveau3PaysActeur(acteur.getNiveau3PaysActeur());
-    
-    //         String pattern = "yyyy-MM-dd HH:mm";
-    //         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-    //         LocalDateTime now = LocalDateTime.now();
-    //         String formattedDateTime = now.format(formatter);
-    //         ac.setDateModif(formattedDateTime);
-    
-    //         if (acteur.getEmailActeur() != null && !acteur.getEmailActeur().isEmpty()) {
-    //             ac.setEmailActeur(acteur.getEmailActeur());
-    //         }
-    
-    //         if (acteur.getTypeActeur() != null) {
-    //             ac.setTypeActeur(acteur.getTypeActeur());
-    //         }
-    
-    //         if (acteur.getSpeculation() != null) {
-    //             ac.setSpeculation(acteur.getSpeculation());
-    //         }
-    
-    //         System.out.println("Acteur après mise à jour: " + ac);
 
-    //         return acteurRepository.save(ac);
-    //     } catch (IOException e) {
-    //         System.err.println("Erreur lors du traitement des fichiers images: " + e.getMessage());
-    //         throw new Exception("Erreur lors du traitement des fichiers images: " + e.getMessage());
-    //     } catch (Exception e) {
-    //         System.err.println("Erreur lors de la mise à jour de l'acteur: " + e.getMessage());
-    //         throw new Exception("Erreur lors de la mise à jour de l'acteur: " + e.getMessage());
-    //     }
-    // }
     @Transactional
     public Acteur updateActeur(Acteur acteur, String idActeur, MultipartFile imageFile1, MultipartFile imageFile2) throws Exception {
         System.out.println("Début de la méthode updateActeur");
@@ -752,9 +693,12 @@ public class ActeurService {
         }
     }
     
-    
+    //find acteur by critere
+    public Page<Acteur> getActeurWithCritere(List<String> typeActeurs,List<String> speculations, Pageable pageable) {
+        return acteurRepository.findByActeurWithCritere(typeActeurs,speculations, pageable);
+    }
        //Recuperer la liste des Admins
-     public List<Acteur> getAllActeur(){
+    public List<Acteur> getAllActeur(){
 
         List<Acteur> acteurList = acteurRepository.findAll();
 
@@ -764,20 +708,7 @@ public class ActeurService {
         return acteurList;
     }
 
-    // public List<Acteur> getAllActeurByTypeActeur(String id){
-
-    //     List<Acteur> acteurList = acteurRepository.findAllByTypeActeurIdTypeActeur(id);
-
-    //     acteurList = acteurList
-    //             .stream().sorted((d1, d2) -> d2.getEmailActeur().compareTo(d1.getEmailActeur()))
-    //             .collect(Collectors.toList());
-    //     return acteurList;
-    // }
-    //Desactiver un acteur
-
-     //Desactiver un acteur
-
-     public ResponseEntity<String> disableActeur(String id) throws Exception {
+    public ResponseEntity<String> disableActeur(String id) throws Exception {
         Optional<Acteur> acteur = acteurRepository.findById(id);
         if (acteur.isPresent()) {
             acteur.get().setStatutActeur(false);
