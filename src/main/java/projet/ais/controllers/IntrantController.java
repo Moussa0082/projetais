@@ -159,7 +159,7 @@ public class IntrantController {
 
     @GetMapping("/getAllIntrantsWithPagination")
     public ResponseEntity<Page<Intrant>> getIntrants(@RequestParam() int page,
-                                                  @RequestParam() int size) {
+                                                    @RequestParam() int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Intrant> intrants = intrantService.getAllIntrantPageable(pageable);
         return ResponseEntity.ok().body(intrants);
