@@ -20,7 +20,7 @@ public interface StockRepository extends JpaRepository<Stock, String>{
     List<Stock> findBySpeculationIdSpeculation(String id);
     List<Stock> findBySpeculationNomSpeculation(String nomSpeculation);
     List<Stock> findByMagasinIdMagasin(String id);
-   
+
     @Query("SELECT s FROM Stock s WHERE " +
     "(:nomProduit IS NULL OR s.nomProduit LIKE %:nomProduit%) AND " +
     "(:nomCategorie IS NULL OR s.speculation.categorieProduit.libelleCategorie = :nomCategorie) AND " +

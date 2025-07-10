@@ -188,7 +188,7 @@ public class ActeurService {
             String formattedDateTime = now.format(formatter);
             acteur.setDateAjout(formattedDateTime);
             acteur.setIdActeur(code);
-            acteur.setWhatsAppActeur(acteur.getWhatsAppActeur());
+            // acteur.setWhatsAppActeur(acteur.getWhatsAppActeur());
            
             // Acteur admins = acteurRepository.findByTypeActeurLibelle("Admin");
 
@@ -228,31 +228,31 @@ public class ActeurService {
             // }
 
           // Récupérez l'administrateur
-            Acteur admin = acteurRepository.findByTypeActeurLibelle("Admin");
+            // Acteur admin = acteurRepository.findByTypeActeurLibelle("Admin");
 
 
-            // Vérifiez si un administrateur a été trouvé
-            if (admin != null) {
-                // Accédez aux types d'acteurs de l'administrateur
-                List<TypeActeur> typeActeurs = admin.getTypeActeur();
-                if (typeActeurs != null) {
-                    for (TypeActeur typeActeur : typeActeurs) {
-                        if (typeActeur.getLibelle().equals("Admin")) {
-                            // Si l'administrateur a le type "Admin", envoyez un e-mail
-                            String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez le contacter à son numero "+ savedActeur.getWhatsAppActeur()+" pour proceder à l'activation de son compte dans les plus brefs délais !";
-                            Alerte alerte = new Alerte(admin.getEmailActeur(), msg, "Création d'un nouveau compte");
-                            alerte.setId(idGenerator.genererCode());
-                            alerteRepository.save(alerte);
-                            emailService.sendSimpleMail(alerte);
-                            messageService.sendMessagePersonnalAndSave(admin.getWhatsAppActeur(), msg);
-                            System.out.println(admin.getWhatsAppActeur());
-                            break; // Sortez de la boucle dès qu'un administrateur est trouvé
-                        }
-                    }
-                }
-            } else {
-                System.out.println("Aucun administrateur trouvé");
-            }
+            // // Vérifiez si un administrateur a été trouvé
+            // if (admin != null) {
+            //     // Accédez aux types d'acteurs de l'administrateur
+            //     List<TypeActeur> typeActeurs = admin.getTypeActeur();
+            //     if (typeActeurs != null) {
+            //         for (TypeActeur typeActeur : typeActeurs) {
+            //             if (typeActeur.getLibelle().equals("Admin")) {
+            //                 // Si l'administrateur a le type "Admin", envoyez un e-mail
+            //                 String msg = savedActeur.getNomActeur().toUpperCase() + " vient de créer un compte. Veuillez le contacter à son numero "+ savedActeur.getWhatsAppActeur()+" pour proceder à l'activation de son compte dans les plus brefs délais !";
+            //                 Alerte alerte = new Alerte(admin.getEmailActeur(), msg, "Création d'un nouveau compte");
+            //                 alerte.setId(idGenerator.genererCode());
+            //                 alerteRepository.save(alerte);
+            //                 emailService.sendSimpleMail(alerte);
+            //                 messageService.sendMessagePersonnalAndSave(admin.getWhatsAppActeur(), msg);
+            //                 System.out.println(admin.getWhatsAppActeur());
+            //                 break; // Sortez de la boucle dès qu'un administrateur est trouvé
+            //             }
+            //         }
+            //     }
+            // } else {
+            //     System.out.println("Aucun administrateur trouvé");
+            // }
             
             // sendMessageToAdmin(savedActeur);
 

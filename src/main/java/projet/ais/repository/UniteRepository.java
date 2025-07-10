@@ -13,5 +13,5 @@ public interface UniteRepository extends JpaRepository<Unite, String>{
     Unite findByIdUnite(String id);
 
     Unite findByNomUnite(String nom);
-     List<Unite> findByActeurIdActeur(String idActeur);
+    List<Unite> findByActeurIdActeur(String idActeur);
 }

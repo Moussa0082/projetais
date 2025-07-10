@@ -40,16 +40,6 @@ public class TypeActeur {
 
     @Column(nullable = true)
     private String dateModif;
-    // @Column(columnDefinition = "TIMESTAMP")
-    // private LocalDateTime dateAjout;
-
-    // @PrePersist
-    // public void prePersist() {
-    //     dateAjout = LocalDateTime.now();
-    // }
-
-    // @Column(columnDefinition = "TIMESTAMP")
-    // private LocalDateTime dateModif;
 
 
     @ManyToMany(mappedBy = "typeActeur")

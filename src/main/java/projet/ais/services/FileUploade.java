@@ -23,7 +23,6 @@ public class FileUploade {
     private static final String FTP_USER = "default_koumi";
     private static final String FTP_PASSWORD = "H8hd#e3KejJR";
     int retryCount = 3; 
-    // private static final String FTP_IMAGES_DIRECTORY = "/images";
     
     @Async
     public String uploadImageToFTP(Path imagePath, String imageName) throws Exception {
@@ -61,7 +60,7 @@ public class FileUploade {
                 throw new Exception("Échec du téléchargement du fichier après plusieurs tentatives.");
     }
       // Méthode pour récupérer une image à partir de son nom
-      public byte[] getImageByName(String imageName) throws IOException {
+    public byte[] getImageByName(String imageName) throws IOException {
         // Chemin où les images sont stockées sur le serveur FTP
         String imagePath = "/web/koumi-server/images/";
     

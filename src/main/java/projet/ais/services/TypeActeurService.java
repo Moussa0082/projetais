@@ -133,7 +133,7 @@ private String genererChaineAleatoire(String source, int longueur) {
         return typeActeurRepository.findAll(pageable);
     }
 
-     public List<TypeActeur> getAllTypeActeurs() {
+    public List<TypeActeur> getAllTypeActeurs() {
         List<TypeActeur> typeActeurs = typeActeurRepository.findAll();
 
         if (typeActeurs.isEmpty()) {
@@ -149,8 +149,8 @@ private String genererChaineAleatoire(String source, int longueur) {
         return typeActeurs;
     }
 
-     private TypeActeur ensureUtf8Encoding(TypeActeur typeActeur) {
-    // Example logic to ensure UTF-8 encoding on the libelle field
+    private TypeActeur ensureUtf8Encoding(TypeActeur typeActeur) {
+
     try {
         String libelle = typeActeur.getLibelle();
         if (libelle != null) {
@@ -220,7 +220,7 @@ private String genererChaineAleatoire(String source, int longueur) {
     }
 
     //  Supprimer type acteur
-      public String deleteByIdTypeActeur(String id){
+    public String deleteByIdTypeActeur(String id){
         TypeActeur typeActeur = typeActeurRepository.findByIdTypeActeur(id);
         if(typeActeur == null){
             throw new EntityNotFoundException("Désolé le type d'acteur à supprimer n'existe pas");
@@ -228,6 +228,6 @@ private String genererChaineAleatoire(String source, int longueur) {
         typeActeurRepository.delete(typeActeur);
         return "Type Acteur supprimé avec succèss";
     }
-   
+
 
 }

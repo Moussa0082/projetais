@@ -1,5 +1,6 @@
 package projet.ais.controllers;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,11 +8,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,16 +26,10 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import projet.ais.models.Conseil;
 import projet.ais.models.Magasin;
 import projet.ais.repository.MagasinRepository;
 import projet.ais.services.FileUploade;
 import projet.ais.services.MagasinService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-
-import org.springframework.http.MediaType;
-import java.io.IOException;
 
 
 
@@ -48,20 +45,6 @@ public class MagasinController {
     @Autowired
     MagasinRepository magasinRepository;
 
-    // @PostMapping("/addMagasin")
-    // public ResponseEntity<Magasin> saveMagasin(
-    //     @Valid @RequestParam("magasin") String magasins,
-    //     @Valid @RequestParam(value = "image",required = false) MultipartFile imageFile) throws Exception{
-
-    //         Magasin magasin1 = new Magasin();
-    //         try {
-    //             magasin1 = new JsonMapper().readValue(magasins,Magasin.class);
-    //         }  catch (JsonProcessingException e) {
-    //             throw new Exception(e.getMessage());
-    //         }
-    //     Magasin saveMag = magasinService.createMagasin(magasin1, imageFile);
-    //     return new ResponseEntity<>(saveMag, HttpStatus.CREATED);
-    // }
     @PostMapping("/addMagasin")
     public ResponseEntity<Magasin> saveMagasin(
     @Valid @RequestParam("magasin") String magasins,
@@ -207,18 +190,7 @@ public class MagasinController {
         return ResponseEntity.ok().body(magasins);
     }
 
-    //  @GetMapping("/getAllMagasinByNiveau1PaysWithPagination")
-    // public ResponseEntity<Page<Magasin>> getMagasinsByNiveau1Pays(
-    //     @RequestParam() String niveau3PaysActeur,
-    //     @RequestParam() String idNiveau1Pays,
-    //     @RequestParam() int page,
-    //                                               @RequestParam() int size) {
-    //     Pageable pageable = PageRequest.of(page, size);
-    //     Page<Magasin> magasins = magasinService.getMagasinByNiveau1PaysWithPagination(niveau3PaysActeur,idNiveau1Pays,pageable);
-    //     return ResponseEntity.ok().body(magasins);
-    // }
-
-     @GetMapping("/getAllMagasinsByActeurWithPagination")
+    @GetMapping("/getAllMagasinsByActeurWithPagination")
     public ResponseEntity<Page<Magasin>> getMagasinsByActeur(
         @RequestParam() String idActeur,
         @RequestParam() int page,

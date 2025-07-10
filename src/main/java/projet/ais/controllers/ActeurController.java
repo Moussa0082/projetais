@@ -559,7 +559,7 @@ public class ActeurController {
         return acteurService.connexionActeur(emailActeur, password);
     }
 
-    @PostMapping("/connexion")
+    @PostMapping("/connexion") 
     @Operation(summary = "Connexion d'un Acteur ")
     public Acteur connexionActeur(@RequestBody Map<String, String> loginData) {
         String emailActeur = loginData.get("emailActeur");
