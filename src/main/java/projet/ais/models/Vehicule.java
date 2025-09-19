@@ -2,7 +2,6 @@ package projet.ais.models;
 
 import java.util.*;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -14,66 +13,69 @@ import lombok.Data;
 @Entity
 @Data
 public class Vehicule {
-     
-   @Id
-   private String idVehicule;
 
-   @Column(nullable = false)
-   private String nomVehicule;
-   
-   @Column(nullable = false)
-   private String capaciteVehicule;
+    @Id
+    private String idVehicule;
 
-   @Column(nullable = true)
-   private String codeVehicule;
+    @Column(nullable = false)
+    private String nomVehicule;
 
-   @Column(nullable = true,columnDefinition = "TEXT")
-   private String description;
+    @Column(nullable = false)
+    private String capaciteVehicule;
 
-   @Column(nullable = true)
-   private int nbKilometrage;
+    @Column(nullable = true)
+    private String codeVehicule;
 
-   @Convert(converter = MapToJsonConverter.class)
-   @Column(columnDefinition = "json")
-   private Map<String, Integer> prixParDestination;
+    @Column(nullable = true, columnDefinition = "TEXT")
+    private String description;
 
-   @Column
-   private boolean statutVehicule = true;
+    @Column(nullable = true)
+    private int nbKilometrage;
 
-   @Column(nullable=true)
+    @Column(nullable = false)
+    private boolean hasAssociation = false;
+
+    @Convert(converter = MapToJsonConverter.class)
+    @Column(columnDefinition = "json")
+    private Map<String, Integer> prixParDestination;
+
+    @Column
+    private boolean statutVehicule = true;
+
+    @Column(nullable = true)
     private String pays;
-   
-   @Column(nullable = true)
-   private String photoVehicule;
-   
-   @Column(nullable = false)
-   private String localisation;
 
-   @Column(nullable = true)
-   private String dateAjout;
+    @Column(nullable = true)
+    private String photoVehicule;
 
-   @Column(nullable = true)
-   private String dateModif;
-   
-   @Column(nullable = false)
-   private String etatVehicule;
+    @Column(nullable = false)
+    private String localisation;
 
-   @Column(nullable=true)
-   private String personneModif;
+    @Column(nullable = true)
+    private String dateAjout;
 
-   @Column(nullable = false)
-   private int nbreView = 0 ;
+    @Column(nullable = true)
+    private String dateModif;
 
-   @ManyToOne
-   @JoinColumn(name = "idActeur")
-   private Acteur acteur;
+    @Column(nullable = false)
+    private String etatVehicule;
 
-   @ManyToOne
-   @JoinColumn(name = "idTypeVoiture")
-   private TypeVoiture typeVoiture;
+    @Column(nullable = true)
+    private String personneModif;
 
-   @ManyToOne
-   @JoinColumn( name = "idMonnaie")
-   private  Monnaie monnaie;
+    @Column(nullable = false)
+    private int nbreView = 0;
+
+    @ManyToOne
+    @JoinColumn(name = "idActeur")
+    private Acteur acteur;
+
+    @ManyToOne
+    @JoinColumn(name = "idTypeVoiture")
+    private TypeVoiture typeVoiture;
+
+    @ManyToOne
+    @JoinColumn(name = "idMonnaie")
+    private Monnaie monnaie;
 
 }

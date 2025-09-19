@@ -35,6 +35,8 @@ public class Monnaie {
     @Column(nullable = false)
     private boolean statut = true;
 
+    @Column(nullable = false)
+    private boolean hasAssociation = false;
 
     @OneToMany(mappedBy = "monnaie")
     @JsonIgnore

@@ -47,11 +47,11 @@ public class SpeculationService {
         CategorieProduit categorieProduit = categorieProduitRepository.findByIdCategorieProduit(speculation.getCategorieProduit().getIdCategorieProduit());
         Speculation speculations = speculationRepository.findBynomSpeculation(speculation.getNomSpeculation());
 
-        //  Acteur acteur = acteurRepository.findByIdActeur(speculation.getActeur().getIdActeur());
-
-        // if(acteur == null)
-        //     throw new IllegalStateException("Aucun acteur disponible");
-        
+       if (!speculations.isHasAssociation()) {
+            speculations.setHasAssociation(true);
+            speculationRepository.save(speculations);
+        }
+    
         if(categorieProduit == null)
             throw new EntityNotFoundException("Cette categorie n'existe pas");
 

@@ -50,7 +50,10 @@ public class Magasin {
 
     @Column(nullable = true)
     private String photo;
-    
+
+    @Column(nullable = false)
+    private boolean hasAssociation = false;
+
     @Column(nullable = true)
     private String pays;
 

@@ -93,6 +93,9 @@ public class Acteur {
 
     private Boolean isConnected;
 
+    @Column(nullable = false)
+    private boolean hasAssociation = false;
+    
     @ManyToOne
     @JoinColumn(name = "idPays")
     private Pays pays;

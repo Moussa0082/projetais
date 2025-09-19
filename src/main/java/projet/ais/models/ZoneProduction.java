@@ -36,20 +36,20 @@ public class ZoneProduction {
     @Column(nullable = true)
     private String dateModif;
 
+    @Column(nullable = false)
+    private boolean hasAssociation = false;
 
-    @Column(nullable=true)
+    @Column(nullable = true)
     private String personneModif;
-    
+
     // @Column(nullable = false)
-    private boolean statutZone ;
-    
-    @OneToMany
-    (mappedBy = "zoneProduction")
+    private boolean statutZone;
+
+    @OneToMany(mappedBy = "zoneProduction")
     @JsonIgnore
     private List<Stock> stockList;
 
     @ManyToOne
-    @JoinColumn( name = "idActeur")
+    @JoinColumn(name = "idActeur")
     private Acteur acteur;
 }
-

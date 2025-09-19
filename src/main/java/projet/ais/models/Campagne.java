@@ -40,6 +40,9 @@ public class Campagne {
     @Column(nullable = true)
     private String dateModif;
     
+    @Column(nullable = false)
+    private boolean hasAssociation = false;
+
     @OneToMany(mappedBy = "campagne")
     @JsonIgnore
     private List<Superficie> superficie;

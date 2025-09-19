@@ -32,7 +32,7 @@ import projet.ais.models.Vehicule;
 import projet.ais.repository.AbonnementRepository;
 import projet.ais.repository.ActeurRepository;
 import projet.ais.repository.VehiculeRepository;
-
+import projet.ais.services.FileUploade;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 
@@ -53,13 +53,9 @@ public class VehiculeService {
     AbonnementRepository aRepository;
     @Autowired
     MessageService messageService;
+    @Autowired
+    FileUploade fileUploade;
 
-    // Connexion FTP
-    private static final String FTP_SERVER = "ftp.koumi.ml";
-    private static final int FTP_PORT = 21; // Mise à jour si nécessaire
-    private static final String FTP_USER = "default_koumi";
-    private static final String FTP_PASSWORD = "H8hd#e3KejJR";
-    // private static final String FTP_IMAGES_DIRECTORY = "/images";
 
     public Vehicule createVehicule(Vehicule vehicule, MultipartFile imageFile) throws Exception {
         Vehicule vh = vehiculeRepository.findByIdVehicule(vehicule.getIdVehicule());
@@ -68,6 +64,12 @@ public class VehiculeService {
         }
 
         Acteur acteur = acteurRepository.findByIdActeur(vehicule.getActeur().getIdActeur());
+
+        if (!acteur.isHasAssociation()) {
+            acteur.setHasAssociation(true);
+            acteurRepository.save(acteur);
+        }
+
         // Traitement du fichier image 
         if (imageFile != null) {
             try {
@@ -80,11 +82,10 @@ public class VehiculeService {
                 String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                 Path imagePath = imageRootLocation.resolve(imageName);
                 Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-              
-                String onlineImagePath = uploadImageToFTP(imagePath, imageName);
+
+                String onlineImagePath = fileUploade.uploadImageToFTP(imagePath, imageName);
                 vehicule.setPhotoVehicule(imageName); // Enregistrement du chemin en ligne dans l'objet Vehicule
 
-                
             } catch (IOException e) {
                 throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
             }
@@ -146,7 +147,7 @@ public class VehiculeService {
     String zoneProduction = i.getPays(); // Exemple d'extraction de la localisation
     String contact = ac.getWhatsAppActeur();
     
-    String lienProduit = "https://koumi.ml/api-koumi/vehicule/" + i.getIdVehicule() + "/image";
+    String lienProduit = "http://api.koumi.ml/vehicule/" + i.getIdVehicule() + "/image";
     
     // Message de notification à envoyer
     String message = String.format(
@@ -179,73 +180,6 @@ public class VehiculeService {
     } catch (Exception e) {
         System.err.println("Erreur lors de l'envoi de la notification : " + e.getMessage());
     }
-    }
-
-    public String uploadImageToFTP(Path imagePath, String imageName) throws Exception {
-        FTPClient ftpClient = new FTPClient();
-        try {
-            ftpClient.connect(FTP_SERVER, FTP_PORT);
-            ftpClient.login(FTP_USER, FTP_PASSWORD);
-            ftpClient.enterLocalPassiveMode();
-    
-            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-    
-            try (InputStream inputStream = Files.newInputStream(imagePath)) {
-                String remoteFilePath = "/web/koumi-server/images/" + imageName; // Chemin d'acc                                                         ès complet sur le serveur FTP
-                boolean uploadResult = ftpClient.storeFile(remoteFilePath, inputStream);
-                if (uploadResult) {
-                    return "ftp://" + FTP_USER + "@" + FTP_SERVER + remoteFilePath; // Retourne le lien complet de l'image en ligne
-                } else {
-                    throw new Exception("Erreur lors du chargement de l'image sur le serveur FTP.");
-                }
-            }
-        } catch (IOException e) {
-            throw new Exception("Erreur lors de la connexion au serveur FTP : " + e.getMessage());
-        } finally {
-            try {
-                if (ftpClient.isConnected()) {
-                    ftpClient.logout();
-                    ftpClient.disconnect();
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-      // Méthode pour récupérer une image à partir de son nom
-      public byte[] getImageByName(String imageName) throws IOException {
-        // Chemin où les images sont Vehiculeées sur le serveur FTP
-        String imagePath = "/web/koumi-server/images/";
-    
-        // Télécharger l'image à partir du serveur FTP en utilisant son nom
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            FTPClient ftpClient = new FTPClient();
-            try {
-                ftpClient.connect(FTP_SERVER, FTP_PORT);
-                ftpClient.login(FTP_USER, FTP_PASSWORD);
-                ftpClient.enterLocalPassiveMode();
-                ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-    
-                // Chemin d'accès complet de l'image sur le serveur FTP
-                String remoteFilePath = imagePath + imageName;
-    
-                // Télécharger l'image depuis le serveur FTP
-                if (ftpClient.retrieveFile(remoteFilePath, outputStream)) {
-                    return outputStream.toByteArray(); // Retourner le tableau d'octets de l'image
-                } else {
-                    throw new IOException("Erreur lors du téléchargement de l'image depuis le serveur FTP.");
-                }
-            } finally {
-                try {
-                    if (ftpClient.isConnected()) {
-                        ftpClient.logout();
-                        ftpClient.disconnect();
-                    }
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
     }
 
 
@@ -498,7 +432,7 @@ public class VehiculeService {
                     
                     // Téléchargement de l'image vers le serveur FTP et récupération du chemin en ligne
                    // Téléchargement de l'image vers le serveur FTP et récupération du chemin en ligne
-                    String onlineImagePath = uploadImageToFTP(imagePath, imageName);
+                    String onlineImagePath = fileUploade.uploadImageToFTP(imagePath, imageName);
                     vh.setPhotoVehicule(imageName); // Enregistrement du chemin en ligne dans l'objet Vehicule
     
                     

@@ -11,13 +11,12 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-
 @Entity
 @Data
 @Table(name = "type_materiel")
 public class TypeMateriel {
-    
-     @Id
+
+    @Id
     private String idTypeMateriel;
 
     @Column(nullable = false)
@@ -26,19 +25,22 @@ public class TypeMateriel {
     @Column(nullable = false)
     private String nom;
 
-    @Column(nullable = true,columnDefinition = "TEXT")
-   private String description;
+    @Column(nullable = true, columnDefinition = "TEXT")
+    private String description;
 
     @Column(nullable = true)
     private String dateAjout;
- 
+
     @Column(nullable = true)
     private String dateModif;
 
     @Column(nullable = false)
     private boolean statutType = true;
 
-     @OneToMany
+    @Column(nullable = false)
+    private boolean hasAssociation = false;
+
+    @OneToMany
     @JsonIgnore
     private List<Materiels> materiels;
 }

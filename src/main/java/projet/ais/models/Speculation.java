@@ -35,12 +35,11 @@ public class Speculation {
 
     @ManyToOne
     // @JsonIgnore
-
     @JoinColumn(name = "idCategorieProduit")
     private CategorieProduit categorieProduit;
 
-    // @Column(columnDefinition = "TIMESTAMP",nullable = true)
-    // private LocalDateTime dateAjout;
+    @Column(nullable = false)
+    private boolean hasAssociation = false;
 
     @Column(nullable = true)
     private String dateAjout;

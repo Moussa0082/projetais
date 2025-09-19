@@ -41,6 +41,8 @@ public class TypeActeur {
     @Column(nullable = true)
     private String dateModif;
 
+     @Column(nullable = false)
+    private boolean hasAssociation = false;
 
     @ManyToMany(mappedBy = "typeActeur")
     @JsonIgnore

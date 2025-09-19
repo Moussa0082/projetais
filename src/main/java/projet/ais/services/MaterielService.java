@@ -134,7 +134,7 @@ public class MaterielService {
     String zoneProduction = i.getPays(); // Exemple d'extraction de la localisation
     String contact = ac.getWhatsAppActeur();
     // Lien vers l'image ou la page du stock
-    String lienProduit = "https://koumi.ml/api-koumi/Materiel/" + i.getIdMateriel() + "/image";
+    String lienProduit = "http://api.koumi.ml/Materiel/" + i.getIdMateriel() + "/image";
     
     // Message de notification à envoyer
     String message = String.format(

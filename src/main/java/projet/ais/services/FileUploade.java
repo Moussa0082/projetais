@@ -20,8 +20,8 @@ public class FileUploade {
 
     private static final String FTP_SERVER = "ftp.koumi.ml";
     private static final int FTP_PORT = 21; // Mise à jour si nécessaire
-    private static final String FTP_USER = "default_koumi";
-    private static final String FTP_PASSWORD = "H8hd#e3KejJR";
+    private static final String FTP_USER = "admin_koumi.ml";
+    private static final String FTP_PASSWORD = "oMwCBwVpr*qyv";
     int retryCount = 3; 
     
     @Async
@@ -36,7 +36,7 @@ public class FileUploade {
                 ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
         
                 try (InputStream inputStream = Files.newInputStream(imagePath)) {
-                    String remoteFilePath = "/web/koumi-server/images/" + imageName; // Chemin d'acc                                                         ès complet sur le serveur FTP
+                    String remoteFilePath = "/web/api-koumi/images/" + imageName; // Chemin d'acc                                                         ès complet sur le serveur FTP
                     boolean uploadResult = ftpClient.storeFile(remoteFilePath, inputStream);
                     if (uploadResult) {
                         return "ftp://" + FTP_USER + "@" + FTP_SERVER + remoteFilePath; // Retourne le lien complet de l'image en ligne
@@ -62,7 +62,7 @@ public class FileUploade {
       // Méthode pour récupérer une image à partir de son nom
     public byte[] getImageByName(String imageName) throws IOException {
         // Chemin où les images sont stockées sur le serveur FTP
-        String imagePath = "/web/koumi-server/images/";
+        String imagePath = "/web/api-koumi/images/";
     
         // Télécharger l'image à partir du serveur FTP en utilisant son nom
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
@@ -106,7 +106,7 @@ public class FileUploade {
                 ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
         
                 try (InputStream inputStream = Files.newInputStream(audioPath)) {
-                    String remoteFilePath = "/web/koumi-server/audio/" + audioName; // Chemin d'accès complet sur le serveur FTP
+                    String remoteFilePath = "/web/api-koumi/audio/" + audioName; // Chemin d'accès complet sur le serveur FTP
                     boolean uploadResult = ftpClient.storeFile(remoteFilePath, inputStream);
                     if (uploadResult) {
                         return "ftp://" + FTP_USER + "@" + FTP_SERVER + remoteFilePath; // Retourne le lien complet du fichier audio en ligne
@@ -132,7 +132,7 @@ public class FileUploade {
     
     public byte[] getAudioByName(String audioName) throws IOException {
         // Chemin où les fichiers audio sont stockés sur le serveur FTP
-        String audioPath = "/web/koumi-server/audio/";
+        String audioPath = "/web/api-koumi/audio/";
     
         // Télécharger le fichier audio à partir du serveur FTP en utilisant son nom
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
@@ -178,7 +178,7 @@ public class FileUploade {
                 ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
         
                 try (InputStream inputStream = Files.newInputStream(videoPath)) {
-                    String remoteFilePath = "/web/koumi-server/videos/" + videoName;
+                    String remoteFilePath = "/web/api-koumi/videos/" + videoName;
                     // logger.info("Début du téléchargement de la video : {}", videoName);
                     boolean uploadResult = ftpClient.storeFile(remoteFilePath, inputStream);
                     if (uploadResult) {
@@ -205,7 +205,7 @@ public class FileUploade {
     
     public byte[] getVideoByName(String videoName) throws IOException {
         // Chemin où les vidéos sont stockées sur le serveur FTP
-        String videoPath = "/web/koumi-server/videos/";
+        String videoPath = "/web/api-koumi/videos/";
     
         // Télécharger la vidéo à partir du serveur FTP en utilisant son nom
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {

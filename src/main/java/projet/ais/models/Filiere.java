@@ -33,31 +33,13 @@ public class Filiere {
 
     @Column(nullable = true)
     private String dateModif;
-    // @Column(columnDefinition = "TIMESTAMP",nullable = true)
-    // private LocalDateTime dateAjout;
-
-    // @PrePersist
-    // public void prePersist() {
-    //     dateAjout = LocalDateTime.now();
-    // }
 
     @Column(nullable=true)
     private String personneModif;
 
-    // @Column(columnDefinition = "TIMESTAMP",nullable = true)
-    // private LocalDateTime dateModif;
+    @Column(nullable = false)
+    private boolean hasAssociation = false;
 
-    // public LocalDateTime updateDateModif(LocalDateTime dateModif) {
-    //     this.dateModif = dateModif;
-    //     return dateModif;
-    // }
-
-
-
-    // @ManyToOne
-    // @JoinColumn( name = "idActeur")
-    // private Acteur acteur;
-    
     @OneToMany
     (mappedBy = "filiere")
     @JsonIgnore

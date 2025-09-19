@@ -41,6 +41,9 @@ public class Materiels {
     @Column(nullable = false)
     private String localisation;
 
+    @Column(nullable = false)
+    private boolean hasAssociation = false;
+    
     @Column(nullable=true)
     private String personneModif;
     

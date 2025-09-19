@@ -28,6 +28,7 @@ import jakarta.validation.Valid;
 import projet.ais.models.Materiels;
 import projet.ais.models.Niveau1Pays;
 import projet.ais.models.Vehicule;
+import projet.ais.services.FileUploade;
 import projet.ais.repository.VehiculeRepository;
 import projet.ais.services.VehiculeService;
 
@@ -36,36 +37,35 @@ import projet.ais.services.VehiculeService;
 @RequestMapping("api-koumi/vehicule")
 public class VehiculeController {
 
-
     @Autowired
     private VehiculeService vehiculeService;
     @Autowired
     VehiculeRepository vehiculeRepository;
-
+    @Autowired
+    FileUploade fileUploade;
 
     @PostMapping("/create")
     @Operation(summary = "création d'un vehicule")
-     public ResponseEntity<Vehicule> createVehicule(
+    public ResponseEntity<Vehicule> createVehicule(
             @Valid @RequestParam("vehicule") String vehiculeString,
             @RequestParam(value = "image", required = false) MultipartFile imageFile)
             throws Exception {
-                
 
-                Vehicule vehicule = new Vehicule();
-                try {
-                    vehicule = new JsonMapper().readValue(vehiculeString, Vehicule.class);
-                } catch (JsonProcessingException e) {
-                    throw new Exception(e.getMessage());
-                }
-            
-                // je le cree et le sauvegarde.
-                Vehicule savedVehicule = vehiculeService.createVehicule(vehicule, imageFile);
-            
-                return new ResponseEntity<>(savedVehicule, HttpStatus.CREATED);
-            }
+        Vehicule vehicule = new Vehicule();
+        try {
+            vehicule = new JsonMapper().readValue(vehiculeString, Vehicule.class);
+        } catch (JsonProcessingException e) {
+            throw new Exception(e.getMessage());
+        }
 
- // Endpoint pour récupérer une image à partir de son nom
- @GetMapping("/{vehiculeId}/image")
+        // je le cree et le sauvegarde.
+        Vehicule savedVehicule = vehiculeService.createVehicule(vehicule, imageFile);
+
+        return new ResponseEntity<>(savedVehicule, HttpStatus.CREATED);
+    }
+
+    // Endpoint pour récupérer une image à partir de son nom
+    @GetMapping("/{vehiculeId}/image")
     public ResponseEntity<byte[]> getImage(@PathVariable String vehiculeId) {
         try {
             // Récupérer le nom de l'image associée au véhicule
@@ -78,66 +78,67 @@ public class VehiculeController {
             String imageName = vehicule.getPhotoVehicule();
 
             // Récupérer l'image à partir du serveur FTP
-            byte[] imageBytes = vehiculeService.getImageByName(imageName);
+            byte[] imageBytes = fileUploade.getImageByName(imageName);
 
             // Détecter le type de contenu de l'image en fonction de son extension
-        MediaType contentType = detectContentType(imageName);
+            MediaType contentType = detectContentType(imageName);
 
-        // Retourner l'image avec le type de contenu approprié
-        return ResponseEntity.ok()
-                .contentType(contentType)
-                .body(imageBytes);
-    } catch (IOException e) {
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-    }
-}
-
-private MediaType detectContentType(String imageName) {
-    String[] parts = imageName.split("\\.");
-    if (parts.length > 1) {
-        String extension = parts[parts.length - 1].toLowerCase();
-        switch (extension) {
-            case "jpg":
-            case "jpeg":
-                return MediaType.IMAGE_JPEG;
-            case "png":
-                return MediaType.IMAGE_PNG;
-            case "gif":
-                return MediaType.IMAGE_GIF;
-            // Ajoutez d'autres cas pour les types de contenu supplémentaires si nécessaire
-            default:
-                break;
+            // Retourner l'image avec le type de contenu approprié
+            return ResponseEntity.ok()
+                    .contentType(contentType)
+                    .body(imageBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-    // Par défaut, retourner MediaType.APPLICATION_OCTET_STREAM
-    return MediaType.APPLICATION_OCTET_STREAM;
-}
-             @PutMapping("/update/{id}")
-      @Operation(summary = "Mise à jour d'un vehicule ")
-      public ResponseEntity<Vehicule> updateVehicule(
-              @PathVariable String id,
-              @Valid @RequestParam("vehicule") String vehiculeString,
-              @RequestParam(value = "image", required = false)  MultipartFile imageFile){
-              Vehicule vehicule = new Vehicule();
-          try {
-               vehicule = new JsonMapper().readValue(vehiculeString, Vehicule.class);
-          } catch (JsonProcessingException e) {
-              return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-          }
 
-    try {
+    private MediaType detectContentType(String imageName) {
+        String[] parts = imageName.split("\\.");
+        if (parts.length > 1) {
+            String extension = parts[parts.length - 1].toLowerCase();
+            switch (extension) {
+                case "jpg":
+                case "jpeg":
+                    return MediaType.IMAGE_JPEG;
+                case "png":
+                    return MediaType.IMAGE_PNG;
+                case "gif":
+                    return MediaType.IMAGE_GIF;
+                // Ajoutez d'autres cas pour les types de contenu supplémentaires si nécessaire
+                default:
+                    break;
+            }
+        }
+        // Par défaut, retourner MediaType.APPLICATION_OCTET_STREAM
+        return MediaType.APPLICATION_OCTET_STREAM;
+    }
+
+    @PutMapping("/update/{id}")
+    @Operation(summary = "Mise à jour d'un vehicule ")
+    public ResponseEntity<Vehicule> updateVehicule(
+            @PathVariable String id,
+            @Valid @RequestParam("vehicule") String vehiculeString,
+            @RequestParam(value = "image", required = false) MultipartFile imageFile) {
+        Vehicule vehicule = new Vehicule();
+        try {
+            vehicule = new JsonMapper().readValue(vehiculeString, Vehicule.class);
+        } catch (JsonProcessingException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        try {
             Vehicule vehiculeMisAjour = vehiculeService.updateVehicule(vehicule, imageFile, id);
             return new ResponseEntity<>(vehiculeMisAjour, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-  
+
     }
 
     @PutMapping("/updateView/{id}")
     @Operation(summary = "Update view")
-    public ResponseEntity<Vehicule> updateViews(@PathVariable String id) throws Exception{
+    public ResponseEntity<Vehicule> updateViews(@PathVariable String id) throws Exception {
         return new ResponseEntity<>(vehiculeService.updateNbViev(id), HttpStatus.OK);
     }
 
@@ -152,94 +153,87 @@ private MediaType detectContentType(String imageName) {
     }
 
     @GetMapping("/getVehiculesByPaysAndTypeVoitureWithPagination")
-    public Page<Vehicule> getAllVehiculesPageableByPaysAndCategorie(@RequestParam String idTypeVoiture,  Pageable pageable) {
-        return vehiculeService.getAllVehiculePageableByPaysByCategorie(idTypeVoiture,  pageable);
+    public Page<Vehicule> getAllVehiculesPageableByPaysAndCategorie(@RequestParam String idTypeVoiture, Pageable pageable) {
+        return vehiculeService.getAllVehiculePageableByPaysByCategorie(idTypeVoiture, pageable);
     }
-
 
     @PutMapping("/update-pays")
     public String updatePaysForVehicules() {
-    vehiculeService.updatePaysForVehicule();
+        vehiculeService.updatePaysForVehicule();
         return "Mise à jour de la colonne pays pour tous les vehicules réussie";
     }
 
-
-       @GetMapping("/getAllVehiculesWithPagination")
+    @GetMapping("/getAllVehiculesWithPagination")
     public ResponseEntity<Page<Vehicule>> getVehicules(@RequestParam() int page,
-                                                  @RequestParam() int size) {
+            @RequestParam() int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Vehicule> vehicules = vehiculeService.getAllVehiculePageable(pageable);
         return ResponseEntity.ok().body(vehicules);
     }
-       @GetMapping("/getAllVehiculesByTypeVoitureWithPagination")
+
+    @GetMapping("/getAllVehiculesByTypeVoitureWithPagination")
     public ResponseEntity<Page<Vehicule>> getVehiculeByTypeVoitureWithPagination(
-        @RequestParam() String  idTypeVoiture,
-        @RequestParam() int page,
-                                                  @RequestParam() int size) {
+            @RequestParam() String idTypeVoiture,
+            @RequestParam() int page,
+            @RequestParam() int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Vehicule> vehicules = vehiculeService.getVehiculeByTypeVoitureWithPagination(idTypeVoiture,pageable);
+        Page<Vehicule> vehicules = vehiculeService.getVehiculeByTypeVoitureWithPagination(idTypeVoiture, pageable);
         return ResponseEntity.ok().body(vehicules);
     }
-
 
     @GetMapping("/getAllVehiculesByActeurWithPagination")
     public ResponseEntity<Page<Vehicule>> getVehiculeByActeurWithPagination(
-        @RequestParam() String  idActeur,
-        @RequestParam() int page,
-        @RequestParam() int size) {
+            @RequestParam() String idActeur,
+            @RequestParam() int page,
+            @RequestParam() int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Vehicule> vehicules = vehiculeService.getVehiculeByActeurWithPagination(idActeur,pageable);
+        Page<Vehicule> vehicules = vehiculeService.getVehiculeByActeurWithPagination(idActeur, pageable);
         return ResponseEntity.ok().body(vehicules);
     }
+    //liste vehicule
 
-
-         //liste vehicule
     @GetMapping("/listeVehiculeByActeur/{id}")
     @Operation(summary = "affichage de la liste des vehicules par acteur")
-    public ResponseEntity<List<Vehicule>> listeVehiculeByActeur(@PathVariable String id){
-        return  new ResponseEntity<>(vehiculeService.getAllVehiculeByActeur(id), HttpStatus.OK);
+    public ResponseEntity<List<Vehicule>> listeVehiculeByActeur(@PathVariable String id) {
+        return new ResponseEntity<>(vehiculeService.getAllVehiculeByActeur(id), HttpStatus.OK);
     }
 
     @GetMapping("/listeVehiculeByType/{id}")
     @Operation(summary = "affichage de la liste des vehicules par type")
-    public ResponseEntity<List<Vehicule>> listeVehiculeByTypes(@PathVariable String id){
-        return  new ResponseEntity<>(vehiculeService.getVehiculesByTypeVoiture(id), HttpStatus.OK);
+    public ResponseEntity<List<Vehicule>> listeVehiculeByTypes(@PathVariable String id) {
+        return new ResponseEntity<>(vehiculeService.getVehiculesByTypeVoiture(id), HttpStatus.OK);
     }
-                 // Get Liste des  vehicules
-      @GetMapping("/read")
-      @Operation(summary = "Liste globale des vehicules")
+
+    @GetMapping("/read")
+    @Operation(summary = "Liste globale des vehicules")
     public ResponseEntity<List<Vehicule>> getAllVehicule() {
         return new ResponseEntity<>(vehiculeService.getAllVehicules(), HttpStatus.OK);
     }
 
-
     @PutMapping("/disable/{id}")
     //Desactiver un vehicule methode
     @Operation(summary = "Désactiver un vehicule ")
-    public ResponseEntity <String> disableVehicule(@PathVariable String id) throws Exception{
-    
+    public ResponseEntity<String> disableVehicule(@PathVariable String id) throws Exception {
+
         vehiculeService.desactive(id);
         return new ResponseEntity<>("Vehicule desactiver avec succes", HttpStatus.ACCEPTED);
     }
 
     //Aciver admin
-      @PutMapping("/enable/{id}")
+    @PutMapping("/enable/{id}")
     //Desactiver un admin methode
     @Operation(summary = "Activer acteur ")
-    public ResponseEntity <String> enableVehicule(@PathVariable String id) throws Exception{
-    
+    public ResponseEntity<String> enableVehicule(@PathVariable String id) throws Exception {
+
         vehiculeService.active(id);
         return new ResponseEntity<>("Vehicule activer avec succes", HttpStatus.ACCEPTED);
     }
+    //Supprimer un acteur
 
-
-             //Supprimer un acteur
-           @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression d'un vehicule")
-    public ResponseEntity<String> deleteVehicule(@PathVariable String id){
+    public ResponseEntity<String> deleteVehicule(@PathVariable String id) {
         return new ResponseEntity<>(vehiculeService.deleteVehicule(id), HttpStatus.OK);
     }
 
-
-    
 }

@@ -34,7 +34,7 @@ import projet.ais.services.MaterielService;
 @RestController
 @RequestMapping("api-koumi/Materiel")
 public class MaterielController {
-    
+
     @Autowired
     MaterielService materielService;
     @Autowired
@@ -66,8 +66,9 @@ public class MaterielController {
     public ResponseEntity<Materiels> updateViews(@PathVariable String id) throws Exception{
         return new ResponseEntity<>(materielService.updateNbViev(id), HttpStatus.OK);
     }
+
     @GetMapping("/{materielId}/image")
-public ResponseEntity<byte[]> getImage(@PathVariable String materielId) {
+    public ResponseEntity<byte[]> getImage(@PathVariable String materielId) {
     try {
         // Récupérer le nom de l'image associée au véhicule
         Materiels materiel =  materielRepository.findByIdMateriel(materielId);
@@ -206,7 +207,6 @@ private MediaType detectContentType(String imageName) {
         return "Mise à jour de la colonne pays pour tous les materiels réussie";
     }
 
-    
     @PutMapping("/update/{id}")
     @Operation(summary = "Modification du materiel")
     public ResponseEntity<Materiels> updatedMateriel(

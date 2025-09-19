@@ -62,7 +62,7 @@ public class MagasinService {
 
         if(acteur == null)
             throw new IllegalStateException("Aucun acteur disponible");
-        
+
         if (imageFile != null) {
             String imageLocation = "/ais";
                 try {
@@ -70,7 +70,7 @@ public class MagasinService {
                     if (!Files.exists(imageRootLocation)) {
                         Files.createDirectories(imageRootLocation);
                     }
-    
+
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);

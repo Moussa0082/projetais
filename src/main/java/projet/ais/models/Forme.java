@@ -32,6 +32,9 @@ public class Forme {
     @Column(nullable = true)
     private String dateAjout;
 
+    @Column(nullable = false)
+    private boolean hasAssociation = false;
+
     @OneToMany
     (mappedBy = "forme")
     @JsonIgnore

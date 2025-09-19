@@ -95,14 +95,14 @@ public class StockService {
     AbonnementRepository aRepository;
     @Autowired
     HistoriqueService historiqueService;
-    
+
     public Stock createStock(Stock stock, MultipartFile imageFile) throws Exception {
         Unite unite = uniteRepository.findByIdUnite(stock.getUnite().getIdUnite());
         Magasin magasin = magasinRepository.findByIdMagasin(stock.getMagasin().getIdMagasin());
         Acteur acteur = acteurRepository.findByIdActeur(stock.getActeur().getIdActeur());
         Speculation speculation = speculationRepository.findByIdSpeculation(stock.getSpeculation().getIdSpeculation());
         ZoneProduction zoneProduction = zoneProductionRepository.findByidZoneProduction(stock.getZoneProduction().getIdZoneProduction());
-        
+
         if(zoneProduction == null)
             throw new IllegalStateException("Aucune zone production trouvé");
         if(speculation == null)
@@ -113,6 +113,32 @@ public class StockService {
             throw new IllegalStateException("Aucun magasin trouvé");
         if(acteur == null)
             throw new IllegalStateException("Aucun acteur trouvé");
+
+         // Mettre à jour hasAssociation si ce n'est pas déjà fait
+        if (!acteur.isHasAssociation()) {
+            acteur.setHasAssociation(true);
+            acteurRepository.save(acteur);
+        }
+
+        if (!magasin.isHasAssociation()) {
+            magasin.setHasAssociation(true);
+            magasinRepository.save(magasin);
+        }
+
+        if (!unite.isHasAssociation()) {
+            unite.setHasAssociation(true);
+            uniteRepository.save(unite);
+        }
+
+        if (!speculation.isHasAssociation()) {
+            speculation.setHasAssociation(true);
+            speculationRepository.save(speculation);
+        }
+
+        if (!zoneProduction.isHasAssociation()) {
+            zoneProduction.setHasAssociation(true);
+            zoneProductionRepository.save(zoneProduction);
+        }
 
             if (imageFile != null) {
                 String imageLocation = "/ais";
@@ -161,7 +187,7 @@ public class StockService {
      historiqueService.createHistorique("Création" , st.getNomProduit() ,st.getActeur().getNomActeur(), st.getActeur().getLocaliteActeur(),st.getActeur().getNiveau3PaysActeur(),"Création de produit " + st.getNomProduit());
         return st;
     }
-    
+
 
 
     private String generateQRCodeData(Stock stock) {
@@ -314,7 +340,7 @@ private String generateQRCodeImage(String qrCodeData) {
 
                   // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
                   String mes = "Bonjour M. " + acteur.getNomActeur() + " M. " +  ac.getNomActeur() + " habitant à " + ac.getAdresseActeur() + " vient d'ajouter un produit au stock: " 
-                      + stock.getNomProduit() + "\n\n Lien vers le produit est : " + "https://koumi.ml/api-koumi/Stock/"+stock.getIdStock()+"/image";
+                      + stock.getNomProduit() + "\n\n Lien vers le produit est : " + "http://api.koumi.ml/Stock/"+stock.getIdStock()+"/image";
                       try {
                           messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  acteur);
                       } catch (Exception e) {
@@ -364,7 +390,7 @@ private String generateQRCodeImage(String qrCodeData) {
     String contact = ac.getWhatsAppActeur();
     
     // Lien vers l'image ou la page du stock
-    String lienProduit = "https://koumi.ml/api-koumi/Stock/" + stock.getIdStock() + "/image";
+    String lienProduit = "http://api.koumi.ml/Stock/" + stock.getIdStock() + "/image";
     
     // Message de notification à envoyer
     String message = String.format(
@@ -411,7 +437,7 @@ private String generateQRCodeImage(String qrCodeData) {
             
             // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
             String mes = "Bonjour M. " + acteur.getNomActeur() + " M. " +  ac.getNomActeur() + " habitant à " + ac.getAdresseActeur() + " vient d'ajouter un produit au stock: " 
-                + stock.getNomProduit() + "\n \n Lien vers le produit est : " + "https://koumi.ml/api-koumi/Stock/"+stock.getIdStock()+"/image";
+                + stock.getNomProduit() + "\n \n Lien vers le produit est : " + "http://api.koumi.ml/Stock/"+stock.getIdStock()+"/image";
                 try {
                     Alerte alerte = new Alerte(acteur.getEmailActeur(), mes, "Nouveau produit");
                     emailService.sendSimpleMail(alerte);

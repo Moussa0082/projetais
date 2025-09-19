@@ -60,6 +60,9 @@ public class Intrant {
     @Column(nullable=true)
     private String pays;
 
+    @Column(nullable = false)
+    private boolean hasAssociation = false;
+
     @Column(nullable=true)
     private String unite;
 

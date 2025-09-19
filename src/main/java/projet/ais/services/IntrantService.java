@@ -78,12 +78,13 @@ public class IntrantService {
     
      //créer un intrant
       public Intrant createIntrant(Intrant intrant, MultipartFile imageFile) throws Exception {
-        // Intrant it = intrantRepository.findByIdIntrant(intrant.getIdIntrant());
-        // if(it != null){
-        //     throw new IllegalArgumentException("Un intrant avec l'id " + it + " existe déjà");
-        // }
-
+    
         Acteur acteur = acteurRepository.findByIdActeur(intrant.getActeur().getIdActeur());
+
+        if (!acteur.isHasAssociation()) {
+            acteur.setHasAssociation(true);
+            acteurRepository.save(acteur);
+        }
 
         if(acteur == null)
             throw new EntityNotFoundException("Aucun acteur trouvé");
@@ -162,7 +163,7 @@ public class IntrantService {
     String zoneProduction = i.getPays(); // Exemple d'extraction de la localisation
     String contact = ac.getWhatsAppActeur();
     // Lien vers l'image ou la page du stock
-    String lienProduit = "https://koumi.ml/api-koumi/intrant/" + i.getIdIntrant() + "/image";
+    String lienProduit = "http://api.koumi.ml/intrant/" + i.getIdIntrant() + "/image";
     
     // Message de notification à envoyer
     String message = String.format(
@@ -206,7 +207,7 @@ public class IntrantService {
             if (ac != acteur) {
                 
                 // Envoyer le message uniquement aux autres acteurs, pas à celui qui a ajouté le stock et pas aux transporteurs
-                String mes = "Bonjour " + acteur.getNomActeur().toUpperCase() + " Un nouveau produit de type intrant vient d'être ajouté " + " Nom : " + intrant.getNomIntrant() + "\n\n Lien vers le produit est : " + "https://koumi.ml/api-koumi/intrant/"+intrant.getIdIntrant()+"/image";;
+                String mes = "Bonjour " + acteur.getNomActeur().toUpperCase() + " Un nouveau produit de type intrant vient d'être ajouté " + " Nom : " + intrant.getNomIntrant() + "\n\n Lien vers le produit est : " + "http://api.koumi.ml/intrant/"+intrant.getIdIntrant()+"/image";;
                     try {
                         messageService.sendMessageAndSave(acteur.getWhatsAppActeur(), mes,  acteur);
                     } catch (Exception e) {

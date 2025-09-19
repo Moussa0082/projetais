@@ -34,6 +34,9 @@ public class SousRegion {
     @Column(nullable = true)
     private String personneModif;
 
+    @Column(nullable = false)
+    private boolean hasAssociation = false;
+
     // @PrePersist
     // public void prePersist() {
     //     dateAjout = LocalDateTime.now();

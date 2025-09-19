@@ -37,6 +37,9 @@ public class Niveau3Pays {
     @Column(nullable = true)
     private String dateModif;
 
+    @Column(nullable = false)
+    private boolean hasAssociation = false;
+
     @ManyToOne
     @JoinColumn( name = "idNiveau2Pays") 
     private  Niveau2Pays niveau2Pays;

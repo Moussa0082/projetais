@@ -1,6 +1,5 @@
 package projet.ais.models;
 
-
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,7 +14,8 @@ import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Entity
-@Data 
+@Data
+
 public class Unite {
 
     @Id
@@ -30,7 +30,7 @@ public class Unite {
 
     @Column(nullable = true)
     private String sigleUnite;
-
+ 
     @Column(nullable = true,columnDefinition = "TEXT")
     private String description;
 
@@ -39,20 +39,24 @@ public class Unite {
 
     @Column(nullable = true)
     private String dateModif;
-    
+
     @Column(nullable = false)
     private boolean statutUnite = true;
-
+  
     @Column(nullable=true)
     private String personneModif;
-    
+
+    @Column(nullable = false)
+    private boolean hasAssociation = false;
+
     @ManyToOne
     @JoinColumn( name = "idActeur")
     private Acteur acteur;
-    
+
     @OneToMany
     (mappedBy = "unite" , cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Stock> stockList;
+
 }
 

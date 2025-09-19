@@ -29,8 +29,6 @@ public class CategorieProduit {
 
     @Column(nullable = false)
     private boolean statutCategorie = true;
-    
-   
 
     @Column(nullable=true)
     private String personneModif;
@@ -40,6 +38,9 @@ public class CategorieProduit {
 
     @Column(nullable = true)
     private String dateModif;
+
+    @Column(nullable = false)
+    private boolean hasAssociation = false;
 
     @OneToMany
     (mappedBy = "categorieProduit")
@@ -54,16 +55,6 @@ public class CategorieProduit {
     (mappedBy = "categorieProduit")
     @JsonIgnore
     private List<Intrant> intrants;
-
-    // @OneToMany
-    // (mappedBy = "categorieProduit")
-    // private List<Magasin> magasin;
-
-
-
-    // @ManyToOne
-    // @JoinColumn(name = "idActeur")
-    // private Acteur acteur;
 
     public CategorieProduit() {
         // Constructeur par défaut
