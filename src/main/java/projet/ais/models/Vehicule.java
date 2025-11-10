@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 @Data
@@ -17,10 +18,12 @@ public class Vehicule {
     @Id
     private String idVehicule;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String nomVehicule;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String capaciteVehicule;
 
     @Column(nullable = true)
@@ -32,7 +35,8 @@ public class Vehicule {
     @Column(nullable = true)
     private int nbKilometrage;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean hasAssociation = false;
 
     @Convert(converter = MapToJsonConverter.class)
@@ -48,7 +52,8 @@ public class Vehicule {
     @Column(nullable = true)
     private String photoVehicule;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String localisation;
 
     @Column(nullable = true)
@@ -57,13 +62,15 @@ public class Vehicule {
     @Column(nullable = true)
     private String dateModif;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String etatVehicule;
 
     @Column(nullable = true)
     private String personneModif;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private int nbreView = 0;
 
     @ManyToOne

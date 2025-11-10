@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 @Data
@@ -19,10 +20,12 @@ public class TypeMateriel {
     @Id
     private String idTypeMateriel;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String codeTypeMateriel;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String nom;
 
     @Column(nullable = true, columnDefinition = "TEXT")
@@ -34,10 +37,12 @@ public class TypeMateriel {
     @Column(nullable = true)
     private String dateModif;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean statutType = true;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean hasAssociation = false;
 
     @OneToMany

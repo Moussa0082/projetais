@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -19,19 +20,22 @@ public class Campagne {
     @Id
     private String idCampagne;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String codeCampagne;
    
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String nomCampagne;
 
-    @Column(nullable = false ,columnDefinition = "TEXT")
+    @Column(nullable = true ,columnDefinition = "TEXT")
     private String description;
 
     @Column(nullable=true)
     private String personneModif;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean statutCampagne = true;
 
     @Column(nullable = true)
@@ -40,7 +44,7 @@ public class Campagne {
     @Column(nullable = true)
     private String dateModif;
     
-    @Column(nullable = false)
+    @Column(nullable = true)
     private boolean hasAssociation = false;
 
     @OneToMany(mappedBy = "campagne")

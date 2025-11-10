@@ -7,6 +7,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -41,13 +42,16 @@ public class Acteur {
     @Column(nullable = true)
     private String codeActeur;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String nomActeur;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String adresseActeur;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String telephoneActeur;
 
     @Column(nullable = true)
@@ -69,7 +73,8 @@ public class Acteur {
     private String niveau3PaysActeur;
 
     
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String password;
 
 
@@ -83,7 +88,8 @@ public class Acteur {
     @Column(nullable=true)
     private String personneModif;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String localiteActeur;
 
     @Column(nullable = true)
@@ -93,7 +99,8 @@ public class Acteur {
 
     private Boolean isConnected;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean hasAssociation = false;
     
     @ManyToOne

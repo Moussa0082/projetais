@@ -2,6 +2,7 @@ package projet.ais.models;
 
 import java.time.LocalDateTime;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -20,7 +21,8 @@ public class Conseil {
     @Column(nullable = true)
     private String codeConseil;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String titreConseil;
 
     @Column(nullable = true)

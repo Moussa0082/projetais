@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 @Data

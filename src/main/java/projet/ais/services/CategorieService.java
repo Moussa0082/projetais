@@ -54,11 +54,15 @@ public class CategorieService {
             filiereRepository.save(filiere);
         }
 
-        if(categorieProduits != null)
-            throw new DuplicateRequestException("Cette catégorie existe déjà");
+        if(categorieProduits != null){
+            new DuplicateRequestException("Cette catégorie existe déjà");
+        }
+            
         
-        if(filiere == null)
-            throw new EntityNotFoundException("Ce filiere n'existe pas");
+        if(filiere == null){
+            new EntityNotFoundException("Ce filiere n'existe pas");
+        }
+            
         
             String codes = codeGenerator.genererCode();
             String Idcodes = idGenerator.genererCode();

@@ -3,6 +3,8 @@ package projet.ais.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,16 +18,19 @@ public class Filiere {
     @Id
     private String idFiliere;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String codeFiliere;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String libelleFiliere;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = true, columnDefinition = "TEXT")
     private String descriptionFiliere;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean statutFiliere = true;
     
     @Column(nullable = true)
@@ -37,7 +42,8 @@ public class Filiere {
     @Column(nullable=true)
     private String personneModif;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean hasAssociation = false;
 
     @OneToMany

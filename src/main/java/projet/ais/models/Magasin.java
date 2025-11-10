@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 
 @Entity
@@ -18,10 +19,12 @@ public class Magasin {
     @Id
     private String idMagasin;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String codeMagasin;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String nomMagasin;
 
     @Column(nullable = true)
@@ -30,16 +33,19 @@ public class Magasin {
     @Column(nullable = true)
     private String longitude;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String localiteMagasin;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String contactMagasin;
 
     @Column(nullable=true)
     private String personneModif;
     
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean statutMagasin = true;
 
     @Column(nullable = true)
@@ -51,13 +57,15 @@ public class Magasin {
     @Column(nullable = true)
     private String photo;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean hasAssociation = false;
 
     @Column(nullable = true)
     private String pays;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private int nbreView = 0 ;
 
     @ManyToOne

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -17,22 +18,26 @@ public class Forme {
     @Id
     private String idForme;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String codeForme;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String libelleForme;
 
-    @Column(nullable = false ,columnDefinition = "TEXT")
+    @Column(nullable = true ,columnDefinition = "TEXT")
     private String descriptionForme;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean statutForme = true;
     
     @Column(nullable = true)
     private String dateAjout;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean hasAssociation = false;
 
     @OneToMany

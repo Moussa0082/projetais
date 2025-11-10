@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
             message = "Opération impossible : l’élément que vous essayez de supprimer est référencé par une autre entité.";
         } else {
             // Fallback pour toute autre erreur
-            message = "Erreur inattendue : ";
+            message = "Erreur inattendue : " + rawMessage;
         }
 
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, message);

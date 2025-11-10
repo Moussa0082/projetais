@@ -11,6 +11,7 @@ import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
@@ -24,16 +25,20 @@ public class Intrant {
     @Id
     private String idIntrant;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String nomIntrant;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private double quantiteIntrant;
     
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String codeIntrant;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private int prixIntrant;
     
     @Column(nullable = true , columnDefinition = "TEXT")
@@ -60,7 +65,8 @@ public class Intrant {
     @Column(nullable=true)
     private String pays;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean hasAssociation = false;
 
     @Column(nullable=true)

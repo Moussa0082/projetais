@@ -3,6 +3,8 @@ package projet.ais.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,16 +20,19 @@ public class CategorieProduit {
     @Id
     private String idCategorieProduit;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String codeCategorie;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String libelleCategorie;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = true, columnDefinition = "TEXT")
     private String descriptionCategorie;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean statutCategorie = true;
 
     @Column(nullable=true)
@@ -39,7 +44,8 @@ public class CategorieProduit {
     @Column(nullable = true)
     private String dateModif;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean hasAssociation = false;
 
     @OneToMany

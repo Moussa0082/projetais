@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 @Data
@@ -24,13 +25,15 @@ public class Speculation {
     @Column(nullable = true)
     private String codeSpeculation;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String nomSpeculation;
 
-    @Column(nullable = false ,columnDefinition = "TEXT")
+    @Column(nullable = true ,columnDefinition = "TEXT")
     private String descriptionSpeculation;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean statutSpeculation = true;
 
     @ManyToOne
@@ -59,11 +62,6 @@ public class Speculation {
     (mappedBy = "speculation")
     @JsonIgnore
     private List<Materiels> materielList;
-
-    // @OneToMany
-    // (mappedBy = "speculation")
-    // @JsonIgnore
-    // private List<Intrant> intrants;
 
     @ManyToMany(mappedBy = "speculation")
     @JsonIgnore

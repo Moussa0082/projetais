@@ -3,7 +3,7 @@ package projet.ais.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -15,20 +15,23 @@ public class Niveau3Pays {
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idNiveau3Pays;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String codeN3;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String nomN3;
 
-    @Column(nullable = false,columnDefinition = "TEXT")
+    @Column(nullable = true,columnDefinition = "TEXT")
     private String descriptionN3;
 
 
     @Column(nullable = true)
     private String personneModif;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean statutN3 = true;
 
     @Column(nullable = true)
@@ -37,7 +40,8 @@ public class Niveau3Pays {
     @Column(nullable = true)
     private String dateModif;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean hasAssociation = false;
 
     @ManyToOne

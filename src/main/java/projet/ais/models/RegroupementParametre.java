@@ -13,6 +13,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 @Data
@@ -22,10 +23,12 @@ public class RegroupementParametre {
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idRegroupementParametre;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String libelleRegroupement;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String description;
 
     @Column(nullable = true)
@@ -34,7 +37,8 @@ public class RegroupementParametre {
     @Column(nullable = true)
     private String dateModif;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean statutRegroupement = true;
 
     @ManyToMany(fetch = FetchType.EAGER)

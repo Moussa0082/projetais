@@ -39,7 +39,7 @@ public class SpeculationService {
     CodeGenerator codeGenerator;
     @Autowired
     IdGenerator idGenerator ;
-       @Autowired
+    @Autowired
     ActeurRepository acteurRepository;
 
     public Speculation createSpeculation(Speculation speculation){
@@ -47,16 +47,20 @@ public class SpeculationService {
         CategorieProduit categorieProduit = categorieProduitRepository.findByIdCategorieProduit(speculation.getCategorieProduit().getIdCategorieProduit());
         Speculation speculations = speculationRepository.findBynomSpeculation(speculation.getNomSpeculation());
 
-       if (!speculations.isHasAssociation()) {
-            speculations.setHasAssociation(true);
-            speculationRepository.save(speculations);
-        }
+    //    if (!speculations.isHasAssociation()) {
+    //         speculations.setHasAssociation(true);
+    //         speculationRepository.save(speculations);
+    //     }
     
-        if(categorieProduit == null)
-            throw new EntityNotFoundException("Cette categorie n'existe pas");
+        if(categorieProduit == null){
+            new EntityNotFoundException("Cette categorie n'existe pas");
+        }
+            
 
-        if(speculations != null)
-            throw new DuplicateRequestException("Cette speculation existe déjà");
+        if(speculations != null){
+            new DuplicateRequestException("Cette speculation existe déjà");
+            }
+            
         
             String codes = codeGenerator.genererCode();
             String idcodes = idGenerator.genererCode();

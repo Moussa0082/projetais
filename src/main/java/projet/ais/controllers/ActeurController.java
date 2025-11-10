@@ -195,6 +195,7 @@ public class ActeurController {
         String monnaie = acteurService.getMonnaiePaysForActeur(id);
         return ResponseEntity.ok(monnaie);
     }
+
     @GetMapping("/getActeurByCritereWithPagination")
     @Operation(summary = "Recuperer les acteurs par critères")
     public ResponseEntity<Page<Acteur>> getStocksWithCritere(
@@ -217,29 +218,6 @@ public class ActeurController {
     }
 
 
-            // @PostMapping("/{idActeur}/types")
-            // public ResponseEntity<Acteur> addTypesToActeur(@PathVariable String idActeur,
-            //                                                 @RequestBody Map<String, Object> requestBody) throws Exception {
-            //     // Récupérer la liste des typeActeurs de la requête
-            //     List<Map<String, String>> typeActeursMapList = (List<Map<String, String>>) requestBody.get("typeActeurs");
-                
-            //     // Convertir la liste des typeActeurs de la requête en une liste de TypeActeur
-            //     List<TypeActeur> typeActeurs = new ArrayList<>();
-            //     for (Map<String, String> typeActeurMap : typeActeursMapList) {
-            //         TypeActeur typeActeur = new TypeActeur();
-            //         typeActeur.setIdTypeActeur(typeActeurMap.get("idTypeActeur"));
-            //         typeActeurs.add(typeActeur);
-            //     }
-            
-            //     // Appeler la méthode de service pour ajouter les types d'acteur à l'acteur
-            //     Acteur acteur = acteurService.addTypesToActeur(idActeur, typeActeurs);
-                
-            //     // Retourner la réponse appropriée
-            //     if (acteur == null) {
-            //         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            //     }
-            //     return new ResponseEntity<>(acteur, HttpStatus.OK);
-            // }
             @PostMapping("/{idActeur}/types")
             public ResponseEntity<Acteur> addTypesToActeur(@PathVariable String idActeur,
                                                             @RequestBody Map<String, Object> requestBody) throws Exception {
@@ -271,9 +249,6 @@ public class ActeurController {
                 return new ResponseEntity<>(acteur, HttpStatus.OK);
             }
             
-
-            
-
 
     @GetMapping("/sendOtpCodeEmail")
     @Operation(summary = "Verifier l'email de l'utilisateur en lui envoyant un code de verification à son adresse email pour la procedure de changement de son mot de pass")
@@ -407,15 +382,7 @@ public class ActeurController {
         }
     }
 
-    // @PostMapping("/send-message-to-admin")
-    // public ResponseEntity<String> sendMessageToAdmin(@RequestParam String message, @RequestParam String acteur ) {
-    //     try {
-    //         acteurService.sendMessageWaToAdmin(message, acteur);
-    //         return new ResponseEntity<>("Message sent to admin successfully", HttpStatus.ACCEPTED);
-    //     } catch (Exception e) {
-    //         return new ResponseEntity<>("Failed to send message to admin: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    //     }
-    // }
+
 
     @GetMapping("/send-email-to-all-checked-choose")
     public ResponseEntity<String> sendMailToAllUserCheckedChoose(@RequestParam ("emails") List<String> emails, @RequestParam("sujet")String sujet, @RequestParam("message")String message, @RequestParam("libelle")List<String> libelle) {

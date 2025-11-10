@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 @Data
@@ -29,7 +30,8 @@ public class Stock {
 
     private String dateProduction;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private double quantiteStock;
 
     @Column(nullable = true)
@@ -67,7 +69,8 @@ public class Stock {
     @Column(nullable=true)
     private String pays;
     
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean statutSotck = true;
 
     @Column(nullable = true)

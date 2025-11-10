@@ -16,7 +16,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import lombok.Data;
 import java.util.List;
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.annotations.ManyToAny;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -29,34 +29,43 @@ public class ParametreFiche {
     @Id
     private String idParametreFiche;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String classeParametre;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String champParametre;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String codeParametre;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String libelleParametre;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String typeDonneeParametre;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private List<String> listeDonneeParametre;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private int valeurMax;
 
     @Column(nullable = true)
     private String personneModif;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private int valeurMin;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private int valeurObligatoire;
 
     @Column(nullable = true)
@@ -65,10 +74,12 @@ public class ParametreFiche {
     @Column(nullable = true)
     private String dateModif;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String critereChampParametre;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean statutParametre = true;
 
     @ManyToMany(mappedBy = "parametreFiche")

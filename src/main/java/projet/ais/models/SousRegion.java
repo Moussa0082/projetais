@@ -4,7 +4,7 @@ package projet.ais.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -16,13 +16,16 @@ public class SousRegion {
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idSousRegion;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String codeSousRegion;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String nomSousRegion;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean statutSousRegion = true;
 
     @Column(nullable = true)
@@ -34,7 +37,8 @@ public class SousRegion {
     @Column(nullable = true)
     private String personneModif;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean hasAssociation = false;
 
     // @PrePersist

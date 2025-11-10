@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 @Data
@@ -18,28 +19,31 @@ public class Superficie {
     @Id
     private String idSuperficie;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String codeSuperficie;
 
-   
-
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String localite;
 
     @Column(nullable=true)
     private String personneModif;
     
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String superficieHa; 
     
     @Column(nullable = true,columnDefinition = "TEXT")
     private String description;
 
     
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean statutSuperficie = true;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String dateSemi;
 
     // @Column(columnDefinition = "TIMESTAMP")
@@ -57,7 +61,8 @@ public class Superficie {
     @ManyToOne
     private Acteur acteur;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private List<String> intrants;
 
 

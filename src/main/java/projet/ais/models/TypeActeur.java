@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -20,16 +20,18 @@ public class TypeActeur {
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idTypeActeur;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String libelle;
     
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String codeTypeActeur;
 
     @Column(nullable = true)
     private boolean statutTypeActeur;
 
-    @Column(nullable = false,columnDefinition = "TEXT")
+    @Column(nullable = true,columnDefinition = "TEXT")
     private String descriptionTypeActeur;
 
     @Column(nullable = true)
@@ -41,7 +43,8 @@ public class TypeActeur {
     @Column(nullable = true)
     private String dateModif;
 
-     @Column(nullable = false)
+     @Schema(required = true)
+@Column(nullable = false)
     private boolean hasAssociation = false;
 
     @ManyToMany(mappedBy = "typeActeur")

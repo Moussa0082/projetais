@@ -1,5 +1,6 @@
 package projet.ais.models;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -15,7 +16,8 @@ public class Alertes {
     @Column(nullable = true)
     private String codeAlerte;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String titreAlerte;
 
     @Column(nullable = true)

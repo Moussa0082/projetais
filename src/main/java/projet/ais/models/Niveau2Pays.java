@@ -5,7 +5,7 @@ package projet.ais.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -17,19 +17,22 @@ public class Niveau2Pays {
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idNiveau2Pays;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String codeN2;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String nomN2;
 
     @Column(nullable = true)
     private String personneModif;
 
-    @Column(nullable = false,columnDefinition = "TEXT")
+    @Column(nullable = true,columnDefinition = "TEXT")
     private String descriptionN2;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean statutN2 = true;
     @Column(nullable = true)
     private String dateAjout;
@@ -37,7 +40,8 @@ public class Niveau2Pays {
     @Column(nullable = true)
     private String dateModif;
 
-     @Column(nullable = false)
+     @Schema(required = true)
+@Column(nullable = false)
     private boolean hasAssociation = false;
 
     @ManyToOne

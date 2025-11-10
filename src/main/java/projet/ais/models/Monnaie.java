@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 @Data
@@ -17,13 +18,16 @@ public class Monnaie {
     @Id
     private String idMonnaie;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String codeMonnaie;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String libelle;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String sigle;
 
     @Column(nullable = true)
@@ -32,10 +36,12 @@ public class Monnaie {
     @Column(nullable = true)
     private String dateModif;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean statut = true;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean hasAssociation = false;
 
     @OneToMany(mappedBy = "monnaie")

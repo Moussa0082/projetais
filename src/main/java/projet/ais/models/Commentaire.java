@@ -2,6 +2,7 @@ package projet.ais.models;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -21,7 +22,8 @@ public class Commentaire{
      @Column(nullable = true)
     private String dateAjout;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String acteur;
 
 }

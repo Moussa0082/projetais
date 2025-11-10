@@ -1,5 +1,6 @@
 package projet.ais.models;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -13,16 +14,20 @@ public class Device {
     @Id
     private String idDevice;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String codeDevice;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String nomDevice;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String sigle;
     
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private double taux;
 
     @Column(nullable = true)
@@ -31,7 +36,8 @@ public class Device {
     @Column(nullable = true)
     private String dateModif;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean statut = true;
 
 

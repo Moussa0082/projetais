@@ -3,15 +3,9 @@ package projet.ais.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Data;
-
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 @Data
@@ -20,28 +14,34 @@ public class Materiels {
     @Id
     private String idMateriel;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String codeMateriel;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private int prixParHeure;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String nom;
     
-    @Column(nullable = false,columnDefinition = "TEXT")
+    @Column(nullable = true,columnDefinition = "TEXT")
     private String description;
     
     @Column(nullable = true)
     private String photoMateriel;
     
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String etatMateriel;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String localisation;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean hasAssociation = false;
     
     @Column(nullable=true)
@@ -63,7 +63,8 @@ public class Materiels {
     @Column(nullable = true)
     private String dateModif;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private int nbreView = 0;
 
     @ManyToOne

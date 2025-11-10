@@ -7,6 +7,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 @Data
@@ -16,37 +17,45 @@ public class ParametreGeneraux {
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idParametreGeneraux;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String sigleStructure;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String nomStructure;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String sigleSysteme;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String nomSysteme;
 
     @Column(nullable = false,columnDefinition = "TEXT")
     private String descriptionSysteme;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String sloganSysteme;
 
     @Column(nullable = true)
     private String logoSysteme;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String adresseStructure;
 
     @Column(nullable = true)
     private String personneModif;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String emailStructure;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String telephoneStructure;
 
     @Column(nullable = true)
@@ -61,10 +70,12 @@ public class ParametreGeneraux {
     // @Column(nullable = true)
     // private String libelleNiveau3Pays;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String codeNiveauStructure;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String localiteStructure;
 
     // @Column(nullable = true)

@@ -3,7 +3,7 @@ package projet.ais.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,16 +15,20 @@ public class ZoneProduction {
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idZoneProduction;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String codeZone;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String nomZoneProduction;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String latitude;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private String longitude;
 
     @Column(nullable = true)
@@ -36,13 +40,15 @@ public class ZoneProduction {
     @Column(nullable = true)
     private String dateModif;
 
-    @Column(nullable = false)
+    @Schema(required = true)
+@Column(nullable = false)
     private boolean hasAssociation = false;
 
     @Column(nullable = true)
     private String personneModif;
 
-    // @Column(nullable = false)
+    // @Schema(required = true)
+@Column(nullable = false)
     private boolean statutZone;
 
     @OneToMany(mappedBy = "zoneProduction")
