@@ -73,11 +73,12 @@ public interface StockRepository extends JpaRepository<Stock, String>{
     List<Stock> findBySpeculation_CategorieProduitAndQuantiteStockGreaterThan(CategorieProduit categorie,double qte);
    
     //Recuperer les stocks par libelle categorie produit
-        Page<Stock> findBySpeculation_CategorieProduit_libelleCategorieAndQuantiteStockGreaterThan(String libelle , Pageable pageable,double qte);
+    List<Stock> findBySpeculation_CategorieProduit_libelleCategorie(String libelle);
+    List<Stock> findBySpeculation_CategorieProduit_Filiere_libelleFiliere(String libelleFiliere);
         // Page<Stock> findBySpeculation_CategorieProduit_filiere_libelleFiliere(String libelleFiliere, Pageable pageable);
 
       //test libelle
-        Page<Stock> findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(String libelleFiliere, boolean statutSotck, boolean statutActeur , Pageable pageable,double qte);
+    Page<Stock> findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndQuantiteStockGreaterThan(String libelleFiliere, boolean statutSotck, boolean statutActeur , Pageable pageable,double qte);
 
     Page<Stock> findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysAndQuantiteStockGreaterThan(String libelleFiliere, boolean statutSotck, boolean statutActeur ,String pays, Pageable pageable,double qte);
     Page<Stock> findAllBySpeculation_CategorieProduit_filiere_LibelleFiliereAndStatutSotckAndActeurStatutActeurAndPaysNotAndQuantiteStockGreaterThan(String libelleFiliere, boolean statutSotck, boolean statutActeur , String pays, Pageable pageable,double qte);

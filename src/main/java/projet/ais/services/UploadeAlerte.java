@@ -20,9 +20,10 @@ public class UploadeAlerte {
     
     private static final String FTP_SERVER = "ftp.koumi.ml";
     private static final int FTP_PORT = 21; // Mise à jour si nécessaire
-    private static final String FTP_USER = "default_koumi";
-    private static final String FTP_PASSWORD = "H8hd#e3KejJR";
-   int retryCount = 3; 
+    private static final String FTP_USER = "admin_koumi.ml";
+    private static final String FTP_PASSWORD = "oMwCBwVpr*qyv";
+
+    int retryCount = 3; 
     private static final Logger logger = LoggerFactory.getLogger(UploadeAlerte.class);
 
     @Async
@@ -56,7 +57,7 @@ public class UploadeAlerte {
 
                     // Upload the compressed data
                     byte[] compressedData = baos.toByteArray();
-                    String remoteFilePath = "/web/koumi-server/videos/" + videoName + ".gz"; // Added .gz extension
+                    String remoteFilePath = "/web/api-koumi/videos/" + videoName + ".gz"; // Added .gz extension
                     try (ByteArrayInputStream compressedStream = new ByteArrayInputStream(compressedData)) {
                         boolean uploadResult = ftpClient.storeFile(remoteFilePath, compressedStream);
                         if (uploadResult) {
@@ -102,7 +103,7 @@ public class UploadeAlerte {
                 ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
         
                 try (InputStream inputStream = Files.newInputStream(imagePath)) {
-                    String remoteFilePath = "/web/koumi-server/images/" + imageName; // Chemin d'acc                                                         ès complet sur le serveur FTP
+                    String remoteFilePath = "/web/api-koumi/images/" + imageName; // Chemin d'acc                                                         ès complet sur le serveur FTP
                     boolean uploadResult = ftpClient.storeFile(remoteFilePath, inputStream);
                     if (uploadResult) {
                         return "ftp://" + FTP_USER + "@" + FTP_SERVER + remoteFilePath; // Retourne le lien complet de l'image en ligne
@@ -130,7 +131,7 @@ public class UploadeAlerte {
       // Méthode pour récupérer une image à partir de son nom
     public byte[] getImageByName(String imageName) throws IOException {
         // Chemin où les images sont stockées sur le serveur FTP
-        String imagePath = "/web/koumi-server/images/";
+        String imagePath = "/web/api-koumi/images/";
     
         // Télécharger l'image à partir du serveur FTP en utilisant son nom
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
@@ -166,7 +167,7 @@ public class UploadeAlerte {
   
  public byte[] getVideoByName(String videoName) throws IOException {
         // Chemin où les vidéos sont stockées sur le serveur FTP
-        String videoPath = "/web/koumi-server/videos/";
+        String videoPath = "/web/api-koumi/videos/";
         String remoteFilePath = videoPath + videoName + ".gz"; // Assurez-vous d'ajouter l'extension .gz
     
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
@@ -240,7 +241,7 @@ public class UploadeAlerte {
 
                     // Upload the compressed data
                     byte[] compressedData = baos.toByteArray();
-                    String remoteFilePath = "/web/koumi-server/audio/" + audioName + ".gz"; // Added .gz extension
+                    String remoteFilePath = "/web/api-koumi/audio/" + audioName + ".gz"; // Added .gz extension
                     try (ByteArrayInputStream compressedStream = new ByteArrayInputStream(compressedData)) {
                         boolean uploadResult = ftpClient.storeFile(remoteFilePath, compressedStream);
                         if (uploadResult) {
@@ -271,7 +272,7 @@ public class UploadeAlerte {
 
     public byte[] getAudioByName(String audioName) throws IOException {
         // Chemin où les audios sont stockées sur le serveur FTP
-        String audioPath = "/web/koumi-server/audio/";
+        String audioPath = "/web/api-koumi/audio/";
         String remoteFilePath = audioPath + audioName + ".gz"; // Assurez-vous d'ajouter l'extension .gz
 
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {

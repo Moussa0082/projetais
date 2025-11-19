@@ -52,11 +52,6 @@ public class ConseilService {
      //Ajouter un conseil
       public Conseil createConseil(Conseil conseil, MultipartFile imageFile, MultipartFile audio, MultipartFile video) throws Exception {
         
-        // Conseil c = conseilRepository.findByIdConseil(conseil.getIdConseil());
-        // if(c != null){
-
-        //     throw new IllegalArgumentException("Un conseil avec l'id " + c + " existe déjà");
-        // }
 
             // Traitement du fichier image 
             if (imageFile != null) {
@@ -70,7 +65,7 @@ public class ConseilService {
                     String imageName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
                     Path imagePath = imageRootLocation.resolve(imageName);
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                    String onlineImagePath =uploadeAlerte.uploadImageToFTP(imagePath, imageName);
+                    String onlineImagePath = uploadeAlerte.uploadImageToFTP(imagePath, imageName);
 
                     conseil.setPhotoConseil(imageName );
                 } catch (IOException e) {

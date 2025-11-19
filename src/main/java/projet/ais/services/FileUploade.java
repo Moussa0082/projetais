@@ -59,6 +59,39 @@ public class FileUploade {
                 }
                 throw new Exception("Échec du téléchargement du fichier après plusieurs tentatives.");
     }
+
+    public byte[] getImageByNames(String imageNameOrUrl) throws IOException {
+    String imagePath = "/web/api-koumi/images/";
+
+    // Si c'est une URL complète, on récupère juste le nom du fichier
+    String imageName = imageNameOrUrl;
+    if (imageNameOrUrl.startsWith("http")) {
+        imageName = imageNameOrUrl.substring(imageNameOrUrl.lastIndexOf('/') + 1);
+    }
+
+    try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+        FTPClient ftpClient = new FTPClient();
+        try {
+            ftpClient.connect(FTP_SERVER, FTP_PORT);
+            ftpClient.login(FTP_USER, FTP_PASSWORD);
+            ftpClient.enterLocalPassiveMode();
+            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+
+            String remoteFilePath = imagePath + imageName;
+            if (ftpClient.retrieveFile(remoteFilePath, outputStream)) {
+                return outputStream.toByteArray();
+            } else {
+                throw new IOException("Image introuvable sur le serveur FTP : " + remoteFilePath);
+            }
+        } finally {
+            if (ftpClient.isConnected()) {
+                ftpClient.logout();
+                ftpClient.disconnect();
+            }
+        }
+    }
+}
+
       // Méthode pour récupérer une image à partir de son nom
     public byte[] getImageByName(String imageName) throws IOException {
         // Chemin où les images sont stockées sur le serveur FTP

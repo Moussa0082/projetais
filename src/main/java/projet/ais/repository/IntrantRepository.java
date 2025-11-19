@@ -40,6 +40,7 @@ public interface IntrantRepository extends JpaRepository<Intrant , String> {
     // List<Intrant> findAllBySpeculationIdSpeculation(String idSpeculation);
     List<Intrant> findAllByCategorieProduit_IdCategorieProduitAndQuantiteIntrantGreaterThan(String idCategorieProduit,double quantite);
 
+    List<Intrant> findByCategorieProduit_Filiere_libelleFiliere(String libelleFiliere);
     //test  categorie
     // Page<Intrant> findAllByCategorieProduit_IdCategorieProduitAndStatutIntrantTrueAndActeurStatutActeurTrueAndQuantiteIntrantGreaterThan(String idCategorieProduit, Pageable pageable,double qte);
     

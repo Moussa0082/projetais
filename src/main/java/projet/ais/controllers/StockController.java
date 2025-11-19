@@ -167,10 +167,10 @@ private MediaType detectContentType(String imageName) {
 }
   
 
-@PutMapping("/{id}/quantite")
-public Stock updateQuantiteStock(@PathVariable String id, @RequestParam double quantite) throws Exception {
-    return stockService.updateQuantiteStock(id, quantite);
-}
+            @PutMapping("/{id}/quantite")
+            public Stock updateQuantiteStock(@PathVariable String id, @RequestParam double quantite) throws Exception {
+                return stockService.updateQuantiteStock(id, quantite);
+            }
 
 
         @GetMapping("/getAllStocks")
@@ -181,22 +181,22 @@ public Stock updateQuantiteStock(@PathVariable String id, @RequestParam double q
 
         //
 
-    @GetMapping("/getStockByCritereWithPagination")
-    @Operation(summary = "Recuperer les stocks par critères")
-    public ResponseEntity<Page<Stock>> getStocksWithCritere(
-            @RequestParam(required = false) String nomProduit,
-            @RequestParam(required = false) String nomCategorie,
-            @RequestParam(required = false) List<String> speculations,
-            @RequestParam(required = false) Double quantiteStock,
-            @RequestParam(required = false) Integer prixMin,
-            @RequestParam(required = false) Integer prixMax,
-            @RequestParam int page,
-            @RequestParam int size
-    ) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Stock> stocks = stockService.getStocksByProduct(nomProduit,nomCategorie,speculations,quantiteStock, prixMin, prixMax, pageable);
-        return ResponseEntity.ok().body(stocks);
-    }
+    // @GetMapping("/getStockByCritereWithPagination")
+    // @Operation(summary = "Recuperer les stocks par critères")
+    // public ResponseEntity<Page<Stock>> getStocksWithCritere(
+    //         @RequestParam(required = false) String nomProduit,
+    //         @RequestParam(required = false) String nomCategorie,
+    //         @RequestParam(required = false) List<String> speculations,
+    //         @RequestParam(required = false) Double quantiteStock,
+    //         @RequestParam(required = false) Integer prixMin,
+    //         @RequestParam(required = false) Integer prixMax,
+    //         @RequestParam int page,
+    //         @RequestParam int size
+    // ) {
+    //     Pageable pageable = PageRequest.of(page, size);
+    //     Page<Stock> stocks = stockService.getStocksByProduct(nomProduit,nomCategorie,speculations,quantiteStock, prixMin, prixMax, pageable);
+    //     return ResponseEntity.ok().body(stocks);
+    // }
 
 
         
@@ -211,51 +211,48 @@ public Stock updateQuantiteStock(@PathVariable String id, @RequestParam double q
             return ResponseEntity.ok().body(stocks);
         }
 
-        @GetMapping("/getAllStocksByCategorieWithPagination")
-        public ResponseEntity<Page<Stock>> getStocksByCategorie(@RequestParam String idCategorie,
-                                                                @RequestParam int page,
-                                                                @RequestParam int size) {
-            CategorieProduit categorie = new CategorieProduit();
-            categorie.setIdCategorieProduit(idCategorie);
+        // @GetMapping("/getAllStocksByCategorieWithPagination")
+        // public ResponseEntity<Page<Stock>> getStocksByCategorie(@RequestParam String idCategorie,
+        //                                                         @RequestParam int page,
+        //                                                         @RequestParam int size) {
+        //     CategorieProduit categorie = new CategorieProduit();
+        //     categorie.setIdCategorieProduit(idCategorie);
     
-            Pageable pageable = PageRequest.of(page, size);
-            Page<Stock> stocks = stockService.getStocksByCategorieWithPagination(categorie, pageable);
+        //     Pageable pageable = PageRequest.of(page, size);
+        //     Page<Stock> stocks = stockService.getStocksByCategorieWithPagination(categorie, pageable);
     
-            return ResponseEntity.ok().body(stocks);
-        }
+        //     return ResponseEntity.ok().body(stocks);
+        // }
+
+    // @GetMapping("/getAllStocksByCategorieAndMagasinWithPagination")
+    // public ResponseEntity<Page<Stock>> listeStockByCategorieProduitAndMagasinWithPagination(
+    //         @RequestParam String idCategorie,
+    //         @RequestParam String idMagasin,
+    //         @RequestParam int page,
+    //         @RequestParam int size) {
+
+    //     CategorieProduit categorie = new CategorieProduit();
+    //     categorie.setIdCategorieProduit(idCategorie);
+
+    //     Pageable pageable = PageRequest.of(page, size);
+    //     Page<Stock> stocks = stockService.listeStockByCategorieProduitAndMagasinWithPagination(idCategorie, idMagasin, pageable);
+
+    //     return ResponseEntity.ok().body(stocks);
+    // }
+
+    // @GetMapping("/getAllStocksByMagasinAndActeurWithPagination")
+    // public ResponseEntity<Page<Stock>> getStocksByMagasinAndActeurWithPagination(
+    //         @RequestParam String idMagasin,
+    //         @RequestParam String idActeur,
+    //         @RequestParam int page,
+    //         @RequestParam int size) {
 
 
-        
+    //     Pageable pageable = PageRequest.of(page, size);
+    //     Page<Stock> stocks = stockService.getStocksByMagasinAndActeurWithPagination(idMagasin, idActeur,pageable);
 
-    @GetMapping("/getAllStocksByCategorieAndMagasinWithPagination")
-    public ResponseEntity<Page<Stock>> listeStockByCategorieProduitAndMagasinWithPagination(
-            @RequestParam String idCategorie,
-            @RequestParam String idMagasin,
-            @RequestParam int page,
-            @RequestParam int size) {
-
-        CategorieProduit categorie = new CategorieProduit();
-        categorie.setIdCategorieProduit(idCategorie);
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Stock> stocks = stockService.listeStockByCategorieProduitAndMagasinWithPagination(idCategorie, idMagasin, pageable);
-
-        return ResponseEntity.ok().body(stocks);
-    }
-
-    @GetMapping("/getAllStocksByMagasinAndActeurWithPagination")
-    public ResponseEntity<Page<Stock>> getStocksByMagasinAndActeurWithPagination(
-            @RequestParam String idMagasin,
-            @RequestParam String idActeur,
-            @RequestParam int page,
-            @RequestParam int size) {
-
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Stock> stocks = stockService.getStocksByMagasinAndActeurWithPagination(idMagasin, idActeur,pageable);
-
-        return ResponseEntity.ok().body(stocks);
-    }
+    //     return ResponseEntity.ok().body(stocks);
+    // }
 
     @GetMapping("/listeStockByLibelleCategorie")
     public ResponseEntity<Page<Stock>> getStocksByLibelleCategorie(
@@ -269,17 +266,17 @@ public Stock updateQuantiteStock(@PathVariable String id, @RequestParam double q
     
   
 
-    @GetMapping("/getAllStocksByMagasinWithPagination")
-    public ResponseEntity<Page<Stock>> getStocksByMagasinWithPagination(
-            @RequestParam String idMagasin,
-            @RequestParam int page,
-            @RequestParam int size) {
+    // @GetMapping("/getAllStocksByMagasinWithPagination")
+    // public ResponseEntity<Page<Stock>> getStocksByMagasinWithPagination(
+    //         @RequestParam String idMagasin,
+    //         @RequestParam int page,
+    //         @RequestParam int size) {
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Stock> stocks = stockService.getStocksByMagasinWithPagination(idMagasin, pageable);
+    //     Pageable pageable = PageRequest.of(page, size);
+    //     Page<Stock> stocks = stockService.getStocksByMagasinWithPagination(idMagasin, pageable);
 
-        return ResponseEntity.ok().body(stocks);
-    }
+    //     return ResponseEntity.ok().body(stocks);
+    // }
 
     @GetMapping("/getAllStocksByPays")
     public ResponseEntity<Page<Stock>> getStocksByPaysWithPagination(
@@ -374,65 +371,46 @@ public Stock updateQuantiteStock(@PathVariable String id, @RequestParam double q
     
             return ResponseEntity.ok().body(stocks);
         }
-        // @GetMapping("/getAllStocksByCategorieAndFiliere")
-        // public ResponseEntity<Page<Stock>> listeStockByCategorieAndLibelleFiliere(
-        //         @RequestParam String idCategorie,
-        //         @RequestParam String libelleFiliere,
+    
+        // @PutMapping("/update-pays")
+        // public String updatePaysForStocks() {
+        //     stockService.updatePaysForStocks();
+        //     return "Mise à jour de la colonne pays pour tous les stocks réussie";
+        // }
+
+        // @GetMapping("/getAllStocksWithPagination")
+        // public ResponseEntity<Page<Stock>> getAllStocksPageable(
+        //         @RequestParam int page,
+        //         @RequestParam int size) {
+    
+        //     Pageable pageable = PageRequest.of(page, size);
+        //     Page<Stock> stocks = stockService.getAllStocksPageable(pageable);
+    
+        //     return ResponseEntity.ok(stocks);
+        // }
+
+        // @GetMapping("/getAllStockAndStatutsWithPagination")
+        // public ResponseEntity<Page<Stock>> getAllStocksPageableAndStock(
+        //         @RequestParam int page,
+        //         @RequestParam int size) {
+    
+        //     Pageable pageable = PageRequest.of(page, size);
+        //     Page<Stock> stocks = stockService.getAllStocksPageableAndStatut(pageable);
+    
+        //     return ResponseEntity.ok(stocks);
+        // }
+
+        // @GetMapping("/getAllStockByPaysWithPagination")
+        // public ResponseEntity<Page<Stock>> getAllStocksPageableByPaysAndStatut(
         //         @RequestParam String niveau3PaysActeur,
         //         @RequestParam int page,
         //         @RequestParam int size) {
     
-        //     CategorieProduit categorie = new CategorieProduit();
-        //     categorie.setIdCategorieProduit(idCategorie);
-    
         //     Pageable pageable = PageRequest.of(page, size);
-        //     Page<Stock> stocks = stockService.getAllStockPageableByPaysByCategorieAndFiliere(idCategorie, libelleFiliere, niveau3PaysActeur,pageable);
+        //     Page<Stock> stocks = stockService.getAllStockPageableByPaysAndStatut(niveau3PaysActeur, pageable);
     
-        //     return ResponseEntity.ok().body(stocks);
+        //     return ResponseEntity.ok(stocks);
         // }
-    
-
-
-
-        @PutMapping("/update-pays")
-        public String updatePaysForStocks() {
-            stockService.updatePaysForStocks();
-            return "Mise à jour de la colonne pays pour tous les stocks réussie";
-        }
-
-        @GetMapping("/getAllStocksWithPagination")
-        public ResponseEntity<Page<Stock>> getAllStocksPageable(
-                @RequestParam int page,
-                @RequestParam int size) {
-    
-            Pageable pageable = PageRequest.of(page, size);
-            Page<Stock> stocks = stockService.getAllStocksPageable(pageable);
-    
-            return ResponseEntity.ok(stocks);
-        }
-
-        @GetMapping("/getAllStockAndStatutsWithPagination")
-        public ResponseEntity<Page<Stock>> getAllStocksPageableAndStock(
-                @RequestParam int page,
-                @RequestParam int size) {
-    
-            Pageable pageable = PageRequest.of(page, size);
-            Page<Stock> stocks = stockService.getAllStocksPageableAndStatut(pageable);
-    
-            return ResponseEntity.ok(stocks);
-        }
-
-        @GetMapping("/getAllStockByPaysWithPagination")
-        public ResponseEntity<Page<Stock>> getAllStocksPageableByPaysAndStatut(
-                @RequestParam String niveau3PaysActeur,
-                @RequestParam int page,
-                @RequestParam int size) {
-    
-            Pageable pageable = PageRequest.of(page, size);
-            Page<Stock> stocks = stockService.getAllStockPageableByPaysAndStatut(niveau3PaysActeur, pageable);
-    
-            return ResponseEntity.ok(stocks);
-        }
         
     // @GetMapping("all")
     // public List<Stock> allUsers(@RequestParam(name = "page",defaultValue = "0") Integer page) {
@@ -459,11 +437,17 @@ public Stock updateQuantiteStock(@PathVariable String id, @RequestParam double q
         // }
 
 
-        @GetMapping("/getAllStocksBySpeculation/{id}")
-        @Operation(summary = "Liste des stocks par d'un acteur ")
-        public ResponseEntity<List<Stock>> listeStockParSpeculation(@PathVariable String id){
-            return new ResponseEntity<>(stockService.getAllStockBySpeculation(id), HttpStatus.OK);
+        @GetMapping("/getAllStocksByFiliere/{libelleFiliere}")
+        @Operation(summary = "Liste des stocks par libelle filière ")
+        public ResponseEntity<List<Stock>> listeStockParFiliere(@PathVariable String libelleFiliere){
+            return new ResponseEntity<>(stockService.getAllStockByFiliere(libelleFiliere), HttpStatus.OK);
         }
+
+        // @GetMapping("/getAllStocksBySpeculation/{id}")
+        // @Operation(summary = "Liste des stocks par d'un acteur ")
+        // public ResponseEntity<List<Stock>> listeStockParSpeculation(@PathVariable String id){
+        //     return new ResponseEntity<>(stockService.getAllStockBySpeculation(id), HttpStatus.OK);
+        // }
         // Recuperer les stocks par categorie produit
           // Endpoint pour récupérer les stocks par catégorie
     @GetMapping("/categorieProduit/{idCategorie}")
@@ -488,25 +472,25 @@ public Stock updateQuantiteStock(@PathVariable String id, @RequestParam double q
             return stockService.getStocksByCategorieAndMagasin(idCategorie, idMagasin);
         }
 
-        @GetMapping("/categorieAndIdActeur/{idCategorie}/{idActeur}")
-        public List<Stock> getStocksByCategorieAndActeur(@PathVariable String idCategorie, @PathVariable String idActeur) {
-            return stockService.getStocksByCategorieAndActeurIdacteur(idCategorie, idActeur);
-        }
+        // @GetMapping("/categorieAndIdActeur/{idCategorie}/{idActeur}")
+        // public List<Stock> getStocksByCategorieAndActeur(@PathVariable String idCategorie, @PathVariable String idActeur) {
+        //     return stockService.getStocksByCategorieAndActeurIdacteur(idCategorie, idActeur);
+        // }
 
         // @GetMapping("/categorie/{idCategorie}")
         // public List<Stock> listeStockByCategorieProduit(@PathVariable String idCategorie) throws Exception {
         //     return stockService.listeStockByCategorieProduit(idCategorie);
         // }
 
-        @GetMapping("/commande/{id}")
-        public List<Stock> getStocksByCommande(@PathVariable String id) {
-            return stockService.getAllStockByCommande(id);
-        }
+        // @GetMapping("/commande/{id}")
+        // public List<Stock> getStocksByCommande(@PathVariable String id) {
+        //     return stockService.getAllStockByCommande(id);
+        // }
 
-        @GetMapping("/categorieAndActeur/{idCategorie}/{idMagasin}/{idActeur}")
-        public List<Stock> getStocksByCategorieAndMagasinAndActeur(@PathVariable String idCategorie, @PathVariable String idMagasin , @PathVariable String idActeur) throws Exception {
-            return stockService.listeStockByCategorieProduitAndMagasinAndActeur(idCategorie, idMagasin,idActeur);
-        }
+        // @GetMapping("/categorieAndActeur/{idCategorie}/{idMagasin}/{idActeur}")
+        // public List<Stock> getStocksByCategorieAndMagasinAndActeur(@PathVariable String idCategorie, @PathVariable String idMagasin , @PathVariable String idActeur) throws Exception {
+        //     return stockService.listeStockByCategorieProduitAndMagasinAndActeur(idCategorie, idMagasin,idActeur);
+        // }
 
         @DeleteMapping("/deleteStocks/{id}")
         @Operation(summary = "Suppression des stocks")

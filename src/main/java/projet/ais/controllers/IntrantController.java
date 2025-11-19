@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import projet.ais.models.Intrant;
+import projet.ais.models.Stock;
 import projet.ais.repository.IntrantRepository;
 import projet.ais.services.FileUploade;
 import projet.ais.services.IntrantService;
@@ -43,8 +44,7 @@ public class IntrantController {
     IntrantRepository intrantRepository;
 
 
-    
-    
+
     @PostMapping("/create")
     @Operation(summary = "création d'un intrant")
      public ResponseEntity<Intrant> createIntrant(
@@ -141,29 +141,29 @@ public class IntrantController {
   
       }
 
-      @GetMapping("/getIntrantByCritereWithPagination")
-      @Operation(summary = "Recuperer  un intrant par critères")
-      public ResponseEntity<Page<Intrant>> getIntrantWithCritere(
-              @RequestParam(required = false) String nomIntrant,
-              @RequestParam(required = false) List<String> categories,
-              @RequestParam(required = false) Double quantiteIntrant,
-              @RequestParam(required = false) Integer prixMin,
-              @RequestParam(required = false) Integer prixMax,
-              @RequestParam int page,
-              @RequestParam int size
-      ) {
-          Pageable pageable = PageRequest.of(page, size);
-          Page<Intrant> i = intrantService.getIntrantByCritere(nomIntrant,categories,quantiteIntrant, prixMin, prixMax, pageable);
-          return ResponseEntity.ok().body(i);
-      }
+    //   @GetMapping("/getIntrantByCritereWithPagination")
+    //   @Operation(summary = "Recuperer  un intrant par critères")
+    //   public ResponseEntity<Page<Intrant>> getIntrantWithCritere(
+    //           @RequestParam(required = false) String nomIntrant,
+    //           @RequestParam(required = false) List<String> categories,
+    //           @RequestParam(required = false) Double quantiteIntrant,
+    //           @RequestParam(required = false) Integer prixMin,
+    //           @RequestParam(required = false) Integer prixMax,
+    //           @RequestParam int page,
+    //           @RequestParam int size
+    //   ) {
+    //       Pageable pageable = PageRequest.of(page, size);
+    //       Page<Intrant> i = intrantService.getIntrantByCritere(nomIntrant,categories,quantiteIntrant, prixMin, prixMax, pageable);
+    //       return ResponseEntity.ok().body(i);
+    //   }
 
-    @GetMapping("/getAllIntrantsWithPagination")
-    public ResponseEntity<Page<Intrant>> getIntrants(@RequestParam() int page,
-                                                    @RequestParam() int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Intrant> intrants = intrantService.getAllIntrantPageable(pageable);
-        return ResponseEntity.ok().body(intrants);
-    }
+    // @GetMapping("/getAllIntrantsWithPagination")
+    // public ResponseEntity<Page<Intrant>> getIntrants(@RequestParam() int page,
+    //                                                 @RequestParam() int size) {
+    //     Pageable pageable = PageRequest.of(page, size);
+    //     Page<Intrant> intrants = intrantService.getAllIntrantPageable(pageable);
+    //     return ResponseEntity.ok().body(intrants);
+    // }
 
     @GetMapping("getIntrantById/{idIntrant}")
     public Intrant getIntrantById(@PathVariable String idIntrant) {
@@ -175,11 +175,11 @@ public class IntrantController {
         return intrantService.updateQuantiteIntrant(id, quantite);
     }
 
-    @PutMapping("/update-pays/{id}")
-    public String updatePaysFor(@PathVariable String id) {
-        intrantService.updatePaysForIntrantsss(id);
-        return "Mise à jour de la colonne pays réussie";
-    }
+    // @PutMapping("/update-pays/{id}")
+    // public String updatePaysFor(@PathVariable String id) {
+    //     intrantService.updatePaysForIntrantsss(id);
+    //     return "Mise à jour de la colonne pays réussie";
+    // }
 
     @GetMapping("/getIntrantsByPaysWithPagination")
     public Page<Intrant> getAllIntrantsPageableByPays( Pageable pageable) {
@@ -201,22 +201,22 @@ public class IntrantController {
         return intrantService.getAllIntrantPageableByPaysByCategorie(idCategorieProduit, niveau3PaysActeur , pageable);
     }
 
-    @GetMapping("/getIntrantsByPaysAndCategorieLibelleCategorieWithPagination")
-    public Page<Intrant> getAllIntrantsPageableByPaysAndCategorieLibelleCategorie(@RequestParam String libelle, @RequestParam String niveau3PaysActeur,  Pageable pageable) {
-        return intrantService.getAllIntrantPageableByPaysByLibelleCategorie(libelle, niveau3PaysActeur, pageable);
-    }
+    // @GetMapping("/getIntrantsByPaysAndCategorieLibelleCategorieWithPagination")
+    // public Page<Intrant> getAllIntrantsPageableByPaysAndCategorieLibelleCategorie(@RequestParam String libelle, @RequestParam String niveau3PaysActeur,  Pageable pageable) {
+    //     return intrantService.getAllIntrantPageableByPaysByLibelleCategorie(libelle, niveau3PaysActeur, pageable);
+    // }
 
 
-      @GetMapping("/getAllIntrantsByPaysWithPagination")
-        public ResponseEntity<Page<Intrant>> getAllIntrantPageableByPays(
-                @RequestParam int page,
-                @RequestParam int size) {
+    //   @GetMapping("/getAllIntrantsByPaysWithPagination")
+    //     public ResponseEntity<Page<Intrant>> getAllIntrantPageableByPays(
+    //             @RequestParam int page,
+    //             @RequestParam int size) {
     
-            Pageable pageable = PageRequest.of(page, size);
-            Page<Intrant> intrants = intrantService.getAllIntrantPageableByPays( pageable);
+    //         Pageable pageable = PageRequest.of(page, size);
+    //         Page<Intrant> intrants = intrantService.getAllIntrantPageableByPays( pageable);
     
-            return ResponseEntity.ok(intrants);
-        }
+    //         return ResponseEntity.ok(intrants);
+    //     }
     //   @GetMapping("/getAllIntrantsByPaysWithPagination")
     //     public ResponseEntity<Page<Intrant>> getAllIntrantPageableByPays(
     //             @RequestParam String niveau3PaysActeur,
@@ -239,21 +239,21 @@ public class IntrantController {
         return ResponseEntity.ok().body(intrants);
     }
 
-    @PutMapping("/update-pays")
-        public String updatePaysForIntrants() {
-        intrantService.updatePaysForIntrant();
-            return "Mise à jour de la colonne pays pour tous les intrants réussie";
-        }
+    // @PutMapping("/update-pays")
+    //     public String updatePaysForIntrants() {
+    //     intrantService.updatePaysForIntrant();
+    //         return "Mise à jour de la colonne pays pour tous les intrants réussie";
+    //     }
 
-    @GetMapping("/getAllIntrantsByCategorieWithPagination")
-    public ResponseEntity<Page<Intrant>> getIntrantsByCategorieWithPagination(
-        @RequestParam() String idCategorie,
-        @RequestParam() int page,
-        @RequestParam() int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Intrant> intrants = intrantService.getIntrantByCategorieWithPagination(idCategorie,pageable);
-        return ResponseEntity.ok().body(intrants);
-    }
+    // @GetMapping("/getAllIntrantsByCategorieWithPagination")
+    // public ResponseEntity<Page<Intrant>> getIntrantsByCategorieWithPagination(
+    //     @RequestParam() String idCategorie,
+    //     @RequestParam() int page,
+    //     @RequestParam() int size) {
+    //     Pageable pageable = PageRequest.of(page, size);
+    //     Page<Intrant> intrants = intrantService.getIntrantByCategorieWithPagination(idCategorie,pageable);
+    //     return ResponseEntity.ok().body(intrants);
+    // }
 
     @GetMapping("/listeIntrantByLibelleFiliereAndIcategorie")
     public ResponseEntity<Page<Intrant>> getIntrantsByLibelleFiAndCat(
@@ -266,6 +266,7 @@ public class IntrantController {
         Page<Intrant> intrants = intrantService.getAllIntrantByLibelleFiliereAndIdCategorie(idCategorie,libelle,pays, pageable);
         return ResponseEntity.ok().body(intrants);
     }
+
     @GetMapping("/listeIntrantByLibelleCategorie")
     public ResponseEntity<Page<Intrant>> getIntrantsByLibelleCategorie(
         @RequestParam() String libelle,
@@ -313,11 +314,11 @@ public class IntrantController {
     // }
 
          //liste intrant pas id categorie
-    @GetMapping("/listeIntrantByCategorie/{id}")
-    @Operation(summary = "affichage de la liste des intrants par Categorie")
-    public ResponseEntity<List<Intrant>> listeIntrantByCategorie(@PathVariable String id){
-        return  new ResponseEntity<>(intrantService.getAllIntrantByCategorie(id), HttpStatus.OK);
-    }
+    // @GetMapping("/listeIntrantByCategorie/{id}")
+    // @Operation(summary = "affichage de la liste des intrants par Categorie")
+    // public ResponseEntity<List<Intrant>> listeIntrantByCategorie(@PathVariable String id){
+    //     return  new ResponseEntity<>(intrantService.getAllIntrantByCategorie(id), HttpStatus.OK);
+    // }
 
     // @GetMapping("/listeIntrantBySuperficie/{id}")
     // @Operation(summary = "affichage de la liste des intrants par superficie")
@@ -326,15 +327,19 @@ public class IntrantController {
     // }
 
                  // Get Liste des  intrants
-      @GetMapping("/read")
-      @Operation(summary = "Liste globale des intrants")
+    @GetMapping("/read")
+    @Operation(summary = "Liste globale des intrants")
     public ResponseEntity<List<Intrant>> getAllIntrant() {
         return new ResponseEntity<>(intrantService.getAllIntrant(), HttpStatus.OK);
     }
 
+    @GetMapping("/getAllIntrantByFiliere/{libelleFiliere}")
+    @Operation(summary = "Liste des intrants par libelle filière ")
+    public ResponseEntity<List<Intrant>> listeIntrantParFiliere(@PathVariable String libelleFiliere){
+            return new ResponseEntity<>(intrantService.getAllIntrantByFiliere(libelleFiliere), HttpStatus.OK);
+    }
 
     @PutMapping("/disable/{id}")
-    //Desactiver un intrant methode
     @Operation(summary = "Désactiver un intrant ")
     public ResponseEntity<String> disableIntrant(@PathVariable String id) throws Exception{
     
@@ -343,8 +348,8 @@ public class IntrantController {
     }
 
     //Aciver intrant
-      @PutMapping("/enable/{id}")
-      @Operation(summary = "Activer intrant ")
+    @PutMapping("/enable/{id}")
+    @Operation(summary = "Activer intrant ")
     public ResponseEntity <String> enableIntrant(@PathVariable String id) throws Exception{
     
         intrantService.active(id);
@@ -353,7 +358,7 @@ public class IntrantController {
 
 
              //Supprimer un intrant
-           @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     @Operation(summary = "Suppression d'un intrant")
     public ResponseEntity<String> deleteIntrant(@PathVariable String id){
         return new ResponseEntity<>(intrantService.deleteIntrant(id), HttpStatus.OK);

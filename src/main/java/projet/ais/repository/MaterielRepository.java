@@ -24,38 +24,7 @@ public interface MaterielRepository  extends JpaRepository<Materiels, String>{
 
     Page<Materiels> findByActeur_IdActeur(String idActeur, Pageable pageable);
 
-    Page<Materiels> findAllByStatutAndActeurStatutActeurAndSpeculationIsNull(boolean statut, boolean statutActeur, Pageable pageable);
+    // Page<Materiels> findAllMateriel(Pageable pageable);
 
-//  Page<Materiel> findBySpeculation_CategorieProduit_filiere_libelleFiliereAndStatutAndActeurStatutActeur(String pays,String libelleFiliere,boolean statut, boolean statutActeur, Pageable pageable);
-//  Page<Materiel> findAllBySpeculation_CategorieProduit_filiere_libelleFiliereAndStatutTrueAndActeurStatutActeurTrueAndPaysNot(String libelleFiliere,boolean statut, boolean statutActeur,String pays, Pageable pageable);
-Page<Materiels> findBySpeculation_CategorieProduit_Filiere_LibelleFiliereAndPays(
-        String libelleFiliere, String pays, Pageable pageable);
 
-    Page<Materiels> findAllBySpeculation_CategorieProduit_Filiere_LibelleFiliereAndPaysNot(
-        String libelleFiliere, String pays, Pageable pageable);
-//         Page<Materiel> findBySpeculation_CategorieProduit_filiere_libelleFiliereAndStatutAndActeurStatutActeur(
-//         String libelleFiliere, String pays, Pageable pageable);
-
-//     Page<Materiel> findAllBySpeculation_CategorieProduit_filiere_libelleFiliereAndStatutTrueAndActeurStatutActeurTrueAndPaysNot(
-//         String libelleFiliere, String pays, Pageable pageable);
-
-        Page<Materiels> findAllByStatutTrueAndPaysAndActeurStatutActeurTrue(String pays, Pageable pageable);
-        Page<Materiels> findAllByStatutTrueAndPaysAndActeurStatutActeurTrueAndSpeculationIsNull(String pays, Pageable pageable);
-
-        Page<Materiels> findAllByStatutTrueAndActeurStatutActeurTrueAndPaysNotAndSpeculationIsNull(String pays, Pageable pageable);
-
-        Page<Materiels> findAllByTypeMaterielIdTypeMaterielAndStatutTrueAndPaysAndActeurStatutActeurTrue(String idTypeMateriel,
-                String pays, Pageable pageable);
-
-        Page<Materiels> findAllByTypeMateriel_IdTypeMaterielAndStatutTrueAndActeurStatutActeurTrueAndPaysNot(
-                        String idTypeMateriel, String pays, Pageable complementPageable);
-
-        Page<Materiels> findAllByTypeMateriel_IdTypeMaterielAndStatutTrueAndActeurStatutActeurTrue(String idTypeMateriel,
-                Pageable pageable);
-
-                Page<Materiels> findByTypeMateriel_IdTypeMaterielAndSpeculation_CategorieProduit_Filiere_LibelleFiliereAndPays(
-                        String idTypeMateriel, String libelleFiliere, String pays, Pageable pageable);
-                
-                    Page<Materiels> findAllByTypeMateriel_IdTypeMaterielAndSpeculation_CategorieProduit_Filiere_LibelleFiliereAndPaysNot(
-                        String idTypeMateriel, String libelleFiliere, String pays, Pageable pageable);
 }

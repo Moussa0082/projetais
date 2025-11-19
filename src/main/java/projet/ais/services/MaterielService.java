@@ -192,9 +192,9 @@ public class MaterielService {
     }
 
 
-     public Page<Materiels> getAllMaterielPageable(Pageable pageable) {
-        return materielRepository.findAllByStatutAndActeurStatutActeurAndSpeculationIsNull(true,true,pageable);
-    }
+    //  public Page<Materiels> getAllMaterielPageable(Pageable pageable) {
+    //     return materielRepository.findAllMateriel(pageable);
+    // }
 
     // recuperer les materiels par  type materiel avec pagination
     public Page<Materiels> getMaterielByTypeMaterielWithPagination(String idTypeMateriel,Pageable pageable) {
@@ -207,151 +207,7 @@ public class MaterielService {
     }
 
 
-    public Page<Materiels> getMaterielByPaysWithPagination(String nomPays,Pageable pageable) {
-        return materielRepository.findAllByStatutTrueAndPaysAndActeurStatutActeurTrueAndSpeculationIsNull(nomPays,pageable);
-    }
-    public Page<Materiels> getAllMaterielPageableByPays(String pays, Pageable pageable) {
-       
-        String paysNormalise = pays.trim().toLowerCase();
-        
-        // Récupérer les stocks pour le pays spécifié
-        Page<Materiels> materielByPays = materielRepository.findAllByStatutTrueAndPaysAndActeurStatutActeurTrueAndSpeculationIsNull(paysNormalise, pageable);
-        
-        List<Materiels> materielList = new ArrayList<>(materielByPays.getContent());
-        long totalElements = materielByPays.getTotalElements();
-    
-        // Si le nombre de stocks est inférieur à la taille de la page, compléter avec des stocks d'autres pays
-        if (materielList.size() < pageable.getPageSize()) {
-            Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - materielList.size());
-            Page<Materiels> stocksComplement =  materielRepository.findAllByStatutTrueAndActeurStatutActeurTrueAndPaysNotAndSpeculationIsNull(paysNormalise, complementPageable);
-            materielList.addAll(stocksComplement.getContent());
-            totalElements += stocksComplement.getTotalElements();
-        }
-    
-        // Créer et retourner une nouvelle page avec la liste complète des stocks et le pageable original
-        return new PageImpl<>(materielList, pageable, totalElements);
-    }
-
-    public Page<Materiels> getMatByPaysWithPagination(String nomPays,Pageable pageable) {
-        return  materielRepository.findAllByStatutTrueAndPaysAndActeurStatutActeurTrueAndSpeculationIsNull(nomPays, pageable);
-    }
-
-
-    public Page<Materiels> getEquipementByPaysWithPagination(String libelleFiliere, String nomPays,Pageable pageable) {
-        return materielRepository.findBySpeculation_CategorieProduit_Filiere_LibelleFiliereAndPays(
-            libelleFiliere, nomPays, pageable);
-    }
-
-    //get materiel par filiere    
-public Page<Materiels> getAllMaterielByLibelleFiliere(String libelleFiliere,String pays, Pageable pageable) {
-       
-    String paysNormalise = pays.trim().toLowerCase();
-    
-    // Récupérer les stocks pour le pays spécifié
-    Page<Materiels> materielByPays = materielRepository.findBySpeculation_CategorieProduit_Filiere_LibelleFiliereAndPays(
-        libelleFiliere, paysNormalise, pageable);
-
-    List<Materiels> materielList = new ArrayList<>(materielByPays.getContent());
-    long totalElements = materielByPays.getTotalElements();
-
-    // Si le nombre de stocks est inférieur à la taille de la page, compléter avec des stocks d'autres pays
-    if (materielList.size() < pageable.getPageSize()) {
-        Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - materielList.size());
-        Page<Materiels> stocksComplement = materielRepository.findAllBySpeculation_CategorieProduit_Filiere_LibelleFiliereAndPaysNot(
-            libelleFiliere, paysNormalise, complementPageable);
-        materielList.addAll(stocksComplement.getContent());
-        totalElements += stocksComplement.getTotalElements();
-    }
-
-    // Créer et retourner une nouvelle page avec la liste complète des stocks et le pageable original
-    return new PageImpl<>(materielList, pageable, totalElements);
-}
-
-
-    @Transactional
-    public Page<Materiels> getAllMaterielPageableByPaysByCategorie(String idTypeMateriel, String niveau3PaysActeur, Pageable pageable) {
-        // Fetch materiel by type materiel from the specified country
-        Page<Materiels> materielByPays = materielRepository.findAllByTypeMaterielIdTypeMaterielAndStatutTrueAndPaysAndActeurStatutActeurTrue(
-            idTypeMateriel, niveau3PaysActeur.trim().toLowerCase(), pageable);
-
-        List<Materiels> materielsList = new ArrayList<>(materielByPays.getContent());
-
-        // If no materiels are found for the specified country, fetch materiels from other countries
-        if (materielsList.isEmpty()) {
-            Page<Materiels> materielFromOtherCountries = materielRepository.findAllByTypeMateriel_IdTypeMaterielAndStatutTrueAndActeurStatutActeurTrue(
-                idTypeMateriel, pageable);
-
-            return new PageImpl<>(materielFromOtherCountries.getContent(), pageable, materielFromOtherCountries.getTotalElements());
-        }
-
-        // Fetch materiels from other countries if needed to fill the page
-        if (materielsList.size() < pageable.getPageSize()) {
-            Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - materielsList.size());
-            Page<Materiels> materielComplement = materielRepository.findAllByTypeMateriel_IdTypeMaterielAndStatutTrueAndActeurStatutActeurTrueAndPaysNot(
-                idTypeMateriel, niveau3PaysActeur.trim().toLowerCase(), complementPageable);
-            materielsList.addAll(materielComplement.getContent());
-        }
-
-        return new PageImpl<>(materielsList, pageable, materielByPays.getTotalElements() + materielsList.size());
-    }
-
-    @Transactional
-    public Page<Materiels> getAllMaterielByIdTypeMaterielAndFiliere(String idTypeMateriel, String libelleFiliere, String pays, Pageable pageable) {
-        // Fetch materiel by type materiel from the specified country
-        Page<Materiels> materielByPays = materielRepository.findByTypeMateriel_IdTypeMaterielAndSpeculation_CategorieProduit_Filiere_LibelleFiliereAndPays(
-            idTypeMateriel, libelleFiliere, pays.trim().toLowerCase(), pageable);
-
-        List<Materiels> materielsList = new ArrayList<>(materielByPays.getContent());
-
-        // If no materiels are found for the specified country, fetch materiels from other countries
-        if (materielsList.isEmpty()) {
-            Page<Materiels> materielFromOtherCountries = materielRepository.findAllByTypeMateriel_IdTypeMaterielAndSpeculation_CategorieProduit_Filiere_LibelleFiliereAndPaysNot(
-                idTypeMateriel, libelleFiliere, pays.trim().toLowerCase(), pageable
-            );
-            return new PageImpl<>(materielFromOtherCountries.getContent(), pageable, materielFromOtherCountries.getTotalElements());
-        }
-
-        // Fetch materiels from other countries if needed to fill the page
-        if (materielsList.size() < pageable.getPageSize()) {
-            Pageable complementPageable = PageRequest.of(0, pageable.getPageSize() - materielsList.size());
-            Page<Materiels> materielComplement = materielRepository.findAllByTypeMateriel_IdTypeMaterielAndSpeculation_CategorieProduit_Filiere_LibelleFiliereAndPaysNot(
-                idTypeMateriel, libelleFiliere, pays.trim().toLowerCase(), complementPageable
-            );
-            materielsList.addAll(materielComplement.getContent());
-        }
-
-        return new PageImpl<>(materielsList, pageable, materielByPays.getTotalElements() + materielsList.size());
-    }
-
-
-    
-    @Transactional
-    public void updatePaysForMateriel() {
-        // Récupérer tous les stocks
-        List<Materiels> materiels = materielRepository.findAll();
-
-        // Parcourir chaque materiel
-        for (Materiels materiel : materiels) {
-            // Récupérer l'acteur lié au intrant
-            Acteur acteur = materiel.getActeur();
-
-            if (acteur != null) {
-                // Récupérer le niveau3Pays de l'acteur lié au stock
-                String niveau3Pays = acteur.getNiveau3PaysActeur();
-
-                // Mettre à jour la colonne pays du stock
-                materiel.setPays(niveau3Pays);
-            } else {
-                // Gérer le cas où l'acteur est null
-                System.out.println("L'acteur lié au materiel ID " + materiel.getIdMateriel() + " est null.");
-            }
-        }
-    }
-
-
-
-
-    
+  
     public Materiels updateMateriel(Materiels materiel, String id, MultipartFile imageFile) throws Exception{
         Materiels mat = materielRepository.findById(id).orElseThrow();
 
@@ -402,36 +258,33 @@ public Page<Materiels> getAllMaterielByLibelleFiliere(String libelleFiliere,Stri
     public List<Materiels> getMateriels(){
         List<Materiels> materielList = materielRepository.findAll();
 
-        if(materielList == null)
-            throw new EntityNotFoundException("Aucune matériel trouvé");
+        if(materielList.isEmpty()){
+            new IllegalArgumentException("Aucune matériel trouvé");
+        }
+             
 
-        materielList = materielList
-        .stream().sorted((m1,m2) -> m2.getNom().compareTo(m1.getNom()))
-        .collect(Collectors.toList());
         return materielList;
     }
 
     public List<Materiels> getMaterielByActeur(String id){
         List<Materiels> materielList = materielRepository.findByActeurIdActeur(id);
 
-        if(materielList.isEmpty())
-            throw new EntityNotFoundException("Aucune matériel trouvé");
+        if(materielList.isEmpty()){
+            new IllegalArgumentException("Aucune matériel trouvé");
+        }
 
-        materielList = materielList
-        .stream().sorted((m1,m2) -> m2.getNom().compareTo(m1.getNom()))
-        .collect(Collectors.toList());
         return materielList;
     }
 
     public List<Materiels> getMaterielByTypeMateriel(String id){
         List<Materiels> materielList = materielRepository.findAllByTypeMaterielIdTypeMateriel(id);
 
-        if(materielList.isEmpty())
-            throw new EntityNotFoundException("Aucune matériel trouvé");
+        if(materielList.isEmpty()){
+            new IllegalArgumentException("Aucune matériel trouvé");
+        }
+            
 
-        materielList = materielList
-        .stream().sorted((m1,m2) -> m2.getNom().compareTo(m1.getNom()))
-        .collect(Collectors.toList());
+       
         return materielList;
     }
 

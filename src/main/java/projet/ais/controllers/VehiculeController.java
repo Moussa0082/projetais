@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import projet.ais.models.Materiels;
 import projet.ais.models.Niveau1Pays;
+import projet.ais.models.Stock;
 import projet.ais.models.Vehicule;
 import projet.ais.services.FileUploade;
 import projet.ais.repository.VehiculeRepository;
@@ -156,30 +157,7 @@ public class VehiculeController {
     public Page<Vehicule> getAllVehiculesPageableByPaysAndCategorie(@RequestParam String idTypeVoiture, Pageable pageable) {
         return vehiculeService.getAllVehiculePageableByPaysByCategorie(idTypeVoiture, pageable);
     }
-
-    @PutMapping("/update-pays")
-    public String updatePaysForVehicules() {
-        vehiculeService.updatePaysForVehicule();
-        return "Mise à jour de la colonne pays pour tous les vehicules réussie";
-    }
-
-    @GetMapping("/getAllVehiculesWithPagination")
-    public ResponseEntity<Page<Vehicule>> getVehicules(@RequestParam() int page,
-            @RequestParam() int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Vehicule> vehicules = vehiculeService.getAllVehiculePageable(pageable);
-        return ResponseEntity.ok().body(vehicules);
-    }
-
-    @GetMapping("/getAllVehiculesByTypeVoitureWithPagination")
-    public ResponseEntity<Page<Vehicule>> getVehiculeByTypeVoitureWithPagination(
-            @RequestParam() String idTypeVoiture,
-            @RequestParam() int page,
-            @RequestParam() int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Vehicule> vehicules = vehiculeService.getVehiculeByTypeVoitureWithPagination(idTypeVoiture, pageable);
-        return ResponseEntity.ok().body(vehicules);
-    }
+    
 
     @GetMapping("/getAllVehiculesByActeurWithPagination")
     public ResponseEntity<Page<Vehicule>> getVehiculeByActeurWithPagination(
@@ -198,13 +176,13 @@ public class VehiculeController {
         return new ResponseEntity<>(vehiculeService.getAllVehiculeByActeur(id), HttpStatus.OK);
     }
 
-    @GetMapping("/listeVehiculeByType/{id}")
+    @GetMapping("/getVehiculeByType/{id}")
     @Operation(summary = "affichage de la liste des vehicules par type")
     public ResponseEntity<List<Vehicule>> listeVehiculeByTypes(@PathVariable String id) {
         return new ResponseEntity<>(vehiculeService.getVehiculesByTypeVoiture(id), HttpStatus.OK);
     }
 
-    @GetMapping("/read")
+    @GetMapping("/getAllVehicule")
     @Operation(summary = "Liste globale des vehicules")
     public ResponseEntity<List<Vehicule>> getAllVehicule() {
         return new ResponseEntity<>(vehiculeService.getAllVehicules(), HttpStatus.OK);

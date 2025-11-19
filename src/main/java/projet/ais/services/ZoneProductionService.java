@@ -51,8 +51,13 @@ public class ZoneProductionService {
     public ZoneProduction createZoneProduction(ZoneProduction zoneProduction, MultipartFile imageFile) throws Exception{
         // ZoneProduction zoneProductions = zoneProductionRepository.findByNomZoneProduction(zoneProduction.getNomZoneProduction());
        
+        String codes = codeGenerator.genererCode();
+        String idCodes = idGenerator.genererCode();
+
+        zoneProduction.setCodeZone(codes);
+        zoneProduction.setIdZoneProduction(idCodes);
+        
         if (imageFile != null) {
-            //  String imageLocation = "C:\\xampp\\htdocs\\ais";
                 String imageLocation = "/ais";
                 try {
                     Path imageRootLocation = Paths.get(imageLocation);
@@ -65,18 +70,16 @@ public class ZoneProductionService {
                     Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
                     String onlineImagePath =fileUploade.uploadImageToFTP(imagePath, imageName);
 
+                     // ✅  un lien HTTP de l'image 
+                    // String imageUrl = "https://api.koumi.ml/api-koumi/ZoneProduction/" 
+                    //                 + zoneProduction.getIdZoneProduction() + "/image";
+
                     zoneProduction.setPhotoZone(imageName);
-                    // zoneProduction.setPhotoZone(imageName);
                 } catch (IOException e) {
                     throw new Exception("Erreur lors du traitement du fichier image : " + e.getMessage());
                 }
             }
-            String codes = codeGenerator.genererCode();
-            String idCodes = idGenerator.genererCode();
-
-        zoneProduction.setCodeZone(codes);
-        zoneProduction.setStatutZone(true);
-        zoneProduction.setIdZoneProduction(idCodes);
+       
         String pattern = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         LocalDateTime now = LocalDateTime.now();

@@ -115,14 +115,14 @@ private MediaType detectContentType(String imageName) {
     return MediaType.APPLICATION_OCTET_STREAM;
 }
 
-    @GetMapping("/getAllMaterielsWithPagination")
-    public ResponseEntity<Page<Materiels>> getMateriels(
-        @RequestParam() int page,
-        @RequestParam() int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Materiels> materiels = materielService.getAllMaterielPageable(pageable);
-        return ResponseEntity.ok().body(materiels);
-    }
+    // @GetMapping("/getAllMaterielsWithPagination")
+    // public ResponseEntity<Page<Materiels>> getMateriels(
+    //     @RequestParam() int page,
+    //     @RequestParam() int size) {
+    //     Pageable pageable = PageRequest.of(page, size);
+    //     Page<Materiels> materiels = materielService.getAllMaterielPageable(pageable);
+    //     return ResponseEntity.ok().body(materiels);
+    // }
 
     @GetMapping("/getAllMaterielsByTypeMaterielWithPagination")
     public ResponseEntity<Page<Materiels>> getMaterielByTypeMaterielWithPagination(
@@ -144,68 +144,6 @@ private MediaType detectContentType(String imageName) {
         return ResponseEntity.ok().body(materiels);
     }
 
-
-    @GetMapping("/getMaterielsByFiliereWithPagination")
-    public ResponseEntity<Page<Materiels>> getAllMaterielsByFiliere(
-
-        @RequestParam String libelleFiliere,
-        @RequestParam String pays,
-        @RequestParam() int page,
-        @RequestParam() int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Materiels> materiels = materielService.getAllMaterielByLibelleFiliere(libelleFiliere, pays, pageable);
-        return ResponseEntity.ok().body(materiels);
-    }
-
-    @GetMapping("/getMaterielsByFiliereAndPaysWithPagination")
-    public ResponseEntity<Page<Materiels>> getAllMatByFiliereAndPays(
-        @RequestParam String libelleFiliere,
-        @RequestParam String pays,
-        @RequestParam() int page,
-        @RequestParam() int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Materiels> materiels = materielService.getEquipementByPaysWithPagination(libelleFiliere, pays, pageable);
-        return ResponseEntity.ok().body(materiels);
-    }
-    
-    @GetMapping("/getMaterielsByPaysWithPagination")
-    public Page<Materiels> getAllMaterielsPageableByPays(@RequestParam String niveau3PaysActeur, Pageable pageable) {
-        return materielService.getAllMaterielPageableByPays(niveau3PaysActeur, pageable);
-    }
-
-    @GetMapping("/getAllByPaysWithPagination")
-    public Page<Materiels> getAllMatPageableByPays(@RequestParam String nomPays, Pageable pageable) {
-        return materielService.getMaterielByPaysWithPagination(nomPays, pageable);
-    }
-
-    @GetMapping("/getMaterielsByPays")
-    public Page<Materiels> getAllMaterielsByPays(@RequestParam String niveau3PaysActeur, Pageable pageable) {
-        return materielService.getMatByPaysWithPagination(niveau3PaysActeur, pageable);
-    }
-
-    @GetMapping("/getMaterielsByIdTypeAndFiliere")
-    public Page<Materiels> getMaterielByTypeFiliereAndPays(
-        @RequestParam String idTypeMateriel,
-        @RequestParam String libelleFiliere,
-        @RequestParam String pays,
-        @RequestParam() int page,
-        @RequestParam() int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        
-        return materielService.getAllMaterielByIdTypeMaterielAndFiliere(idTypeMateriel, libelleFiliere, pays, pageable);
-    }
-
-    @GetMapping("/getMaterielsByPaysAndTypeMaterielWithPagination")
-    public Page<Materiels> getAllMaterielsPageableByPaysAndCategorie(@RequestParam String idTypeMateriel, @RequestParam String niveau3PaysActeur,  Pageable pageable) {
-        return materielService.getAllMaterielPageableByPaysByCategorie(idTypeMateriel, niveau3PaysActeur , pageable);
-    }
-
-
-    @PutMapping("/update-pays")
-    public String updatePaysForMateriel() {
-    materielService.updatePaysForMateriel();
-        return "Mise à jour de la colonne pays pour tous les materiels réussie";
-    }
 
     @PutMapping("/update/{id}")
     @Operation(summary = "Modification du materiel")
@@ -235,17 +173,17 @@ private MediaType detectContentType(String imageName) {
         return new ResponseEntity<>(materielService.desactive(id), HttpStatus.OK);
     }
 
-    @GetMapping("/list")
+    @GetMapping("/getAllMateriel")
     public ResponseEntity<List<Materiels>> getAllMateriel(){
         return new ResponseEntity<>(materielService.getMateriels(), HttpStatus.OK);
     }
 
-    @GetMapping("/readByActeur/{id}")
+    @GetMapping("/getAllByActeur/{id}")
     public ResponseEntity<List<Materiels>> getAllByActeur(@PathVariable String id){
         return new ResponseEntity<>(materielService.getMaterielByActeur(id), HttpStatus.OK);
     }
 
-    @GetMapping("/readByTypeMateriel/{id}")
+    @GetMapping("/getByTypeMateriel/{id}")
     public ResponseEntity<List<Materiels>> getAllByMaterielByType(@PathVariable String id){
         return new ResponseEntity<>(materielService.getMaterielByTypeMateriel(id), HttpStatus.OK);
     }

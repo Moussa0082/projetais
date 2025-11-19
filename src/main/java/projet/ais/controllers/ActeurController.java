@@ -62,8 +62,6 @@ public class ActeurController {
     @Autowired
     FileUploade fileUploade;
 
-    
-
     @PostMapping("/create")
     @Operation(summary = "création d'un acteur")
     public ResponseEntity<Acteur> createActeur(
@@ -519,12 +517,7 @@ public class ActeurController {
     }
 
     //Se connecter 
-    @GetMapping("/login")
-    @Operation(summary = "Connexion d'un Acteur ")
-    public Acteur connexion(@RequestParam("emailActeur")  String emailActeur,
-                            @RequestParam("password")  String password) {
-        return acteurService.connexionActeur(emailActeur, password);
-    }
+   
 
     @PostMapping("/connexion") 
     @Operation(summary = "Connexion d'un Acteur ")
@@ -534,7 +527,6 @@ public class ActeurController {
         return acteurService.loginActeur(emailActeur, password);
     }
     
-
     //Se connecter 
     @GetMapping("/pinLogin")
     @Operation(summary = "Connexion d'un Acteur")
@@ -545,14 +537,7 @@ public class ActeurController {
     return acteurService.connexionActeurWithPin(codeActeur,password);
     }
 
-    @GetMapping("/codeAndNomActeurLogin")
-    @Operation(summary = "Connexion d'un Acteur via code et nomActeur")
-    public Acteur connexionActeurWithCodeAndNomAceur(
-        @RequestParam("codeActeur")  String codeActeur,
-        @RequestParam("nomActeur")  String nomActeur
-    ) {
-    return acteurService.connexionActeurWithCodeAndNomActeur(codeActeur,nomActeur);
-    }
+   
 
     
 }

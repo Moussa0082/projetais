@@ -144,7 +144,7 @@ public ResponseEntity<byte[]> getAudio(@PathVariable String alerteId) {
         Alertes alertes = alertesRepository.findByIdAlerte(alerteId);
         if (alertes == null || alertes.getAudioAlerte() == null) {
             return ResponseEntity.notFound().build();
-        }
+        } 
 
         String audioName = alertes.getAudioAlerte();
         byte[] audioBytes = uploadeAlerte.getAudioByName(audioName);

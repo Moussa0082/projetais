@@ -33,8 +33,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.http.MediaType;
 import java.io.IOException;
 
-
-
 @RestController
 // @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("api-koumi/ZoneProduction")
@@ -82,6 +80,42 @@ public class ZoneProductionController {
             return new ResponseEntity<>(updatedZone, HttpStatus.OK);
         }
 // Endpoint pour récupérer une image à partir de son nom
+// @GetMapping("/{zoneId}/image")
+// public ResponseEntity<byte[]> getImage(@PathVariable String zoneId) {
+//     try {
+//         ZoneProduction zoneProduction = zoneProductionRepository.findByidZoneProduction(zoneId);
+//         if (zoneProduction == null || zoneProduction.getPhotoZone() == null) {
+//             return ResponseEntity.notFound().build();
+//         }
+
+//         String imagePath = zoneProduction.getPhotoZone();
+
+//         // ✅ Cas 1 : si `photoZone` contient déjà un nom de fichier (ancienne logique)
+//         if (!imagePath.startsWith("http")) {
+//             byte[] imageBytes = fileUploade.getImageByNames(imagePath);
+//             MediaType contentType = detectContentType(imagePath);
+//             return ResponseEntity.ok()
+//                     .contentType(contentType)
+//                     .body(imageBytes);
+//         }
+
+//         // ✅ Cas 2 : si `photoZone` contient un lien HTTP (nouvelle logique)
+//         // On récupère le nom réel du fichier depuis le lien (ex: après le dernier '/')
+//         String fileName = imagePath.substring(imagePath.lastIndexOf('/') + 1);
+
+//         byte[] imageBytes = fileUploade.getImageByNames(fileName);
+//         MediaType contentType = detectContentType(fileName);
+
+//         return ResponseEntity.ok()
+//                 .contentType(contentType)
+//                 .body(imageBytes);
+
+//     } catch (IOException e) {
+//         e.printStackTrace();
+//         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+//     }
+// }
+
 @GetMapping("/{zoneId}/image")
 public ResponseEntity<byte[]> getImage(@PathVariable String zoneId) {
     try {

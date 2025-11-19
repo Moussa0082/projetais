@@ -636,6 +636,10 @@ public class ActeurService {
                 ac.setAdresseActeur(acteur.getAdresseActeur());
                 System.out.println("Adresse de l'acteur mise à jour: " + acteur.getAdresseActeur());
             }
+            if (acteur.getUsername() != null) {
+                ac.setUsername(acteur.getUsername());
+                System.out.println("username de l'acteur mise à jour: " + acteur.getUsername());
+            }
             if (acteur.getNomActeur() != null) {
                 ac.setNomActeur(acteur.getNomActeur());
                 System.out.println("Nom de l'acteur mis à jour: " + acteur.getNomActeur());

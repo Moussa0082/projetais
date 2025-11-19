@@ -49,7 +49,7 @@ public class ZoneProduction {
 
     // @Schema(required = true)
 @Column(nullable = false)
-    private boolean statutZone;
+    private boolean statutZone = true;
 
     @OneToMany(mappedBy = "zoneProduction")
     @JsonIgnore

@@ -195,7 +195,7 @@ private MediaType determineContentTypeAudio(String fileName) {
         return MediaType.valueOf("audio/ogg");
     }
     // Add other audio formats if needed
-    return MediaType.APPLICATION_OCTET_STREAM;
+    return MediaType.APPLICATION_OCTET_STREAM; 
 }
                     @GetMapping("/{conseilId}/image")
                     public ResponseEntity<byte[]> getImage(@PathVariable String conseilId) {

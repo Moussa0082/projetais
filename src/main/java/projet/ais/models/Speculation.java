@@ -58,10 +58,6 @@ public class Speculation {
     @JsonIgnore
     private List<Stock> stockList;
     
-    @OneToMany
-    (mappedBy = "speculation")
-    @JsonIgnore
-    private List<Materiels> materielList;
 
     @ManyToMany(mappedBy = "speculation")
     @JsonIgnore

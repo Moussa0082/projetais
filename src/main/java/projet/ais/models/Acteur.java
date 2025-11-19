@@ -43,15 +43,18 @@ public class Acteur {
     private String codeActeur;
 
     @Schema(required = true)
-@Column(nullable = false)
+    @Column(nullable = false)
     private String nomActeur;
 
+    @Column(nullable = true)
+    private String username;
+    
     @Schema(required = true)
-@Column(nullable = false)
+    @Column(nullable = false)
     private String adresseActeur;
 
     @Schema(required = true)
-@Column(nullable = false)
+    @Column(nullable = false)
     private String telephoneActeur;
 
     @Column(nullable = true)
@@ -72,11 +75,9 @@ public class Acteur {
     @Column(nullable = true)
     private String niveau3PaysActeur;
 
-    
     @Schema(required = true)
-@Column(nullable = false)
+    @Column(nullable = false)
     private String password;
-
 
     @Column(nullable = true)
     private String dateAjout;
@@ -84,12 +85,11 @@ public class Acteur {
     @Column(nullable = true)
     private String dateModif;
 
-
     @Column(nullable=true)
     private String personneModif;
 
     @Schema(required = true)
-@Column(nullable = false)
+    @Column(nullable = false)
     private String localiteActeur;
 
     @Column(nullable = true)
@@ -100,7 +100,7 @@ public class Acteur {
     private Boolean isConnected;
 
     @Schema(required = true)
-@Column(nullable = false)
+    @Column(nullable = false)
     private boolean hasAssociation = false;
     
     @ManyToOne
